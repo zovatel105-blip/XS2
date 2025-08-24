@@ -242,14 +242,16 @@ export const musicLibrary = [
 
 export const musicCategories = [
   'Todas',
-  'Moda',
-  'Comida', 
-  'Baile',
+  'Trending',
+  'Pop',
+  'Hip-Hop',
+  'Electronic', 
+  'Rock',
+  'Latin',
   'Chill',
-  'Hip Hop',
-  'Acústico',
-  'Electrónica',
-  'Pop'
+  'Acoustic',
+  'Dance',
+  'Original'
 ];
 
 // Función para obtener música por categoría
