@@ -252,16 +252,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
           </h2>
         </div>
 
-        {/* Music display */}
-        {poll.music && (
-          <div className="absolute bottom-20 left-4 right-4 z-30">
-            <MusicDisplay 
-              music={poll.music} 
-              compact={true}
-              className="bg-black/50 backdrop-blur-md rounded-full px-3 py-2"
-            />
-          </div>
-        )}
+
       </div>
 
       {/* Main content - Perfect full screen grid with safe areas */}
