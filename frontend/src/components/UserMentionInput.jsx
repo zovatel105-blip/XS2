@@ -34,7 +34,7 @@ const UserMentionInput = ({
   const searchUsers = async (query) => {
     setLoading(true);
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
       const token = localStorage.getItem('token');
       
       const response = await fetch(`${backendUrl}/api/users/search?q=${encodeURIComponent(query)}`, {
