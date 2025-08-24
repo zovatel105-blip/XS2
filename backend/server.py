@@ -1991,6 +1991,7 @@ async def create_poll(
                 "verified": current_user.is_verified,
                 "followers": "1K"  # Placeholder
             },
+            "mentioned_users": option.mentioned_users,  # Include mentioned users in option
             "media": {
                 "type": option.media_type,
                 "url": option.media_url,
@@ -2015,6 +2016,7 @@ async def create_poll(
         is_featured=poll.is_featured,
         tags=poll.tags,
         category=poll.category,
+        mentioned_users=poll.mentioned_users,  # Include mentioned users in poll
         created_at=poll.created_at,
         time_ago=calculate_time_ago(poll.created_at)
     )
