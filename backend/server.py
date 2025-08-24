@@ -1946,7 +1946,8 @@ async def create_poll(
             text=option_data["text"],
             media_type=option_data.get("media_type"),
             media_url=option_data.get("media_url"),
-            thumbnail_url=option_data.get("thumbnail_url")
+            thumbnail_url=option_data.get("thumbnail_url"),
+            mentioned_users=option_data.get("mentioned_users", [])
         )
         options.append(option)
     
