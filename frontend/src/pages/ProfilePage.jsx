@@ -20,8 +20,14 @@ import { useFollow } from '../contexts/FollowContext';
 import { useShare } from '../hooks/useShare';
 import { cn } from '../lib/utils';
 
-const StatCard = ({ icon: Icon, label, value, color = "blue" }) => (
-  <Card className="hover:shadow-md transition-shadow">
+const StatCard = ({ icon: Icon, label, value, color = "blue", onClick, clickable = false }) => (
+  <Card 
+    className={cn(
+      "transition-all duration-300",
+      clickable ? "hover:shadow-lg hover:scale-105 cursor-pointer hover:bg-gray-50" : "hover:shadow-md",
+    )}
+    onClick={clickable ? onClick : undefined}
+  >
     <CardContent className="p-4">
       <div className="flex items-center gap-3">
         <div className={cn(
@@ -36,7 +42,12 @@ const StatCard = ({ icon: Icon, label, value, color = "blue" }) => (
         </div>
         <div>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm text-gray-600">{label}</p>
+          <p className={cn(
+            "text-sm",
+            clickable ? "text-blue-600 font-medium" : "text-gray-600"
+          )}>
+            {label}
+          </p>
         </div>
       </div>
     </CardContent>
