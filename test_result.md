@@ -359,6 +359,18 @@ backend:
           comment: "🎯 SISTEMA DE ARCHIVOS ESTÁTICOS COMPLETAMENTE FUNCIONAL (2025-08-22): Testing exhaustivo del nuevo endpoint GET /api/uploads/{category}/{filename} completado exitosamente con resultados perfectos. VERIFICACIÓN COMPLETA: 1) ✅ ENDPOINT IMPLEMENTATION: GET /api/uploads/{category}/{filename} implementado correctamente con FileResponse, validación de categorías (avatars, poll_options, poll_backgrounds, general), detección automática de MIME types (image/png, image/jpeg), manejo de errores 404 para archivos/categorías inexistentes, 2) ✅ CONTENT-TYPE HANDLING: Archivos PNG servidos con content-type: image/png correcto, archivos JPG servidos con content-type: image/jpeg correcto, Content-Length headers incluidos apropiadamente, 3) ✅ CATEGORY VALIDATION: Categorías válidas (avatars, poll_options, poll_backgrounds, general) funcionan correctamente, categorías inválidas retornan 404 apropiadamente, estructura de directorios respetada, 4) ✅ ERROR HANDLING: Archivos no existentes retornan 404 correctamente, categorías inválidas retornan 404 apropiadamente, validación de paths funcional, 5) ✅ INTEGRATION: Integración perfecta con sistema de upload existente, URLs generadas automáticamente con formato /api/uploads/, compatibilidad con diferentes formatos de imagen. RESULTADO: El nuevo sistema de static file serving está completamente operacional y resuelve el problema de imágenes móviles al usar rutas /api/ que se enrutan correctamente al backend a través del proxy/ingress de Kubernetes."
 
 frontend:
+frontend:
+  - task: "Corrección Variables de Entorno REACT_APP_BACKEND_URL"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/contexts/AuthContext.js, /app/frontend/src/services/*.js, /app/frontend/src/components/UserMentionInput.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "✅ PROBLEMA CRÍTICO DE VARIABLES DE ENTORNO RESUELTO COMPLETAMENTE (2025-01-25): Identificado y solucionado problema donde import.meta.env.REACT_APP_BACKEND_URL estaba undefined causando errores en servicios backend. PROBLEMA IDENTIFICADO: Múltiples servicios usando mezcla incorrecta de process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL cuando Create React App solo soporta process.env, no import.meta.env (que es para Vite). ARCHIVOS CORREGIDOS: 1) ✅ AuthContext.js: Removido fallback a import.meta.env, 2) ✅ commentService.js: Corregida configuración de BACKEND_URL, 3) ✅ addictionApi.js: Corregida configuración de API_BASE, 4) ✅ uploadService.js: Corregida configuración de BACKEND_URL, 5) ✅ realMusicService.js: Corregida configuración de API_BASE_URL, 6) ✅ pollService.js: Corregida configuración de BACKEND_URL, 7) ✅ UserMentionInput.jsx: Corregidas ambas instancias de backendUrl (líneas 37 y 91). VERIFICACIONES: ✅ Variable REACT_APP_BACKEND_URL existe en frontend/.env con valor correcto, ✅ Servicios frontend y backend reiniciados exitosamente, ✅ Backend responde correctamente en https://env-config-fix.preview.emergentagent.com/api/, ✅ Eliminadas todas las referencias a import.meta.env en el proyecto. RESULTADO: Los servicios ahora usan exclusivamente process.env.REACT_APP_BACKEND_URL que está definida correctamente, eliminando errores de undefined backend URL."
   - task: "Gestión de Logo en Dispositivos Móviles"
     implemented: true
     working: true
