@@ -644,7 +644,7 @@ const ProfilePage = () => {
           <StatCard
             icon={Users}
             label="Seguidores"
-            value={displayUser.followers.toLocaleString()}
+            value={followStatsLoading ? "..." : displayUser.followers.toLocaleString()}
             color="blue"
           />
           <StatCard
