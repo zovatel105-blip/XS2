@@ -1,17 +1,132 @@
-import React, { useState } from 'react';
-import { Play, Pause, Music } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Pause, Music, Loader2 } from 'lucide-react';
+import audioManager from '../services/AudioManager';
+import realMusicService from '../services/realMusicService';
 
-const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '' }) => {
+const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', autoPlay = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [realPreviewUrl, setRealPreviewUrl] = useState(null);
+  const [error, setError] = useState(null);
+  const mountedRef = useRef(true);
+
+  // Efecto para obtener preview real
+  useEffect(() => {
+    const fetchRealPreview = async () => {
+      if (!music || !music.artist || !music.title) return;
+      
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Primero intentar usar preview_url si ya existe
+        if (music.preview_url) {
+          setRealPreviewUrl(music.preview_url);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Si no, buscar en iTunes
+        const result = await realMusicService.getCachedPreview(music.artist, music.title);
+        
+        if (mountedRef.current) {
+          if (result.success && result.preview_url) {
+            setRealPreviewUrl(result.preview_url);
+            console.log(`✅ Preview real obtenido para ${music.title}:`, result.preview_url);
+          } else {
+            setError('Preview no disponible');
+            console.log(`❌ No hay preview para ${music.title}`);
+          }
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (mountedRef.current) {
+          console.error('Error obteniendo preview:', error);
+          setError('Error cargando audio');
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchRealPreview();
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, [music?.artist, music?.title, music?.preview_url]);
+
+  // Efecto para autoplay
+  useEffect(() => {
+    if (autoPlay && realPreviewUrl && isVisible && !isPlaying) {
+      handlePlay();
+    }
+  }, [autoPlay, realPreviewUrl, isVisible]);
+
+  // Cleanup al desmontar
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   if (!music || !isVisible) {
     return null;
   }
 
-  const handleTogglePlay = () => {
-    setIsPlaying(!isPlaying);
-    if (onTogglePlay) {
-      onTogglePlay(!isPlaying);
+  const handlePlay = async () => {
+    if (!realPreviewUrl) {
+      console.log('❌ No hay URL de preview disponible');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const success = await audioManager.play(realPreviewUrl, {
+        startTime: 0,
+        loop: false
+      });
+
+      if (success && mountedRef.current) {
+        setIsPlaying(true);
+        console.log(`🎵 Reproduciendo: ${music.title} - ${music.artist}`);
+        
+        if (onTogglePlay) {
+          onTogglePlay(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error reproduciendo audio:', error);
+      setError('Error reproduciendo');
+    } finally {
+      if (mountedRef.current) {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handlePause = async () => {
+    try {
+      await audioManager.pause();
+      
+      if (mountedRef.current) {
+        setIsPlaying(false);
+        console.log(`⏸️ Pausado: ${music.title}`);
+        
+        if (onTogglePlay) {
+          onTogglePlay(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error pausando audio:', error);
+    }
+  };
+
+  const handleTogglePlay = async () => {
+    if (isPlaying) {
+      await handlePause();
+    } else {
+      await handlePlay();
     }
   };
 
