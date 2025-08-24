@@ -102,7 +102,20 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: Las imágenes que subi desde un dispositivo móvil no se muestran - necesita solución para que las imágenes subidas localmente se visualicen correctamente en el feed y perfiles.
+user_problem_statement: Resuelve el problema de las miniaturas de video - Las miniaturas de videos subidos no se generan o muestran correctamente en el feed y perfiles.
+
+backend:
+  - task: "Sistema de Generación Automática de Miniaturas de Video"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py, /app/backend/models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "✅ SISTEMA DE GENERACIÓN DE MINIATURAS IMPLEMENTADO COMPLETAMENTE: Desarrollado sistema completo para generar miniaturas automáticamente al subir videos usando OpenCV. IMPLEMENTACIÓN REALIZADA: 1) ✅ DEPENDENCIAS INSTALADAS: Agregadas opencv-python>=4.8.0 y moviepy>=1.0.3 al requirements.txt, instalación exitosa, 2) ✅ FUNCIÓN get_video_info MEJORADA: Reemplazada función básica con implementación completa usando OpenCV, extrae frame del medio del video, genera thumbnail JPG de 800px max, guarda en directorio /thumbnails/, detecta dimensiones reales del video, calcula duración real, 3) ✅ MODELOS ACTUALIZADOS: Agregado campo thumbnail_url a UploadedFile y UploadResponse, soporte completo para almacenar URLs de miniaturas, 4) ✅ ENDPOINT DE ARCHIVOS: Agregado endpoint GET /api/uploads/{category}/thumbnails/{filename} para servir miniaturas via API, validación de categorías, MIME type correcto (image/jpeg), 5) ✅ INTEGRACIÓN CON POLLS: Función get_thumbnail_for_media_url para obtener thumbnails de videos desde DB, actualización automática en respuestas de polls, fallback a media_url si no hay thumbnail, 6) ✅ WORKFLOW COMPLETO: Upload video → OpenCV genera thumbnail → guarda en DB → sirve via API → muestra en polls. SOLUCIÓN AL PROBLEMA: Las miniaturas de video ahora se generan automáticamente usando el frame del medio del video, se almacenan como JPG optimizadas, se sirven correctamente via API, se integran automáticamente en las respuestas de polls. Pendiente testing completo."
 
 backend:
   - task: "Sistema de Subida de Archivos (File Upload)"
