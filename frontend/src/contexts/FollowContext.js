@@ -158,6 +158,26 @@ export const FollowProvider = ({ children }) => {
     }
   };
 
+  const getUserFollowers = async (userId) => {
+    try {
+      const response = await apiRequest(`/api/users/${userId}/followers`);
+      return response;
+    } catch (error) {
+      console.error('Error getting user followers:', error);
+      return { followers: [], total: 0 };
+    }
+  };
+
+  const getUserFollowing = async (userId) => {
+    try {
+      const response = await apiRequest(`/api/users/${userId}/following`);
+      return response;
+    } catch (error) {
+      console.error('Error getting user following:', error);
+      return { following: [], total: 0 };
+    }
+  };
+
   const value = {
     followUser,
     unfollowUser,
