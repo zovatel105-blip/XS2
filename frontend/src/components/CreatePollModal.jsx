@@ -241,7 +241,10 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
           thumbnail_url: opt.media?.type === 'image' ? opt.media?.url : opt.media?.thumbnail_url || null
         })),
         tags: [], // No tags field in current UI
-        category: 'general' // Default category
+        category: 'general', // Default category
+        // New fields for enhanced functionality
+        mentioned_users: mentionedUsers.map(user => user.id),
+        video_playback_settings: getVideosFromOptions().length > 0 ? videoPlaybackSettings : null
       };
 
       // Create poll using API
@@ -263,6 +266,13 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
       ]);
       setSelectedMusic(null);
       setShowMusicSelector(false);
+      setMentionedUsers([]);
+      setVideoPlaybackSettings({
+        playbackMode: 'sequential',
+        autoplay: true,
+        muted: false,
+        loop: false
+      });
       setIsOpen(false);
 
     } catch (error) {
