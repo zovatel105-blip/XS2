@@ -4343,8 +4343,8 @@ def main():
     test_results['user_login'] = test_user_login(base_url)
     test_results['get_current_user'] = test_get_current_user(base_url)
     
-    # PRIORITY TEST FOR VIDEO SYSTEM - MAIN FOCUS
-    test_results['video_system_end_to_end'] = test_video_system_end_to_end(base_url)
+    # PRIORITY TEST FOR REAL MUSIC SYSTEM - MAIN FOCUS
+    test_results['🎵_real_music_system'] = test_real_music_system(base_url)
     
     # Additional essential tests
     test_results['jwt_validation'] = test_jwt_validation(base_url)
@@ -4357,7 +4357,7 @@ def main():
     
     # Print summary
     print("\n" + "=" * 80)
-    print("📊 FINAL TEST RESULTS SUMMARY")
+    print("📊 FINAL TEST RESULTS SUMMARY - REAL MUSIC SYSTEM FOCUS")
     print("=" * 80)
     
     passed_tests = 0
