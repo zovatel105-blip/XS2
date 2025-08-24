@@ -102,7 +102,20 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: Resuelve el problema de las miniaturas de video - Las miniaturas de videos subidos no se generan o muestran correctamente en el feed y perfiles.
+user_problem_statement: CORREGIR BUG DE MENCIONES: Al crear una publicación aparece mencionado el propio usuario (error). Las menciones solo deben de aparecer cuando se menciona a alguien en la página de creación.
+
+backend:
+  - task: "Corrección Bug de Menciones en Publicaciones"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py, /app/backend/models.py, /app/frontend/src/pages/ProfilePage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "✅ BUG DE MENCIONES CORREGIDO COMPLETAMENTE (2025-01-25): Identificado y solucionado problema donde el autor de una publicación aparecía incorrectamente como mencionado. PROBLEMA IDENTIFICADO: En ProfilePage.jsx líneas 474-480, la lógica para determinar menciones verificaba si option.user?.username === displayUser.username, pero option.user es el AUTOR de la opción, no un usuario mencionado. Esto causaba que todas las publicaciones del usuario aparecieran como si el usuario fuera mencionado en ellas. SOLUCIÓN IMPLEMENTADA: 1) ✅ FRONTEND CORREGIDO: Actualizada lógica en ProfilePage.jsx para verificar poll.mentioned_users?.includes(displayUser.id) y option.mentioned_users?.includes(displayUser.id) en lugar de verificar autoría, 2) ✅ BACKEND ACTUALIZADO: Agregado campo mentioned_users a PollResponse model, actualizado endpoint POST /api/polls para incluir mentioned_users en respuesta de options y poll, actualizado endpoint GET /api/polls para incluir mentioned_users en respuesta, actualizado endpoint GET /api/polls/{poll_id} para incluir mentioned_users en respuesta, 3) ✅ ESTRUCTURA CORREGIDA: Ahora las menciones se basan en listas reales de usuarios mencionados (mentioned_users) no en autoría (option.user). RESULTADO: Las menciones ahora funcionan correctamente - solo aparecen cuando un usuario es explícitamente mencionado usando @ en la creación de publicaciones, no cuando es el autor."
 
 backend:
   - task: "Sistema de Generación Automática de Miniaturas de Video"
