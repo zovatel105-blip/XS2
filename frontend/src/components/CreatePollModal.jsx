@@ -61,8 +61,8 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [options, setOptions] = useState([
-    { text: '', media: null },
-    { text: '', media: null }
+    { text: '', media: null, mentionedUsers: [] },
+    { text: '', media: null, mentionedUsers: [] }
   ]);
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
