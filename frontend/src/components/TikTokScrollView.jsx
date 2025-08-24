@@ -69,6 +69,7 @@ const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserCli
 const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCreatePoll, isActive, index, total, showLogo = true }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [audioContextActivated, setAudioContextActivated] = useState(false);
   const navigate = useNavigate();
   const { followUser, unfollowUser, isFollowing, getFollowStatus } = useFollow();
   const { user: currentUser } = useAuth();
