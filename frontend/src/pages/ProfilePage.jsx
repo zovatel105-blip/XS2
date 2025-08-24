@@ -317,8 +317,8 @@ const ProfilePage = () => {
     email: authUser?.email || 'user@example.com',
     bio: authUser?.bio || '🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando',
     avatar: authUser?.avatar_url || null,
-    followers: 1234, // TODO: Get from follow system when implemented
-    following: 567,  // TODO: Get from follow system when implemented
+    followers: followersCount, // Dynamic from follow system
+    following: followingCount,  // Dynamic from follow system
     totalVotes: totalVotesReceived,
     totalLikes: totalLikesReceived,
     totalShares: totalSharesReceived,
