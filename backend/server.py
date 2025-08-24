@@ -1514,6 +1514,33 @@ async def get_video_info(file_path: Path) -> tuple[Optional[int], Optional[int],
         # Return reasonable defaults on error
         return 1280, 720, 30.0
 
+def get_video_thumbnail_url(file_path: str, upload_type: UploadType = UploadType.GENERAL) -> Optional[str]:
+    """Generate thumbnail URL for video files"""
+    try:
+        file_path_obj = Path(file_path)
+        thumbnail_filename = f"{file_path_obj.stem}_thumbnail.jpg"
+        
+        # Map upload type to category for URL generation
+        category_map = {
+            UploadType.AVATAR: "avatars",
+            UploadType.POLL_OPTION: "poll_options", 
+            UploadType.POLL_BACKGROUND: "poll_backgrounds",
+            UploadType.GENERAL: "general"
+        }
+        
+        category = category_map.get(upload_type, "general")
+        
+        # Check if thumbnail file exists
+        thumbnail_path = file_path_obj.parent / "thumbnails" / thumbnail_filename
+        if thumbnail_path.exists():
+            return f"/api/uploads/{category}/thumbnails/{thumbnail_filename}"
+        
+        return None
+        
+    except Exception as e:
+        print(f"Error generating thumbnail URL: {e}")
+        return None
+
 async def save_upload_file(file: UploadFile, file_path: Path) -> int:
     """Save uploaded file to disk and return file size"""
     file_size = 0
