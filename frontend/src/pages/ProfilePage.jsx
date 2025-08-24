@@ -58,8 +58,12 @@ const ProfilePage = () => {
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [tikTokPolls, setTikTokPolls] = useState([]);
   const [initialPollIndex, setInitialPollIndex] = useState(0);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [followStatsLoading, setFollowStatsLoading] = useState(true);
   const { toast } = useToast();
   const { user: authUser, refreshUser } = useAuth();
+  const { getUserFollowers, getUserFollowing } = useFollow();
   const { userId } = useParams();
   const navigate = useNavigate();
   const { shareModal, shareProfile, closeShareModal } = useShare();
