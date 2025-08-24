@@ -298,13 +298,27 @@ async def search_itunes_track(artist: str, track: str):
             'media': 'music',
             'entity': 'song',
             'limit': 1,
-            'country': 'US'  # Can be changed to ES for Spanish market
+            'country': 'US',  # Can be changed to ES for Spanish market
+            'callback': ''  # Disable JSONP to get pure JSON
         }
         
         async with aiohttp.ClientSession() as session:
             async with session.get(url, params=params) as response:
                 if response.status == 200:
-                    data = await response.json()
+                    # Get text and parse as JSON (iTunes returns JSONP by default)
+                    text = await response.text()
+                    
+                    # If it starts with a function call, extract JSON
+                    if text.strip().startswith('(') or 'callback' in text:
+                        # Find JSON part
+                        start = text.find('{')
+                        end = text.rfind('}') + 1
+                        if start >= 0 and end > start:
+                            text = text[start:end]
+                    
+                    import json
+                    data = json.loads(text)
+                    
                     if data.get('results') and len(data['results']) > 0:
                         result = data['results'][0]
                         return {
