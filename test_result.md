@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: EXPANDIR BIBLIOTECA MUSICAL CON ARTISTAS REALES: Expandir la biblioteca musical del creador de contenido para incluir canciones de artistas populares como Morad, Bad Bunny, Karol G y otros artistas urbanos populares en TikTok.
+user_problem_statement: CORRECCIÓN CRÍTICA DE VARIABLES DE ENTORNO: El error es que `import.meta.env.REACT_APP_BACKEND_URL` está undefined. Esto está causando errores en los servicios que intentan hacer requests al backend. Las aplicaciones Create React App solo soportan process.env, no import.meta.env (que es para Vite).
 
 **🎵 ACTUALIZACIÓN CRÍTICA: REPRODUCCIÓN REAL IMPLEMENTADA (2025-01-25)**
 
