@@ -1868,6 +1868,11 @@ async def get_polls(
                 # Keep media_url as relative path for frontend to handle
                 media_url = option.get("media_url")
                 
+                # Get thumbnail URL for videos
+                thumbnail_url = option.get("thumbnail_url")
+                if not thumbnail_url and media_url and option.get("media_type") == "video":
+                    thumbnail_url = await get_thumbnail_for_media_url(media_url)
+                
                 option_dict = {
                     "id": option["id"],
                     "text": option["text"],
@@ -1882,7 +1887,7 @@ async def get_polls(
                     "media": {
                         "type": option.get("media_type"),
                         "url": media_url,
-                        "thumbnail": option.get("thumbnail_url") or media_url
+                        "thumbnail": thumbnail_url or media_url
                     } if media_url else None
                 }
                 options.append(option_dict)
