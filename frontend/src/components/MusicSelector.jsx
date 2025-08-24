@@ -142,7 +142,7 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
 
 const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('Todas');
+  const [activeCategory, setActiveCategory] = useState('Trending');
   const [currentMusic, setCurrentMusic] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -152,6 +152,21 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
     if (searchQuery.trim()) {
       return searchMusic(searchQuery);
     }
+    
+    // Si hay un título de poll, mostrar recomendaciones primero
+    if (pollTitle && activeCategory === 'Trending') {
+      const recommended = getRecommendedMusic(pollTitle);
+      const trending = getTrendingMusic();
+      // Mezclar recomendadas con trending, evitar duplicados
+      const combined = [...recommended];
+      trending.forEach(music => {
+        if (!combined.find(m => m.id === music.id)) {
+          combined.push(music);
+        }
+      });
+      return combined;
+    }
+    
     return getMusicByCategory(activeCategory);
   };
 
@@ -177,11 +192,17 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
     onSelectMusic(music);
   };
 
+  // Obtener categorías principales para mostrar
+  const mainCategories = ['Trending', 'Pop', 'Hip-Hop', 'Electronic', 'Latin', 'Chill'];
+
   return (
     <div className="space-y-3 bg-white">
       {/* Header */}
       <div className="flex items-center justify-between pb-2 border-b">
-        <h3 className="font-bold text-lg">Agregar música</h3>
+        <div className="flex items-center gap-2">
+          <Music className="w-5 h-5 text-gray-700" />
+          <h3 className="font-bold text-lg">Agregar música</h3>
+        </div>
         {selectedMusic && (
           <Button
             variant="ghost"
@@ -198,24 +219,35 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <Input
-          placeholder="Buscar música..."
+          placeholder="Buscar canciones, artistas..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 bg-gray-50 border-0 rounded-full"
         />
       </div>
 
+      {/* Recomendaciones basadas en el título */}
+      {pollTitle && !searchQuery && activeCategory === 'Trending' && (
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-3 border border-purple-100">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-4 h-4 text-purple-500" />
+            <span className="text-sm font-semibold text-purple-700">Recomendado para tu contenido</span>
+          </div>
+          <p className="text-xs text-purple-600">Basado en: "{pollTitle}"</p>
+        </div>
+      )}
+
       {/* Quick categories - Horizontal scroll like TikTok */}
       {!searchQuery && (
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {['Trending', 'Pop', 'Hip-Hop', 'Electronic', 'Rock'].map((category) => (
+          {mainCategories.map((category) => (
             <Button
               key={category}
               variant={activeCategory === category ? "default" : "outline"}
               size="sm"
-              onClick={() => setActiveCategory(category === 'Trending' ? 'Todas' : category)}
+              onClick={() => setActiveCategory(category)}
               className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium ${
-                activeCategory === category || (category === 'Trending' && activeCategory === 'Todas')
+                activeCategory === category
                   ? 'bg-black text-white hover:bg-gray-800' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-0'
               }`}
@@ -227,22 +259,46 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
       )}
 
       {/* Music list - Simple vertical list like Instagram */}
-      <div className="space-y-1 max-h-64 overflow-y-auto">
+      <div className="space-y-1 max-h-80 overflow-y-auto">
         {filteredMusic.length > 0 ? (
-          filteredMusic.map((music) => (
-            <SimpleMusicCard
-              key={music.id}
-              music={music}
-              isSelected={selectedMusic?.id === music.id}
-              isPlaying={currentMusic?.id === music.id && isPlaying}
-              onSelect={handleSelectMusic}
-              onPlay={handlePlay}
-            />
-          ))
+          <>
+            {filteredMusic.map((music) => (
+              <SimpleMusicCard
+                key={music.id}
+                music={music}
+                isSelected={selectedMusic?.id === music.id}
+                isPlaying={currentMusic?.id === music.id && isPlaying}
+                onSelect={handleSelectMusic}
+                onPlay={handlePlay}
+              />
+            ))}
+            
+            {/* Add original sound option at the end */}
+            <div className="border-t pt-2 mt-3">
+              <SimpleMusicCard
+                music={{
+                  id: 'original_sound',
+                  title: 'Sonido Original',
+                  artist: 'Sin música de fondo',
+                  duration: 0,
+                  cover: '/images/original-sound.png',
+                  category: 'Original',
+                  isOriginal: true,
+                  uses: 0,
+                  waveform: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
+                }}
+                isSelected={selectedMusic?.id === 'original_sound'}
+                isPlaying={false}
+                onSelect={handleSelectMusic}
+                onPlay={() => {}} // No play for original sound
+              />
+            </div>
+          </>
         ) : (
           <div className="text-center py-8 text-gray-400">
             <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No hay música disponible</p>
+            <p className="text-sm">No se encontró música</p>
+            <p className="text-xs text-gray-300 mt-1">Intenta con otros términos de búsqueda</p>
           </div>
         )}
       </div>
