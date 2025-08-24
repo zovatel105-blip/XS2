@@ -2332,6 +2332,9 @@ async def get_poll_by_id(
             }
             options.append(option_dict)
     
+    # Get music info if available
+    music_info = await get_music_info(poll.get("music_id")) if poll.get("music_id") else None
+    
     return PollResponse(
         id=poll["id"],
         title=poll["title"],
@@ -2342,7 +2345,7 @@ async def get_poll_by_id(
         likes=poll["likes"],
         shares=poll["shares"],
         comments_count=poll["comments_count"],
-        music=None,  # TODO: Implement music system
+        music=music_info,  # Include music information
         user_vote=user_vote["option_id"] if user_vote else None,
         user_liked=bool(user_like),
         is_featured=poll["is_featured"],
