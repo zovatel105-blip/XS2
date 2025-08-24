@@ -64,6 +64,12 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
           src={images[0]}
           alt={poll.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            console.log('TikTokProfileGrid - Image failed to load:', images[0]);
+            // Fallback to a solid color background
+            e.target.style.display = 'none';
+            e.target.parentElement.style.background = 'linear-gradient(135deg, #1f2937, #111827)';
+          }}
         />
       );
     } else if (images.length === 2) {
@@ -76,6 +82,11 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
               src={img}
               alt={`${poll.title} option ${idx + 1}`}
               className="w-1/2 h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                console.log('TikTokProfileGrid - Image failed to load:', img);
+                e.target.style.display = 'none';
+                e.target.parentElement.style.background = 'linear-gradient(135deg, #1f2937, #111827)';
+              }}
             />
           ))}
         </div>
@@ -88,6 +99,11 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
             src={images[0]}
             alt={`${poll.title} option 1`}
             className="w-2/3 h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              console.log('TikTokProfileGrid - Image failed to load:', images[0]);
+              e.target.style.display = 'none';
+              e.target.parentElement.style.background = 'linear-gradient(135deg, #1f2937, #111827)';
+            }}
           />
           <div className="w-1/3 h-full flex flex-col">
             {images.slice(1, 3).map((img, idx) => (
@@ -96,6 +112,11 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
                 src={img}
                 alt={`${poll.title} option ${idx + 2}`}
                 className="w-full h-1/2 object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  console.log('TikTokProfileGrid - Image failed to load:', img);
+                  e.target.style.display = 'none';
+                  e.target.parentElement.style.background = 'linear-gradient(135deg, #1f2937, #111827)';
+                }}
               />
             ))}
           </div>
@@ -111,6 +132,11 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
               src={img}
               alt={`${poll.title} option ${idx + 1}`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                console.log('TikTokProfileGrid - Image failed to load:', img);
+                e.target.style.display = 'none';
+                e.target.parentElement.style.background = 'linear-gradient(135deg, #1f2937, #111827)';
+              }}
             />
           ))}
         </div>
