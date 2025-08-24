@@ -267,6 +267,9 @@ class Poll(BaseModel):
     tags: List[str] = []
     category: Optional[str] = None
     is_featured: bool = False
+    # New fields for enhanced functionality
+    mentioned_users: List[str] = []  # List of user IDs mentioned in the poll
+    video_playback_settings: Optional[dict] = None  # Video playback configuration
 
 class PollCreate(BaseModel):
     title: str
