@@ -2000,6 +2000,9 @@ async def get_polls(
         if not options or not poll_data.get("title"):
             continue
         
+        # Get music info if available
+        music_info = await get_music_info(poll_data.get("music_id")) if poll_data.get("music_id") else None
+        
         poll_response = PollResponse(
             id=poll_data["id"],
             title=poll_data["title"],
@@ -2010,7 +2013,7 @@ async def get_polls(
             likes=poll_data["likes"],
             shares=poll_data["shares"],
             comments_count=poll_data["comments_count"],
-            music=None,  # TODO: Implement music system
+            music=music_info,  # Include music information
             user_vote=user_votes_dict.get(poll_data["id"]),
             user_liked=poll_data["id"] in liked_poll_ids,
             is_featured=poll_data["is_featured"],
