@@ -340,7 +340,7 @@ async def get_music_info(music_id: str):
     if not music_id:
         return None
     
-    # Music library - Enhanced like TikTok with real artists
+    # Music library - Enhanced like TikTok with real artists and REAL PREVIEW URLS
     music_library = {
         # TRENDING
         'music_trending_1': {
@@ -349,6 +349,7 @@ async def get_music_info(music_id: str):
             'artist': 'Morad',
             'duration': 195,
             'url': '/music/morad-la-botella.mp3',
+            'preview_url': None,  # Will be fetched from iTunes
             'cover': 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
             'category': 'Trending',
             'isOriginal': False,
@@ -361,6 +362,7 @@ async def get_music_info(music_id: str):
             'artist': 'Bad Bunny',
             'duration': 208,
             'url': '/music/bad-bunny-verano.mp3',
+            'preview_url': None,  # Will be fetched from iTunes
             'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
             'category': 'Trending',
             'isOriginal': False,
@@ -373,6 +375,7 @@ async def get_music_info(music_id: str):
             'artist': 'Karol G ft. Shakira',
             'duration': 192,
             'url': '/music/karol-g-tqg.mp3',
+            'preview_url': None,  # Will be fetched from iTunes
             'cover': 'https://images.unsplash.com/photo-1520262494112-9fe481d36ec3?w=400&h=400&fit=crop&crop=center',
             'category': 'Trending',
             'isOriginal': False,
@@ -387,6 +390,7 @@ async def get_music_info(music_id: str):
             'artist': 'Bad Bunny x Chencho Corleone',
             'duration': 178,
             'url': '/music/bad-bunny-me-porto-bonito.mp3',
+            'preview_url': 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2c/7a/80/2c7a8014-6ff1-88a5-d3df-39125a23546a/mzaf_4090450781883707192.plus.aac.p.m4a',  # REAL PREVIEW!
             'cover': 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
             'category': 'Reggaeton',
             'isOriginal': False,
