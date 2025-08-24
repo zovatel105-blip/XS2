@@ -25,10 +25,22 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
     }
 
     return poll.options.map(option => {
+      // Debug log to see what data we're getting
+      console.log('TikTokProfileGrid - Processing option:', {
+        hasMedia: !!option.media,
+        mediaType: option.media?.type,
+        hasUrl: !!option.media?.url,
+        hasThumbnail: !!option.media?.thumbnail,
+        thumbnailValue: option.media?.thumbnail,
+        urlValue: option.media?.url
+      });
+
       if (option.media) {
         // For videos, prefer thumbnail over the video URL
         if (option.media.type === 'video') {
-          return option.media.thumbnail || option.media.url;
+          const thumbnail = option.media.thumbnail || option.media.url;
+          console.log('TikTokProfileGrid - Using video thumbnail:', thumbnail);
+          return thumbnail;
         }
         // For images, use thumbnail first, then URL
         if (option.media.thumbnail) {
