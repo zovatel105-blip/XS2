@@ -292,87 +292,168 @@ async def get_music_info(music_id: str):
     if not music_id:
         return None
     
-    # Music library - could be from database or external service
+    # Music library - Enhanced like TikTok
     music_library = {
-        'music_1': {
-            'id': 'music_1',
-            'title': 'Style & Fashion',
-            'artist': 'Fashion Beats',
+        # TRENDING
+        'music_trending_1': {
+            'id': 'music_trending_1',
+            'title': 'Aesthetic Vibes',
+            'artist': 'TrendyBeats',
             'duration': 30,
-            'url': '/music/style-fashion.mp3',
+            'url': '/music/aesthetic-vibes.mp3',
             'cover': 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
-            'category': 'Moda',
-            'isOriginal': False
+            'category': 'Trending',
+            'isOriginal': False,
+            'isTrending': True,
+            'uses': 2500000
         },
-        'music_2': {
-            'id': 'music_2',
-            'title': 'Cooking Vibes',
-            'artist': 'Kitchen Beats',
+        'music_trending_2': {
+            'id': 'music_trending_2',
+            'title': 'Viral Dance Beat',
+            'artist': 'ViralHits',
             'duration': 45,
-            'url': '/music/cooking-vibes.mp3',
-            'cover': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&crop=center',
-            'category': 'Comida',
-            'isOriginal': True
-        },
-        'music_3': {
-            'id': 'music_3',
-            'title': 'Dance Revolution 2025',
-            'artist': 'DJ TikTok',
-            'duration': 60,
-            'url': '/music/dance-revolution.mp3',
+            'url': '/music/viral-dance.mp3',
             'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
-            'category': 'Baile',
-            'isOriginal': False
+            'category': 'Trending',
+            'isOriginal': False,
+            'isTrending': True,
+            'uses': 1800000
         },
-        'music_4': {
-            'id': 'music_4',
-            'title': 'Summer Vibes',
-            'artist': 'Chill Master',
-            'duration': 38,
-            'url': '/music/summer-vibes.mp3',
+        'music_trending_3': {
+            'id': 'music_trending_3',
+            'title': 'Chill Aesthetic',
+            'artist': 'ChillVibesOnly',
+            'duration': 40,
+            'url': '/music/chill-aesthetic.mp3',
             'cover': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center',
-            'category': 'Chill',
-            'isOriginal': False
+            'category': 'Trending',
+            'isOriginal': True,
+            'isTrending': True,
+            'uses': 950000
         },
-        'music_5': {
-            'id': 'music_5',
-            'title': 'Urban Beat',
-            'artist': 'City Sounds',
-            'duration': 52,
-            'url': '/music/urban-beat.mp3',
-            'cover': 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
-            'category': 'Hip Hop',
-            'isOriginal': False
-        },
-        'music_6': {
-            'id': 'music_6',
-            'title': 'Acoustic Dream',
-            'artist': 'Folk Vibes',
-            'duration': 42,
-            'url': '/music/acoustic-dream.mp3',
-            'cover': 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
-            'category': 'Acústico',
-            'isOriginal': True
-        },
-        'music_7': {
-            'id': 'music_7',
-            'title': 'Electronic Pulse',
-            'artist': 'Synth Wave',
-            'duration': 48,
-            'url': '/music/electronic-pulse.mp3',
-            'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
-            'category': 'Electrónica',
-            'isOriginal': False
-        },
-        'music_8': {
-            'id': 'music_8',
+        
+        # POP
+        'music_pop_1': {
+            'id': 'music_pop_1',
             'title': 'Pop Sensation',
             'artist': 'Chart Toppers',
             'duration': 35,
             'url': '/music/pop-sensation.mp3',
             'cover': 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
             'category': 'Pop',
-            'isOriginal': False
+            'isOriginal': False,
+            'uses': 750000
+        },
+        'music_pop_2': {
+            'id': 'music_pop_2',
+            'title': 'Bubblegum Dreams',
+            'artist': 'Sweet Melody',
+            'duration': 32,
+            'url': '/music/bubblegum-dreams.mp3',
+            'cover': 'https://images.unsplash.com/photo-1520262494112-9fe481d36ec3?w=400&h=400&fit=crop&crop=center',
+            'category': 'Pop',
+            'isOriginal': False,
+            'uses': 420000
+        },
+        
+        # HIP-HOP
+        'music_hiphop_1': {
+            'id': 'music_hiphop_1',
+            'title': 'Urban Beat',
+            'artist': 'City Sounds',
+            'duration': 52,
+            'url': '/music/urban-beat.mp3',
+            'cover': 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
+            'category': 'Hip-Hop',
+            'isOriginal': False,
+            'uses': 680000
+        },
+        'music_hiphop_2': {
+            'id': 'music_hiphop_2',
+            'title': 'Street Rhythm',
+            'artist': 'Underground Kings',
+            'duration': 48,
+            'url': '/music/street-rhythm.mp3',
+            'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
+            'category': 'Hip-Hop',
+            'isOriginal': True,
+            'uses': 330000
+        },
+        
+        # ELECTRONIC
+        'music_electronic_1': {
+            'id': 'music_electronic_1',
+            'title': 'Electronic Pulse',
+            'artist': 'Synth Wave',
+            'duration': 48,
+            'url': '/music/electronic-pulse.mp3',
+            'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
+            'category': 'Electronic',
+            'isOriginal': False,
+            'uses': 520000
+        },
+        'music_electronic_2': {
+            'id': 'music_electronic_2',
+            'title': 'Neon Nights',
+            'artist': 'CyberBeats',
+            'duration': 55,
+            'url': '/music/neon-nights.mp3',
+            'cover': 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop&crop=center',
+            'category': 'Electronic',
+            'isOriginal': True,
+            'uses': 290000
+        },
+        
+        # LATIN
+        'music_latin_1': {
+            'id': 'music_latin_1',
+            'title': 'Reggaeton Flow',
+            'artist': 'Latino Beats',
+            'duration': 42,
+            'url': '/music/reggaeton-flow.mp3',
+            'cover': 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop&crop=center',
+            'category': 'Latin',
+            'isOriginal': False,
+            'uses': 850000
+        },
+        
+        # CHILL
+        'music_chill_1': {
+            'id': 'music_chill_1',
+            'title': 'Summer Vibes',
+            'artist': 'Chill Master',
+            'duration': 38,
+            'url': '/music/summer-vibes.mp3',
+            'cover': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center',
+            'category': 'Chill',
+            'isOriginal': False,
+            'uses': 640000
+        },
+        
+        # DANCE
+        'music_dance_1': {
+            'id': 'music_dance_1',
+            'title': 'Dance Revolution 2025',
+            'artist': 'DJ TikTok',
+            'duration': 60,
+            'url': '/music/dance-revolution.mp3',
+            'cover': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
+            'category': 'Dance',
+            'isOriginal': False,
+            'uses': 1200000
+        },
+        
+        # ORIGINAL SOUND
+        'original_sound': {
+            'id': 'original_sound',
+            'title': 'Sonido Original',
+            'artist': 'Sin música de fondo',
+            'duration': 0,
+            'url': '',
+            'cover': '/images/original-sound.png',
+            'category': 'Original',
+            'isOriginal': True,
+            'uses': 0
         }
     }
     
