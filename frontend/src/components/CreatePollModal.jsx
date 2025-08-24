@@ -103,6 +103,39 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
     setOptions(newOptions);
   };
 
+  // Handle user mention selection
+  const handleMentionSelect = (user) => {
+    setMentionedUsers(prev => {
+      const exists = prev.find(u => u.id === user.id);
+      if (!exists) {
+        return [...prev, user];
+      }
+      return prev;
+    });
+    
+    toast({
+      title: "Usuario mencionado",
+      description: `@${user.username} será notificado cuando publiques`,
+    });
+  };
+
+  // Remove mentioned user
+  const removeMentionedUser = (userId) => {
+    setMentionedUsers(prev => prev.filter(u => u.id !== userId));
+  };
+
+  // Handle video playback settings change
+  const handleVideoPlaybackSettingsChange = (settings) => {
+    setVideoPlaybackSettings(settings);
+  };
+
+  // Get videos from options
+  const getVideosFromOptions = () => {
+    return options
+      .filter(option => option.media && option.media.type === 'video')
+      .map(option => option.media);
+  };
+
   const handleFileUpload = async (index, file) => {
     try {
       const isVideo = file.type.startsWith('video/');
