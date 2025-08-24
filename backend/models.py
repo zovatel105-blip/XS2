@@ -362,6 +362,7 @@ class UploadResponse(BaseModel):
     file_format: str
     file_size: int
     public_url: str
+    thumbnail_url: Optional[str] = None
     width: Optional[int] = None
     height: Optional[int] = None
     duration: Optional[float] = None
