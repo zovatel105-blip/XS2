@@ -275,18 +275,39 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                 touchAction: 'manipulation'
               }}
             >
-              {/* Background image/color - Perfect coverage */}
+              {/* Background image/video - Perfect coverage */}
               <div className="absolute inset-0 w-full h-full">
                 {option.media?.url ? (
-                  <img 
-                    src={option.media.url} 
-                    alt={option.text}
-                    className="w-full h-full object-cover object-center"
-                    style={{ 
-                      objectFit: 'cover',
-                      objectPosition: 'center'
-                    }}
-                  />
+                  option.media?.type === 'video' ? (
+                    <>
+                      {/* Video thumbnail */}
+                      <img 
+                        src={option.media.thumbnail || option.media.url} 
+                        alt={option.text}
+                        className="w-full h-full object-cover object-center"
+                        style={{ 
+                          objectFit: 'cover',
+                          objectPosition: 'center'
+                        }}
+                      />
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                        <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                          <Play className="w-6 h-6 text-black ml-0.5" />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <img 
+                      src={option.media.url} 
+                      alt={option.text}
+                      className="w-full h-full object-cover object-center"
+                      style={{ 
+                        objectFit: 'cover',
+                        objectPosition: 'center'
+                      }}
+                    />
+                  )
                 ) : (
                   <div className={cn(
                     "w-full h-full",
