@@ -278,15 +278,14 @@ export const musicLibrary = [
 
 export const musicCategories = [
   'Todas',
-  'Trending',
-  'Pop',
+  'Trending', 
+  'Reggaeton',
+  'Trap',
+  'Urbano Español',
+  'Pop Latino',
   'Hip-Hop',
   'Electronic', 
-  'Rock',
-  'Latin',
   'Chill',
-  'Acoustic',
-  'Dance',
   'Original'
 ];
 
