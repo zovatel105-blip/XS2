@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: CORREGIR BUG DE MENCIONES: Al crear una publicación aparece mencionado el propio usuario (error). Las menciones solo deben de aparecer cuando se menciona a alguien en la página de creación.
+user_problem_statement: ELIMINAR REPRODUCTOR DE MÚSICA SUPERIOR: Eliminar el reproductor de música superior del feed dejando solo el de abajo.
 
 backend:
   - task: "Corrección Bug de Menciones en Publicaciones"
