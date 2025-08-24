@@ -749,8 +749,8 @@ const ProfilePage = () => {
         {/* Progress Bar - Removed gamification stats */}
 
         {/* Content Tabs */}
-        <Tabs defaultValue="polls" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="polls" className="space-y-6" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="polls" className="flex items-center justify-center">
               <Grid3X3 className="w-5 h-5" />
             </TabsTrigger>
@@ -762,6 +762,12 @@ const ProfilePage = () => {
             </TabsTrigger>
             <TabsTrigger value="saved" className="flex items-center justify-center">
               <Bookmark className="w-5 h-5" />
+            </TabsTrigger>
+            <TabsTrigger value="followers" className="flex items-center justify-center">
+              <UserPlus className="w-5 h-5" />
+            </TabsTrigger>
+            <TabsTrigger value="following" className="flex items-center justify-center">
+              <UserCheck className="w-5 h-5" />
             </TabsTrigger>
           </TabsList>
 
