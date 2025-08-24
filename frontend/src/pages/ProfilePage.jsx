@@ -16,6 +16,7 @@ import { Settings, Users, Vote, Trophy, Heart, Share, ArrowLeft, AtSign, Bookmar
 import pollService from '../services/pollService';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
+import { useFollow } from '../contexts/FollowContext';
 import { useShare } from '../hooks/useShare';
 import { cn } from '../lib/utils';
 
