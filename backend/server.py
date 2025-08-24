@@ -1967,9 +1967,15 @@ async def create_poll(
     # Insert into database
     await db.polls.insert_one(poll.dict())
     
-    # TODO: Send notifications to mentioned users
-    if poll_data.mentioned_users:
-        await send_mention_notifications(poll_data.mentioned_users, poll.id, current_user)
+    # Send notifications to mentioned users (both general and option-specific)
+    all_mentioned_users = set(poll_data.mentioned_users)
+    
+    # Collect mentioned users from all options
+    for option in options:
+        all_mentioned_users.update(option.mentioned_users)
+    
+    if all_mentioned_users:
+        await send_mention_notifications(list(all_mentioned_users), poll.id, current_user)
     
     # Return poll response
     options_response = []
