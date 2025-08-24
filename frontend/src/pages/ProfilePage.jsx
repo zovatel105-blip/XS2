@@ -662,7 +662,7 @@ const ProfilePage = () => {
           <StatCard
             icon={Users}
             label="Siguiendo"
-            value={displayUser.following}
+            value={followStatsLoading ? "..." : displayUser.following}
             color="purple"
           />
         </div>
