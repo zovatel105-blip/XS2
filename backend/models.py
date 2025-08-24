@@ -275,6 +275,9 @@ class PollCreate(BaseModel):
     music_id: Optional[str] = None
     tags: List[str] = []
     category: Optional[str] = None
+    # New fields for enhanced functionality
+    mentioned_users: List[str] = []  # List of user IDs mentioned in the poll
+    video_playback_settings: Optional[dict] = None  # Video playback configuration
 
 class PollResponse(BaseModel):
     id: str
