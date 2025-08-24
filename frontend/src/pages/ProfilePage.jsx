@@ -749,6 +749,8 @@ const ProfilePage = () => {
             label="Seguidores"
             value={followStatsLoading ? "..." : displayUser.followers.toLocaleString()}
             color="blue"
+            clickable={!followStatsLoading}
+            onClick={handleFollowersClick}
           />
           <StatCard
             icon={Vote}
@@ -767,6 +769,8 @@ const ProfilePage = () => {
             label="Siguiendo"
             value={followStatsLoading ? "..." : displayUser.following}
             color="purple"
+            clickable={!followStatsLoading}
+            onClick={handleFollowingClick}
           />
         </div>
 
