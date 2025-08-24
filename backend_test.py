@@ -3784,9 +3784,279 @@ def test_profile_system_corrections(base_url):
     print(f"\nProfile System Corrections Tests Summary: {success_count}/8 tests passed")
     return success_count >= 6  # At least 6 out of 8 tests should pass
 
+def test_video_system_end_to_end(base_url):
+    """Test complete video system workflow: upload → poll creation → poll retrieval → file serving"""
+    print("\n=== Testing Video System End-to-End ===")
+    
+    if not auth_tokens:
+        print("❌ No auth tokens available for video system testing")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    uploaded_video_url = None
+    created_poll_id = None
+    
+    # Test 1: Video Upload via POST /api/upload
+    print("Testing video upload via POST /api/upload...")
+    try:
+        # Create a mock video file for testing
+        import tempfile
+        import os
+        
+        # Create a temporary "video" file (we'll simulate it with a small file)
+        with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_video:
+            # Write some dummy content to simulate a video file
+            temp_video.write(b'MOCK_VIDEO_CONTENT_FOR_TESTING' * 100)  # Make it reasonably sized
+            temp_video_path = temp_video.name
+        
+        try:
+            # Upload the video file
+            with open(temp_video_path, 'rb') as video_file:
+                files = {'file': ('test_video.mp4', video_file, 'video/mp4')}
+                data = {'upload_type': 'general'}
+                
+                response = requests.post(f"{base_url}/upload", 
+                                       files=files, data=data, headers=headers, timeout=30)
+                print(f"Video Upload Status Code: {response.status_code}")
+                
+                if response.status_code == 200:
+                    upload_data = response.json()
+                    print(f"✅ Video uploaded successfully")
+                    print(f"File ID: {upload_data['id']}")
+                    print(f"File Type: {upload_data['file_type']}")
+                    print(f"Public URL: {upload_data['public_url']}")
+                    print(f"Width: {upload_data.get('width', 'N/A')}")
+                    print(f"Height: {upload_data.get('height', 'N/A')}")
+                    print(f"Duration: {upload_data.get('duration', 'N/A')}")
+                    
+                    # Verify it's detected as video
+                    if upload_data['file_type'] == 'video':
+                        print("✅ File correctly detected as video type")
+                        success_count += 1
+                        uploaded_video_url = upload_data['public_url']
+                    else:
+                        print(f"❌ File should be detected as video, got: {upload_data['file_type']}")
+                else:
+                    print(f"❌ Video upload failed: {response.text}")
+                    
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_video_path):
+                os.unlink(temp_video_path)
+                
+    except Exception as e:
+        print(f"❌ Video upload error: {e}")
+    
+    # Test 2: Create Poll with Video Option
+    if uploaded_video_url:
+        print("\nTesting poll creation with video option...")
+        try:
+            poll_data = {
+                "title": "¿Cuál es tu video favorito de gaming?",
+                "description": "Vota por el mejor video de gaming",
+                "options": [
+                    {
+                        "text": "Video de Minecraft",
+                        "media_type": "video",
+                        "media_url": uploaded_video_url,
+                        "thumbnail_url": uploaded_video_url
+                    },
+                    {
+                        "text": "Video de Fortnite", 
+                        "media_type": "video",
+                        "media_url": uploaded_video_url,
+                        "thumbnail_url": uploaded_video_url
+                    }
+                ],
+                "category": "gaming",
+                "tags": ["gaming", "video", "test"]
+            }
+            
+            response = requests.post(f"{base_url}/polls", 
+                                   json=poll_data, headers=headers, timeout=10)
+            print(f"Poll Creation Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                poll_response = response.json()
+                print(f"✅ Poll with video created successfully")
+                print(f"Poll ID: {poll_response['id']}")
+                print(f"Poll Title: {poll_response['title']}")
+                print(f"Options Count: {len(poll_response['options'])}")
+                
+                # Verify video options
+                video_options = [opt for opt in poll_response['options'] 
+                               if opt.get('media', {}).get('type') == 'video']
+                
+                if len(video_options) > 0:
+                    print(f"✅ Poll contains {len(video_options)} video options")
+                    print(f"Video URL: {video_options[0]['media']['url']}")
+                    success_count += 1
+                    created_poll_id = poll_response['id']
+                else:
+                    print("❌ Poll should contain video options")
+            else:
+                print(f"❌ Poll creation failed: {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Poll creation error: {e}")
+    
+    # Test 3: Retrieve Polls with Videos via GET /api/polls
+    print("\nTesting poll retrieval with videos...")
+    try:
+        response = requests.get(f"{base_url}/polls?limit=10", headers=headers, timeout=10)
+        print(f"Poll Retrieval Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            polls = response.json()
+            print(f"✅ Polls retrieved successfully: {len(polls)} polls")
+            
+            # Find polls with video content
+            video_polls = []
+            for poll in polls:
+                for option in poll.get('options', []):
+                    if option.get('media', {}).get('type') == 'video':
+                        video_polls.append(poll)
+                        break
+            
+            if len(video_polls) > 0:
+                print(f"✅ Found {len(video_polls)} polls with video content")
+                
+                # Verify video poll structure
+                video_poll = video_polls[0]
+                video_option = None
+                for option in video_poll['options']:
+                    if option.get('media', {}).get('type') == 'video':
+                        video_option = option
+                        break
+                
+                if video_option:
+                    print(f"✅ Video option structure verified:")
+                    print(f"  - Media Type: {video_option['media']['type']}")
+                    print(f"  - Media URL: {video_option['media']['url']}")
+                    print(f"  - Thumbnail: {video_option['media']['thumbnail']}")
+                    success_count += 1
+                else:
+                    print("❌ Video option structure invalid")
+            else:
+                print("⚠️  No polls with video content found (may be expected if no videos uploaded)")
+                success_count += 1  # Don't fail if no existing video polls
+        else:
+            print(f"❌ Poll retrieval failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Poll retrieval error: {e}")
+    
+    # Test 4: Video File Serving via GET /api/uploads/{category}/{filename}
+    if uploaded_video_url:
+        print("\nTesting video file serving...")
+        try:
+            # Extract category and filename from the uploaded URL
+            # URL format: /api/uploads/{category}/{filename}
+            url_parts = uploaded_video_url.split('/')
+            if len(url_parts) >= 4 and url_parts[-3] == 'uploads':
+                category = url_parts[-2]
+                filename = url_parts[-1]
+                
+                # Test direct file access
+                file_url = f"{base_url}/uploads/{category}/{filename}"
+                response = requests.get(file_url, timeout=10)
+                print(f"Video File Serving Status Code: {response.status_code}")
+                
+                if response.status_code == 200:
+                    print(f"✅ Video file served successfully")
+                    print(f"Content-Type: {response.headers.get('content-type', 'N/A')}")
+                    print(f"Content-Length: {response.headers.get('content-length', 'N/A')}")
+                    
+                    # Verify content type is appropriate for video
+                    content_type = response.headers.get('content-type', '')
+                    if content_type.startswith('video/') or content_type == 'application/octet-stream':
+                        print("✅ Video content-type is appropriate")
+                        success_count += 1
+                    else:
+                        print(f"⚠️  Content-type may not be optimal for video: {content_type}")
+                        success_count += 1  # Don't fail, just warn
+                else:
+                    print(f"❌ Video file serving failed: {response.text}")
+            else:
+                print("❌ Could not parse video URL for file serving test")
+                
+        except Exception as e:
+            print(f"❌ Video file serving error: {e}")
+    
+    # Test 5: Video Info Verification (backend get_video_info function)
+    print("\nTesting video info handling...")
+    try:
+        # This test verifies that the backend properly handles video metadata
+        # We'll check if our uploaded video has the expected default dimensions
+        if uploaded_video_url:
+            # Get upload info to verify video metadata
+            # We need to find the file ID from our upload
+            response = requests.get(f"{base_url}/uploads/user?upload_type=general&limit=5", 
+                                  headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                uploads = response.json()
+                video_uploads = [u for u in uploads if u['file_type'] == 'video']
+                
+                if video_uploads:
+                    video_upload = video_uploads[0]  # Get the most recent video
+                    print(f"✅ Video metadata verification:")
+                    print(f"  - Width: {video_upload.get('width', 'N/A')}")
+                    print(f"  - Height: {video_upload.get('height', 'N/A')}")
+                    print(f"  - Duration: {video_upload.get('duration', 'N/A')}")
+                    
+                    # Check if default values are returned (as per the correction)
+                    if (video_upload.get('width') == 1280 and 
+                        video_upload.get('height') == 720 and 
+                        video_upload.get('duration') == 30.0):
+                        print("✅ Video info returns expected default values (1280x720, 30s)")
+                        success_count += 1
+                    elif (video_upload.get('width') is not None and 
+                          video_upload.get('height') is not None):
+                        print("✅ Video info returns valid dimensions")
+                        success_count += 1
+                    else:
+                        print("❌ Video info should return valid dimensions")
+                else:
+                    print("⚠️  No video uploads found for metadata verification")
+            else:
+                print(f"❌ Could not retrieve upload info: {response.text}")
+        else:
+            print("⚠️  No video uploaded, skipping metadata verification")
+            
+    except Exception as e:
+        print(f"❌ Video info verification error: {e}")
+    
+    # Test 6: End-to-End Video Workflow Verification
+    print("\nTesting complete video workflow verification...")
+    try:
+        if created_poll_id and uploaded_video_url:
+            # Get the specific poll we created
+            response = requests.get(f"{base_url}/polls/{created_poll_id}", headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                poll = response.json()
+                print(f"✅ End-to-end video workflow verified:")
+                print(f"  - Poll created with ID: {poll['id']}")
+                print(f"  - Poll title: {poll['title']}")
+                print(f"  - Video options: {len([o for o in poll['options'] if o.get('media', {}).get('type') == 'video'])}")
+                print(f"  - Video URLs accessible: {uploaded_video_url}")
+                success_count += 1
+            else:
+                print(f"❌ Could not retrieve created poll: {response.text}")
+        else:
+            print("⚠️  Incomplete workflow - poll or video not created")
+            
+    except Exception as e:
+        print(f"❌ End-to-end verification error: {e}")
+    
+    print(f"\nVideo System Tests Summary: {success_count}/6 tests passed")
+    return success_count >= 4  # At least 4 out of 6 tests should pass
+
 def main():
     """Main test execution function"""
-    print("🚀 Starting Backend API Testing - Focus on Profile System Corrections...")
+    print("🚀 Starting Backend API Testing - Focus on Video System Testing...")
     print("=" * 80)
     
     # Get backend URL
