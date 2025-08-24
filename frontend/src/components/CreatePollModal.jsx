@@ -309,18 +309,15 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8 py-4 sm:py-8 px-2">
-          {/* Título con soporte para menciones */}
           <div className="space-y-2 sm:space-y-4">
-            <Label htmlFor="title" className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+            <Label htmlFor="title" className="text-lg sm:text-xl font-bold text-gray-900">
               ¿Qué quieres preguntar?
-              <AtSign className="w-5 h-5 text-purple-500" />
             </Label>
-            <UserMentionInput
+            <Textarea
               id="title"
-              placeholder="Escribe tu pregunta aquí... Usa @ para mencionar usuarios. Sé creativo y haz que sea interesante para tu audiencia"
+              placeholder="Escribe tu pregunta aquí... Sé creativo y haz que sea interesante para tu audiencia"
               value={title}
-              onChange={setTitle}
-              onMentionSelect={handleMentionSelect}
+              onChange={(e) => setTitle(e.target.value)}
               className="min-h-[100px] sm:min-h-[120px] resize-none border-2 border-gray-200 focus:ring-2 focus:ring-gray-400 focus:border-transparent rounded-2xl text-base sm:text-lg p-4 sm:p-6 bg-gray-50"
             />
           </div>
