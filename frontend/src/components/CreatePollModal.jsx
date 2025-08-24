@@ -230,6 +230,7 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
         title: title.trim(),
         description: null, // No description field in current UI
         options: processedOptions,
+        music_id: selectedMusic?.id || null, // Add selected music
         tags: [], // No tags field in current UI
         category: 'general', // Default category
         // All mentioned users from all options
