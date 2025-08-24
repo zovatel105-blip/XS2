@@ -227,13 +227,13 @@ const UserMentionInput = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-gray-900">@{user.username}</span>
-                      {user.verified && (
+                      {user.is_verified && (
                         <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
                           <div className="w-2 h-2 bg-white rounded-full"></div>
                         </div>
                       )}
                     </div>
-                    <div className="text-sm text-gray-500 truncate">{user.displayName}</div>
+                    <div className="text-sm text-gray-500 truncate">{user.display_name}</div>
                   </div>
                 </button>
               ))}
