@@ -231,19 +231,30 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
 
     try {
       // Prepare poll data for API
-      const pollData = {
-        title: title.trim(),
-        description: null, // No description field in current UI
-        options: validOptions.map(opt => ({
+      const allMentionedUsers = [];
+      const processedOptions = validOptions.map(opt => {
+        // Collect mentioned users from this option
+        if (opt.mentionedUsers) {
+          allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
+        }
+        
+        return {
           text: opt.text.trim(),
           media_type: opt.media?.type || null,
           media_url: opt.media?.url || null,
-          thumbnail_url: opt.media?.type === 'image' ? opt.media?.url : opt.media?.thumbnail_url || null
-        })),
+          thumbnail_url: opt.media?.type === 'image' ? opt.media?.url : opt.media?.thumbnail_url || null,
+          mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
+        };
+      });
+
+      const pollData = {
+        title: title.trim(),
+        description: null, // No description field in current UI
+        options: processedOptions,
         tags: [], // No tags field in current UI
         category: 'general', // Default category
-        // New fields for enhanced functionality
-        mentioned_users: mentionedUsers.map(user => user.id),
+        // All mentioned users from all options
+        mentioned_users: [...new Set(allMentionedUsers)], // Remove duplicates
         video_playback_settings: getVideosFromOptions().length > 0 ? videoPlaybackSettings : null
       };
 
