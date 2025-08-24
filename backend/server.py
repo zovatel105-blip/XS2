@@ -500,6 +500,102 @@ async def get_music_info(music_id: str):
     
     return music_library.get(music_id)
 
+# =============  REAL MUSIC PREVIEW ENDPOINTS =============
+
+@api_router.get("/music/search")
+async def search_music_preview(
+    artist: str,
+    track: Optional[str] = None,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Search for real music preview using iTunes API"""
+    try:
+        # If no track specified, use first word of artist as track
+        search_track = track or artist.split()[0] if artist else ""
+        
+        itunes_result = await search_itunes_track(artist, search_track)
+        
+        if itunes_result and itunes_result['preview_url']:
+            return {
+                'success': True,
+                'music': {
+                    'id': f"itunes_{itunes_result['iTunes_id']}",
+                    'title': itunes_result['track_name'],
+                    'artist': itunes_result['artist_name'],
+                    'preview_url': itunes_result['preview_url'],
+                    'cover': itunes_result['artwork_url'],
+                    'duration': 30,  # iTunes previews are 30 seconds
+                    'category': itunes_result['genre'],
+                    'isOriginal': False,
+                    'source': 'iTunes'
+                }
+            }
+        else:
+            return {
+                'success': False,
+                'message': 'No preview found',
+                'music': None
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error searching music: {str(e)}")
+
+@api_router.get("/music/library-with-previews")
+async def get_music_library_with_real_previews(
+    limit: int = 20,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get music library with real iTunes preview URLs"""
+    
+    # Define popular songs to fetch real previews for
+    popular_songs = [
+        {'artist': 'Morad', 'track': 'LA BOTELLA'},
+        {'artist': 'Bad Bunny', 'track': 'Un Verano Sin Ti'},
+        {'artist': 'Karol G', 'track': 'TQG'},
+        {'artist': 'Bad Bunny', 'track': 'Me Porto Bonito'},
+        {'artist': 'Karol G', 'track': 'Provenza'},
+        {'artist': 'Feid', 'track': 'FERXXO 100'},
+        {'artist': 'Quevedo', 'track': 'BZRP Music Sessions 52'},
+        {'artist': 'Morad', 'track': 'MOTOROLA'},
+        {'artist': 'Morad', 'track': 'DURMIENDO EN EL SUELO'},
+        {'artist': 'Becky G', 'track': 'MAMIII'},
+        {'artist': 'Rosalía', 'track': 'Despechá'},
+        {'artist': 'Bad Bunny', 'track': 'Tití Me Preguntó'}
+    ]
+    
+    music_with_previews = []
+    
+    # Fetch real previews from iTunes
+    for song_info in popular_songs[:limit]:
+        itunes_result = await search_itunes_track(song_info['artist'], song_info['track'])
+        
+        if itunes_result and itunes_result['preview_url']:
+            music_with_previews.append({
+                'id': f"real_{itunes_result['iTunes_id']}",
+                'title': itunes_result['track_name'],
+                'artist': itunes_result['artist_name'],
+                'preview_url': itunes_result['preview_url'],  # REAL 30-second preview
+                'cover': itunes_result['artwork_url'],
+                'duration': 30,
+                'category': itunes_result['genre'] or 'Urban',
+                'isOriginal': False,
+                'isTrending': True,
+                'uses': 8500000,  # Mock usage count
+                'source': 'iTunes',
+                'waveform': [0.8, 0.9, 0.7, 0.9, 0.8, 1.0, 0.6, 0.9, 0.8, 0.7, 0.9, 0.8, 1.0, 0.7, 0.9, 0.8, 0.6, 0.9, 0.8, 0.7]
+            })
+        
+        # Limit concurrent requests to avoid rate limiting
+        if len(music_with_previews) >= 5:
+            await asyncio.sleep(0.1)
+    
+    return {
+        'music': music_with_previews,
+        'total': len(music_with_previews),
+        'has_real_previews': True,
+        'source': 'iTunes Search API'
+    }
+
 # =============  MUSIC ENDPOINTS =============
 
 @api_router.get("/music/library", response_model=List[dict])
