@@ -2095,6 +2095,9 @@ async def create_poll(
         }
         options_response.append(option_dict)
     
+    # Get music info if available
+    music_info = await get_music_info(poll.music_id) if poll.music_id else None
+    
     return PollResponse(
         id=poll.id,
         title=poll.title,
@@ -2105,7 +2108,7 @@ async def create_poll(
         likes=poll.likes,
         shares=poll.shares,
         comments_count=poll.comments_count,
-        music=None,
+        music=music_info,  # Include music information
         user_vote=None,
         user_liked=False,
         is_featured=poll.is_featured,
