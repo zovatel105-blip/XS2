@@ -78,16 +78,40 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
             )}
           </div>
         </div>
+        
+        {/* Trending badge */}
+        {music.isTrending && (
+          <div className="absolute -top-1 -right-1">
+            <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+              <TrendingUp className="w-2 h-2 text-white" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Music info */}
       <div className="flex-1 min-w-0">
-        <h4 className="font-semibold text-xs sm:text-sm text-gray-900 truncate">
+        <h4 className="font-semibold text-xs sm:text-sm text-gray-900 truncate flex items-center gap-1">
           {music.title}
+          {music.isOriginal && <Sparkles className="w-3 h-3 text-yellow-500 flex-shrink-0" />}
         </h4>
         <p className="text-xs text-gray-500 truncate">
           {music.artist}
         </p>
+        
+        {/* Uses count */}
+        {music.uses > 0 && (
+          <div className="flex items-center gap-1 mt-0.5">
+            <Users className="w-2.5 h-2.5 text-gray-400" />
+            <span className="text-xs text-gray-400">{formatUses(music.uses)}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Duration */}
+      <div className="hidden sm:flex items-center gap-1 text-xs text-gray-400 flex-shrink-0">
+        <Clock className="w-3 h-3" />
+        {formatDuration(music.duration)}
       </div>
 
       {/* Simple waveform indicator - Hidden on very small screens */}
