@@ -1582,6 +1582,32 @@ async def get_upload_file(category: str, filename: str):
         filename=filename
     )
 
+@api_router.get("/uploads/{category}/thumbnails/{filename}")
+async def get_thumbnail_file(category: str, filename: str):
+    """Serve thumbnail files through API endpoint"""
+    
+    # Validate category
+    allowed_categories = ["avatars", "poll_options", "poll_backgrounds", "general"]
+    if category not in allowed_categories:
+        raise HTTPException(status_code=404, detail="Invalid category")
+    
+    # Construct thumbnail file path
+    file_path = UPLOAD_DIR / category / "thumbnails" / filename
+    
+    # Check if file exists
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Thumbnail not found")
+    
+    # Get MIME type (thumbnails are always JPEG)
+    mime_type = "image/jpeg"
+    
+    # Return the thumbnail
+    return FileResponse(
+        path=file_path,
+        media_type=mime_type,
+        filename=filename
+    )
+
 # =============  FILE UPLOAD ENDPOINTS =============
 
 @api_router.post("/upload", response_model=UploadResponse)
