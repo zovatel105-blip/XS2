@@ -132,7 +132,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   return (
     <div className={`flex-shrink-0 ${className}`}>
-      {/* Reproductor compacto estilo TikTok */}
+      {/* Reproductor compacto estilo TikTok con audio real */}
       <div 
         onClick={handleTogglePlay}
         className="relative cursor-pointer group"
@@ -153,7 +153,9 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
           
           {/* Overlay de reproducción */}
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            {isPlaying ? (
+            {isLoading ? (
+              <Loader2 className="w-3 h-3 text-white animate-spin" />
+            ) : isPlaying ? (
               <Pause className="w-3 h-3 text-white fill-white" />
             ) : (
               <Play className="w-3 h-3 text-white fill-white ml-0.5" />
@@ -166,6 +168,22 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
               <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm animate-pulse" />
             </div>
           )}
+
+          {/* Indicador de audio real */}
+          {realPreviewUrl && (
+            <div className="absolute -bottom-0.5 -left-0.5">
+              <div className="w-2 h-2 bg-blue-500 rounded-full border border-white shadow-sm" 
+                   title="Audio real disponible" />
+            </div>
+          )}
+
+          {/* Indicador de error */}
+          {error && (
+            <div className="absolute -bottom-0.5 -left-0.5">
+              <div className="w-2 h-2 bg-red-500 rounded-full border border-white shadow-sm" 
+                   title={error} />
+            </div>
+          )}
         </div>
         
         {/* Animación de ondas cuando está reproduciéndose */}
@@ -174,6 +192,20 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             <div className="w-12 h-12 rounded-full border-2 border-white/30 animate-ping" />
           </div>
         )}
+
+        {/* Tooltip mejorado */}
+        <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+          <div className="bg-black/90 text-white text-xs px-3 py-2 rounded-lg backdrop-blur-sm whitespace-nowrap border border-white/20 shadow-lg max-w-48 text-center">
+            <div className="font-medium truncate">{music.title}</div>
+            <div className="text-gray-300 truncate">{music.artist}</div>
+            {realPreviewUrl && (
+              <div className="text-blue-400 text-[10px] mt-1">🎵 Audio Real</div>
+            )}
+            {error && (
+              <div className="text-red-400 text-[10px] mt-1">❌ {error}</div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
