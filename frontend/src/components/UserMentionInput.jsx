@@ -66,7 +66,7 @@ const UserMentionInput = ({
   };
 
   // Handle text change and mention detection
-  const handleTextChange = (e) => {
+  const handleTextChange = async (e) => {
     const newValue = e.target.value;
     const cursorPos = e.target.selectionStart;
     
