@@ -171,15 +171,30 @@ backend:
 
   - task: "Sistema de Búsqueda de Música en Tiempo Real"
     implemented: true
-    working: true
+    working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
         - working: true
           agent: "testing"
           comment: "🎉 SISTEMA DE BÚSQUEDA DE MÚSICA EN TIEMPO REAL COMPLETAMENTE FUNCIONAL (2025-01-26): Testing exhaustivo del nuevo endpoint /api/music/search-realtime completado exitosamente con resultados excelentes (10/11 tests passed - 91% success rate). CONTEXTO: Se solicitó testing completo del nuevo sistema de búsqueda ilimitada que integra iTunes API para permitir buscar cualquier canción/artista, no solo las preconfiguradas. ✅ ENDPOINT PRINCIPAL VERIFICADO: 1) ✅ GET /api/music/search-realtime?query=Bad Bunny&limit=5: Funcionando perfectamente - retornó 6 resultados reales de iTunes, primer resultado 'I Like It by Cardi B, Bad Bunny & J Balvin' con preview_url real (https://audio-ssl.itunes.apple.com/...), cover de alta calidad, duración 30 segundos, categoría Hip-Hop/Rap, source iTunes, 2) ✅ GET /api/music/search-realtime?query=Karol G&limit=5: Funcionando perfectamente - retornó 6 resultados, primer resultado 'Tusa by KAROL G & Nicki Minaj', 3) ✅ GET /api/music/search-realtime?query=Morad&limit=5: Funcionando perfectamente - retornó 6 resultados incluyendo 'Habla Claro by Eladio Carrión & Morad', confirmando soporte para artistas urbanos españoles. ✅ BÚSQUEDAS ESPECÍFICAS VERIFICADAS: 1) ✅ Búsqueda 'Flowers': Retornó 6 resultados musicales válidos, 2) ✅ Búsqueda 'reggaeton': Retornó 10 resultados perfectos incluyendo 'Gasolina (Dj Buddha Remix) by Daddy Yankee', 'Ven báilalo (Reggaeton Mix) by Angel y Khriz', 'I Like It by Cardi B, Bad Bunny & J Balvin', 3) ✅ Parámetro limit: Funcionando correctamente - limit=3 retornó exactamente 3 resultados. ✅ VALIDACIONES Y SEGURIDAD: 1) ✅ Formato de respuesta: Todos los campos requeridos presentes (success, message, results, total, query), estructura de resultados correcta (id, title, artist, preview_url, cover, duration, category, source), 2) ✅ Validación query vacío: Manejado correctamente - retorna success: false con mensaje 'Query is required', 3) ✅ Autenticación requerida: Endpoint protegido correctamente (403 sin auth), 4) ✅ Comparación con endpoints estáticos: /api/music/library-with-previews funcionando perfectamente (4 tracks, has_real_previews: true, source: iTunes Search API). ⚠️ ISSUE MENOR: /api/music/library retorna 500 Internal Server Error (problema conocido en biblioteca estática, no afecta funcionalidad principal). 🎯 RESULTADO CRÍTICO: El objetivo se ha cumplido completamente - los usuarios ahora pueden buscar cualquier canción disponible en iTunes, no solo las 20-25 preconfiguradas. El sistema permite búsqueda ilimitada de artistas populares (Bad Bunny, Karol G, Morad), canciones específicas (Flowers, TQG), y términos genéricos (reggaeton, pop, latino) con resultados reales de iTunes API. Sistema listo para producción."
+        - working: false
+          agent: "testing"
+          comment: "🚨 PROBLEMA CRÍTICO DETECTADO EN BÚSQUEDA EN TIEMPO REAL (2025-01-26): Testing específico de la funcionalidad de iTunes reveló problema crítico de dependencias. PROBLEMA IDENTIFICADO: ❌ Error 'No module named httpcore' en endpoint /api/music/search-realtime impide búsquedas de iTunes. HALLAZGOS ESPECÍFICOS: 1) ❌ GET /api/music/search-realtime?query=Bad Bunny&limit=3: Retorna success: false con mensaje 'Search error: No module named httpcore', 0 resultados obtenidos, 2) ❌ Todas las búsquedas (Karol G, Morad, reggaeton) fallan con el mismo error de dependencia, 3) ✅ GET /api/music/library-with-previews: Funciona correctamente - 10 tracks con previews reales de iTunes, source: iTunes Search API, 4) ❌ GET /api/music/library: Retorna 500 Internal Server Error, 5) ✅ Autenticación y validación funcionan correctamente. CAUSA RAÍZ: Falta la dependencia 'httpcore' requerida por httpx para realizar requests HTTP a iTunes API. IMPACTO: Los usuarios no pueden buscar música nueva en tiempo real, limitando la funcionalidad a la biblioteca estática. SOLUCIÓN REQUERIDA: Instalar dependencia httpcore o actualizar requirements.txt para incluir httpx[http2] que incluye httpcore automáticamente."
+
+  - task: "Testing Funcionalidad iTunes get_music_info"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "🎵 TESTING FUNCIONALIDAD ITUNES get_music_info COMPLETADO (2025-01-26): Testing específico de la nueva funcionalidad para manejar IDs de iTunes según solicitud de revisión completado con resultados mixtos (2/6 tests passed). CONTEXTO: Se solicitó probar que get_music_info ahora puede manejar tanto IDs estáticos (music_trending_1) como IDs de iTunes (itunes_XXXXX) correctamente. ✅ BIBLIOTECA ESTÁTICA VERIFICADA: 1) ✅ GET /api/music/library-with-previews: Funcionando correctamente - 10 tracks con previews reales de iTunes, has_real_previews: true, source: iTunes Search API, primer track 'Un Verano Sin Ti by Bad Bunny' con preview_url disponible. ❌ BÚSQUEDA EN TIEMPO REAL FALLIDA: 2) ❌ GET /api/music/search-realtime?query=Bad Bunny&limit=3: Falla con error 'No module named httpcore', success: false, 0 resultados obtenidos, impide obtener IDs de iTunes para testing. ⚠️ TESTING LIMITADO: 3) ⚠️ No se pudo probar get_music_info con iTunes ID porque no se obtuvieron IDs de iTunes del search-realtime, 4) ❌ GET /api/polls: 0 polls encontrados, no se pudo verificar reproducción de música en feed, 5) ❌ GET /api/music/library: Retorna 500 Internal Server Error, confirma problema en biblioteca estática, 6) ✅ Búsquedas múltiples artistas completadas sin errores adicionales. PROBLEMA PRINCIPAL: La dependencia faltante 'httpcore' impide el funcionamiento completo del sistema de iTunes. RESULTADO: Aunque la biblioteca estática con previews funciona, no se puede verificar completamente la nueva funcionalidad de get_music_info con IDs de iTunes debido al error de dependencias. El objetivo de la revisión no se puede confirmar hasta resolver el problema de httpcore."
 
 backend:
   - task: "Sistema de Generación Automática de Miniaturas de Video"
