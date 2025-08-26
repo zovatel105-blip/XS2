@@ -38,6 +38,7 @@ class AudioManager {
       // Configurar propiedades según opciones
       if (options.loop !== undefined) {
         audio.loop = options.loop;
+        console.log('🔄 Audio loop configured:', options.loop);
       }
       
       if (options.startTime) {
@@ -57,6 +58,16 @@ class AudioManager {
         console.error('🚨 Audio error:', e.target.error);
       });
 
+      // Event listener para cuando la canción termine (si no está en loop)
+      audio.addEventListener('ended', () => {
+        if (!audio.loop) {
+          console.log('🎵 Audio ended, not looping');
+          this.isPlaying = false;
+        } else {
+          console.log('🔄 Audio ended, restarting due to loop');
+        }
+      });
+
       // Load audio source
       audio.src = audioUrl;
       this.currentAudio = audio;
@@ -68,10 +79,16 @@ class AudioManager {
       this.isPlaying = true;
       await this.fadeIn();
 
-      // Auto-pause después de 30 segundos (duración típica de preview)
-      setTimeout(() => {
-        this.fadeOutAndPause();
-      }, 30000);
+      // Solo auto-pausar después de 30 segundos si NO está en loop
+      // En modo loop, la música debe continuar reproduciéndose indefinidamente
+      if (!options.loop) {
+        setTimeout(() => {
+          console.log('🔄 Auto-pausing after 30s (no loop mode)');
+          this.fadeOutAndPause();
+        }, 30000);
+      } else {
+        console.log('🔄 Loop mode enabled - music will repeat automatically');
+      }
 
       return true;
 
