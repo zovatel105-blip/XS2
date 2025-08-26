@@ -101,7 +101,8 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   // Activar contexto de audio y reproducción automática
   useEffect(() => {
     const handleAutoPlay = async () => {
-      // Solo reproducir si está activo y tiene música
+      console.log(`🎵 Post transition - Active: ${isActive}, Has Music: ${!!(poll.music && poll.music.preview_url)}`);
+      
       if (isActive && poll.music && poll.music.preview_url) {
         try {
           // Activar contexto de audio si no está activado
@@ -110,7 +111,10 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             setAudioContextActivated(activated);
           }
 
-          // Reproducir música automáticamente
+          // SINCRONIZACIÓN COMPLETA: Detener completamente cualquier audio anterior
+          await audioManager.stop();
+          
+          // Reproducir música automáticamente con la nueva URL
           await audioManager.play(poll.music.preview_url, {
             startTime: 0,
             loop: true // Loop para que suene mientras se ve el post
@@ -122,23 +126,16 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
         } catch (error) {
           console.error('Error en autoplay:', error);
         }
-      } else if (isActive && (!poll.music || !poll.music.preview_url)) {
-        // ARREGLO: Si el post está activo pero NO tiene música, detener cualquier música
-        if (isMusicPlaying) {
-          await audioManager.pause();
-          setIsMusicPlaying(false);
-          console.log('⏸️ Pausing music - current post has no music');
-        }
-      } else if (!isActive && isMusicPlaying) {
-        // Pausar cuando ya no está activo
-        await audioManager.pause();
+      } else {
+        // ARREGLO MEJORADO: Si no hay música o el post no está activo, detener completamente
+        console.log('🔇 Stopping all music - post has no music or is inactive');
+        await audioManager.stop();
         setIsMusicPlaying(false);
-        console.log('⏸️ Auto-paused music');
       }
     };
 
     handleAutoPlay();
-  }, [isActive, poll.music, audioContextActivated, isMusicPlaying]);
+  }, [isActive, poll.music?.preview_url, poll.music?.id, audioContextActivated]);
 
   // Activar audio context en primera interacción
   useEffect(() => {
