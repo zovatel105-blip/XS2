@@ -101,35 +101,48 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   // Activar contexto de audio y reproducción automática
   useEffect(() => {
     const handleAutoPlay = async () => {
-      console.log(`🎵 Post transition - Active: ${isActive}, Has Music: ${!!(poll.music && poll.music.preview_url)}`);
+      const hasMusic = poll.music && poll.music.preview_url;
+      const currentlyPlayingUrl = audioManager.getCurrentAudioUrl();
       
-      if (isActive && poll.music && poll.music.preview_url) {
-        try {
-          // Activar contexto de audio si no está activado
-          if (!audioContextActivated) {
-            const activated = await audioManager.activateAudioContext();
-            setAudioContextActivated(activated);
+      console.log(`🎵 Post transition - Active: ${isActive}, Has Music: ${hasMusic}, Current URL: ${currentlyPlayingUrl}, Post URL: ${hasMusic ? poll.music.preview_url : 'none'}`);
+      
+      if (isActive && hasMusic) {
+        // Solo reproducir si no se está reproduciendo ya esta URL específica
+        if (!audioManager.isPlayingUrl(poll.music.preview_url)) {
+          try {
+            // Activar contexto de audio si no está activado
+            if (!audioContextActivated) {
+              const activated = await audioManager.activateAudioContext();
+              setAudioContextActivated(activated);
+            }
+
+            // SINCRONIZACIÓN COMPLETA: Detener completamente cualquier audio anterior
+            await audioManager.stop();
+            
+            // Reproducir música automáticamente con la nueva URL
+            const success = await audioManager.play(poll.music.preview_url, {
+              startTime: 0,
+              loop: true // Loop para que suene mientras se ve el post
+            });
+
+            if (success) {
+              setIsMusicPlaying(true);
+              console.log(`🎵 Auto-playing: ${poll.music.title} - ${poll.music.artist}`);
+            }
+            
+          } catch (error) {
+            console.error('Error en autoplay:', error);
           }
-
-          // SINCRONIZACIÓN COMPLETA: Detener completamente cualquier audio anterior
-          await audioManager.stop();
-          
-          // Reproducir música automáticamente con la nueva URL
-          await audioManager.play(poll.music.preview_url, {
-            startTime: 0,
-            loop: true // Loop para que suene mientras se ve el post
-          });
-
+        } else {
+          console.log('🎵 Already playing correct music for this post');
           setIsMusicPlaying(true);
-          console.log(`🎵 Auto-playing: ${poll.music.title} - ${poll.music.artist}`);
-          
-        } catch (error) {
-          console.error('Error en autoplay:', error);
         }
       } else {
         // ARREGLO MEJORADO: Si no hay música o el post no está activo, detener completamente
-        console.log('🔇 Stopping all music - post has no music or is inactive');
-        await audioManager.stop();
+        if (audioManager.getCurrentAudioUrl()) {
+          console.log('🔇 Stopping all music - post has no music or is inactive');
+          await audioManager.stop();
+        }
         setIsMusicPlaying(false);
       }
     };
