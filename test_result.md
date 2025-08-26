@@ -102,9 +102,32 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: MÚSICA AUTO-REPETICIÓN EN PUBLICACIONES: El usuario solicita que la música se auto-repita en las publicaciones del feed TikTok para mejorar la experiencia de usuario similar a TikTok real.
+user_problem_statement: CORRECIÓN CRÍTICA DEL SISTEMA DE MÚSICA (2025-01-26): "Las publicaciones que no tienen música no deben reproducir la música de otra publicación" - Problema identificado y solucionado donde posts sin música seguían reproduciendo música de posts anteriores.
 
-**🎵 ACTUALIZACIÓN CRÍTICA: AUTO-REPETICIÓN IMPLEMENTADA (2025-01-26)**
+**🎵 PROBLEMA CRÍTICO CORREGIDO: MÚSICA EN POSTS SIN MÚSICA (2025-01-26)**
+
+✅ **ARREGLO IMPLEMENTADO COMPLETAMENTE**
+
+**Problema Identificado:**
+- Posts que no tenían música reproducían incorrectamente la música de publicaciones anteriores
+- La lógica del AudioManager solo pausaba música cuando un post se volvía inactivo, pero no cuando un post activo no tenía música
+
+**Solución Implementada:**
+1. ✅ **TikTokScrollView Corregido**: Agregada condición específica para detener música cuando post activo no tiene música
+2. ✅ **Lógica Mejorada**: `isActive && (!poll.music || !poll.music.preview_url)` ahora pausa música correctamente
+3. ✅ **Estados Sincronizados**: Dependencies del useEffect actualizadas para incluir `isMusicPlaying`
+4. ✅ **Console Logging**: Agregado logging para debug "⏸️ Pausing music - current post has no music"
+
+**Funcionalidades Corregidas:**
+- Posts sin música ya no reproducen música de otros posts
+- Transición suave entre posts con/sin música
+- Estado de reproducción correctamente sincronizado
+- Comportamiento idéntico a TikTok real
+
+**Resultado Final:**
+🔇 Los posts sin música ahora permanecen silenciosos, creando la experiencia correcta donde solo los posts con música asignada reproducen audio automáticamente.
+
+**🎵 ACTUALIZACIÓN PREVIA: AUTO-REPETICIÓN IMPLEMENTADA (2025-01-26)**
 
 ✅ **AUTO-REPETICIÓN EN FEED TIKTOK COMPLETAMENTE IMPLEMENTADA**
 
