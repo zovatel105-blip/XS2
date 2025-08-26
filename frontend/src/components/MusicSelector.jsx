@@ -164,31 +164,125 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showS
 
 const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('Trending');
+  const [activeCategory, setActiveCategory] = useState('Popular');
   const [currentMusic, setCurrentMusic] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [popularMusic, setPopularMusic] = useState([]);
+  const [isLoadingPopular, setIsLoadingPopular] = useState(false);
+  const [searchError, setSearchError] = useState('');
   const audioRef = useRef(null);
+  const searchTimeoutRef = useRef(null);
+  const { toast } = useToast();
 
-  // Obtener música filtrada
+  // Load popular music on component mount
+  useEffect(() => {
+    loadPopularMusic();
+  }, []);
+
+  // Load popular/trending music
+  const loadPopularMusic = async () => {
+    setIsLoadingPopular(true);
+    try {
+      const result = await musicService.getPopularMusic(20);
+      if (result.success) {
+        setPopularMusic(result.results);
+      } else {
+        // Fallback to static library if service fails
+        const staticTrending = getTrendingMusic();
+        setPopularMusic(staticTrending);
+        console.warn('Using static music as fallback:', result.message);
+      }
+    } catch (error) {
+      console.error('Error loading popular music:', error);
+      // Fallback to static library
+      const staticTrending = getTrendingMusic();
+      setPopularMusic(staticTrending);
+    }
+    setIsLoadingPopular(false);
+  };
+
+  // Search music with debouncing
+  const searchMusic = async (query) => {
+    if (!query?.trim()) {
+      setSearchResults([]);
+      setSearchError('');
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError('');
+
+    try {
+      const result = await musicService.searchMusic(query.trim(), {
+        includeStatic: true,
+        staticFirst: true,
+        limit: 30
+      });
+
+      if (result.success) {
+        setSearchResults(result.results);
+        if (result.results.length === 0) {
+          setSearchError('No se encontraron canciones. Intenta con otros términos de búsqueda.');
+        }
+      } else {
+        setSearchError(result.message || 'Error en la búsqueda');
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error('Error searching music:', error);
+      setSearchError('Error de conexión. Verifica tu internet e intenta de nuevo.');
+      setSearchResults([]);
+    }
+
+    setIsSearching(false);
+  };
+
+  // Handle search input change with debouncing
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for search
+    if (query.trim()) {
+      searchTimeoutRef.current = setTimeout(() => {
+        searchMusic(query);
+      }, 500); // 500ms debounce
+    } else {
+      setSearchResults([]);
+      setSearchError('');
+    }
+  };
+
+  // Get music to display based on current state
   const getFilteredMusic = () => {
     if (searchQuery.trim()) {
-      return searchMusic(searchQuery);
+      return searchResults;
     }
     
-    // Si hay un título de poll, mostrar recomendaciones primero
-    if (pollTitle && activeCategory === 'Trending') {
-      const recommended = getRecommendedMusic(pollTitle);
-      const trending = getTrendingMusic();
-      // Mezclar recomendadas con trending, evitar duplicados
-      const combined = [...recommended];
-      trending.forEach(music => {
-        if (!combined.find(m => m.id === music.id)) {
-          combined.push(music);
-        }
-      });
-      return combined;
+    if (activeCategory === 'Popular') {
+      // If we have poll title, show recommended first
+      if (pollTitle && !searchQuery) {
+        const recommended = getRecommendedMusic(pollTitle);
+        // Merge with popular music, avoiding duplicates
+        const combinedMusic = [...recommended];
+        popularMusic.forEach(music => {
+          if (!combinedMusic.find(m => m.id === music.id)) {
+            combinedMusic.push(music);
+          }
+        });
+        return combinedMusic;
+      }
+      return popularMusic;
     }
     
+    // Fallback to static categories
     return getMusicByCategory(activeCategory);
   };
 
@@ -212,10 +306,14 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
 
   const handleSelectMusic = (music) => {
     onSelectMusic(music);
+    toast({
+      title: "Música seleccionada",
+      description: `${music.title} por ${music.artist}`,
+    });
   };
 
-  // Obtener categorías principales para mostrar
-  const mainCategories = ['Trending', 'Reggaeton', 'Trap', 'Urbano Español', 'Pop Latino', 'Hip-Hop'];
+  // Enhanced categories including Popular
+  const mainCategories = ['Popular', 'Reggaeton', 'Trap', 'Urbano Español', 'Pop Latino'];
 
   return (
     <div className="space-y-3 bg-white">
@@ -237,19 +335,44 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
         )}
       </div>
 
-      {/* Quick search */}
+      {/* Enhanced search with real-time indicator */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <Input
-          placeholder="Buscar canciones, artistas..."
+          placeholder="Buscar cualquier canción, artista... ¡Millones de resultados!"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearchChange}
           className="pl-10 bg-gray-50 border-0 rounded-full"
         />
+        {isSearching && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+          </div>
+        )}
       </div>
 
+      {/* Search status/results info */}
+      {searchQuery.trim() && (
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">
+            {isSearching 
+              ? `Buscando "${searchQuery}"...`
+              : searchResults.length > 0
+                ? `${searchResults.length} resultados para "${searchQuery}"`
+                : searchError || 'Sin resultados'
+            }
+          </span>
+          {searchResults.length > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              <Globe className="w-3 h-3 mr-1" />
+              Búsqueda global
+            </Badge>
+          )}
+        </div>
+      )}
+
       {/* Recomendaciones basadas en el título */}
-      {pollTitle && !searchQuery && activeCategory === 'Trending' && (
+      {pollTitle && !searchQuery && activeCategory === 'Popular' && (
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-3 border border-purple-100">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-4 h-4 text-purple-500" />
@@ -259,7 +382,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
         </div>
       )}
 
-      {/* Quick categories - Horizontal scroll like TikTok */}
+      {/* Categories - Only show when not searching */}
       {!searchQuery && (
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {mainCategories.map((category) => (
@@ -275,14 +398,28 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
               }`}
             >
               {category}
+              {category === 'Popular' && (
+                <Star className="w-3 h-3 ml-1" />
+              )}
             </Button>
           ))}
         </div>
       )}
 
-      {/* Music list - Simple vertical list like Instagram */}
+      {/* Music list */}
       <div className="space-y-1 max-h-80 overflow-y-auto">
-        {filteredMusic.length > 0 ? (
+        {isLoadingPopular && !searchQuery ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 text-gray-400 animate-spin mr-2" />
+            <span className="text-gray-500">Cargando música popular...</span>
+          </div>
+        ) : searchError && searchQuery ? (
+          <div className="text-center py-8 text-gray-400">
+            <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">{searchError}</p>
+            <p className="text-xs text-gray-300 mt-1">Intenta con otros términos de búsqueda</p>
+          </div>
+        ) : filteredMusic.length > 0 ? (
           <>
             {filteredMusic.map((music) => (
               <SimpleMusicCard
@@ -292,6 +429,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
                 isPlaying={currentMusic?.id === music.id && isPlaying}
                 onSelect={handleSelectMusic}
                 onPlay={handlePlay}
+                showSource={searchQuery.trim().length > 0}
               />
             ))}
             
@@ -307,12 +445,14 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
                   category: 'Original',
                   isOriginal: true,
                   uses: 0,
-                  waveform: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
+                  waveform: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3],
+                  source: 'App'
                 }}
                 isSelected={selectedMusic?.id === 'original_sound'}
                 isPlaying={false}
                 onSelect={handleSelectMusic}
                 onPlay={() => {}} // No play for original sound
+                showSource={searchQuery.trim().length > 0}
               />
             </div>
           </>
@@ -320,10 +460,21 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
           <div className="text-center py-8 text-gray-400">
             <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No se encontró música</p>
-            <p className="text-xs text-gray-300 mt-1">Intenta con otros términos de búsqueda</p>
+            <p className="text-xs text-gray-300 mt-1">
+              {searchQuery ? 'Intenta con otros términos de búsqueda' : 'Cargando biblioteca de música...'}
+            </p>
           </div>
         )}
       </div>
+
+      {/* Loading more indicator for search results */}
+      {searchQuery && searchResults.length > 0 && searchResults.length >= 20 && (
+        <div className="text-center py-2 border-t">
+          <p className="text-xs text-gray-500">
+            Mostrando los primeros {searchResults.length} resultados
+          </p>
+        </div>
+      )}
     </div>
   );
 };
