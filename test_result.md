@@ -1306,6 +1306,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Sistema de Búsqueda de Música en Tiempo Real"
     - "Ultra-Addictive User Profile System"
     - "Variable Reward Action Tracking System"
     - "Achievements System"
