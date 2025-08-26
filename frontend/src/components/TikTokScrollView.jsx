@@ -982,7 +982,7 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
         ))}
       </div>
 
-      {/* Enhanced CSS for better scroll behavior and mobile support */}
+      {/* Enhanced CSS for ultra-smooth scroll behavior and optimal performance */}
       <style jsx>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
@@ -992,36 +992,57 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
           display: none;
         }
         
-        /* Enhanced snap behavior */
+        /* Ultra-optimized snap behavior with momentum preservation */
         .snap-y {
           scroll-snap-type: y mandatory;
+          scroll-snap-stop: always;
         }
         
         .snap-start {
           scroll-snap-align: start;
+          scroll-snap-stop: always;
         }
         
         .snap-always {
           scroll-snap-stop: always;
         }
 
-        /* Perfect full screen support */
+        /* Perfect full screen support with hardware acceleration */
         @supports (height: 100dvh) {
           .h-screen {
             height: 100dvh;
           }
         }
 
-        /* Prevent overscroll and improve touch behavior */
+        /* Advanced mobile optimizations */
         body {
           overscroll-behavior: none;
           -webkit-overflow-scrolling: touch;
           touch-action: pan-y;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
         }
 
-        /* Enhance mobile viewport behavior */
+        /* GPU acceleration for smooth scrolling */
+        .w-full.h-full.overflow-y-scroll {
+          -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-perspective: 1000px;
+          perspective: 1000px;
+          will-change: scroll-position;
+        }
+
+        /* Optimize scroll container performance */
+        .overflow-y-scroll {
+          contain: layout style paint;
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+        }
+
+        /* Enhanced mobile viewport handling */
         @media (max-width: 768px) {
-          /* Ensure proper mobile viewport handling */
           .fixed.inset-0 {
             position: fixed;
             top: 0;
@@ -1030,10 +1051,20 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
             left: 0;
             height: 100vh;
             height: 100dvh;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+          }
+          
+          /* Mobile scroll optimizations */
+          .overflow-y-scroll {
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: y mandatory;
+            scroll-snap-stop: always;
+            overscroll-behavior-y: contain;
           }
         }
 
-        /* Better touch interaction */
+        /* Ultra-smooth touch interactions */
         * {
           -webkit-tap-highlight-color: transparent;
           -webkit-touch-callout: none;
@@ -1044,13 +1075,43 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
           user-select: none;
         }
 
-        /* Allow text selection for content */
-        .text-white, .text-gray-400 {
+        /* Performance optimizations for animations */
+        .transition-all, .transition-transform, .transition-colors {
+          will-change: transform, opacity;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+        }
+
+        /* Optimize snap scrolling performance */
+        .snap-start.snap-always {
+          contain: layout style paint;
+          will-change: transform;
+        }
+
+        /* Allow text selection for content while maintaining performance */
+        .text-white, .text-gray-400, h2, h3, p {
           -webkit-user-select: auto;
           -khtml-user-select: auto;
           -moz-user-select: auto;
           -ms-user-select: auto;
           user-select: auto;
+          contain: layout style;
+        }
+
+        /* Prevent scroll chaining and improve momentum */
+        .overflow-y-scroll.scrollbar-hide {
+          overscroll-behavior: contain;
+          -ms-scroll-chaining: none;
+          scroll-padding: 0;
+          scroll-margin: 0;
+        }
+
+        /* Hardware acceleration for video elements */
+        video {
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
       `}</style>
     </div>
