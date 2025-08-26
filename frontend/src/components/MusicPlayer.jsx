@@ -84,7 +84,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
     try {
       const success = await audioManager.play(realPreviewUrl, {
         startTime: 0,
-        loop: false
+        loop: loop
       });
 
       if (success && mountedRef.current) {
