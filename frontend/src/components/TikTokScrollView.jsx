@@ -633,7 +633,7 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
 
-  // Enhanced scroll handling with better throttling and snap detection
+  // Optimized scroll handling with debounce and momentum detection
   const handleScroll = useCallback(() => {
     if (isScrolling) return;
     
@@ -642,43 +642,78 @@ const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, o
 
     const scrollTop = container.scrollTop;
     const containerHeight = container.clientHeight;
-    const newIndex = Math.round(scrollTop / containerHeight);
     
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < polls.length) {
+    // More precise index calculation with snap tolerance
+    const exactIndex = scrollTop / containerHeight;
+    const newIndex = Math.round(exactIndex);
+    
+    // Only update if we've crossed the 50% threshold and it's a valid index
+    const threshold = 0.3; // 30% threshold for better responsiveness
+    if (Math.abs(exactIndex - newIndex) < threshold && 
+        newIndex !== activeIndex && 
+        newIndex >= 0 && 
+        newIndex < polls.length) {
       setActiveIndex(newIndex);
     }
   }, [activeIndex, polls.length, isScrolling]);
 
-  // Enhanced scroll listener with improved throttling
+  // Enhanced scroll listener with optimized debouncing
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let scrollTimeout;
     let rafId;
+    let lastScrollTop = 0;
+    let velocity = 0;
 
-    const throttledScroll = () => {
+    const optimizedScrollHandler = () => {
+      const currentScrollTop = container.scrollTop;
+      velocity = Math.abs(currentScrollTop - lastScrollTop);
+      lastScrollTop = currentScrollTop;
+      
       setIsScrolling(true);
       clearTimeout(scrollTimeout);
       
-      // Cancel previous RAF
+      // Cancel previous RAF for better performance
       if (rafId) {
         cancelAnimationFrame(rafId);
       }
       
-      // Use RAF for smooth updates
+      // Use RAF for 60fps smooth updates
       rafId = requestAnimationFrame(() => {
+        // Adaptive timeout based on scroll velocity
+        const timeoutDelay = velocity > 50 ? 100 : 30;
+        
         scrollTimeout = setTimeout(() => {
           setIsScrolling(false);
           handleScroll();
-        }, 50); // Reduced timeout for more responsive behavior
+          
+          // Auto-snap to nearest position if close enough
+          const scrollTop = container.scrollTop;
+          const containerHeight = container.clientHeight;
+          const nearestIndex = Math.round(scrollTop / containerHeight);
+          const currentPosition = scrollTop / containerHeight;
+          
+          // Snap if within 15% of target position for better UX
+          if (Math.abs(currentPosition - nearestIndex) > 0.15) {
+            container.scrollTo({
+              top: nearestIndex * containerHeight,
+              behavior: 'smooth'
+            });
+          }
+        }, timeoutDelay);
       });
     };
 
-    container.addEventListener('scroll', throttledScroll, { passive: true });
+    // Use passive listeners for better performance
+    container.addEventListener('scroll', optimizedScrollHandler, { 
+      passive: true,
+      capture: false 
+    });
     
     return () => {
-      container.removeEventListener('scroll', throttledScroll);
+      container.removeEventListener('scroll', optimizedScrollHandler);
       clearTimeout(scrollTimeout);
       if (rafId) {
         cancelAnimationFrame(rafId);
