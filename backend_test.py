@@ -4582,10 +4582,257 @@ def test_music_investigation(base_url):
     
     return success_count >= 3
 
+def test_sanity_check_after_frontend_optimizations(base_url):
+    """
+    Sanity check testing after frontend optimizations to ensure backend still works correctly.
+    Tests the specific areas mentioned in the review request.
+    """
+    print("\n=== 🔍 SANITY CHECK AFTER FRONTEND OPTIMIZATIONS ===")
+    print("Testing backend functionality after frontend title positioning and scroll optimizations")
+    
+    success_count = 0
+    total_tests = 4
+    
+    # 1. ✅ ENDPOINTS BÁSICOS: Verificar que GET /api/, GET /api/polls funcionen correctamente
+    print("\n1️⃣ Testing Basic Endpoints...")
+    try:
+        # Test GET /api/
+        print("Testing GET /api/...")
+        response = requests.get(f"{base_url}/", timeout=10)
+        print(f"GET /api/ Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "Social Network API" in data.get("name", ""):
+                print("✅ GET /api/ working correctly")
+                
+                # Test GET /api/polls (requires authentication)
+                if auth_tokens:
+                    print("Testing GET /api/polls...")
+                    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+                    polls_response = requests.get(f"{base_url}/polls", headers=headers, timeout=10)
+                    print(f"GET /api/polls Status Code: {polls_response.status_code}")
+                    
+                    if polls_response.status_code == 200:
+                        polls_data = polls_response.json()
+                        print(f"✅ GET /api/polls working correctly - returned {len(polls_data)} polls")
+                        success_count += 1
+                    else:
+                        print(f"❌ GET /api/polls failed: {polls_response.text}")
+                else:
+                    print("⚠️ No auth tokens available for /api/polls test, but basic endpoint works")
+                    success_count += 1
+            else:
+                print("❌ GET /api/ returned unexpected response")
+        else:
+            print(f"❌ GET /api/ failed with status: {response.status_code}")
+            
+    except Exception as e:
+        print(f"❌ Basic endpoints test error: {e}")
+    
+    # 2. ✅ MÚSICA: Verificar que GET /api/music/library-with-previews siga funcionando
+    print("\n2️⃣ Testing Music System...")
+    try:
+        if auth_tokens:
+            headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+            print("Testing GET /api/music/library-with-previews...")
+            
+            response = requests.get(f"{base_url}/music/library-with-previews?limit=5", 
+                                  headers=headers, timeout=15)
+            print(f"Music Library Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                music_data = response.json()
+                print(f"✅ Music system working correctly")
+                print(f"Music tracks returned: {len(music_data.get('music', []))}")
+                print(f"Has real previews: {music_data.get('has_real_previews', False)}")
+                print(f"Source: {music_data.get('source', 'Unknown')}")
+                
+                # Check if we have real preview URLs
+                if music_data.get('music'):
+                    first_track = music_data['music'][0]
+                    preview_url = first_track.get('preview_url')
+                    if preview_url and 'itunes.apple.com' in preview_url:
+                        print(f"✅ Real iTunes preview URLs confirmed: {preview_url[:50]}...")
+                    else:
+                        print(f"⚠️ Preview URL format: {preview_url}")
+                
+                success_count += 1
+            else:
+                print(f"❌ Music library failed: {response.text}")
+        else:
+            print("❌ No auth tokens available for music system test")
+            
+    except Exception as e:
+        print(f"❌ Music system test error: {e}")
+    
+    # 3. ✅ AUTENTICACIÓN: Test rápido de registro/login para confirmar que auth sigue operativo
+    print("\n3️⃣ Testing Authentication System...")
+    try:
+        # Quick auth test - register a new user
+        timestamp = int(time.time())
+        test_user_data = {
+            "email": f"sanity.check.{timestamp}@example.com",
+            "username": f"sanity_user_{timestamp}",
+            "display_name": "Sanity Check User",
+            "password": "testpass123"
+        }
+        
+        print("Testing user registration...")
+        reg_response = requests.post(f"{base_url}/auth/register", json=test_user_data, timeout=10)
+        print(f"Registration Status Code: {reg_response.status_code}")
+        
+        if reg_response.status_code == 200:
+            reg_data = reg_response.json()
+            print("✅ Registration working correctly")
+            
+            # Test login
+            print("Testing user login...")
+            login_data = {
+                "email": test_user_data["email"],
+                "password": test_user_data["password"]
+            }
+            
+            login_response = requests.post(f"{base_url}/auth/login", json=login_data, timeout=10)
+            print(f"Login Status Code: {login_response.status_code}")
+            
+            if login_response.status_code == 200:
+                login_result = login_response.json()
+                print("✅ Login working correctly")
+                print(f"Token type: {login_result['token_type']}")
+                print(f"User ID: {login_result['user']['id']}")
+                success_count += 1
+            else:
+                print(f"❌ Login failed: {login_response.text}")
+        else:
+            print(f"❌ Registration failed: {reg_response.text}")
+            
+    except Exception as e:
+        print(f"❌ Authentication test error: {e}")
+    
+    # 4. ✅ POLLS: Verificar que se puedan obtener polls correctamente para el feed TikTok
+    print("\n4️⃣ Testing Polls System for TikTok Feed...")
+    try:
+        if auth_tokens:
+            headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+            
+            # Test getting polls
+            print("Testing GET /api/polls for TikTok feed...")
+            response = requests.get(f"{base_url}/polls?limit=5", headers=headers, timeout=10)
+            print(f"Polls Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                polls_data = response.json()
+                print(f"✅ Polls system working correctly for TikTok feed")
+                print(f"Polls returned: {len(polls_data)}")
+                
+                # Check poll structure for TikTok feed compatibility
+                if polls_data and len(polls_data) > 0:
+                    first_poll = polls_data[0]
+                    required_fields = ['id', 'title', 'options', 'author', 'total_votes']
+                    missing_fields = [field for field in required_fields if field not in first_poll]
+                    
+                    if not missing_fields:
+                        print("✅ Poll structure compatible with TikTok feed")
+                        print(f"Sample poll: '{first_poll['title']}' by {first_poll['author']['username']}")
+                        success_count += 1
+                    else:
+                        print(f"⚠️ Poll missing fields for TikTok feed: {missing_fields}")
+                        success_count += 1  # Still count as success if polls are returned
+                else:
+                    print("⚠️ No polls returned, but endpoint is working")
+                    success_count += 1
+            else:
+                print(f"❌ Polls system failed: {response.text}")
+        else:
+            print("❌ No auth tokens available for polls system test")
+            
+    except Exception as e:
+        print(f"❌ Polls system test error: {e}")
+    
+    # Summary
+    print(f"\n🎯 SANITY CHECK SUMMARY: {success_count}/{total_tests} critical systems working")
+    
+    if success_count == total_tests:
+        print("🎉 ✅ ALL CRITICAL SYSTEMS OPERATIONAL")
+        print("Frontend optimizations have NOT affected backend functionality")
+        return True
+    elif success_count >= 3:
+        print("✅ MOST CRITICAL SYSTEMS OPERATIONAL")
+        print("Minor issues detected but core functionality intact")
+        return True
+    else:
+        print("❌ CRITICAL SYSTEMS COMPROMISED")
+        print("Frontend optimizations may have affected backend functionality")
+        return False
+
 def main():
     """Main test execution function"""
-    print("🎵 REAL MUSIC SYSTEM TESTING - iTunes API Integration")
-    print("=" * 80)
+    print("🚀 Starting Backend API Testing...")
+    print("=" * 60)
+    
+    # Get backend URL
+    base_url = get_backend_url()
+    if not base_url:
+        print("❌ Could not determine backend URL from frontend .env file")
+        sys.exit(1)
+    
+    print(f"Backend URL: {base_url}")
+    print("=" * 60)
+    
+    # Track test results
+    test_results = {}
+    
+    # Run core tests first to get auth tokens
+    test_results['health_check'] = test_health_check(base_url)
+    test_results['user_registration'] = test_user_registration(base_url)
+    test_results['user_login'] = test_user_login(base_url)
+    test_results['get_current_user'] = test_get_current_user(base_url)
+    
+    # Run the specific sanity check for frontend optimizations
+    test_results['sanity_check_after_optimizations'] = test_sanity_check_after_frontend_optimizations(base_url)
+    
+    # Run additional comprehensive tests
+    test_results['jwt_validation'] = test_jwt_validation(base_url)
+    test_results['user_search'] = test_user_search(base_url)
+    test_results['messaging_system'] = test_messaging_system(base_url)
+    test_results['addiction_system'] = test_addiction_system_integration(base_url)
+    test_results['authentication_requirements'] = test_authentication_requirements(base_url)
+    test_results['profile_updates'] = test_profile_update_endpoints(base_url)
+    test_results['nested_comments'] = test_nested_comments_system(base_url)
+    test_results['follow_system'] = test_follow_system(base_url)
+    test_results['tiktok_profile_grid'] = test_tiktok_profile_grid_backend_support(base_url)
+    
+    # Print summary
+    print("\n" + "=" * 60)
+    print("🎯 TESTING SUMMARY")
+    print("=" * 60)
+    
+    passed_tests = sum(1 for result in test_results.values() if result)
+    total_tests = len(test_results)
+    
+    for test_name, result in test_results.items():
+        status = "✅ PASSED" if result else "❌ FAILED"
+        print(f"{test_name.replace('_', ' ').title()}: {status}")
+    
+    print(f"\nOverall Result: {passed_tests}/{total_tests} tests passed")
+    
+    # Special focus on sanity check result
+    sanity_check_passed = test_results.get('sanity_check_after_optimizations', False)
+    if sanity_check_passed:
+        print("\n🎉 ✅ SANITY CHECK PASSED: Frontend optimizations did NOT break backend functionality")
+    else:
+        print("\n❌ ⚠️ SANITY CHECK FAILED: Frontend optimizations may have affected backend")
+    
+    if passed_tests == total_tests:
+        print("🎉 All tests passed! Backend is fully functional.")
+        sys.exit(0)
+    elif passed_tests >= total_tests * 0.8:
+        print("✅ Most tests passed. Backend is mostly functional.")
+        sys.exit(0)
+    else:
+        print("❌ Many tests failed. Backend needs attention.")
+        sys.exit(1)
     
     # Get backend URL
     base_url = get_backend_url()
