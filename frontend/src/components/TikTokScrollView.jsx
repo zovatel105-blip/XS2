@@ -591,6 +591,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
               isVisible={isActive}
               onTogglePlay={handleMusicToggle}
               autoPlay={true}  // ✅ REPRODUCCIÓN AUTOMÁTICA ACTIVADA
+              loop={true}     // 🔄 LOOP AUTOMÁTICO HABILITADO
               className="flex-shrink-0"
             />
           )}
