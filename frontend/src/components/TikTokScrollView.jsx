@@ -304,7 +304,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
         </div>
         
         <div className="mt-3">
-          <h2 className="text-white font-bold text-xl leading-tight text-center">
+          <h2 className="text-white font-bold text-xl leading-tight text-left">
             {poll.title}
           </h2>
         </div>
