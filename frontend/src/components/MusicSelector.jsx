@@ -52,7 +52,7 @@ const MusicWaveform = ({ waveform, isPlaying, duration = 30 }) => {
 };
 
 // Simplified TikTok/Instagram style music card
-const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => {
+const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showSource = false }) => {
   return (
     <div 
       className={`
@@ -73,6 +73,9 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
           src={music.cover} 
           alt={music.title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.style.display = 'none';
+          }}
         />
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
           <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/90 flex items-center justify-center transition-all ${isPlaying ? 'scale-110' : ''}`}>
@@ -84,11 +87,17 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
           </div>
         </div>
         
-        {/* Trending badge */}
-        {music.isTrending && (
+        {/* Priority/Trending badge */}
+        {(music.isTrending || music.isPriority) && (
           <div className="absolute -top-1 -right-1">
-            <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-2 h-2 text-white" />
+            <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+              music.isPriority ? 'bg-yellow-500' : 'bg-red-500'
+            }`}>
+              {music.isPriority ? (
+                <Star className="w-2 h-2 text-white" />
+              ) : (
+                <TrendingUp className="w-2 h-2 text-white" />
+              )}
             </div>
           </div>
         )}
@@ -104,13 +113,21 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
           {music.artist}
         </p>
         
-        {/* Uses count */}
-        {music.uses > 0 && (
-          <div className="flex items-center gap-1 mt-0.5">
-            <Users className="w-2.5 h-2.5 text-gray-400" />
-            <span className="text-xs text-gray-400">{formatUses(music.uses)}</span>
-          </div>
-        )}
+        {/* Source and uses count */}
+        <div className="flex items-center gap-2 mt-0.5">
+          {showSource && music.source && (
+            <div className="flex items-center gap-1">
+              <Globe className="w-2.5 h-2.5 text-gray-400" />
+              <span className="text-xs text-gray-400">{music.source}</span>
+            </div>
+          )}
+          {music.uses > 0 && (
+            <div className="flex items-center gap-1">
+              <Users className="w-2.5 h-2.5 text-gray-400" />
+              <span className="text-xs text-gray-400">{formatUses(music.uses)}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Duration */}
@@ -121,7 +138,7 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay }) => 
 
       {/* Simple waveform indicator - Hidden on very small screens */}
       <div className="hidden sm:flex items-center gap-0.5">
-        {music.waveform.slice(0, 4).map((height, index) => (
+        {(music.waveform || []).slice(0, 4).map((height, index) => (
           <div
             key={index}
             className={`w-1 bg-gray-400 rounded-full transition-all duration-75 ${
