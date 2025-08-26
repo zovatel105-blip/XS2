@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
@@ -14,18 +14,23 @@ import {
   Sparkles,
   Clock,
   TrendingUp,
-  Users
+  Users,
+  Loader2,
+  Globe,
+  Star
 } from 'lucide-react';
 import { 
   musicLibrary, 
   musicCategories, 
   getMusicByCategory, 
-  searchMusic, 
+  searchMusic as searchMusicStatic, 
   getRecommendedMusic,
   getTrendingMusic,
   formatDuration,
   formatUses
 } from '../services/musicLibrary';
+import musicService from '../services/musicService';
+import { useToast } from '../hooks/use-toast';
 
 const MusicWaveform = ({ waveform, isPlaying, duration = 30 }) => {
   return (
