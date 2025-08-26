@@ -139,6 +139,25 @@ class AudioManager {
   }
 
   /**
+   * Habilita o deshabilita el loop de la canción actual
+   */
+  setLoop(enabled) {
+    if (this.currentAudio) {
+      this.currentAudio.loop = enabled;
+      console.log('🔄 Loop', enabled ? 'enabled' : 'disabled', 'for current audio');
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Obtiene el estado actual del loop
+   */
+  isLooping() {
+    return this.currentAudio ? this.currentAudio.loop : false;
+  }
+
+  /**
    * Fade in suave
    */
   async fadeIn(duration = 500) {
