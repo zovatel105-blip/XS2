@@ -138,7 +138,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
     };
 
     handleAutoPlay();
-  }, [isActive, poll.music, audioContextActivated]);
+  }, [isActive, poll.music, audioContextActivated, isMusicPlaying]);
 
   // Activar audio context en primera interacción
   useEffect(() => {
