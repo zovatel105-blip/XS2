@@ -340,27 +340,30 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                 {option.media?.url ? (
                   option.media?.type === 'video' ? (
                     <video 
-                      src={option.media.url} 
+                      src={shouldPreload ? option.media.url : undefined} 
                       className="w-full h-full object-cover object-center"
                       style={{ 
                         objectFit: 'cover',
                         objectPosition: 'center'
                       }}
-                      autoPlay
+                      autoPlay={isActive}
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload={shouldPreload ? "metadata" : "none"}
+                      loading="lazy"
                     />
                   ) : (
                     <img 
-                      src={option.media.url} 
+                      src={shouldPreload ? option.media.url : undefined} 
                       alt={option.text}
                       className="w-full h-full object-cover object-center"
                       style={{ 
                         objectFit: 'cover',
                         objectPosition: 'center'
                       }}
+                      loading="lazy"
+                      decoding="async"
                     />
                   )
                 ) : (
