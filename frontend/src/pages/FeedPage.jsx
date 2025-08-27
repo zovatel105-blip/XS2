@@ -62,6 +62,15 @@ const FeedPage = () => {
     loadPolls();
   }, [isAuthenticated, toast]);
 
+  // Handle navigation state for pre-selected audio
+  useEffect(() => {
+    if (location.state?.createPoll) {
+      setShowCreateModal(true);
+      // Clear the state to prevent reopening on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
