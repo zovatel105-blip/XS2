@@ -242,7 +242,7 @@ class CommentLike(BaseModel):
 class PollOption(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str  # Usuario que creó esta opción
-    text: str
+    text: Optional[str] = ""  # Texto opcional para la opción
     votes: int = 0
     media_type: Optional[str] = None  # "image", "video", None
     media_url: Optional[str] = None
