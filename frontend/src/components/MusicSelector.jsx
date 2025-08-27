@@ -254,36 +254,121 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
   const searchMusic = async (query) => {
     if (!query?.trim()) {
       setSearchResults([]);
-      setSearchError('');
       return;
     }
 
     setIsSearching(true);
     setSearchError('');
-
+    
     try {
-      const result = await musicService.searchMusic(query.trim(), {
-        includeStatic: true,
-        staticFirst: true,
-        limit: 30
-      });
-
+      const result = await musicService.searchMusic(query, 20);
       if (result.success) {
-        setSearchResults(result.results);
-        if (result.results.length === 0) {
-          setSearchError('No se encontraron canciones. Intenta con otros términos de búsqueda.');
-        }
+        setSearchResults(result.results || []);
       } else {
         setSearchError(result.message || 'Error en la búsqueda');
         setSearchResults([]);
       }
     } catch (error) {
       console.error('Error searching music:', error);
-      setSearchError('Error de conexión. Verifica tu internet e intenta de nuevo.');
+      setSearchError('Error de conexión');
       setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Handle audio file upload
+  const handleAudioUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/aac', 'audio/x-m4a'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Formato no soportado",
+        description: "Solo se permiten archivos MP3, M4A, WAV, AAC",
+        variant: "destructive"
+      });
+      return;
     }
 
-    setIsSearching(false);
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "Archivo muy grande",
+        description: "El archivo no debe superar los 10MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      toast({
+        title: "Autenticación requerida",
+        description: "Inicia sesión para subir música",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', file.name.replace(/\.[^/.]+$/, "")); // Remove extension
+      formData.append('artist', 'Mi Audio'); // Default artist
+      formData.append('privacy', 'private'); // Default to private
+
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL}/api/audio/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          toast({
+            title: "Audio subido exitosamente",
+            description: `${result.audio.title} está listo para usar`,
+          });
+          
+          // Reload my music to show the new upload
+          loadMyMusic();
+          setShowUploadForm(false);
+        } else {
+          toast({
+            title: "Error al subir",
+            description: result.message || "Error desconocido",
+            variant: "destructive"
+          });
+        }
+      } else {
+        toast({
+          title: "Error del servidor",
+          description: "No se pudo subir el archivo",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Error de conexión",
+        description: "Verifica tu conexión a internet",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+      // Clear the file input
+      event.target.value = '';
+    }
   };
 
   // Handle search input change with debouncing
