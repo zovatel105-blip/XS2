@@ -35,7 +35,7 @@ const UserMentionInput = ({
     setLoading(true);
     try {
       const backendUrl = process.env.REACT_APP_BACKEND_URL;
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken');
       
       const response = await fetch(`${backendUrl}/api/users/search?q=${encodeURIComponent(query)}`, {
         headers: {
