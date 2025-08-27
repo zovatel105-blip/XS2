@@ -3260,7 +3260,13 @@ async def get_my_audio_library(
                 username=current_user.username,
                 display_name=current_user.display_name,
                 avatar_url=current_user.avatar_url,
-                email=current_user.email
+                email=current_user.email,
+                bio=current_user.bio,
+                is_verified=current_user.is_verified,
+                created_at=current_user.created_at,
+                last_login=current_user.last_login,
+                is_public=current_user.is_public,
+                allow_messages=current_user.allow_messages
             )
             
             audio_response = UserAudioResponse(
