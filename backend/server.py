@@ -3072,15 +3072,28 @@ async def get_poll_by_id(
 
 # =============  USER AUDIO ENDPOINTS =============
 
-# Import audio utilities
-from audio_utils import (
-    validate_audio_file, process_audio_file, generate_waveform,
-    get_unique_filename, cleanup_temp_files, AudioProcessingError
-)
-
 # Create audio upload directory
-AUDIO_UPLOAD_DIR = os.path.join(UPLOAD_DIR, "audio")
-os.makedirs(AUDIO_UPLOAD_DIR, exist_ok=True)
+AUDIO_UPLOAD_DIR = UPLOAD_DIR / "audio"
+AUDIO_UPLOAD_DIR.mkdir(exist_ok=True)
+
+def get_unique_filename(user_id: str, original_filename: str) -> str:
+    """Generate unique filename for uploaded audio"""
+    timestamp = int(datetime.utcnow().timestamp())
+    file_ext = original_filename.split('.')[-1].lower()
+    return f"audio_{user_id}_{timestamp}.{file_ext}"
+
+def cleanup_temp_files(*file_paths):
+    """Clean up temporary files"""
+    for file_path in file_paths:
+        if file_path and os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except Exception as e:
+                logger.warning(f"Could not delete temp file {file_path}: {e}")
+
+class AudioProcessingError(Exception):
+    """Custom exception for audio processing errors"""
+    pass
 
 @api_router.post("/audio/upload")
 async def upload_audio(
