@@ -15,6 +15,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Plus } from 'lucide-react';
 
 const FeedPage = () => {
+  const location = useLocation();
   const [polls, setPolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
