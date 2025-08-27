@@ -607,7 +607,7 @@ const FeedPage = () => {
           setPreSelectedAudio(null); // Clear pre-selected audio when closing
         }}
         preSelectedAudio={preSelectedAudio}
-        onPollCreated={(newPoll) => {
+        onCreatePoll={(newPoll) => {
           // Add the new poll to the beginning of the list
           const transformedPoll = pollService.transformPollData(newPoll);
           setPolls(prev => [transformedPoll, ...prev]);
