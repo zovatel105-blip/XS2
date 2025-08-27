@@ -17,7 +17,11 @@ import {
   Users,
   Loader2,
   Globe,
-  Star
+  Star,
+  Upload,
+  Plus,
+  FileAudio,
+  X
 } from 'lucide-react';
 import { 
   musicLibrary, 
