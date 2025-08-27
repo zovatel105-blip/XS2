@@ -339,10 +339,12 @@ class UploadType(str, Enum):
     POLL_OPTION = "poll_option"
     POLL_BACKGROUND = "poll_background"
     GENERAL = "general"
+    AUDIO = "audio"  # Nuevo tipo para archivos de audio
 
 class FileType(str, Enum):
     IMAGE = "image"
     VIDEO = "video"
+    AUDIO = "audio"  # Nuevo tipo para archivos de audio
 
 class UploadedFile(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
