@@ -169,11 +169,11 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   return (
     <div className={`flex-shrink-0 ${className}`}>
-      {/* Reproductor compacto estilo TikTok con audio real */}
+      {/* Reproductor compacto estilo TikTok - UN SOLO CLICK PARA NAVEGAR */}
       <div 
         onClick={handleNavigateToAudio}
         className="relative cursor-pointer group select-none"
-        title={`Ver detalles de "${music?.title}" - ${music?.artist}`}
+        title={`Ver detalles: "${music?.title}" - ${music?.artist}`}
       >
         {/* Container con imagen de fondo */}
         <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg">
@@ -181,28 +181,29 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             <img 
               src={music.cover} 
               alt={music.title}
-              className="w-full h-full object-cover pointer-events-none"
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center pointer-events-none">
-              <Music className="w-4 h-4 text-white pointer-events-none" />
+            <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <Music className="w-4 h-4 text-white" />
             </div>
           )}
           
-          {/* Overlay de reproducción - solo visible al hover */}
-          <div 
+          {/* Overlay de reproducción - SOLO visible al hover y mantenido */}
+          <button 
             data-audio-player-control="true"
             onClick={handleTogglePlay}
-            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 pointer-events-none group-hover:pointer-events-auto"
+            className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
+            onMouseEnter={(e) => e.stopPropagation()}
           >
             {isLoading ? (
-              <Loader2 className="w-3 h-3 text-white animate-spin pointer-events-none" />
+              <Loader2 className="w-3 h-3 text-white animate-spin" />
             ) : isPlaying ? (
-              <Pause className="w-3 h-3 text-white fill-white pointer-events-none" />
+              <Pause className="w-3 h-3 text-white fill-white" />
             ) : (
-              <Play className="w-3 h-3 text-white fill-white ml-0.5 pointer-events-none" />
+              <Play className="w-3 h-3 text-white fill-white ml-0.5" />
             )}
-          </div>
+          </button>
           
           {/* Indicador de música activa cuando está reproduciéndose */}
           {isPlaying && (
