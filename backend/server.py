@@ -3729,6 +3729,143 @@ async def search_user_audio(
         logger.error(f"Error searching user audio: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error searching audio: {str(e)}")
 
+@api_router.get("/audio/{audio_id}/posts")
+async def get_posts_using_audio(
+    audio_id: str,
+    limit: int = 20,
+    offset: int = 0,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Obtener todos los posts que usan un audio específico"""
+    try:
+        # Verificar que el audio existe y el usuario tiene acceso
+        audio = await db.user_audio.find_one({"id": audio_id})
+        if not audio:
+            # También buscar en el sistema de música estática
+            music_info = await get_music_info(audio_id)
+            if not music_info:
+                raise HTTPException(status_code=404, detail="Audio not found")
+        
+        # Buscar posts que usan este audio
+        # Primero buscar en polls con music_id
+        polls_filter = {"music_id": audio_id}
+        polls = await db.polls.find(polls_filter) \
+            .sort("created_at", -1) \
+            .skip(offset) \
+            .limit(limit) \
+            .to_list(limit)
+        
+        # También buscar en UserAudioUse para posts que usan user audio
+        audio_uses_filter = {"audio_id": audio_id}
+        if audio_id.startswith("user_audio_"):
+            # Para user audio, buscar por el ID real sin prefijo
+            real_audio_id = audio_id.replace("user_audio_", "")
+            audio_uses_filter = {"audio_id": real_audio_id}
+        
+        audio_uses = await db.user_audio_use.find(audio_uses_filter) \
+            .sort("created_at", -1) \
+            .to_list(1000)  # Get all uses to find associated polls
+        
+        # Obtener poll IDs de los uses
+        poll_ids_from_uses = [use["poll_id"] for use in audio_uses if use.get("poll_id")]
+        
+        # Buscar polls adicionales de los uses
+        if poll_ids_from_uses:
+            additional_polls = await db.polls.find({"id": {"$in": poll_ids_from_uses}}) \
+                .sort("created_at", -1) \
+                .to_list(limit)
+            
+            # Combinar polls evitando duplicados
+            existing_poll_ids = {poll["id"] for poll in polls}
+            for poll in additional_polls:
+                if poll["id"] not in existing_poll_ids:
+                    polls.append(poll)
+        
+        # Limitar resultado final
+        polls = polls[:limit]
+        
+        # Obtener información de autores
+        author_ids = list(set(poll["author_id"] for poll in polls))
+        authors = await db.users.find({"id": {"$in": author_ids}}).to_list(len(author_ids))
+        authors_dict = {author["id"]: UserResponse(**author) for author in authors}
+        
+        # Construir respuesta de polls
+        poll_responses = []
+        for poll_data in polls:
+            # Procesar opciones
+            options = []
+            if poll_data.get("options"):
+                for option in poll_data["options"]:
+                    # Obtener información del usuario de la opción
+                    option_user = authors_dict.get(option.get("user_id"))
+                    
+                    # Obtener thumbnail si es necesario
+                    media_url = option.get("media_url")
+                    thumbnail_url = option.get("thumbnail_url")
+                    
+                    if media_url and not thumbnail_url and option.get("media_type") == "video":
+                        thumbnail_url = get_thumbnail_for_media_url(media_url)
+                    
+                    option_dict = {
+                        "id": option.get("id", str(uuid.uuid4())),
+                        "text": option.get("text", ""),
+                        "votes": option.get("votes", 0),
+                        "user": option_user.dict() if option_user else None,
+                        "mentioned_users": option.get("mentioned_users", []),
+                        "media": {
+                            "type": option.get("media_type"),
+                            "url": media_url,
+                            "thumbnail": thumbnail_url or media_url
+                        } if media_url else None
+                    }
+                    options.append(option_dict)
+            
+            # Get music info if available
+            music_info = await get_music_info(poll_data.get("music_id")) if poll_data.get("music_id") else None
+            
+            poll_response = PollResponse(
+                id=poll_data["id"],
+                title=poll_data["title"],
+                author=authors_dict.get(poll_data["author_id"]),
+                description=poll_data.get("description"),
+                options=options,
+                total_votes=poll_data["total_votes"],
+                likes=poll_data["likes"],
+                shares=poll_data["shares"],
+                comments_count=poll_data["comments_count"],
+                music=music_info,
+                user_vote=None,  # Se puede mejorar para incluir el voto del usuario actual
+                user_liked=False,  # Se puede mejorar para incluir si le dio like
+                created_at=poll_data["created_at"],
+                mentioned_users=poll_data.get("mentioned_users", []),
+                tags=poll_data.get("tags", []),
+                category=poll_data.get("category"),
+                is_featured=poll_data.get("is_featured", False)
+            )
+            poll_responses.append(poll_response.dict())
+        
+        # Contar total de posts que usan este audio
+        total_polls = await db.polls.count_documents(polls_filter)
+        total_uses = len(audio_uses)
+        total = max(total_polls, total_uses)
+        
+        return {
+            "success": True,
+            "audio_id": audio_id,
+            "posts": poll_responses,
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "has_more": offset + limit < total,
+            "message": f"Found {len(poll_responses)} posts using this audio"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting posts using audio {audio_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error getting posts: {str(e)}")
+
 # =============  ENHANCED MUSIC LIBRARY WITH USER AUDIO =============
 
 @api_router.get("/music/combined-library")
