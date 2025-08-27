@@ -125,24 +125,11 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
   };
 
   const handleNavigateToAudio = (e) => {
-    // Solo prevenir navegación si específicamente se hace clic en el área de controles cuando está visible
-    const isHovering = e.currentTarget.matches(':hover');
-    const controlElement = e.target.closest('[data-audio-player-control]');
-    
     console.log('🎵 MusicPlayer clicked!', {
-      isHovering,
-      controlElement: !!controlElement,
       target: e.target.tagName,
-      music: music?.id
+      music: music?.id,
+      event: 'navigation_attempt'
     });
-    
-    // Solo prevenir navegación si realmente se hizo clic en los controles mientras están visibles
-    if (controlElement && isHovering) {
-      console.log('🚫 Navigation prevented - clicked on visible control');
-      return;
-    }
-    
-    console.log('🎵 Navigating to audio:', music?.id);
     
     if (music?.id) {
       let audioId = music.id;
@@ -151,7 +138,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
         audioId = audioId.startsWith('user_audio_') ? audioId : `user_audio_${audioId}`;
       }
       
-      console.log('✅ Navigation - URL: /audio/' + audioId);
+      console.log('✅ Navigating to /audio/' + audioId);
       navigate(`/audio/${audioId}`);
     } else {
       console.error('❌ No music ID available');
@@ -160,6 +147,8 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   const handleTogglePlay = async (e) => {
     e.stopPropagation(); // Prevent navigation when clicking play/pause
+    console.log('🎵 Play/Pause clicked - preventing navigation');
+    
     if (isPlaying) {
       await handlePause();
     } else {
