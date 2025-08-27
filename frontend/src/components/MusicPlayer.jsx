@@ -130,6 +130,8 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
       return;
     }
     
+    console.log('🎵 Navigating to audio:', music);
+    
     if (music?.id) {
       // Handle both user audio and system music IDs
       let audioId = music.id;
@@ -137,7 +139,10 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
         // For user uploaded audio, ensure we have the right format
         audioId = audioId.startsWith('user_audio_') ? audioId : `user_audio_${audioId}`;
       }
+      console.log('🎵 Final audio ID:', audioId);
       navigate(`/audio/${audioId}`);
+    } else {
+      console.log('❌ No music ID available');
     }
   };
 
