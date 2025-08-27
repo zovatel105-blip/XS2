@@ -3126,23 +3126,32 @@ async def upload_audio(
         
         try:
             # Validar archivo de audio
-            validation_result = validate_audio_file(temp_file, file.filename)
-            logger.info(f"Audio validation result: {validation_result}")
+            validation = validate_audio_file(file)
+            if not validation['valid']:
+                raise HTTPException(status_code=400, detail=validation['error'])
+            
+            logger.info(f"Audio validation passed: {file.filename}")
             
             # Generar nombre único para el archivo
             unique_filename = get_unique_filename(current_user.id, file.filename)
+            final_path = AUDIO_UPLOAD_DIR / unique_filename.replace(unique_filename.split('.')[-1], 'mp3')
             
             # Procesar audio (recortar, optimizar, generar waveform)
-            processing_result = process_audio_file(
-                input_path=temp_file,
-                output_dir=AUDIO_UPLOAD_DIR,
-                target_filename=unique_filename,
-                max_duration=60  # 60 segundos máximo
-            )
-            logger.info(f"Audio processing result: {processing_result}")
+            processing_result = process_audio_file(temp_file, max_duration=60)
+            
+            if not processing_result['success']:
+                raise AudioProcessingError(processing_result['error'])
+            
+            # Mover archivo procesado a ubicación final
+            os.rename(processing_result['processed_path'], str(final_path))
+            
+            # Obtener tamaño del archivo final
+            file_size = os.path.getsize(final_path)
+            
+            logger.info(f"Audio processing completed: {processing_result}")
             
             # Crear URL pública
-            public_url = f"/uploads/audio/{processing_result['filename']}"
+            public_url = f"/api/uploads/audio/{final_path.name}"
             
             # Preparar datos para la base de datos
             audio_data = UserAudio(
