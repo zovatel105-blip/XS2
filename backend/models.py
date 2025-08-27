@@ -376,5 +376,79 @@ class UploadResponse(BaseModel):
     duration: Optional[float] = None
     created_at: datetime
 
+# =============  USER AUDIO MODELS =============
+
+class AudioPrivacy(str, Enum):
+    PRIVATE = "private"  # Solo el usuario puede usar este audio
+    PUBLIC = "public"    # Otros usuarios pueden descubrir y usar este audio
+
+class UserAudio(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str  # Título del audio (editable por usuario)
+    artist: str = ""  # Artista/Creador (defaults to username)
+    original_filename: str  # Nombre del archivo original
+    filename: str  # Nombre del archivo en el servidor
+    file_format: str  # mp3, m4a, wav, aac
+    file_size: int  # Tamaño en bytes
+    duration: int  # Duración en segundos (máx 60)
+    uploader_id: str  # ID del usuario que subió el audio
+    file_path: str  # Ruta local del archivo
+    public_url: str  # URL pública para acceder al audio
+    waveform: List[float] = []  # Datos de visualización de onda
+    cover_url: Optional[str] = None  # URL de la imagen de portada (opcional)
+    privacy: AudioPrivacy = AudioPrivacy.PRIVATE  # Privacidad del audio
+    uses_count: int = 0  # Número de veces que se ha usado en posts
+    is_original: bool = True  # Siempre True para audio subido por usuarios
+    category: str = "User Audio"  # Categoría fija
+    # Metadatos del archivo
+    bitrate: Optional[int] = None  # Bitrate del audio
+    sample_rate: Optional[int] = None  # Frecuencia de muestreo
+    # Control de estado
+    is_active: bool = True  # Si el audio está activo
+    is_processed: bool = False  # Si el audio ha sido procesado
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserAudioCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=100)
+    artist: Optional[str] = Field(None, max_length=100)
+    privacy: AudioPrivacy = AudioPrivacy.PRIVATE
+    cover_url: Optional[str] = None
+
+class UserAudioUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=1, max_length=100)
+    artist: Optional[str] = Field(None, max_length=100)
+    privacy: Optional[AudioPrivacy] = None
+    cover_url: Optional[str] = None
+
+class UserAudioResponse(BaseModel):
+    id: str
+    title: str
+    artist: str
+    duration: int
+    public_url: str
+    waveform: List[float]
+    cover_url: Optional[str]
+    privacy: AudioPrivacy
+    uses_count: int
+    is_original: bool
+    category: str
+    file_format: str
+    file_size: int
+    uploader: UserResponse  # Información del usuario que subió
+    created_at: datetime
+    # Para compatibilidad con sistema de música existente
+    url: str = ""  # Será igual a public_url
+    preview_url: str = ""  # Será igual a public_url
+    isTrending: bool = False
+    uses: int = 0  # Será igual a uses_count
+
+class UserAudioUse(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    audio_id: str  # ID del audio usado
+    user_id: str  # ID del usuario que usó el audio
+    poll_id: Optional[str] = None  # ID del poll donde se usó (si aplica)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # Necesario para resolver referencia circular
 CommentResponse.model_rebuild()
