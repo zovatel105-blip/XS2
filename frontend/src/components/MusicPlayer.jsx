@@ -169,41 +169,52 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   return (
     <div className={`flex-shrink-0 ${className}`}>
-      {/* Reproductor compacto estilo TikTok - UN SOLO CLICK PARA NAVEGAR */}
-      <div 
-        onClick={handleNavigateToAudio}
-        className="relative cursor-pointer group select-none"
-        title={`Ver detalles: "${music?.title}" - ${music?.artist}`}
-      >
-        {/* Container con imagen de fondo */}
-        <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg">
-          {music.cover ? (
-            <img 
-              src={music.cover} 
-              alt={music.title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <Music className="w-4 h-4 text-white" />
-            </div>
-          )}
-          
-          {/* Overlay de reproducción - SOLO visible al hover y mantenido */}
-          <button 
-            data-audio-player-control="true"
-            onClick={handleTogglePlay}
-            className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
-            onMouseEnter={(e) => e.stopPropagation()}
-          >
-            {isLoading ? (
-              <Loader2 className="w-3 h-3 text-white animate-spin" />
-            ) : isPlaying ? (
-              <Pause className="w-3 h-3 text-white fill-white" />
+      {/* Reproductor compacto estilo TikTok - SOLO el círculo es clicable */}
+      <div className="relative">
+        
+        {/* Tooltip SEPARADO del área clicable */}
+        <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-40">
+          <div className="bg-black/90 text-white text-xs px-2 py-1 rounded-lg whitespace-nowrap border border-white/20 shadow-lg">
+            <div className="font-medium">{music.title}</div>
+            <div className="text-gray-300">{music.artist}</div>
+            <div className="text-purple-400 text-[10px] mt-1">👆 Click aquí abajo en el círculo</div>
+          </div>
+        </div>
+
+        {/* ÁREA CLICABLE - Solo el reproductor circular */}
+        <div 
+          onClick={handleNavigateToAudio}
+          className="relative cursor-pointer group select-none w-8 h-8"
+          title={`${music?.title} - ${music?.artist}`}
+        >
+          {/* Container circular del reproductor */}
+          <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg">
+            {music.cover ? (
+              <img 
+                src={music.cover} 
+                alt={music.title}
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <Play className="w-3 h-3 text-white fill-white ml-0.5" />
+              <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <Music className="w-4 h-4 text-white" />
+              </div>
             )}
-          </button>
+            
+            {/* Overlay de reproducción - SOLO visible al hover y mantenido */}
+            <button 
+              data-audio-player-control="true"
+              onClick={handleTogglePlay}
+              className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20"
+            >
+              {isLoading ? (
+                <Loader2 className="w-3 h-3 text-white animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-3 h-3 text-white fill-white" />
+              ) : (
+                <Play className="w-3 h-3 text-white fill-white ml-0.5" />
+              )}
+            </button>
           
           {/* Indicador de música activa cuando está reproduciéndose */}
           {isPlaying && (
