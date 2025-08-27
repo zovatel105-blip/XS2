@@ -262,13 +262,16 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
           <div className="bg-black/90 text-white text-xs px-3 py-2 rounded-lg backdrop-blur-sm whitespace-nowrap border border-white/20 shadow-lg max-w-48 text-center">
             <div className="font-medium truncate">{music.title}</div>
             <div className="text-gray-300 truncate">{music.artist}</div>
+            {music.id && (
+              <div className="text-yellow-400 text-[10px] mt-1">ID: {music.id}</div>
+            )}
             {realPreviewUrl && (
               <div className="text-blue-400 text-[10px] mt-1">🎵 Audio Real</div>
             )}
             {error && (
               <div className="text-red-400 text-[10px] mt-1">❌ {error}</div>
             )}
-            <div className="text-gray-400 text-[10px] mt-1">Click para ver detalles</div>
+            <div className="text-purple-400 text-[10px] mt-1 font-medium">👆 Click para ver info</div>
           </div>
         </div>
       </div>
