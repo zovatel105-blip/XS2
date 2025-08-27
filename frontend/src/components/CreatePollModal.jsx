@@ -196,11 +196,11 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
       return;
     }
 
-    const validOptions = options.filter(opt => opt.text.trim());
-    if (validOptions.length < 2) {
+    // Las opciones pueden estar vacías - solo necesitamos al menos 2 opciones (aunque estén sin texto)
+    if (options.length < 2) {
       toast({
-        title: "Error",
-        description: "Necesitas al menos 2 opciones válidas",
+        title: "Error", 
+        description: "Necesitas al menos 2 opciones (el texto es opcional)",
         variant: "destructive"
       });
       return;
