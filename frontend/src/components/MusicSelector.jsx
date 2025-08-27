@@ -312,8 +312,8 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
     });
   };
 
-  // Enhanced categories including Popular
-  const mainCategories = ['Popular', 'Reggaeton', 'Trap', 'Urbano Español', 'Pop Latino'];
+  // Enhanced categories including Popular and Mi Música
+  const mainCategories = ['Popular', 'Mi Música', 'Reggaeton', 'Trap', 'Urbano Español', 'Pop Latino'];
 
   return (
     <div className="space-y-3 bg-white">
