@@ -191,14 +191,13 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             )}
           </button>
           
-          {/* Indicador de música activa cuando está reproduciéndose */}
+          {/* Indicadores de estado */}
           {isPlaying && (
             <div className="absolute -top-0.5 -right-0.5">
               <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm animate-pulse" />
             </div>
           )}
 
-          {/* Indicador de audio real */}
           {realPreviewUrl && (
             <div className="absolute -bottom-0.5 -left-0.5">
               <div className="w-2 h-2 bg-blue-500 rounded-full border border-white shadow-sm" 
@@ -206,7 +205,6 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             </div>
           )}
 
-          {/* Indicador de error */}
           {error && (
             <div className="absolute -bottom-0.5 -left-0.5">
               <div className="w-2 h-2 bg-red-500 rounded-full border border-white shadow-sm" 
@@ -221,8 +219,6 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             <div className="w-12 h-12 rounded-full border-2 border-white/30 animate-ping" />
           </div>
         )}
-      </div>
-
       </div>
     </div>
   );
