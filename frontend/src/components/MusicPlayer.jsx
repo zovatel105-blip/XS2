@@ -5,6 +5,7 @@ import audioManager from '../services/AudioManager';
 import realMusicService from '../services/realMusicService';
 
 const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', autoPlay = false, loop = false }) => {
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [realPreviewUrl, setRealPreviewUrl] = useState(null);
