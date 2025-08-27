@@ -243,8 +243,12 @@ const AudioDetailPage = () => {
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
-              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600">Cargando audio...</p>
+              <div className="relative w-16 h-16 mx-auto mb-4">
+                <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                <Music className="w-6 h-6 text-purple-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <p className="text-gray-600 text-lg font-medium">Cargando información del audio...</p>
+              <p className="text-gray-500 text-sm mt-2">Audio ID: {audioId}</p>
             </div>
           </div>
         </div>
