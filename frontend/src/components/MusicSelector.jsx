@@ -398,6 +398,10 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
       return searchResults;
     }
     
+    if (activeCategory === 'Mi Música') {
+      return myMusic;
+    }
+    
     if (activeCategory === 'Popular') {
       // If we have poll title, show recommended first
       if (pollTitle && !searchQuery) {
