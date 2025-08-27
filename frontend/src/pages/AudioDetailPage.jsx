@@ -28,6 +28,7 @@ const AudioDetailPage = () => {
       setLoading(true);
       const token = localStorage.getItem('authToken');
       
+      // First try to fetch from user audio endpoint
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -38,8 +39,11 @@ const AudioDetailPage = () => {
       if (response.ok) {
         const data = await response.json();
         setAudio(data.audio);
+        console.log('✅ Audio cargado desde biblioteca personal:', data.audio);
       } else {
         // If not found in user audio, try music system
+        console.log('🔍 Audio no encontrado en biblioteca personal, buscando en sistema de música...');
+        
         const musicResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/music/library-with-previews?limit=1000`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -49,10 +53,12 @@ const AudioDetailPage = () => {
         
         if (musicResponse.ok) {
           const musicData = await musicResponse.json();
+          console.log('🎵 Biblioteca de música cargada:', musicData.music?.length || 0, 'tracks');
+          
           const musicTrack = musicData.music?.find(m => m.id === audioId);
           if (musicTrack) {
             // Convert music track to audio format
-            setAudio({
+            const audioData = {
               id: musicTrack.id,
               title: musicTrack.title,
               artist: musicTrack.artist,
@@ -62,13 +68,19 @@ const AudioDetailPage = () => {
               uses_count: musicTrack.uses || 0,
               privacy: 'public',
               is_system_music: true,
-              source: 'iTunes API',
-              created_at: new Date().toISOString()
-            });
+              source: musicTrack.source || 'iTunes API',
+              created_at: musicTrack.created_at || new Date().toISOString(),
+              category: musicTrack.category,
+              genre: musicTrack.genre
+            };
+            setAudio(audioData);
+            console.log('✅ Audio del sistema encontrado:', audioData);
           } else {
+            console.log('❌ Audio no encontrado en sistema de música para ID:', audioId);
             throw new Error('Audio not found');
           }
         } else {
+          console.log('❌ Error accediendo a biblioteca de música:', musicResponse.status);
           throw new Error('Audio not found');
         }
       }
