@@ -327,7 +327,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
       formData.append('artist', 'Mi Audio'); // Default artist
       formData.append('privacy', 'private'); // Default to private
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL}/api/audio/upload`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
