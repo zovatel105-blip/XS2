@@ -172,6 +172,11 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
   const [popularMusic, setPopularMusic] = useState([]);
   const [isLoadingPopular, setIsLoadingPopular] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [myMusic, setMyMusic] = useState([]);
+  const [isLoadingMyMusic, setIsLoadingMyMusic] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const audioRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const { toast } = useToast();
