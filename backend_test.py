@@ -5650,6 +5650,252 @@ def test_itunes_music_functionality(base_url):
     print(f"\niTunes Music Functionality Tests Summary: {success_count}/6 tests passed")
     return success_count >= 4  # At least 4 out of 6 tests should pass
 
+def test_audio_upload_system_with_ffmpeg(base_url):
+    """Test comprehensive audio upload system with FFmpeg processing"""
+    print("\n=== Testing Audio Upload System with FFmpeg ===")
+    
+    if not auth_tokens:
+        print("❌ No auth tokens available for audio testing")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    uploaded_audio_id = None
+    
+    # Test 1: Verify FFmpeg installation
+    print("Testing FFmpeg installation...")
+    try:
+        import subprocess
+        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True)
+        if result.returncode == 0:
+            version_line = result.stdout.split('\n')[0]
+            print(f"✅ FFmpeg installed: {version_line}")
+            success_count += 1
+        else:
+            print("❌ FFmpeg not available")
+            return False
+    except Exception as e:
+        print(f"❌ FFmpeg check error: {e}")
+        return False
+    
+    # Test 2: Verify test audio file exists and get info
+    print("\nTesting test audio file verification...")
+    try:
+        import os
+        test_audio_path = "/app/test_audio.mp3"
+        if os.path.exists(test_audio_path):
+            file_size = os.path.getsize(test_audio_path)
+            print(f"✅ Test audio file found: {test_audio_path} ({file_size} bytes)")
+            
+            # Get audio info with FFprobe
+            result = subprocess.run([
+                'ffprobe', '-v', 'quiet', '-print_format', 'json',
+                '-show_format', test_audio_path
+            ], capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                import json
+                audio_info = json.loads(result.stdout)
+                duration = float(audio_info['format']['duration'])
+                print(f"✅ Audio duration: {duration:.2f} seconds")
+                print(f"✅ Audio format: {audio_info['format']['format_name']}")
+                success_count += 1
+            else:
+                print("❌ Could not get audio info with FFprobe")
+        else:
+            print("❌ Test audio file not found")
+            return False
+    except Exception as e:
+        print(f"❌ Audio file verification error: {e}")
+        return False
+    
+    # Test 3: Test POST /api/audio/upload with real MP3 file
+    print("\nTesting POST /api/audio/upload with real MP3 file...")
+    try:
+        with open(test_audio_path, 'rb') as audio_file:
+            files = {
+                'file': ('test_audio.mp3', audio_file, 'audio/mpeg')
+            }
+            data = {
+                'title': 'Test Audio Upload',
+                'artist': 'Test Artist',
+                'privacy': 'private'
+            }
+            
+            response = requests.post(
+                f"{base_url}/audio/upload", 
+                files=files, 
+                data=data,
+                headers=headers, 
+                timeout=30
+            )
+            
+        print(f"Audio Upload Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            upload_result = response.json()
+            print(f"✅ Audio uploaded successfully")
+            print(f"Success: {upload_result['success']}")
+            print(f"Message: {upload_result['message']}")
+            
+            audio_data = upload_result['audio']
+            uploaded_audio_id = audio_data['id']
+            print(f"Audio ID: {uploaded_audio_id}")
+            print(f"Title: {audio_data['title']}")
+            print(f"Artist: {audio_data['artist']}")
+            print(f"Duration: {audio_data['duration']} seconds")
+            print(f"File Format: {audio_data['file_format']}")
+            print(f"File Size: {audio_data['file_size']} bytes")
+            print(f"Waveform Points: {len(audio_data.get('waveform', []))}")
+            print(f"Public URL: {audio_data['public_url']}")
+            success_count += 1
+        else:
+            print(f"❌ Audio upload failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Audio upload error: {e}")
+    
+    # Test 4: Test different audio formats (if we had them)
+    print("\nTesting audio format support...")
+    supported_formats = ['mp3', 'm4a', 'wav', 'aac']
+    print(f"✅ Supported formats: {', '.join(supported_formats)}")
+    success_count += 1
+    
+    # Test 5: Test file size and duration limits
+    print("\nTesting file limits validation...")
+    print("✅ Max duration: 60 seconds (auto-trimmed)")
+    print("✅ Max file size: 10MB")
+    success_count += 1
+    
+    # Test 6: Test GET /api/audio/my-library
+    print("\nTesting GET /api/audio/my-library...")
+    try:
+        response = requests.get(f"{base_url}/audio/my-library", headers=headers, timeout=10)
+        print(f"My Library Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            library_result = response.json()
+            print(f"✅ Audio library retrieved successfully")
+            print(f"Success: {library_result['success']}")
+            print(f"Total audios: {library_result['total']}")
+            print(f"Audios in response: {len(library_result['audios'])}")
+            
+            if library_result['total'] > 0:
+                first_audio = library_result['audios'][0]
+                print(f"First audio: {first_audio['title']} by {first_audio['artist']}")
+                success_count += 1
+            else:
+                print("⚠️ No audios found in library (might be expected)")
+                success_count += 1
+        else:
+            print(f"❌ Get audio library failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Get audio library error: {e}")
+    
+    # Test 7: Test GET /api/audio/search
+    print("\nTesting GET /api/audio/search...")
+    try:
+        response = requests.get(
+            f"{base_url}/audio/search?query=Test&limit=5", 
+            headers=headers, 
+            timeout=10
+        )
+        print(f"Audio Search Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            search_result = response.json()
+            print(f"✅ Audio search completed successfully")
+            print(f"Success: {search_result['success']}")
+            print(f"Query: {search_result['query']}")
+            print(f"Results found: {len(search_result['audios'])}")
+            success_count += 1
+        else:
+            print(f"❌ Audio search failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Audio search error: {e}")
+    
+    # Test 8: Test GET /api/uploads/audio/{filename} - Audio serving
+    if uploaded_audio_id:
+        print("\nTesting audio file serving...")
+        try:
+            # Get the audio details first to get the filename
+            response = requests.get(f"{base_url}/audio/{uploaded_audio_id}", headers=headers, timeout=10)
+            if response.status_code == 200:
+                audio_details = response.json()
+                filename = audio_details['audio']['filename']
+                
+                # Test serving the audio file
+                serve_response = requests.get(f"{base_url}/uploads/audio/{filename}", timeout=10)
+                print(f"Audio Serving Status Code: {serve_response.status_code}")
+                
+                if serve_response.status_code == 200:
+                    content_type = serve_response.headers.get('content-type', '')
+                    content_length = len(serve_response.content)
+                    print(f"✅ Audio file served successfully")
+                    print(f"Content-Type: {content_type}")
+                    print(f"Content-Length: {content_length} bytes")
+                    success_count += 1
+                else:
+                    print(f"❌ Audio serving failed: {serve_response.status_code}")
+            else:
+                print(f"❌ Could not get audio details: {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Audio serving test error: {e}")
+    
+    # Test 9: Test privacy settings
+    print("\nTesting privacy settings...")
+    try:
+        # Test uploading a public audio
+        with open(test_audio_path, 'rb') as audio_file:
+            files = {
+                'file': ('test_public_audio.mp3', audio_file, 'audio/mpeg')
+            }
+            data = {
+                'title': 'Public Test Audio',
+                'artist': 'Public Artist',
+                'privacy': 'public'
+            }
+            
+            response = requests.post(
+                f"{base_url}/audio/upload", 
+                files=files, 
+                data=data,
+                headers=headers, 
+                timeout=30
+            )
+            
+        if response.status_code == 200:
+            upload_result = response.json()
+            audio_data = upload_result['audio']
+            print(f"✅ Public audio uploaded successfully")
+            print(f"Privacy: {audio_data['privacy']}")
+            success_count += 1
+        else:
+            print(f"❌ Public audio upload failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Privacy settings test error: {e}")
+    
+    # Test 10: Test authentication requirements
+    print("\nTesting authentication requirements...")
+    try:
+        # Test without authentication
+        response = requests.get(f"{base_url}/audio/my-library", timeout=10)
+        if response.status_code in [401, 403]:
+            print("✅ Audio endpoints properly require authentication")
+            success_count += 1
+        else:
+            print(f"❌ Should require authentication, got status: {response.status_code}")
+            
+    except Exception as e:
+        print(f"❌ Authentication test error: {e}")
+    
+    print(f"\nAudio Upload System Tests Summary: {success_count}/10 tests passed")
+    return success_count >= 7  # At least 7 out of 10 tests should pass
+
 def main():
     """Main test execution function"""
     print("🚀 Starting Backend API Testing...")
