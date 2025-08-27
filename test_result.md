@@ -57,8 +57,8 @@
 ##   test_priority: "high_first"  # or "sequential" or "stuck_first"
 ##
 ## agent_communication:
-##     -agent: "main"  # or "testing" or "user"
-##     -message: "Communication message between agents"
+##     -agent: "main"
+##     -message: "FFmpeg instalado exitosamente. Iniciando testing específico del sistema de subida de audio según solicitud del usuario. Archivo test_audio.mp3 (40KB, 5seg) creado para pruebas. Endpoints a probar: POST /api/audio/upload, GET /api/audio/my-library, GET /api/audio/search, GET /api/uploads/audio/{filename}"
 
 # Protocol Guidelines for Main agent
 #
