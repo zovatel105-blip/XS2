@@ -171,11 +171,11 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
             </div>
           )}
           
-          {/* Overlay de reproducción */}
+          {/* Overlay de reproducción - solo visible al hover */}
           <div 
             data-audio-player-control="true"
             onClick={handleTogglePlay}
-            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
           >
             {isLoading ? (
               <Loader2 className="w-3 h-3 text-white animate-spin" />
