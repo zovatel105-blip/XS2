@@ -233,7 +233,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
         return;
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL}/api/audio/my-library`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/my-library`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
