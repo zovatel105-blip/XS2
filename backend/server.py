@@ -430,11 +430,11 @@ def generate_waveform(audio_path: str, points: int = 20) -> List[float]:
     Generate waveform visualization data from audio file
     """
     try:
-        # Load audio with librosa for analysis
+        # Try to load audio with librosa for analysis
         y, sr = librosa.load(audio_path)
         
         # Calculate RMS energy for each segment
-        hop_length = len(y) // points
+        hop_length = max(1, len(y) // points)
         waveform = []
         
         for i in range(points):
@@ -450,9 +450,10 @@ def generate_waveform(audio_path: str, points: int = 20) -> List[float]:
         
         return waveform
     except Exception as e:
-        print(f"❌ Waveform generation error: {str(e)}")
+        print(f"❌ Librosa waveform generation failed: {str(e)}")
+        print("🔄 Using basic waveform generation")
         # Return default waveform if generation fails
-        return [0.5, 0.7, 0.4, 0.8, 0.6, 0.9, 0.3, 0.7, 0.5, 0.8] * 2
+        return generate_basic_waveform(points)
 
 def validate_audio_file(file: UploadFile) -> dict:
     """
