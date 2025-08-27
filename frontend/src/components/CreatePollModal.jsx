@@ -390,7 +390,7 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
                   </div>
                   <div className="flex-1">
                     <UserMentionInput
-                      placeholder={`Descripción para la opción ${index + 1}... Usa @ para mencionar usuarios`}
+                      placeholder={`Descripción para la opción ${index + 1} (opcional)... Usa @ para mencionar usuarios`}
                       value={option.text}
                       onChange={(newText) => updateOption(index, 'text', newText)}
                       onMentionSelect={(user) => {
