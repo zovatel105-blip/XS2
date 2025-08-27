@@ -35,7 +35,9 @@ from models import (
     Follow, FollowCreate, FollowResponse, FollowStatus, FollowingList, FollowersList,
     LoginAttempt, UserDevice, UserSession, SecurityNotification,
     Poll, PollCreate, PollResponse, PollOption, Vote, VoteCreate, PollLike, Music,
-    UploadType, FileType, UploadedFile, UploadResponse
+    UploadType, FileType, UploadedFile, UploadResponse,
+    # User Audio Models
+    UserAudio, UserAudioCreate, UserAudioUpdate, UserAudioResponse, UserAudioUse, AudioPrivacy
 )
 from auth import (
     verify_password, get_password_hash, create_access_token, 
