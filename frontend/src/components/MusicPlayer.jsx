@@ -128,7 +128,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
     console.log('🎵 MusicPlayer clicked!', {
       target: e.target.tagName,
       music: music?.id,
-      event: 'navigation_attempt'
+      event: 'navigation_to_audio_page'
     });
     
     if (music?.id) {
@@ -138,21 +138,10 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
         audioId = audioId.startsWith('user_audio_') ? audioId : `user_audio_${audioId}`;
       }
       
-      console.log('✅ Navigating to /audio/' + audioId);
+      console.log('✅ Navegando a página de audio:', '/audio/' + audioId);
       navigate(`/audio/${audioId}`);
     } else {
-      console.error('❌ No music ID available');
-    }
-  };
-
-  const handleTogglePlay = async (e) => {
-    e.stopPropagation(); // Prevent navigation when clicking play/pause
-    console.log('🎵 Play/Pause clicked - preventing navigation');
-    
-    if (isPlaying) {
-      await handlePause();
-    } else {
-      await handlePlay();
+      console.error('❌ No music ID disponible para navegación');
     }
   };
 
