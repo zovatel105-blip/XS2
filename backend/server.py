@@ -292,6 +292,117 @@ async def create_or_get_oauth_user(oauth_data: Dict, ip_address: str, user_agent
         
         return user
 
+# =============  AUDIO PROCESSING UTILITIES =============
+
+import pydub
+from pydub import AudioSegment
+import librosa
+import soundfile as sf
+import numpy as np
+
+def process_audio_file(file_path: str, max_duration: int = 60) -> dict:
+    """
+    Process uploaded audio file: validate, trim to max duration, extract metadata
+    """
+    try:
+        # Load audio using pydub (supports MP3, M4A, WAV, AAC)
+        audio = AudioSegment.from_file(file_path)
+        
+        # Get original metadata
+        original_duration = len(audio) / 1000.0  # Convert to seconds
+        sample_rate = audio.frame_rate
+        channels = audio.channels
+        
+        # Trim to max duration if necessary
+        if original_duration > max_duration:
+            audio = audio[:max_duration * 1000]  # pydub uses milliseconds
+            print(f"🎵 Audio trimmed from {original_duration:.1f}s to {max_duration}s")
+        
+        # Export processed audio (convert to MP3 for consistency)
+        processed_path = file_path.replace(file_path.split('.')[-1], 'mp3')
+        audio.export(processed_path, format="mp3", bitrate="128k")
+        
+        # Generate waveform data for visualization
+        waveform = generate_waveform(processed_path)
+        
+        return {
+            'success': True,
+            'processed_path': processed_path,
+            'duration': min(original_duration, max_duration),
+            'sample_rate': sample_rate,
+            'channels': channels,
+            'bitrate': 128,  # Fixed bitrate for processed files
+            'waveform': waveform,
+            'was_trimmed': original_duration > max_duration,
+            'original_duration': original_duration
+        }
+        
+    except Exception as e:
+        print(f"❌ Audio processing error: {str(e)}")
+        return {
+            'success': False,
+            'error': f"Error processing audio: {str(e)}"
+        }
+
+def generate_waveform(audio_path: str, points: int = 20) -> List[float]:
+    """
+    Generate waveform visualization data from audio file
+    """
+    try:
+        # Load audio with librosa for analysis
+        y, sr = librosa.load(audio_path)
+        
+        # Calculate RMS energy for each segment
+        hop_length = len(y) // points
+        waveform = []
+        
+        for i in range(points):
+            start = i * hop_length
+            end = min((i + 1) * hop_length, len(y))
+            if start < len(y):
+                segment = y[start:end]
+                rms = np.sqrt(np.mean(segment**2)) if len(segment) > 0 else 0
+                # Normalize to 0-1 range
+                waveform.append(min(1.0, rms * 3))  # Amplify for better visualization
+            else:
+                waveform.append(0.0)
+        
+        return waveform
+    except Exception as e:
+        print(f"❌ Waveform generation error: {str(e)}")
+        # Return default waveform if generation fails
+        return [0.5, 0.7, 0.4, 0.8, 0.6, 0.9, 0.3, 0.7, 0.5, 0.8] * 2
+
+def validate_audio_file(file: UploadFile) -> dict:
+    """
+    Validate uploaded audio file (format, size, etc.)
+    """
+    # Supported audio formats
+    SUPPORTED_FORMATS = ['mp3', 'm4a', 'wav', 'aac', 'flac', 'ogg']
+    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+    
+    # Get file extension
+    file_extension = file.filename.lower().split('.')[-1] if '.' in file.filename else ''
+    
+    # Validate format
+    if file_extension not in SUPPORTED_FORMATS:
+        return {
+            'valid': False,
+            'error': f"Formato no soportado. Use: {', '.join(SUPPORTED_FORMATS.upper())}"
+        }
+    
+    # Validate size
+    if hasattr(file, 'size') and file.size > MAX_FILE_SIZE:
+        return {
+            'valid': False,
+            'error': f"Archivo muy grande. Máximo 10MB permitido."
+        }
+    
+    return {
+        'valid': True,
+        'format': file_extension
+    }
+
 # =============  MUSIC UTILITIES =============
 
 async def search_itunes_track(artist: str, track: str):
