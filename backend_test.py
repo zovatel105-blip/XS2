@@ -5693,6 +5693,9 @@ def main():
     # NEW: iTunes Music Functionality Testing (as requested in review)
     test_results['itunes_music_functionality'] = test_itunes_music_functionality(base_url)
     
+    # NEW: User Audio Endpoints Testing (as requested in review)
+    test_results['user_audio_endpoints'] = test_user_audio_endpoints(base_url)
+    
     # Print summary
     print("\n" + "=" * 60)
     print("🎯 TESTING SUMMARY")
