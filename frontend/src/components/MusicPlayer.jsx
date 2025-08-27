@@ -124,7 +124,25 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
     }
   };
 
-  const handleTogglePlay = async () => {
+  const handleNavigateToAudio = (e) => {
+    // Prevent navigation if clicking on play/pause button
+    if (e.target.closest('[data-audio-player-control]')) {
+      return;
+    }
+    
+    if (music?.id) {
+      // Handle both user audio and system music IDs
+      let audioId = music.id;
+      if (music.isOriginal || music.source === 'User Upload') {
+        // For user uploaded audio, ensure we have the right format
+        audioId = audioId.startsWith('user_audio_') ? audioId : `user_audio_${audioId}`;
+      }
+      navigate(`/audio/${audioId}`);
+    }
+  };
+
+  const handleTogglePlay = async (e) => {
+    e.stopPropagation(); // Prevent navigation when clicking play/pause
     if (isPlaying) {
       await handlePause();
     } else {
