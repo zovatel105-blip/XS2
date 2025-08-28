@@ -628,9 +628,6 @@ const AudioDetailPage = () => {
         </Button>
       </div>
     </div>
-
-      </div>
-    </div>
   );
 };
 
