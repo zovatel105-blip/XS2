@@ -970,14 +970,14 @@ const AudioDetailPage = () => {
         )}
       </div>
 
-      {/* Botones inferiores (altura ~12% de pantalla) */}
-      <div className="h-[12vh] flex items-center justify-center px-4">
-        {/* Botón central "Use sound": ~40% del ancho, fondo verde, esquinas muy redondeadas */}
+      {/* Botón inferior */}
+      <div className={classes.bottomButton}>
+        {/* Botón central "Use sound" */}
         <Button 
           onClick={handleUseThisSound}
-          className="w-[40%] h-14 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-2xl text-lg transition-colors"
+          className={classes.mainButton}
         >
-          Use sound
+          {t('buttons.useSound')}
         </Button>
       </div>
     </div>
