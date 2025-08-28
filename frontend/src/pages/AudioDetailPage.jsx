@@ -586,9 +586,11 @@ const AudioDetailPage = () => {
 
   // Poll modal handlers
   const handlePollClick = (post) => {
-    console.log('🎯 Opening poll modal for:', post);
-    setSelectedPoll(post);
-    setShowPollModal(true);
+    console.log('🎬 Opening post in TikTok view:', post);
+    // Encontrar el índice del post seleccionado
+    const index = posts.findIndex(p => p.id === post.id);
+    setSelectedPostIndex(index >= 0 ? index : 0);
+    setShowTikTokView(true);
   };
 
   const handlePollVote = (pollId, optionId) => {
