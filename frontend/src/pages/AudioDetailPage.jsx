@@ -458,7 +458,7 @@ const AudioDetailPage = () => {
                 <p className="text-base text-gray-600 truncate">
                   {audio?.artist || 'Artista desconocido'}
                 </p>
-                {audio?.artist && audio?.artist.includes(',') && (
+                {audio?.artist && (audio.artist.includes(',') || audio.artist.includes('&') || audio.artist.includes('ft.') || audio.artist.includes('feat.')) && (
                   <span className="text-gray-500 text-sm">+&nbsp;{">"}</span>
                 )}
               </div>
