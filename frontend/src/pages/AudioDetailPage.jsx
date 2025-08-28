@@ -268,12 +268,69 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    toast({
-      title: isLiked ? "Quitado de favoritos" : "Agregado a favoritos",
-      description: `"${audio.title}" ${isLiked ? 'eliminado de' : 'agregado a'} tus favoritos`
-    });
+  const handleLike = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const audioType = audio.is_system_music ? 'system' : 'user';
+      
+      if (isLiked) {
+        // Remove from favorites
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/favorites/${audio.id}?audio_type=${audioType}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          setIsLiked(false);
+          toast({
+            title: "Quitado de favoritos",
+            description: `"${audio.title}" eliminado de tus favoritos`
+          });
+        } else {
+          throw new Error('Error removing from favorites');
+        }
+      } else {
+        // Add to favorites
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/favorites`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            audio_id: audio.id,
+            audio_type: audioType
+          })
+        });
+
+        if (response.ok) {
+          setIsLiked(true);
+          toast({
+            title: "Agregado a favoritos",
+            description: `"${audio.title}" agregado a tus favoritos`
+          });
+        } else if (response.status === 400) {
+          // Already in favorites
+          setIsLiked(true);
+          toast({
+            title: "Ya en favoritos",
+            description: `"${audio.title}" ya está en tus favoritos`
+          });
+        } else {
+          throw new Error('Error adding to favorites');
+        }
+      }
+    } catch (error) {
+      console.error('Error managing favorites:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar favoritos",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleAddToItunes = () => {
