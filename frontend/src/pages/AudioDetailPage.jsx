@@ -369,6 +369,15 @@ const AudioDetailPage = () => {
         const errorData = await response.text();
         console.error('❌ Error details:', errorData);
         
+        setDebugInfo({
+          lastFetch: new Date().toLocaleTimeString(),
+          postsCount: 0,
+          total: 0,
+          hasMore: false,
+          loading: false,
+          error: `${response.status}: ${errorData}`
+        });
+        
         if (offset === 0) {
           setPosts([]);
           setTotalPosts(0);
@@ -377,6 +386,16 @@ const AudioDetailPage = () => {
       }
     } catch (error) {
       console.error('❌ ERROR EN FETCH:', error);
+      
+      setDebugInfo({
+        lastFetch: new Date().toLocaleTimeString(),
+        postsCount: 0,
+        total: 0,
+        hasMore: false,
+        loading: false,
+        error: error.message
+      });
+      
       if (offset === 0) {
         setPosts([]);
         setTotalPosts(0);
