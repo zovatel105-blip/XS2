@@ -257,14 +257,19 @@ const AudioDetailPage = () => {
     }
   };
 
-  const fetchPostsUsingAudio = async () => {
+  const fetchPostsUsingAudio = async (offset = 0, append = false) => {
     try {
-      setPostsLoading(true);
+      if (offset === 0) {
+        setPostsLoading(true);
+      } else {
+        setLoadingMorePosts(true);
+      }
+      
       const token = localStorage.getItem('authToken');
       
-      console.log('🔍 Buscando posts que usan el audio:', audioId);
+      console.log(`🔍 Buscando posts que usan el audio: ${audioId}, offset: ${offset}`);
       
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}/posts`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}/posts?limit=12&offset=${offset}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -276,12 +281,26 @@ const AudioDetailPage = () => {
         console.log('✅ Respuesta completa de posts recibida:', JSON.stringify(data, null, 2));
         
         const postsData = data.posts || [];
-        setPosts(postsData);
-        console.log(`📊 Posts procesados y guardados:`, postsData.length);
+        const total = data.total || 0;
+        const hasMore = data.has_more || false;
+        
+        if (append) {
+          setPosts(prevPosts => [...prevPosts, ...postsData]);
+          console.log(`📊 Posts agregados (${postsData.length}), total ahora: ${posts.length + postsData.length}`);
+        } else {
+          setPosts(postsData);
+          console.log(`📊 Posts iniciales cargados: ${postsData.length}`);
+        }
+        
+        setTotalPosts(total);
+        setHasMorePosts(hasMore);
+        setCurrentOffset(offset + postsData.length);
+        
+        console.log(`📊 Estado actualizado - Total: ${total}, HasMore: ${hasMore}, NewOffset: ${offset + postsData.length}`);
         
         // Log detallado de cada post
         postsData.forEach((post, index) => {
-          console.log(`📝 Post ${index + 1}:`, {
+          console.log(`📝 Post ${offset + index + 1}:`, {
             id: post.id,
             title: post.title,
             created_at: post.created_at,
@@ -297,13 +316,25 @@ const AudioDetailPage = () => {
         const errorData = await response.text();
         console.error('Error details:', errorData);
         
-        setPosts([]);
+        if (offset === 0) {
+          setPosts([]);
+          setTotalPosts(0);
+          setHasMorePosts(false);
+        }
       }
     } catch (error) {
       console.error('❌ Error fetching posts using audio:', error);
-      setPosts([]);
+      if (offset === 0) {
+        setPosts([]);
+        setTotalPosts(0);
+        setHasMorePosts(false);
+      }
     } finally {
-      setPostsLoading(false);
+      if (offset === 0) {
+        setPostsLoading(false);
+      } else {
+        setLoadingMorePosts(false);
+      }
     }
   };
 
