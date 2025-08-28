@@ -1,0 +1,110 @@
+const translations = {
+  es: {
+    audioDetail: {
+      contains: "Contains:",
+      originalSoundBy: "Original sound by:",
+      users: "{{count}} usuarios",
+      user: "usuario",
+      loading: "Cargando información del audio...",
+      audioId: "Audio ID: {{id}}",
+      notFound: "Este audio no existe o ha sido eliminado",
+      backToFeed: "Volver al feed",
+      previousPage: "Página anterior",
+      loadingContent: "Cargando contenido...",
+      noContent: "No hay contenido aún",
+      beFirst: "Sé el primero en usar este audio en tu contenido",
+      originalPost: "Original",
+      loadingMore: "Cargando más contenido...",
+      noMoreContent: "No hay más contenido",
+      showing: "Mostrando {{current}} de {{total}}",
+      searchingFirst: "Buscando primera publicación...",
+      determining: "Determinando usuario...",
+      firstToUse: "Sé el primero en usar este sonido"
+    },
+    buttons: {
+      openAppleMusic: "Open in Apple Music",
+      addToFavorites: "Add to Favorites",
+      inFavorites: "En Favoritos", 
+      useSound: "Use sound",
+      notAvailable: "No disponible"
+    },
+    toast: {
+      audioSelected: "Audio seleccionado",
+      audioSelectedDesc: "\"{{title}}\" de {{artist}} ha sido seleccionado para tu nueva publicación",
+      sharedSuccess: "Compartido exitosamente",
+      sharedDesc: "El audio ha sido compartido",
+      linkCopied: "Enlace copiado",
+      linkCopiedDesc: "El enlace del audio se copió al portapapeles",
+      addedToFavorites: "Agregado a favoritos",
+      addedToFavoritesDesc: "\"{{title}}\" agregado a tus favoritos",
+      removedFromFavorites: "Quitado de favoritos", 
+      removedFromFavoritesDesc: "\"{{title}}\" eliminado de tus favoritos",
+      alreadyInFavorites: "Ya en favoritos",
+      alreadyInFavoritesDesc: "\"{{title}}\" ya está en tus favoritos",
+      openingAppleMusic: "Abriendo Apple Music",
+      openingAppleMusicDesc: "Buscando \"{{title}}\" de {{artist}}",
+      customAudio: "Audio personalizado",
+      customAudioDesc: "Esta es música subida por usuarios, no disponible en tiendas de música",
+      error: "Error",
+      errorLoading: "No se pudieron cargar los detalles del audio",
+      errorPlaying: "No se pudo reproducir el audio",
+      errorSharing: "No se pudo compartir el audio",
+      errorFavorites: "No se pudo actualizar favoritos"
+    }
+  },
+  en: {
+    audioDetail: {
+      contains: "Contains:",
+      originalSoundBy: "Original sound by:",
+      users: "{{count}} users", 
+      user: "user",
+      loading: "Loading audio information...",
+      audioId: "Audio ID: {{id}}",
+      notFound: "This audio doesn't exist or has been deleted",
+      backToFeed: "Back to feed",
+      previousPage: "Previous page", 
+      loadingContent: "Loading content...",
+      noContent: "No content yet",
+      beFirst: "Be the first to use this audio in your content",
+      originalPost: "Original",
+      loadingMore: "Loading more content...",
+      noMoreContent: "No more content",
+      showing: "Showing {{current}} of {{total}}",
+      searchingFirst: "Searching first post...",
+      determining: "Determining user...",
+      firstToUse: "Be the first to use this sound"
+    },
+    buttons: {
+      openAppleMusic: "Open in Apple Music",
+      addToFavorites: "Add to Favorites",
+      inFavorites: "In Favorites",
+      useSound: "Use sound", 
+      notAvailable: "Not available"
+    },
+    toast: {
+      audioSelected: "Audio selected",
+      audioSelectedDesc: "\"{{title}}\" by {{artist}} has been selected for your new post",
+      sharedSuccess: "Shared successfully", 
+      sharedDesc: "The audio has been shared",
+      linkCopied: "Link copied",
+      linkCopiedDesc: "The audio link was copied to clipboard", 
+      addedToFavorites: "Added to favorites",
+      addedToFavoritesDesc: "\"{{title}}\" added to your favorites",
+      removedFromFavorites: "Removed from favorites",
+      removedFromFavoritesDesc: "\"{{title}}\" removed from your favorites", 
+      alreadyInFavorites: "Already in favorites",
+      alreadyInFavoritesDesc: "\"{{title}}\" is already in your favorites",
+      openingAppleMusic: "Opening Apple Music",
+      openingAppleMusicDesc: "Searching \"{{title}}\" by {{artist}}",
+      customAudio: "Custom audio",
+      customAudioDesc: "This is user-uploaded music, not available in music stores",
+      error: "Error",
+      errorLoading: "Could not load audio details", 
+      errorPlaying: "Could not play audio",
+      errorSharing: "Could not share audio",
+      errorFavorites: "Could not update favorites"
+    }
+  }
+};
+
+export default translations;
