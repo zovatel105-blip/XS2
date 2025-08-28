@@ -791,7 +791,7 @@ const AudioDetailPage = () => {
         {/* Número de personas que utilizaron ese sonido: extremo derecho */}
         <div className="flex-shrink-0 ml-4">
           <span className="text-sm text-gray-400">
-            {formatNumber(audio?.uses_count || 0)} usuarios
+            {totalPosts > 0 ? `${formatNumber(totalPosts)} usuarios` : formatNumber(audio?.uses_count || 0) + ' usuarios'}
           </span>
         </div>
       </div>
