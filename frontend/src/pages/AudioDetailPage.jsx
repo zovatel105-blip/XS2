@@ -671,11 +671,9 @@ const AudioDetailPage = () => {
         <div className="flex-1 ml-6">
           <p className="text-sm text-gray-500">
             Original sound by: <span className="font-medium text-gray-700">
-              {originalUser || 'Cargando usuario...'}
+              {postsLoading ? 'Cargando...' : (originalUser || 'Determinando usuario...')}
             </span>
           </p>
-          {/* Debug info - remover en producción */}
-          {console.log('🔍 Debug originalUser:', originalUser, 'audio:', audio?.title, 'posts:', posts.length)}
         </div>
         
         {/* Número de personas que utilizaron ese sonido: extremo derecho */}
