@@ -509,7 +509,7 @@ const AudioDetailPage = () => {
         {/* Sección de miniaturas (rejilla 3 columnas) */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Videos ({posts.length})
+            Imágenes/Videos ({posts.length})
           </h3>
           
           {postsLoading ? (
