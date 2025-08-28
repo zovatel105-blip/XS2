@@ -823,7 +823,7 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Cuadrícula 3x3 (altura ~45% de pantalla) */}
+      {/* Cuadrícula 3x3 con scroll infinito (altura ~45% de pantalla) */}
       <div className="h-[45vh] px-1">
         {postsLoading ? (
           <div className="flex items-center justify-center h-full">
@@ -833,9 +833,12 @@ const AudioDetailPage = () => {
             </div>
           </div>
         ) : posts.length > 0 ? (
-          /* Grid 3x3 con celdas cuadradas uniformes y separación mínima (~2px) */
-          <>
-            {/* Debug logging */}
+          /* Contenedor con scroll para permitir más de 9 publicaciones */
+          <div 
+            className="h-full overflow-y-auto overscroll-behavior-y-contain"
+            onScroll={handleScroll}
+          >
+            {/* Grid 3x3 expandible verticalmente */}
             {(() => {
               console.log('📊 Renderizando grid con', posts.length, 'posts:', posts.map(p => ({
                 id: p.id, 
@@ -845,8 +848,8 @@ const AudioDetailPage = () => {
               })));
               return null;
             })()}
-            <div className="grid grid-cols-3 gap-0.5 h-full">
-            {posts.slice(0, 9).map((post, index) => {
+            <div className="grid grid-cols-3 gap-0.5 auto-rows-fr">
+            {posts.map((post, index) => {
               // Determinar si este es el post original (el más antiguo)
               const sortedByDate = [...posts].sort((a, b) => 
                 new Date(a.created_at) - new Date(b.created_at)
@@ -900,17 +903,25 @@ const AudioDetailPage = () => {
                 </div>
               );
             })}
-            
-            {/* Llenar celdas vacías si hay menos de 9 posts */}
-            {Array.from({ length: Math.max(0, 9 - posts.length) }).map((_, index) => (
-              <div key={`empty-${index}`} className="aspect-square bg-gray-50 flex items-center justify-center">
-                <div className="text-gray-300">
-                  <Plus className="w-8 h-8" />
-                </div>
-              </div>
-            ))}
           </div>
-          </>
+          
+          {/* Loading indicator para más posts */}
+          {loadingMorePosts && (
+            <div className="flex items-center justify-center py-4">
+              <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
+              <span className="text-sm text-gray-500">Cargando más contenido...</span>
+            </div>
+          )}
+          
+          {/* Mensaje cuando no hay más posts */}
+          {!hasMorePosts && posts.length >= 12 && (
+            <div className="flex items-center justify-center py-4">
+              <span className="text-sm text-gray-400">
+                {totalPosts > posts.length ? `Mostrando ${posts.length} de ${totalPosts}` : 'No hay más contenido'}
+              </span>
+            </div>
+          )}
+          </div>
         ) : (
           /* Estado vacío */
           <div className="flex items-center justify-center h-full">
