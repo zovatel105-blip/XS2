@@ -856,7 +856,7 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Cuadrícula 3x3 con scroll infinito */}
+      {/* Feed estilo TikTok de publicaciones que usan este audio */}
       <div className={classes.grid}>
         {postsLoading ? (
           <div className="flex items-center justify-center h-full">
@@ -866,122 +866,17 @@ const AudioDetailPage = () => {
             </div>
           </div>
         ) : posts && posts.length > 0 ? (
-          /* Contenedor con scroll para permitir más de 9 publicaciones */
-          <div 
-            className="h-full overflow-y-auto overscroll-behavior-y-contain px-1"
-            onScroll={handleScroll}
-          >
-            {/* Grid 3x3 expandible verticalmente */}
-            <div className={`grid grid-cols-${layout.gridCols} ${layout.gridGap} auto-rows-fr`}>
-              {posts.map((post, index) => {
-                console.log(`📝 Renderizando post ${index + 1}:`, post);
-                
-                // Determinar si este es el post original (el más antiguo)
-                const sortedByDate = [...posts].sort((a, b) => 
-                  new Date(a.created_at) - new Date(b.created_at)
-                );
-                const isOriginal = sortedByDate.length > 0 && post.id === sortedByDate[0].id;
-                
-                // Obtener la URL del media de forma más robusta
-                let mediaUrl = null;
-                let mediaType = 'image';
-                
-                if (post.options && post.options.length > 0) {
-                  // Buscar en las opciones del post
-                  const optionWithMedia = post.options.find(opt => 
-                    opt.media && (opt.media.url || opt.media_url)
-                  );
-                  if (optionWithMedia) {
-                    mediaUrl = optionWithMedia.media?.url || optionWithMedia.media_url;
-                    mediaType = optionWithMedia.media?.type || 'image';
-                  }
-                } else if (post.media_url) {
-                  // Usar media_url directo del post
-                  mediaUrl = post.media_url;
-                  mediaType = post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? 'video' : 'image';
-                }
-                
-                console.log(`📸 Media para post ${post.id}:`, { mediaUrl, mediaType });
-                
-                return (
-                  <div 
-                    key={post.id} 
-                    className="relative group cursor-pointer bg-gray-100"
-                    onClick={() => handlePollClick(post)}
-                  >
-                    {/* Celda cuadrada (~33% del ancho disponible) */}
-                    <div className="aspect-square w-full h-full bg-gray-200">
-                      {mediaUrl ? (
-                        mediaType === 'video' ? (
-                          /* Video thumbnail */
-                          <video 
-                            src={mediaUrl}
-                            className="w-full h-full object-cover"
-                            muted
-                            preload="metadata"
-                            onError={(e) => {
-                              console.error(`❌ Error cargando video ${mediaUrl}:`, e);
-                            }}
-                          />
-                        ) : (
-                          /* Imagen thumbnail */
-                          <img 
-                            src={mediaUrl} 
-                            alt={post.title || 'Post image'}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              console.error(`❌ Error cargando imagen ${mediaUrl}:`, e);
-                              e.target.style.display = 'none';
-                            }}
-                          />
-                        )
-                      ) : (
-                        /* Placeholder con información del post */
-                        <div className="w-full h-full bg-gray-300 flex flex-col items-center justify-center p-2">
-                          <MessageCircle className={`${layout.iconSize} text-gray-500 mb-2`} />
-                          <span className={`${classes.infoText} text-gray-600 text-center font-medium`}>
-                            {post.title?.substring(0, 20) || 'Sin título'}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {/* Etiqueta "Original" azul: esquina superior izquierda */}
-                      {isOriginal && (
-                        <div className="absolute top-1 left-1">
-                          <span className="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded font-medium leading-tight">
-                            {t('audioDetail.originalPost')}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {/* Overlay hover */}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            
-            {/* Loading indicator para más posts */}
-            {loadingMorePosts && (
-              <div className="flex items-center justify-center py-4">
-                <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
-                <span className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingMore')}</span>
-              </div>
-            )}
-            
-            {/* Mensaje cuando no hay más posts */}
-            {!hasMorePosts && posts.length >= 12 && (
-              <div className="flex items-center justify-center py-4">
-                <span className={`${classes.infoText} text-gray-400`}>
-                  {totalPosts > posts.length ? 
-                    t('audioDetail.showing', { current: posts.length, total: totalPosts }) : 
-                    t('audioDetail.noMoreContent')
-                  }
-                </span>
-              </div>
-            )}
-          </div>
+          /* Vista TikTok de publicaciones */
+          <TikTokScrollView
+            polls={posts}
+            onVote={handlePollVote}
+            onLike={handlePollLike}
+            onShare={handlePollShare}
+            onComment={handlePollComment}
+            onSave={handlePollSave}
+            showLogo={false}
+            className="h-full"
+          />
         ) : (
           /* Estado vacío */
           <div className="flex items-center justify-center h-full">
