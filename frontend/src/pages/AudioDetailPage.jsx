@@ -184,7 +184,7 @@ const AudioDetailGrid = ({ polls, onPollClick }) => {
 
             {/* Subtle gradient overlay for text readability - AudioDetailPage colors */}
             <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-100/80 to-transparent pointer-events-none" />
-          </div>
+          </motion.div>
         );
       })}
     </div>
