@@ -14,6 +14,7 @@ const AudioDetailPage = () => {
   const { audioId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const waveformRef = useRef(null);
   
   const [audio, setAudio] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -21,6 +22,21 @@ const AudioDetailPage = () => {
   const [postsLoading, setPostsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [waveformData, setWaveformData] = useState([]);
+  const [playbackPosition, setPlaybackPosition] = useState(0);
+
+  // Generate mock waveform data
+  useEffect(() => {
+    const generateWaveform = () => {
+      const data = [];
+      for (let i = 0; i < 50; i++) {
+        data.push(Math.random() * 100 + 20);
+      }
+      setWaveformData(data);
+    };
+    generateWaveform();
+  }, [audio]);
 
   useEffect(() => {
     fetchAudioDetails();
