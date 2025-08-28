@@ -233,18 +233,30 @@ const AudioDetailPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Respuesta de posts recibida:', data);
+        console.log('✅ Respuesta completa de posts recibida:', JSON.stringify(data, null, 2));
         
-        setPosts(data.posts || []);
-        console.log(`📊 Posts cargados: ${data.posts?.length || 0} de ${data.total || 0} total`);
+        const postsData = data.posts || [];
+        setPosts(postsData);
+        console.log(`📊 Posts procesados y guardados:`, postsData.length);
         
-        // La determinación del usuario original se hará en useEffect cuando cambien los posts
+        // Log detallado de cada post
+        postsData.forEach((post, index) => {
+          console.log(`📝 Post ${index + 1}:`, {
+            id: post.id,
+            title: post.title,
+            created_at: post.created_at,
+            author: post.author,
+            user: post.user,
+            hasAuthor: !!post.author,
+            hasUser: !!post.user
+          });
+        });
+        
       } else {
         console.error('❌ Error fetching posts:', response.status, response.statusText);
         const errorData = await response.text();
         console.error('Error details:', errorData);
         
-        // En caso de error, mantener posts vacío pero no marcar como error crítico
         setPosts([]);
       }
     } catch (error) {
