@@ -13,6 +13,7 @@ import { Button } from '../components/ui/button';
 import PollCard from '../components/PollCard';
 import PollModal from '../components/PollModal';
 import AudioWaveform from '../components/AudioWaveform';
+import TikTokScrollView from '../components/TikTokScrollView';
 
 const AudioDetailPage = () => {
   const { audioId } = useParams();
