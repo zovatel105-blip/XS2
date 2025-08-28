@@ -206,31 +206,12 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handleNoPostsFound = () => {
-    // Si no hay posts, usar información del audio o artista como fallback
-    if (audio) {
-      if (audio.is_system_music || audio.source === 'iTunes') {
-        // Para música del sistema, usar el artista como "original sound"
-        setOriginalUser(`${audio.artist} (artista original)`);
-        console.log('🎵 No hay posts, usando artista del sistema de música:', audio.artist);
-      } else if (audio.created_by) {
-        // Para audio de usuario, usar quien lo subió
-        setOriginalUser(audio.created_by);
-        console.log('🎵 No hay posts, usando creador del audio:', audio.created_by);
-      } else {
-        // Último fallback
-        setOriginalUser('Primera persona en usar este sonido');
-        console.log('🎵 No se pudo determinar usuario original');
-      }
-    } else {
-      setOriginalUser('Usuario original');
-    }
-  };
-
   const fetchPostsUsingAudio = async () => {
     try {
       setPostsLoading(true);
       const token = localStorage.getItem('authToken');
+      
+      console.log('🔍 Buscando posts que usan el audio:', audioId);
       
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}/posts`, {
         headers: {
@@ -241,34 +222,23 @@ const AudioDetailPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setPosts(data.posts || []);
+        console.log('✅ Respuesta de posts recibida:', data);
         
-        // Encontrar el usuario original (el más antiguo que usó este audio)
-        if (data.posts && data.posts.length > 0) {
-          const sortedByDate = [...data.posts].sort((a, b) => 
-            new Date(a.created_at) - new Date(b.created_at)
-          );
-          const originalPost = sortedByDate[0];
-          
-          // Priorizar display_name, luego username, luego un fallback
-          const originalUserName = originalPost.user?.display_name || 
-                                  originalPost.user?.username || 
-                                  originalPost.created_by ||
-                                  'Usuario desconocido';
-          
-          setOriginalUser(originalUserName);
-          console.log('🎵 Usuario original del audio encontrado:', originalUserName, 'del post más antiguo:', originalPost.created_at);
-        } else {
-          // Si no hay posts usando este audio, obtener info del audio mismo o usar artista
-          handleNoPostsFound();
-        }
+        setPosts(data.posts || []);
+        console.log(`📊 Posts cargados: ${data.posts?.length || 0} de ${data.total || 0} total`);
+        
+        // La determinación del usuario original se hará en useEffect cuando cambien los posts
       } else {
-        console.error('Error fetching posts:', response.status);
-        handleNoPostsFound();
+        console.error('❌ Error fetching posts:', response.status, response.statusText);
+        const errorData = await response.text();
+        console.error('Error details:', errorData);
+        
+        // En caso de error, mantener posts vacío pero no marcar como error crítico
+        setPosts([]);
       }
     } catch (error) {
-      console.error('Error fetching posts using audio:', error);
-      handleNoPostsFound();
+      console.error('❌ Error fetching posts using audio:', error);
+      setPosts([]);
     } finally {
       setPostsLoading(false);
     }
