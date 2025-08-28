@@ -596,9 +596,9 @@ const AudioDetailPage = () => {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-gray-400" />
               </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">No hay videos aún</h4>
+              <h4 className="text-lg font-medium text-gray-900 mb-2">No hay contenido aún</h4>
               <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">
-                Sé el primero en usar este audio en tu video
+                Sé el primero en usar este audio en tu contenido
               </p>
             </div>
           )}
