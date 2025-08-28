@@ -91,7 +91,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
       if (success && mountedRef.current) {
         setIsPlaying(true);
-        console.log(`🎵 Reproduciendo: ${music.title} - ${music.artist}`);
+        console.log(`🎵 Reproduciendo automáticamente: ${music.title} - ${music.artist}`);
         
         if (onTogglePlay) {
           onTogglePlay(true);
@@ -113,7 +113,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
       
       if (mountedRef.current) {
         setIsPlaying(false);
-        console.log(`⏸️ Pausado: ${music.title}`);
+        console.log(`⏸️ Pausado automáticamente: ${music.title}`);
         
         if (onTogglePlay) {
           onTogglePlay(false);
