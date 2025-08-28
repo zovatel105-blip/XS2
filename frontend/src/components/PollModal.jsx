@@ -199,7 +199,7 @@ const PollModal = ({ isOpen, onClose, poll, onVote, onLike, onShare, onComment }
         onClose={() => setShowCommentsModal(false)}
         pollId={poll.id}
         pollTitle={poll.title}
-        pollAuthor={poll.author}
+        pollAuthor={poll.author?.display_name || poll.author?.username || 'Usuario'}
       />
     </>
   );
