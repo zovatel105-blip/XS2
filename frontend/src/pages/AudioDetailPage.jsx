@@ -832,95 +832,127 @@ const AudioDetailPage = () => {
               <p className="text-gray-500 text-sm">Cargando contenido...</p>
             </div>
           </div>
-        ) : posts.length > 0 ? (
+        ) : posts && posts.length > 0 ? (
           /* Contenedor con scroll para permitir más de 9 publicaciones */
           <div 
             className="h-full overflow-y-auto overscroll-behavior-y-contain"
             onScroll={handleScroll}
           >
-            {/* Grid 3x3 expandible verticalmente */}
-            {(() => {
-              console.log('📊 Renderizando grid con', posts.length, 'posts:', posts.map(p => ({
-                id: p.id, 
-                title: p.title, 
-                user: p.user || p.author,
-                created_at: p.created_at
-              })));
-              return null;
-            })()}
-            <div className="grid grid-cols-3 gap-0.5 auto-rows-fr">
-            {posts.map((post, index) => {
-              // Determinar si este es el post original (el más antiguo)
-              const sortedByDate = [...posts].sort((a, b) => 
-                new Date(a.created_at) - new Date(b.created_at)
-              );
-              const isOriginal = sortedByDate.length > 0 && post.id === sortedByDate[0].id;
-              
-              return (
-                <div 
-                  key={post.id} 
-                  className="relative group cursor-pointer bg-gray-100"
-                  onClick={() => navigate(`/poll/${post.id}`)}
-                >
-                  {/* Celda cuadrada (~33% del ancho disponible) */}
-                  <div className="aspect-square w-full h-full bg-gray-200">
-                    {post.media_url ? (
-                      post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? (
-                        /* Video thumbnail */
-                        <video 
-                          src={post.media_url}
-                          className="w-full h-full object-cover"
-                          muted
-                          preload="metadata"
-                        />
-                      ) : (
-                        /* Imagen thumbnail */
-                        <img 
-                          src={post.media_url} 
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )
-                    ) : (
-                      /* Placeholder */
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <MessageCircle className="w-6 h-6 text-gray-400" />
-                      </div>
-                    )}
-                    
-                    {/* Etiqueta "Original" azul: esquina superior izquierda, ~20% del ancho de celda */}
-                    {isOriginal && (
-                      <div className="absolute top-1 left-1">
-                        <span className="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded font-medium leading-tight">
-                          Original
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* Overlay hover */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
-                  </div>
-                </div>
-              );
+            {/* Debug logging */}
+            {console.log('📊 RENDERIZANDO GRID:', {
+              postsLength: posts.length,
+              firstPost: posts[0],
+              postsLoading,
+              totalPosts
             })}
-          </div>
-          
-          {/* Loading indicator para más posts */}
-          {loadingMorePosts && (
-            <div className="flex items-center justify-center py-4">
-              <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
-              <span className="text-sm text-gray-500">Cargando más contenido...</span>
+            
+            {/* Grid 3x3 expandible verticalmente */}
+            <div className="grid grid-cols-3 gap-0.5 auto-rows-fr">
+              {posts.map((post, index) => {
+                console.log(`📝 Renderizando post ${index + 1}:`, post);
+                
+                // Determinar si este es el post original (el más antiguo)
+                const sortedByDate = [...posts].sort((a, b) => 
+                  new Date(a.created_at) - new Date(b.created_at)
+                );
+                const isOriginal = sortedByDate.length > 0 && post.id === sortedByDate[0].id;
+                
+                // Obtener la URL del media de forma más robusta
+                let mediaUrl = null;
+                let mediaType = 'image';
+                
+                if (post.options && post.options.length > 0) {
+                  // Buscar en las opciones del post
+                  const optionWithMedia = post.options.find(opt => 
+                    opt.media && (opt.media.url || opt.media_url)
+                  );
+                  if (optionWithMedia) {
+                    mediaUrl = optionWithMedia.media?.url || optionWithMedia.media_url;
+                    mediaType = optionWithMedia.media?.type || 'image';
+                  }
+                } else if (post.media_url) {
+                  // Usar media_url directo del post
+                  mediaUrl = post.media_url;
+                  mediaType = post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? 'video' : 'image';
+                }
+                
+                console.log(`📸 Media para post ${post.id}:`, { mediaUrl, mediaType });
+                
+                return (
+                  <div 
+                    key={post.id} 
+                    className="relative group cursor-pointer bg-gray-100"
+                    onClick={() => navigate(`/poll/${post.id}`)}
+                  >
+                    {/* Celda cuadrada (~33% del ancho disponible) */}
+                    <div className="aspect-square w-full h-full bg-gray-200">
+                      {mediaUrl ? (
+                        mediaType === 'video' ? (
+                          /* Video thumbnail */
+                          <video 
+                            src={mediaUrl}
+                            className="w-full h-full object-cover"
+                            muted
+                            preload="metadata"
+                            onError={(e) => {
+                              console.error(`❌ Error cargando video ${mediaUrl}:`, e);
+                            }}
+                          />
+                        ) : (
+                          /* Imagen thumbnail */
+                          <img 
+                            src={mediaUrl} 
+                            alt={post.title || 'Post image'}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error(`❌ Error cargando imagen ${mediaUrl}:`, e);
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        )
+                      ) : (
+                        /* Placeholder con información del post */
+                        <div className="w-full h-full bg-gray-300 flex flex-col items-center justify-center p-2">
+                          <MessageCircle className="w-8 h-8 text-gray-500 mb-2" />
+                          <span className="text-xs text-gray-600 text-center font-medium">
+                            {post.title?.substring(0, 20) || 'Sin título'}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Etiqueta "Original" azul: esquina superior izquierda */}
+                      {isOriginal && (
+                        <div className="absolute top-1 left-1">
+                          <span className="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded font-medium leading-tight">
+                            Original
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Overlay hover */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          )}
-          
-          {/* Mensaje cuando no hay más posts */}
-          {!hasMorePosts && posts.length >= 12 && (
-            <div className="flex items-center justify-center py-4">
-              <span className="text-sm text-gray-400">
-                {totalPosts > posts.length ? `Mostrando ${posts.length} de ${totalPosts}` : 'No hay más contenido'}
-              </span>
-            </div>
-          )}
+            
+            {/* Loading indicator para más posts */}
+            {loadingMorePosts && (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
+                <span className="text-sm text-gray-500">Cargando más contenido...</span>
+              </div>
+            )}
+            
+            {/* Mensaje cuando no hay más posts */}
+            {!hasMorePosts && posts.length >= 12 && (
+              <div className="flex items-center justify-center py-4">
+                <span className="text-sm text-gray-400">
+                  {totalPosts > posts.length ? `Mostrando ${posts.length} de ${totalPosts}` : 'No hay más contenido'}
+                </span>
+              </div>
+            )}
           </div>
         ) : (
           /* Estado vacío */
