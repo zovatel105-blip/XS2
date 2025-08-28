@@ -444,7 +444,7 @@ const AudioDetailPage = () => {
               {/* Waveform Visualization */}
               <div className="mt-6 bg-black/30 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
                 <div className="flex items-center gap-2 mb-3">
-                  <Waveform className="w-4 h-4 text-purple-400" />
+                  <AudioWaveform className="w-4 h-4 text-purple-400" />
                   <span className="text-white text-sm font-medium">Waveform</span>
                 </div>
                 <div className="flex items-end gap-1 h-20" ref={waveformRef}>
