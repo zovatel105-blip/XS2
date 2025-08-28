@@ -3777,51 +3777,95 @@ async def get_posts_using_audio(
 ):
     """Obtener todos los posts que usan un audio específico"""
     try:
-        # Verificar que el audio existe y el usuario tiene acceso
-        audio = await db.user_audio.find_one({"id": audio_id})
-        if not audio:
-            # También buscar en el sistema de música estática
-            music_info = await get_music_info(audio_id)
-            if not music_info:
-                raise HTTPException(status_code=404, detail="Audio not found")
+        logger.info(f"🎵 Buscando posts para audio ID: {audio_id}")
         
-        # Buscar posts que usan este audio
-        # Primero buscar en polls con music_id
+        # Verificar que el audio existe
+        audio_exists = False
+        audio_source = None
+        
+        # Primero verificar si es audio de usuario
+        user_audio = await db.user_audio.find_one({"id": audio_id})
+        if user_audio:
+            audio_exists = True
+            audio_source = "user_audio"
+            logger.info(f"✅ Audio encontrado en user_audio: {audio_id}")
+        else:
+            # Verificar si es música del sistema
+            try:
+                music_info = await get_music_info(audio_id)
+                if music_info:
+                    audio_exists = True
+                    audio_source = "system_music"
+                    logger.info(f"✅ Audio encontrado en sistema de música: {audio_id}")
+            except:
+                pass
+        
+        if not audio_exists:
+            logger.error(f"❌ Audio no encontrado: {audio_id}")
+            raise HTTPException(status_code=404, detail="Audio not found")
+        
+        # Buscar posts que usan este audio con múltiples estrategias
+        all_polls = []
+        
+        # Estrategia 1: Buscar por music_id directo
+        logger.info(f"🔍 Buscando posts con music_id = {audio_id}")
         polls_filter = {"music_id": audio_id}
-        polls = await db.polls.find(polls_filter) \
-            .sort("created_at", -1) \
-            .skip(offset) \
-            .limit(limit) \
-            .to_list(limit)
+        direct_polls = await db.polls.find(polls_filter).to_list(1000)
+        logger.info(f"📊 Posts encontrados por music_id directo: {len(direct_polls)}")
+        all_polls.extend(direct_polls)
         
-        # También buscar en UserAudioUse para posts que usan user audio
-        audio_uses_filter = {"audio_id": audio_id}
-        if audio_id.startswith("user_audio_"):
-            # Para user audio, buscar por el ID real sin prefijo
-            real_audio_id = audio_id.replace("user_audio_", "")
-            audio_uses_filter = {"audio_id": real_audio_id}
+        # Estrategia 2: Buscar por music.id en el objeto music embebido
+        logger.info(f"🔍 Buscando posts con music.id = {audio_id}")
+        music_nested_filter = {"music.id": audio_id}
+        nested_polls = await db.polls.find(music_nested_filter).to_list(1000)
+        logger.info(f"📊 Posts encontrados por music.id embebido: {len(nested_polls)}")
         
-        audio_uses = await db.user_audio_use.find(audio_uses_filter) \
-            .sort("created_at", -1) \
-            .to_list(1000)  # Get all uses to find associated polls
+        # Evitar duplicados
+        existing_ids = {poll["id"] for poll in all_polls}
+        for poll in nested_polls:
+            if poll["id"] not in existing_ids:
+                all_polls.append(poll)
         
-        # Obtener poll IDs de los uses
-        poll_ids_from_uses = [use["poll_id"] for use in audio_uses if use.get("poll_id")]
-        
-        # Buscar polls adicionales de los uses
-        if poll_ids_from_uses:
-            additional_polls = await db.polls.find({"id": {"$in": poll_ids_from_uses}}) \
-                .sort("created_at", -1) \
-                .to_list(limit)
+        # Estrategia 3: Para audio de usuario, buscar en user_audio_use
+        if audio_source == "user_audio":
+            logger.info(f"🔍 Buscando en user_audio_use para audio de usuario: {audio_id}")
+            audio_uses_filter = {"audio_id": audio_id}
+            audio_uses = await db.user_audio_use.find(audio_uses_filter).to_list(1000)
+            logger.info(f"📊 Usos de audio encontrados: {len(audio_uses)}")
             
-            # Combinar polls evitando duplicados
-            existing_poll_ids = {poll["id"] for poll in polls}
-            for poll in additional_polls:
-                if poll["id"] not in existing_poll_ids:
-                    polls.append(poll)
+            # Obtener poll IDs de los uses
+            poll_ids_from_uses = [use["poll_id"] for use in audio_uses if use.get("poll_id")]
+            logger.info(f"📊 Poll IDs de usos de audio: {len(poll_ids_from_uses)}")
+            
+            if poll_ids_from_uses:
+                use_polls = await db.polls.find({"id": {"$in": poll_ids_from_uses}}).to_list(1000)
+                logger.info(f"📊 Posts encontrados por usos de audio: {len(use_polls)}")
+                
+                # Evitar duplicados
+                for poll in use_polls:
+                    if poll["id"] not in existing_ids:
+                        all_polls.append(poll)
+                        existing_ids.add(poll["id"])
         
-        # Limitar resultado final
-        polls = polls[:limit]
+        # Ordenar por fecha de creación (más reciente primero) y aplicar paginación
+        all_polls.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        total = len(all_polls)
+        polls = all_polls[offset:offset + limit]
+        
+        logger.info(f"📊 Total posts encontrados: {total}, mostrando: {len(polls)}")
+        
+        if not polls:
+            logger.info(f"⚠️ No se encontraron posts usando el audio: {audio_id}")
+            return {
+                "success": True,
+                "audio_id": audio_id,
+                "posts": [],
+                "total": 0,
+                "limit": limit,
+                "offset": offset,
+                "has_more": False,
+                "message": "No posts found using this audio"
+            }
         
         # Obtener información de autores
         author_ids = list(set(poll["author_id"] for poll in polls))
