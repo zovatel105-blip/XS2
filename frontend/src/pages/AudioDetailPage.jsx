@@ -631,11 +631,15 @@ const AudioDetailPage = () => {
           
           {/* Botón Add to Favorites - 45% del ancho */}
           <Button 
-            onClick={handleSave}
-            className="w-[45%] h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 border-0 rounded-lg flex items-center justify-center gap-2 font-medium"
+            onClick={handleLike}
+            className={`w-[45%] h-12 border-0 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors ${
+              isLiked 
+                ? 'bg-red-500 hover:bg-red-600 text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
           >
-            <Bookmark className="w-4 h-4" />
-            Add to Favorites
+            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            {isLiked ? 'En Favoritos' : 'Add to Favorites'}
           </Button>
         </div>
       </div>
