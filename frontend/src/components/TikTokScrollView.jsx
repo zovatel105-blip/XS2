@@ -268,7 +268,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleUserClick(poll.authorUser || { username: poll.author });
+                  handleUserClick(poll.authorUser || { username: poll.author?.username || poll.author?.display_name || 'usuario' });
                 }}
                 className="relative transition-transform duration-200 hover:scale-110"
               >
