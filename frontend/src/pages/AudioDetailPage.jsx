@@ -323,8 +323,8 @@ const AudioDetailPage = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="relative w-16 h-16 mx-auto mb-4">
-              <div className="w-16 h-16 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin"></div>
-              <Music className="w-6 h-6 text-pink-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              <div className="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+              <Music className="w-6 h-6 text-green-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
             </div>
             <p className="text-gray-600 text-lg font-medium">Cargando información del audio...</p>
             <p className="text-gray-500 text-sm mt-2">Audio ID: {audioId}</p>
