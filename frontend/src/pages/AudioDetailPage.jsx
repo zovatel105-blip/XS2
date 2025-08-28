@@ -506,7 +506,7 @@ const AudioDetailPage = () => {
         {/* "Original sound by: (usuario)" centro-izquierda */}
         <div className="flex-1 ml-6">
           <p className="text-sm text-gray-500">
-            Original sound by: <span className="font-medium text-gray-700">{originalUser || audio?.created_by || audio?.artist || 'Usuario original'}</span>
+            Original sound by: <span className="font-medium text-gray-700">{originalUser || 'Usuario original'}</span>
           </p>
         </div>
         
