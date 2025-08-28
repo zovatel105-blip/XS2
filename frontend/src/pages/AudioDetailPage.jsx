@@ -243,6 +243,30 @@ const AudioDetailPage = () => {
     }
   };
 
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+    toast({
+      title: isLiked ? "Quitado de favoritos" : "Agregado a favoritos",
+      description: `"${audio.title}" ${isLiked ? 'eliminado de' : 'agregado a'} tus favoritos`
+    });
+  };
+
+  const handleDownload = () => {
+    toast({
+      title: "Función próximamente",
+      description: "La descarga estará disponible pronto"
+    });
+  };
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`;
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
+    }
+    return num.toString();
+  };
+
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
