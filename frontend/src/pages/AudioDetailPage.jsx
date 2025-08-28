@@ -731,13 +731,16 @@ const AudioDetailPage = () => {
     <div className="min-h-screen bg-white flex flex-col">
       {/* Debug info temporal - eliminar después */}
       {debugInfo && (
-        <div className="fixed top-0 right-0 z-50 bg-black text-white text-xs p-2 m-2 rounded">
+        <div className="fixed top-0 right-0 z-50 bg-black text-white text-xs p-2 m-2 rounded max-w-xs">
           <div>Debug: {debugInfo.lastFetch}</div>
           <div>Posts: {debugInfo.postsCount}</div>
           <div>Total: {debugInfo.total}</div>
           <div>HasMore: {debugInfo.hasMore ? 'Si' : 'No'}</div>
           <div>Loading: {postsLoading ? 'Si' : 'No'}</div>
           <div>PostsArray: {posts?.length || 0}</div>
+          {debugInfo.error && (
+            <div className="text-red-400 mt-1">Error: {debugInfo.error}</div>
+          )}
         </div>
       )}
       
