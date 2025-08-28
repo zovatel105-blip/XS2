@@ -220,27 +220,6 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handleNoPostsFound = () => {
-    // Si no hay posts, usar información del audio o artista como fallback
-    if (audio) {
-      if (audio.is_system_music || audio.source === 'iTunes') {
-        // Para música del sistema, usar el artista como "original sound"
-        setOriginalUser(`${audio.artist} (artista original)`);
-        console.log('🎵 No hay posts, usando artista del sistema de música:', audio.artist);
-      } else if (audio.created_by) {
-        // Para audio de usuario, usar quien lo subió
-        setOriginalUser(audio.created_by);
-        console.log('🎵 No hay posts, usando creador del audio:', audio.created_by);
-      } else {
-        // Último fallback
-        setOriginalUser('Primera persona en usar este sonido');
-        console.log('🎵 No se pudo determinar usuario original');
-      }
-    } else {
-      setOriginalUser('Usuario original');
-    }
-  };
-
   const handlePlayPause = async () => {
     if (!audio?.public_url) return;
 
