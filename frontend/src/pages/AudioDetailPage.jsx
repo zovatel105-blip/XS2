@@ -420,7 +420,7 @@ const AudioDetailPage = () => {
                   {audio?.artist || 'Artista desconocido'}
                 </p>
                 {audio?.artist && (
-                  <span className="text-gray-500 text-sm">+ ></span>
+                  <span className="text-gray-500 text-sm">+&nbsp;{">"}</span>
                 )}
               </div>
               
