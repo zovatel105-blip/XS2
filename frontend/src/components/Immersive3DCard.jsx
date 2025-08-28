@@ -178,16 +178,16 @@ const Immersive3DCard = ({
               whileTap={{ scale: 0.95 }}
             >
               <Avatar className="w-12 h-12 border-2 border-white/20">
-                <AvatarImage src={poll.author.avatar} />
+                <AvatarImage src={poll.author?.avatar_url} />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
-                  {((poll.author.name || poll.author.username || 'U') + '').charAt(0).toUpperCase()}
+                  {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </motion.div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-white">{poll.author.name}</h3>
-                {poll.author.verified && (
+                <h3 className="font-semibold text-white">{poll.author?.display_name || poll.author?.username || 'Usuario'}</h3>
+                {poll.author?.is_verified && (
                   <CheckCircle className="w-4 h-4 text-blue-400 fill-current" />
                 )}
               </div>
