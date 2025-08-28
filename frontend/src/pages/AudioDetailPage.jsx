@@ -664,7 +664,11 @@ const AudioDetailPage = () => {
               const isOriginal = sortedByDate.length > 0 && post.id === sortedByDate[0].id;
               
               return (
-                <div key={post.id} className="relative group cursor-pointer bg-gray-100">
+                <div 
+                  key={post.id} 
+                  className="relative group cursor-pointer bg-gray-100"
+                  onClick={() => navigate(`/poll/${post.id}`)}
+                >
                   {/* Celda cuadrada (~33% del ancho disponible) */}
                   <div className="aspect-square w-full h-full bg-gray-200">
                     {post.media_url ? (
