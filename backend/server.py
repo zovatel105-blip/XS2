@@ -3958,6 +3958,33 @@ async def get_posts_using_audio(
                     except Exception as music_error:
                         logger.error(f"❌ Error obteniendo info de música para {poll_data.get('music_id')}: {str(music_error)}")
                 
+                # Calcular time_ago
+                created_at_dt = poll_data.get("created_at")
+                if isinstance(created_at_dt, str):
+                    try:
+                        created_at_dt = datetime.fromisoformat(created_at_dt.replace('Z', '+00:00'))
+                    except:
+                        created_at_dt = datetime.utcnow()
+                elif not isinstance(created_at_dt, datetime):
+                    created_at_dt = datetime.utcnow()
+                
+                # Calcular diferencia de tiempo
+                now = datetime.utcnow()
+                diff = now - created_at_dt
+                
+                if diff.days > 0:
+                    time_ago = f"hace {diff.days} día{'s' if diff.days > 1 else ''}"
+                elif diff.seconds > 3600:
+                    hours = diff.seconds // 3600
+                    time_ago = f"hace {hours} hora{'s' if hours > 1 else ''}"
+                elif diff.seconds > 60:
+                    minutes = diff.seconds // 60
+                    time_ago = f"hace {minutes} minuto{'s' if minutes > 1 else ''}"
+                else:
+                    time_ago = "hace unos segundos"
+                
+                logger.info(f"⏰ Time ago calculado: {time_ago}")
+                
                 poll_response = PollResponse(
                     id=poll_data["id"],
                     title=poll_data["title"],
@@ -3971,11 +3998,12 @@ async def get_posts_using_audio(
                     music=music_info,
                     user_vote=None,  # Se puede mejorar para incluir el voto del usuario actual
                     user_liked=False,  # Se puede mejorar para incluir si le dado like
-                    created_at=poll_data.get("created_at", datetime.utcnow().isoformat()),
+                    created_at=created_at_dt,
                     mentioned_users=poll_data.get("mentioned_users", []),
                     tags=poll_data.get("tags", []),
                     category=poll_data.get("category"),
-                    is_featured=poll_data.get("is_featured", False)
+                    is_featured=poll_data.get("is_featured", False),
+                    time_ago=time_ago  # ¡Campo faltante!
                 )
                 
                 # Convertir a dict y agregar campo user para retrocompatibilidad
