@@ -45,6 +45,29 @@ const AudioDetailPage = () => {
     checkIfFavorited();
   }, [audioId]);
 
+  const checkIfFavorited = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token || !audio) return;
+      
+      const audioType = audio.is_system_music ? 'system' : 'user';
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/favorites/${audio.id}/check?audio_type=${audioType}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsLiked(data.is_favorite);
+      }
+    } catch (error) {
+      console.error('Error checking if audio is favorited:', error);
+    }
+  };
+
   const fetchAudioDetails = async () => {
     try {
       setLoading(true);
