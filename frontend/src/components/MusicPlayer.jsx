@@ -147,12 +147,12 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   return (
     <div className={`flex-shrink-0 ${className}`}>
-      {/* Reproductor clicable directo */}
+      {/* Reproductor clicable - SOLO PARA NAVEGACIÓN */}
       <div className="relative">
         <div 
           onClick={handleNavigateToAudio}
-          className="relative cursor-pointer group select-none w-8 h-8 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg"
-          title="Click para ver información del audio"
+          className="relative cursor-pointer w-8 h-8 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl transition-shadow duration-200"
+          title="Ver información de la música"
         >
           {music.cover ? (
             <img 
@@ -165,20 +165,6 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
               <Music className="w-4 h-4 text-white" />
             </div>
           )}
-          
-          {/* Overlay de reproducción solo al hover */}
-          <button 
-            onClick={handleTogglePlay}
-            className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 z-10"
-          >
-            {isLoading ? (
-              <Loader2 className="w-3 h-3 text-white animate-spin" />
-            ) : isPlaying ? (
-              <Pause className="w-3 h-3 text-white fill-white" />
-            ) : (
-              <Play className="w-3 h-3 text-white fill-white ml-0.5" />
-            )}
-          </button>
           
           {/* Indicadores de estado */}
           {isPlaying && (
