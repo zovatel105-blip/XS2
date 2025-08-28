@@ -767,29 +767,33 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Barra de información del sonido (altura ~8% de pantalla) */}
-      <div className="h-[8vh] flex items-center px-4">
+      {/* Barra de información del sonido */}
+      <div className={classes.infoBar}>
         {/* Ícono play: extremo izquierdo, tamaño pequeño */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <Play className="w-4 h-4 text-gray-600" />
-          <span className="text-sm text-gray-700 font-medium">
+          <Play className={`${layout.iconSize} text-gray-600`} />
+          <span className={`${classes.infoText} text-gray-700 font-medium`}>
             {formatDuration(audio?.duration || 0)}
           </span>
         </div>
         
         {/* "Original sound by: (usuario)" centro-izquierda */}
         <div className="flex-1 ml-6">
-          <p className="text-sm text-gray-500">
-            Original sound by: <span className="font-medium text-gray-700">
-              {postsLoading ? 'Buscando primera publicación...' : (originalUser || 'Determinando usuario...')}
+          <p className={classes.infoText}>
+            <span className="text-gray-500">{t('audioDetail.originalSoundBy')} </span>
+            <span className="font-medium text-gray-700">
+              {postsLoading ? t('audioDetail.searchingFirst') : (originalUser || t('audioDetail.determining'))}
             </span>
           </p>
         </div>
         
         {/* Número de personas que utilizaron ese sonido: extremo derecho */}
         <div className="flex-shrink-0 ml-4">
-          <span className="text-sm text-gray-400">
-            {totalPosts > 0 ? `${formatNumber(totalPosts)} usuarios` : formatNumber(audio?.uses_count || 0) + ' usuarios'}
+          <span className={`${classes.infoText} text-gray-400`}>
+            {totalPosts > 0 ? 
+              t('audioDetail.users', { count: formatNumber(totalPosts) }) : 
+              t('audioDetail.users', { count: formatNumber(audio?.uses_count || 0) })
+            }
           </span>
         </div>
       </div>
