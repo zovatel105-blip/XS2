@@ -259,10 +259,10 @@ const AudioDetailPage = () => {
       }
     } catch (error) {
       console.error('Error fetching audio details:', error);
-      setError('Error cargando detalles del audio');
+      setError(t('toast.errorLoading'));
       toast({
-        title: "Error",
-        description: "No se pudieron cargar los detalles del audio",
+        title: t('toast.error'),
+        description: t('toast.errorLoading'),
         variant: "destructive"
       });
     } finally {
