@@ -579,6 +579,28 @@ const AudioDetailPage = () => {
     }
   };
 
+  // Poll modal handlers
+  const handlePollClick = (post) => {
+    console.log('🎯 Opening poll modal for:', post);
+    setSelectedPoll(post);
+    setShowPollModal(true);
+  };
+
+  const handleVote = (pollId, optionId) => {
+    console.log('🗳️ Vote:', pollId, optionId);
+    // TODO: Implement voting functionality
+  };
+
+  const handleLike = (pollId) => {
+    console.log('❤️ Like poll:', pollId);
+    // TODO: Implement like functionality
+  };
+
+  const handleShare = (pollId) => {
+    console.log('📤 Share poll:', pollId);
+    // TODO: Implement share functionality
+  };
+
   // Utility functions now handled by i18n system
 
   if (loading) {
