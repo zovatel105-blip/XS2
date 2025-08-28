@@ -1007,6 +1007,16 @@ const AudioDetailPage = () => {
           {t('buttons.useSound')}
         </Button>
       </div>
+
+      {/* Poll Modal */}
+      <PollModal
+        isOpen={showPollModal}
+        onClose={() => setShowPollModal(false)}
+        poll={selectedPoll}
+        onVote={handleVote}
+        onLike={handleLike}
+        onShare={handleShare}
+      />
     </div>
   );
 };
