@@ -580,11 +580,6 @@ const AudioDetailPage = () => {
   };
 
   // Poll modal handlers
-      });
-    }
-  };
-
-  // Poll modal handlers
   const handlePollClick = (post) => {
     console.log('🎯 Opening poll modal for:', post);
     setSelectedPoll(post);
@@ -603,6 +598,8 @@ const AudioDetailPage = () => {
 
   const handlePollShare = (pollId) => {
     console.log('📤 Share poll:', pollId);
+    // TODO: Implement share functionality
+  };
     // TODO: Implement share functionality
   };
 
