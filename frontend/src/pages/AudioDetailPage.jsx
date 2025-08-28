@@ -798,6 +798,7 @@ const AudioDetailPage = () => {
               </div>
             ))}
           </div>
+          </>
         ) : (
           /* Estado vacío */
           <div className="flex items-center justify-center h-full">
