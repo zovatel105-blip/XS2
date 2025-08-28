@@ -42,6 +42,10 @@ const AudioDetailPage = () => {
   // Poll modal states
   const [showPollModal, setShowPollModal] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState(null);
+  
+  // TikTok view states
+  const [showTikTokView, setShowTikTokView] = useState(false);
+  const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
   // Remove old hardcoded waveform generation
   // Generate mock waveform data - REMOVED (now using real AudioWaveform component)
