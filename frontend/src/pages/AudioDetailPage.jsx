@@ -467,7 +467,7 @@ const AudioDetailPage = () => {
           </div>
         </div>
 
-        {/* Parte Inferior - Rejilla de videos */}
+        {/* Sección de miniaturas (rejilla 3 columnas) */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Videos ({posts.length})
@@ -479,12 +479,12 @@ const AudioDetailPage = () => {
               <p className="text-gray-500 text-sm">Cargando videos...</p>
             </div>
           ) : posts.length > 0 ? (
-            /* Rejilla de videos (3 columnas) con miniaturas rectangulares */
-            <div className="grid grid-cols-3 gap-2">
+            /* Rejilla de videos (3 columnas) con miniaturas verticales */
+            <div className="grid grid-cols-3 gap-2 mb-6">
               {posts.map((post, index) => (
                 <div key={post.id} className="relative group cursor-pointer">
                   
-                  {/* Miniatura rectangular */}
+                  {/* Miniatura vertical */}
                   <div className="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
                     {post.media_url ? (
                       post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? (
@@ -515,8 +515,17 @@ const AudioDetailPage = () => {
                       </div>
                     )}
                     
-                    {/* Overlay con número de votos en esquina inferior izquierda */}
-                    <div className="absolute bottom-2 left-2">
+                    {/* Etiqueta "Original" en esquina superior izquierda (algunos videos) */}
+                    {index === 0 && (
+                      <div className="absolute top-2 left-2">
+                        <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded font-medium">
+                          Original
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Overlay con número de votos en esquina inferior derecha */}
+                    <div className="absolute bottom-2 right-2">
                       <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md flex items-center gap-1">
                         <BarChart3 className="w-3 h-3" />
                         <span className="text-xs font-medium">
@@ -536,7 +545,7 @@ const AudioDetailPage = () => {
             </div>
           ) : (
             /* Estado vacío */
-            <div className="text-center py-16">
+            <div className="text-center py-16 mb-6">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-gray-400" />
               </div>
@@ -544,15 +553,42 @@ const AudioDetailPage = () => {
               <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">
                 Sé el primero en usar este audio en tu video
               </p>
-              <Button 
-                onClick={handleUseThisSound}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium"
-              >
-                Crear video
-              </Button>
             </div>
           )}
         </div>
+
+        {/* Barra inferior con botones principales */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-area-pb">
+          <div className="max-w-md mx-auto">
+            <div className="grid grid-cols-2 gap-3">
+              {/* Botón Add to Story */}
+              <Button 
+                variant="outline"
+                className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2 py-3"
+                onClick={() => {
+                  toast({
+                    title: "Add to Story",
+                    description: "Función próximamente disponible"
+                  });
+                }}
+              >
+                <Music className="w-4 h-4" />
+                Add to Story
+              </Button>
+              
+              {/* Botón Use sound (verde fuerte) */}
+              <Button 
+                onClick={handleUseThisSound}
+                className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 transition-colors flex items-center justify-center gap-2"
+              >
+                Use sound
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Espaciador para la barra inferior fija */}
+        <div className="h-20"></div>
 
       </div>
     </div>
