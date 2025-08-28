@@ -677,8 +677,8 @@ const AudioDetailPage = () => {
         {/* Fondo degradado que se extiende desde header hasta mitad del audio */}
         <div className={`${classes.gradientBg} h-[17.5vh]`}></div>
         
-        {/* Encabezado superior (altura ~10% de pantalla) */}
-        <div className="relative h-[10vh] flex items-center justify-between px-4 z-10">
+        {/* Encabezado superior */}
+        <div className={classes.header}>
           {/* Flecha izquierda (←) esquina superior izquierda */}
           <Button 
             variant="ghost" 
@@ -686,7 +686,7 @@ const AudioDetailPage = () => {
             onClick={() => navigate(-1)}
             className="text-gray-900 hover:bg-white/50 p-3"
           >
-            <ArrowLeft className="w-7 h-7 stroke-2" />
+            <ArrowLeft className={`${layout.iconSize} stroke-2`} />
           </Button>
           
           {/* Flecha derecha (→) esquina superior derecha */}
@@ -696,74 +696,74 @@ const AudioDetailPage = () => {
             onClick={handleShare}
             className="text-gray-900 hover:bg-white/50 p-3"
           >
-            <Share2 className="w-7 h-7 stroke-2" />
+            <Share2 className={`${layout.iconSize} stroke-2`} />
           </Button>
         </div>
 
-        {/* Sección del audio (altura ~15% de pantalla) - sin línea separadora */}
-        <div className="relative h-[15vh] flex items-center px-4 py-2 z-10">
-        {/* Miniatura cuadrada del álbum: lado izquierdo, más grande */}
-        <div className="w-[18vw] h-[18vw] max-w-28 max-h-28 min-w-20 min-h-20 flex-shrink-0 relative">
-          <div className="w-full h-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-            {audio?.cover_url ? (
-              <img 
-                src={audio.cover_url} 
-                alt={audio.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <Music className="w-8 h-8 text-gray-400" />
-              </div>
-            )}
-          </div>
-          
-          {/* Botón de play superpuesto */}
-          <button
-            onClick={handlePlayPause}
-            className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
-          >
-            {isPlaying ? (
-              <Pause className="w-5 h-5 text-white" />
-            ) : (
-              <Play className="w-5 h-5 text-white ml-0.5" />
-            )}
-          </button>
-        </div>
-
-        {/* Información del audio: ocupa el ancho restante */}
-        <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
-          {/* Título: "Contains: [nombre del audio]" - texto grande y bold */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-2 truncate">
-            Contains: {audio?.title || 'Título no disponible'}
-          </h2>
-          
-          {/* Fila del artista con avatar, nombre y checkmark */}
-          <div className="flex items-center gap-2">
-            {/* Avatar circular pequeño */}
-            <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden">
-              {audio?.artist ? (
-                <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                  {audio.artist[0].toUpperCase()}
-                </div>
+        {/* Sección del audio */}
+        <div className={classes.audioSection}>
+          {/* Miniatura cuadrada del álbum: lado izquierdo */}
+          <div className={classes.cover}>
+            <div className="w-full h-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+              {audio?.cover_url ? (
+                <img 
+                  src={audio.cover_url} 
+                  alt={audio.title}
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <div className="w-full h-full bg-gray-400"></div>
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <Music className={`${layout.iconSize} text-gray-400`} />
+                </div>
               )}
             </div>
             
-            {/* Nombre del artista en mayúsculas - aún más pequeño */}
-            <span className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-              {(audio?.artist || 'Artista desconocido').toUpperCase()}
-            </span>
+            {/* Botón de play superpuesto */}
+            <button
+              onClick={handlePlayPause}
+              className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+            >
+              {isPlaying ? (
+                <Pause className={`${layout.playIconSize} text-white`} />
+              ) : (
+                <Play className={`${layout.playIconSize} text-white ml-0.5`} />
+              )}
+            </button>
+          </div>
+
+          {/* Información del audio: ocupa el ancho restante */}
+          <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
+            {/* Título dinámico */}
+            <h2 className={classes.title}>
+              {t('audioDetail.contains')} {audio?.title || 'Título no disponible'}
+            </h2>
             
-            {/* Checkmark azul verificado */}
-            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
+            {/* Fila del artista con avatar, nombre y checkmark */}
+            <div className="flex items-center gap-2">
+              {/* Avatar circular pequeño */}
+              <div className={`${layout.avatarSize} rounded-full bg-gray-300 flex-shrink-0 overflow-hidden`}>
+                {audio?.artist ? (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                    {audio.artist[0].toUpperCase()}
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gray-400"></div>
+                )}
+              </div>
+              
+              {/* Nombre del artista en mayúsculas */}
+              <span className={`${classes.artist} text-gray-900`}>
+                {(audio?.artist || 'Artista desconocido').toUpperCase()}
+              </span>
+              
+              {/* Checkmark azul verificado */}
+              <div className={`${layout.iconSize} bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0`}>
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
 
