@@ -535,8 +535,8 @@ const AudioDetailPage = () => {
     } catch (error) {
       console.error('Error managing favorites:', error);
       toast({
-        title: "Error",
-        description: "No se pudo actualizar favoritos",
+        title: t('toast.error'),
+        description: t('toast.errorFavorites'),
         variant: "destructive"
       });
     }
@@ -562,13 +562,13 @@ const AudioDetailPage = () => {
       }
       
       toast({
-        title: "Abriendo Apple Music",
-        description: `Buscando "${audio.title}" de ${audio.artist}`
+        title: t('toast.openingAppleMusic'),
+        description: t('toast.openingAppleMusicDesc', { title: audio.title, artist: audio.artist })
       });
     } else {
       toast({
-        title: "Audio personalizado",
-        description: "Esta es música subida por usuarios, no disponible en tiendas de música",
+        title: t('toast.customAudio'),
+        description: t('toast.customAudioDesc'),
         variant: "destructive"
       });
     }
