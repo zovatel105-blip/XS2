@@ -11,6 +11,7 @@ import { useResponsiveLayout, useDynamicClasses } from '../hooks/useResponsiveLa
 import audioManager from '../services/AudioManager';
 import { Button } from '../components/ui/button';
 import PollCard from '../components/PollCard';
+import PollModal from '../components/PollModal';
 import AudioWaveform from '../components/AudioWaveform';
 
 const AudioDetailPage = () => {
