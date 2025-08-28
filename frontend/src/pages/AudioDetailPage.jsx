@@ -337,8 +337,8 @@ const AudioDetailPage = () => {
   if (error || !audio) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
-        {/* Encabezado con degradado rosa */}
-        <div className="h-[10vh] bg-gradient-to-r from-pink-100 via-pink-50 to-yellow-50 flex items-center justify-between px-4">
+        {/* Encabezado con degradado verde/beige */}
+        <div className="h-[10vh] bg-gradient-to-r from-green-100 via-green-50 to-yellow-50 flex items-center justify-between px-4">
           <Button 
             variant="ghost" 
             size="sm" 
