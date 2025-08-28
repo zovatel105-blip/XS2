@@ -644,7 +644,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
         onClose={() => setShowCommentsModal(false)}
         pollId={poll.id}
         pollTitle={poll.title}
-        pollAuthor={poll.author}
+        pollAuthor={poll.author?.display_name || poll.author?.username || 'Usuario'}
       />
 
       {/* Modal de compartir */}
