@@ -32,6 +32,9 @@ const AudioDetailPage = () => {
   const [loadingMorePosts, setLoadingMorePosts] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
+  
+  // Debug state (temporal)
+  const [debugInfo, setDebugInfo] = useState(null);
 
   // Generate mock waveform data
   useEffect(() => {
