@@ -47,7 +47,7 @@ const AudioDetailPage = () => {
 
   useEffect(() => {
     fetchAudioDetails();
-    fetchPostsUsingAudio();
+    fetchPostsUsingAudio(0, false); // Cargar posts iniciales
   }, [audioId]);
 
   // Check favorites and determine original user after audio is loaded
