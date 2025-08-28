@@ -25,6 +25,7 @@ const AudioDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [waveformData, setWaveformData] = useState([]);
   const [playbackPosition, setPlaybackPosition] = useState(0);
+  const [originalUser, setOriginalUser] = useState(null);
 
   // Generate mock waveform data
   useEffect(() => {
