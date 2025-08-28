@@ -280,14 +280,14 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                   }}
                 >
                   <Avatar className="ring-2 ring-blue-500/20 w-10 h-10 cursor-pointer">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} />
                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm">
-                      {((poll.author || 'U') + '').charAt(0).toUpperCase()}
+                      {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </button>
                 <div>
-                  <h3 className="font-semibold text-gray-900 text-sm">{poll.author}</h3>
+                  <h3 className="font-semibold text-gray-900 text-sm">{poll.author?.display_name || poll.author?.username || 'Usuario'}</h3>
                   <p className="text-xs text-gray-500">{poll.timeAgo}</p>
                 </div>
               </div>
