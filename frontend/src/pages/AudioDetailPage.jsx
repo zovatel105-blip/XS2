@@ -351,15 +351,6 @@ const AudioDetailPage = () => {
         const errorData = await response.text();
         console.error('❌ Error details:', errorData);
         
-        setDebugInfo({
-          lastFetch: new Date().toLocaleTimeString(),
-          postsCount: 0,
-          total: 0,
-          hasMore: false,
-          loading: false,
-          error: `${response.status}: ${errorData}`
-        });
-        
         if (offset === 0) {
           setPosts([]);
           setTotalPosts(0);
