@@ -46,13 +46,23 @@ const AudioDetailPage = () => {
 
   // Check favorites and determine original user after audio is loaded
   useEffect(() => {
+    console.log('🔄 useEffect triggered - audio y posts cambiaron');
+    console.log('🔄 Audio exists:', !!audio);
+    console.log('🔄 Posts length:', posts?.length || 0);
+    console.log('🔄 Posts loading:', postsLoading);
+    
     if (audio) {
       checkIfFavorited();
       
-      // Determinar usuario original de forma más simple y clara
-      determineOriginalUser();
+      // Solo determinar usuario original si no estamos cargando posts
+      if (!postsLoading) {
+        console.log('✅ Condiciones cumplidas - determinando usuario original');
+        determineOriginalUser();
+      } else {
+        console.log('⏳ Posts aún cargando - esperando...');
+      }
     }
-  }, [audio, posts]); // Depende de audio Y posts
+  }, [audio, posts, postsLoading]); // Agregamos postsLoading a las dependencias
 
   const determineOriginalUser = () => {
     console.log('🔍 === DETERMINANDO USUARIO ORIGINAL ===');
