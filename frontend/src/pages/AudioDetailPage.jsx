@@ -671,26 +671,11 @@ const AudioDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Debug info temporal - eliminar después */}
-      {debugInfo && (
-        <div className="fixed top-0 right-0 z-50 bg-black text-white text-xs p-2 m-2 rounded max-w-xs">
-          <div>Debug: {debugInfo.lastFetch}</div>
-          <div>Posts: {debugInfo.postsCount}</div>
-          <div>Total: {debugInfo.total}</div>
-          <div>HasMore: {debugInfo.hasMore ? 'Si' : 'No'}</div>
-          <div>Loading: {postsLoading ? 'Si' : 'No'}</div>
-          <div>PostsArray: {posts?.length || 0}</div>
-          {debugInfo.error && (
-            <div className="text-red-400 mt-1">Error: {debugInfo.error}</div>
-          )}
-        </div>
-      )}
-      
+    <div className={classes.container}>
       {/* Contenedor del header y sección audio con degradado difuminado */}
       <div className="relative">
         {/* Fondo degradado que se extiende desde header hasta mitad del audio */}
-        <div className="absolute inset-0 bg-gradient-to-b from-green-100 via-green-50 to-transparent h-[17.5vh]"></div>
+        <div className={`${classes.gradientBg} h-[17.5vh]`}></div>
         
         {/* Encabezado superior (altura ~10% de pantalla) */}
         <div className="relative h-[10vh] flex items-center justify-between px-4 z-10">
