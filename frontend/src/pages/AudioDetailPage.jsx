@@ -471,7 +471,7 @@ const AudioDetailPage = () => {
               
               {/* Original sound by - el usuario que subió originalmente el audio */}
               <p className="text-sm text-gray-600 mb-2">
-                Original sound by: {audio?.original_user || audio?.created_by || 'Usuario original'}
+                Original sound by: {originalUser || audio?.created_by || audio?.artist || 'Usuario original'}
               </p>
               
               {/* Cantidad de publicaciones */}
