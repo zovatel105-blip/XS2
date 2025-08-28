@@ -16,6 +16,175 @@ import AudioWaveform from '../components/AudioWaveform';
 import TikTokScrollView from '../components/TikTokScrollView';
 import TikTokProfileGrid from '../components/TikTokProfileGrid';
 
+// AudioDetailGrid personalizado con colores del AudioDetailPage
+const AudioDetailGrid = ({ polls, onPollClick }) => {
+  // Function to format vote count
+  const formatViewCount = (votes) => {
+    if (votes >= 1000000) {
+      return `${(votes / 1000000).toFixed(1)}M`;
+    } else if (votes >= 1000) {
+      return `${(votes / 1000).toFixed(1)}K`;
+    }
+    return votes.toString();
+  };
+
+  // Function to get vote count
+  const getVoteCount = (poll) => {
+    return poll.totalVotes || 0;
+  };
+
+  // Function to get all option images for creating a composite thumbnail
+  const getOptionImages = (poll) => {
+    if (!poll.options || poll.options.length === 0) {
+      return [];
+    }
+
+    return poll.options.map(option => {
+      if (option.media) {
+        // For videos, prefer thumbnail over the video URL
+        if (option.media.type === 'video') {
+          return option.media.thumbnail || option.media.url;
+        }
+        // For images, use thumbnail first, then URL
+        if (option.media.thumbnail) {
+          return option.media.thumbnail;
+        }
+        if (option.media.url) {
+          return option.media.url;
+        }
+      }
+      // Fallback image for options without media
+      return 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=600&fit=crop&crop=center';
+    });
+  };
+
+  // Function to create a composite thumbnail layout
+  const renderCompositeThumbnail = (poll, images) => {
+    if (images.length === 1) {
+      // Single image - full cover
+      return (
+        <img
+          src={images[0]}
+          alt={poll.title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentElement.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+          }}
+        />
+      );
+    } else if (images.length === 2) {
+      // Two images - split vertically
+      return (
+        <div className="w-full h-full flex">
+          {images.slice(0, 2).map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${poll.title} option ${idx + 1}`}
+              className="w-1/2 h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+              }}
+            />
+          ))}
+        </div>
+      );
+    } else if (images.length === 3) {
+      // Three images - one large on left, two stacked on right
+      return (
+        <div className="w-full h-full flex">
+          <img
+            src={images[0]}
+            alt={`${poll.title} option 1`}
+            className="w-2/3 h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentElement.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+            }}
+          />
+          <div className="w-1/3 h-full flex flex-col">
+            {images.slice(1, 3).map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`${poll.title} option ${idx + 2}`}
+                className="w-full h-1/2 object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      // Four or more images - 2x2 grid
+      return (
+        <div className="w-full h-full grid grid-cols-2 grid-rows-2">
+          {images.slice(0, 4).map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              alt={`${poll.title} option ${idx + 1}`}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+              }}
+            />
+          ))}
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-3 gap-1">
+      {polls.map((poll, index) => {
+        const optionImages = getOptionImages(poll);
+        const voteCount = getVoteCount(poll);
+
+        return (
+          <div
+            key={poll.id}
+            className="relative aspect-[3/4] bg-gray-100 overflow-hidden cursor-pointer group rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300"
+            onClick={() => onPollClick && onPollClick(poll)}
+          >
+            {/* Composite Cover Images */}
+            {renderCompositeThumbnail(poll, optionImages)}
+
+            {/* Subtle overlay for better text visibility - AudioDetailPage colors */}
+            <div className="absolute inset-0 bg-green-100/5 group-hover:bg-green-100/15 transition-colors" />
+
+            {/* Play Button (on hover) - AudioDetailPage green theme */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="w-12 h-12 rounded-full bg-green-600/20 backdrop-blur-sm border border-green-500/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 duration-200"
+              >
+                <Play className="w-6 h-6 text-green-700 ml-1" />
+              </div>
+            </div>
+
+            {/* Vote Count with Vote icon - Bottom left corner - AudioDetailPage colors */}
+            <div className="absolute bottom-2 left-2 z-10">
+              <div className="flex items-center gap-1 text-gray-800 font-bold drop-shadow-sm bg-white/80 backdrop-blur-sm rounded-md px-1.5 py-0.5">
+                <BarChart3 className="w-3 h-3 text-green-600" />
+                <span className="text-xs font-bold">{formatViewCount(voteCount)}</span>
+              </div>
+            </div>
+
+            {/* Subtle gradient overlay for text readability - AudioDetailPage colors */}
+            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-100/80 to-transparent pointer-events-none" />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const AudioDetailPage = () => {
   const { audioId } = useParams();
   const navigate = useNavigate();
