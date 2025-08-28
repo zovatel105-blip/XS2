@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, Pause, Music, Users, Clock, Calendar, Volume2, Share2, Heart, MessageCircle, MoreVertical, Plus } from 'lucide-react';
+import { 
+  ArrowLeft, Play, Pause, Music, Users, Clock, Calendar, Volume2, Share2, Heart, 
+  MessageCircle, MoreVertical, Plus, TrendingUp, Download, Repeat, Shuffle,
+  BarChart3, Waveform, Star, Eye, Headphones, Radio, Disc3
+} from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import audioManager from '../services/AudioManager';
 import { Button } from '../components/ui/button';
