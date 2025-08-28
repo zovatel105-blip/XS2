@@ -340,16 +340,6 @@ const AudioDetailPage = () => {
         setHasMorePosts(hasMore);
         setCurrentOffset(offset + postsData.length);
         
-        // Update debug info
-        setDebugInfo({
-          lastFetch: new Date().toLocaleTimeString(),
-          postsCount: postsData.length,
-          total: total,
-          hasMore: hasMore,
-          loading: false,
-          error: null
-        });
-        
         console.log(`📊 ESTADO ACTUALIZADO:`, {
           totalPosts: total,
           hasMorePosts: hasMore,
