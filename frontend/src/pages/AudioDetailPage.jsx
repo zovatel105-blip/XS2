@@ -682,7 +682,7 @@ const AudioDetailPage = () => {
         <div className="flex-1 ml-6">
           <p className="text-sm text-gray-500">
             Original sound by: <span className="font-medium text-gray-700">
-              {postsLoading ? 'Cargando...' : (originalUser || 'Determinando usuario...')}
+              {postsLoading ? 'Buscando primera publicación...' : (originalUser || 'Determinando usuario...')}
             </span>
           </p>
         </div>
