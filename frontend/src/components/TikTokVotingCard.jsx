@@ -95,13 +95,13 @@ const TikTokVotingCard = ({
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10 ring-2 ring-white/30">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} />
             <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-600 text-white font-bold">
-              {((poll.author || 'U') + '').charAt(0).toUpperCase()}
+              {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-bold text-white text-sm">{poll.author}</h3>
+            <h3 className="font-bold text-white text-sm">{poll.author?.display_name || poll.author?.username || 'Usuario'}</h3>
             <p className="text-white/70 text-xs">{poll.timeAgo}</p>
           </div>
         </div>
