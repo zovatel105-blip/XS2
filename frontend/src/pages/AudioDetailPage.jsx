@@ -348,19 +348,25 @@ const AudioDetailPage = () => {
   return (
     <div className="min-h-screen bg-white">
       
-      {/* Header minimalista */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      {/* Header con degradado verde claro */}
+      <div className="sticky top-0 z-50 bg-gradient-to-b from-green-100 to-green-50 border-b border-green-200">
         <div className="flex items-center justify-between px-4 py-3">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(-1)}
-            className="text-gray-900 hover:bg-gray-100 p-2"
+            className="text-gray-900 hover:bg-white/50 p-2"
           >
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-lg font-medium text-gray-900">Audio</h1>
-          <div className="w-10"></div> {/* Espaciador */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleShare}
+            className="text-gray-900 hover:bg-white/50 p-2"
+          >
+            <Share2 className="w-6 h-6" />
+          </Button>
         </div>
       </div>
 
