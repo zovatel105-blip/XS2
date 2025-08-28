@@ -906,7 +906,7 @@ const AudioDetailPage = () => {
                   <div 
                     key={post.id} 
                     className="relative group cursor-pointer bg-gray-100"
-                    onClick={() => navigate(`/poll/${post.id}`)}
+                    onClick={() => handlePollClick(post)}
                   >
                     {/* Celda cuadrada (~33% del ancho disponible) */}
                     <div className="aspect-square w-full h-full bg-gray-200">
