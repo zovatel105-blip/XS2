@@ -3611,41 +3611,78 @@ async def get_audio_details(
     audio_id: str,
     current_user: UserResponse = Depends(get_current_user)
 ):
-    """Obtener detalles de un audio específico"""
+    """Obtener detalles de un audio específico (usuario o sistema iTunes)"""
     try:
-        # Buscar el audio
+        print(f"🎵 Getting audio details for ID: {audio_id}")
+        
+        # First try to find in user audio
         audio_data = await db.user_audio.find_one({
             "id": audio_id,
             "is_active": True
         })
         
-        if not audio_data:
-            raise HTTPException(status_code=404, detail="Audio not found")
+        if audio_data:
+            print(f"✅ Found user audio: {audio_data.get('title')}")
+            # Verificar permisos de acceso para audio de usuario
+            if audio_data["privacy"] == AudioPrivacy.PRIVATE and audio_data["uploader_id"] != current_user.id:
+                raise HTTPException(status_code=403, detail="Access denied to private audio")
+            
+            # Obtener información del uploader
+            uploader = await db.users.find_one({"id": audio_data["uploader_id"]})
+            if not uploader:
+                raise HTTPException(status_code=404, detail="Audio uploader not found")
+            
+            uploader_response = UserResponse(**uploader)
+            
+            # Preparar respuesta para audio de usuario
+            audio_response = UserAudioResponse(
+                **audio_data,
+                uploader=uploader_response,
+                url=audio_data["public_url"],
+                preview_url=audio_data["public_url"],
+                uses=audio_data["uses_count"]
+            )
+            
+            return {
+                "success": True,
+                "audio": audio_response.dict()
+            }
         
-        # Verificar permisos de acceso
-        if audio_data["privacy"] == AudioPrivacy.PRIVATE and audio_data["uploader_id"] != current_user.id:
-            raise HTTPException(status_code=403, detail="Access denied to private audio")
+        # If not found in user audio, try system music
+        print(f"🔍 User audio not found, checking system music for ID: {audio_id}")
         
-        # Obtener información del uploader
-        uploader = await db.users.find_one({"id": audio_data["uploader_id"]})
-        if not uploader:
-            raise HTTPException(status_code=404, detail="Audio uploader not found")
+        # Get music info using existing function (supports iTunes IDs)
+        music_info = await get_music_info(audio_id)
         
-        uploader_response = UserResponse(**uploader)
+        if music_info:
+            print(f"✅ Found system music: {music_info.get('title')} by {music_info.get('artist')}")
+            
+            # Convert to compatible format with frontend
+            audio_response = {
+                "id": music_info["id"],
+                "title": music_info["title"],
+                "artist": music_info["artist"],
+                "duration": music_info.get("duration", 30),
+                "public_url": music_info.get("preview_url"),
+                "cover_url": music_info.get("cover"),
+                "uses_count": music_info.get("uses", 0),
+                "privacy": "public",
+                "is_system_music": True,
+                "source": music_info.get("source", "iTunes API"),
+                "created_at": music_info.get("created_at", datetime.utcnow().isoformat()),
+                "category": music_info.get("category"),
+                "genre": music_info.get("genre"),
+                "uploader": None  # System music has no uploader
+            }
+            
+            return {
+                "success": True,
+                "audio": audio_response
+            }
         
-        # Preparar respuesta
-        audio_response = UserAudioResponse(
-            **audio_data,
-            uploader=uploader_response,
-            url=audio_data["public_url"],
-            preview_url=audio_data["public_url"],
-            uses=audio_data["uses_count"]
-        )
-        
-        return {
-            "success": True,
-            "audio": audio_response.dict()
-        }
+        # If neither user audio nor system music found
+        print(f"❌ Audio not found in user audio or system music: {audio_id}")
+        raise HTTPException(status_code=404, detail="Audio not found")
         
     except HTTPException:
         raise
