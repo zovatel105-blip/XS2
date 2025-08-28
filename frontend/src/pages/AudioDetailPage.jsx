@@ -1039,6 +1039,23 @@ const AudioDetailPage = () => {
         onLike={handlePollLike}
         onShare={handlePollShare}
       />
+
+      {/* TikTok View Modal */}
+      {showTikTokView && (
+        <div className="fixed inset-0 z-50 bg-black">
+          <TikTokScrollView
+            polls={posts}
+            onVote={handlePollVote}
+            onLike={handlePollLike}
+            onShare={handlePollShare}
+            onComment={handlePollComment}
+            onSave={handlePollSave}
+            onExitTikTok={handleExitTikTok}
+            showLogo={false}
+            initialIndex={selectedPostIndex}
+          />
+        </div>
+      )}
     </div>
   );
 };
