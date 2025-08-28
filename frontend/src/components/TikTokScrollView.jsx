@@ -78,15 +78,23 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
 
   // Get user ID from poll author
   const getAuthorUserId = () => {
+    // Primero intentar con el objeto author si existe
+    if (poll.author && poll.author.id) {
+      return poll.author.id;
+    }
+    if (poll.author && poll.author.username) {
+      return poll.author.username;
+    }
+    // Luego intentar con authorUser (legacy support)
     if (poll.authorUser && poll.authorUser.id) {
       return poll.authorUser.id;
     }
-    // Use the username if available, otherwise convert author name to username format
     if (poll.authorUser && poll.authorUser.username) {
       return poll.authorUser.username;
     }
-    // Convert author name to username format (lowercase, spaces to underscores)
-    return poll.author.toLowerCase().replace(/\s+/g, '_');
+    // Convert author display name to username format como fallback
+    const displayName = poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'unknown';
+    return displayName.toLowerCase().replace(/\s+/g, '_');
   };
 
   const authorUserId = getAuthorUserId();
