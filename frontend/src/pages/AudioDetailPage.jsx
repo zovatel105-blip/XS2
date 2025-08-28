@@ -26,6 +26,12 @@ const AudioDetailPage = () => {
   const [waveformData, setWaveformData] = useState([]);
   const [playbackPosition, setPlaybackPosition] = useState(0);
   const [originalUser, setOriginalUser] = useState(null);
+  
+  // Infinite scroll states
+  const [hasMorePosts, setHasMorePosts] = useState(false);
+  const [loadingMorePosts, setLoadingMorePosts] = useState(false);
+  const [currentOffset, setCurrentOffset] = useState(0);
+  const [totalPosts, setTotalPosts] = useState(0);
 
   // Generate mock waveform data
   useEffect(() => {
