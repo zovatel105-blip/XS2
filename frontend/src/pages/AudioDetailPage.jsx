@@ -520,67 +520,75 @@ const AudioDetailPage = () => {
           ) : posts.length > 0 ? (
             /* Rejilla de videos (3 columnas) con miniaturas verticales */
             <div className="grid grid-cols-3 gap-2 mb-6">
-              {posts.map((post, index) => (
-                <div key={post.id} className="relative group cursor-pointer">
-                  
-                  {/* Miniatura vertical */}
-                  <div className="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                    {post.media_url ? (
-                      post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? (
-                        /* Video thumbnail */
-                        <video 
-                          src={post.media_url}
-                          className="w-full h-full object-cover"
-                          muted
-                          preload="metadata"
-                        />
+              {posts.map((post, index) => {
+                // Determinar si este es el post original (el más antiguo)
+                const sortedByDate = [...posts].sort((a, b) => 
+                  new Date(a.created_at) - new Date(b.created_at)
+                );
+                const isOriginal = sortedByDate.length > 0 && post.id === sortedByDate[0].id;
+                
+                return (
+                  <div key={post.id} className="relative group cursor-pointer">
+                    
+                    {/* Miniatura vertical */}
+                    <div className="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                      {post.media_url ? (
+                        post.media_url.includes('.mp4') || post.media_url.includes('.mov') ? (
+                          /* Video thumbnail */
+                          <video 
+                            src={post.media_url}
+                            className="w-full h-full object-cover"
+                            muted
+                            preload="metadata"
+                          />
+                        ) : (
+                          /* Imagen thumbnail */
+                          <img 
+                            src={post.media_url} 
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                          />
+                        )
                       ) : (
-                        /* Imagen thumbnail */
-                        <img 
-                          src={post.media_url} 
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )
-                    ) : (
-                      /* Placeholder */
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <div className="text-center">
-                          <MessageCircle className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                          <p className="text-xs text-gray-500 px-2 leading-tight">
-                            {post.title || 'Video'}
-                          </p>
+                        /* Placeholder */
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          <div className="text-center">
+                            <MessageCircle className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                            <p className="text-xs text-gray-500 px-2 leading-tight">
+                              {post.title || 'Video'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Etiqueta "Original" en esquina superior izquierda (solo para el primer video cronológico) */}
+                      {isOriginal && (
+                        <div className="absolute top-2 left-2">
+                          <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded font-medium">
+                            Original
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Overlay con número de votos en esquina inferior derecha */}
+                      <div className="absolute bottom-2 right-2">
+                        <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md flex items-center gap-1">
+                          <BarChart3 className="w-3 h-3" />
+                          <span className="text-xs font-medium">
+                            {formatNumber(
+                              (post.options || []).reduce((total, option) => total + (option.votes || 0), 0) || 
+                              Math.floor(Math.random() * 1000) + 50
+                            )}
+                          </span>
                         </div>
                       </div>
-                    )}
-                    
-                    {/* Etiqueta "Original" en esquina superior izquierda (algunos videos) */}
-                    {index === 0 && (
-                      <div className="absolute top-2 left-2">
-                        <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded font-medium">
-                          Original
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* Overlay con número de votos en esquina inferior derecha */}
-                    <div className="absolute bottom-2 right-2">
-                      <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-md flex items-center gap-1">
-                        <BarChart3 className="w-3 h-3" />
-                        <span className="text-xs font-medium">
-                          {formatNumber(
-                            (post.options || []).reduce((total, option) => total + (option.votes || 0), 0) || 
-                            Math.floor(Math.random() * 1000) + 50
-                          )}
-                        </span>
-                      </div>
+                      
+                      {/* Overlay hover */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
                     </div>
-                    
-                    {/* Overlay hover */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             /* Estado vacío */
