@@ -149,10 +149,15 @@ const AudioDetailGrid = ({ polls, onPollClick }) => {
         const voteCount = getVoteCount(poll);
 
         return (
-          <div
+          <motion.div
             key={poll.id}
-            className="relative aspect-[3/4] bg-gray-100 overflow-hidden cursor-pointer group rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300"
+            className="relative aspect-[3/4] bg-gray-100 overflow-hidden cursor-pointer group rounded-lg border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg"
             onClick={() => onPollClick && onPollClick(poll)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
           >
             {/* Composite Cover Images */}
             {renderCompositeThumbnail(poll, optionImages)}
