@@ -305,7 +305,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
               {!isFollowing(authorUserId) && currentUser && authorUserId !== currentUser.id && (
                 <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
                   <div className="bg-blue-800/90 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm whitespace-nowrap border border-blue-600/30 shadow-lg">
-                    <div className="font-medium">@{poll.authorUser?.username || poll.author}</div>
+                    <div className="font-medium">@{poll.authorUser?.username || poll.author?.username || poll.author?.display_name || 'usuario'}</div>
                     <div className="text-blue-300 text-[10px]">Seguir usuario</div>
                   </div>
                 </div>
