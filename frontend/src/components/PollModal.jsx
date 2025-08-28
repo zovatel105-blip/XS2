@@ -42,14 +42,14 @@ const PollModal = ({ isOpen, onClose, poll, onVote, onLike, onShare, onComment }
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src={poll.authorUser?.avatar} />
+                  <AvatarImage src={poll.author?.avatar_url || poll.authorUser?.avatar} />
                   <AvatarFallback>
-                    {(poll.author || 'A').charAt(0).toUpperCase()}
+                    {(poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'A').charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <DialogTitle className="text-sm font-semibold">
-                    {poll.authorUser?.displayName || poll.author}
+                    {poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'Usuario'}
                   </DialogTitle>
                   <p className="text-xs text-gray-500">{poll.timeAgo}</p>
                 </div>
