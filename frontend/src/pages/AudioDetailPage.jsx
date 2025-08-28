@@ -478,6 +478,7 @@ const AudioDetailPage = () => {
             <span className="text-lg font-bold text-gray-600 ml-1">+3&nbsp;{">"}</span>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Barra de información del sonido (altura ~8% de pantalla) */}
