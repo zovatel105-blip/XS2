@@ -5,6 +5,7 @@ import {
   MessageCircle, MoreVertical, Plus, TrendingUp, Download, Repeat, Shuffle,
   BarChart3, Star, Eye, Headphones, Radio, Disc3, Send, Apple
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useToast } from '../hooks/use-toast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useResponsiveLayout, useDynamicClasses } from '../hooks/useResponsiveLayout';
