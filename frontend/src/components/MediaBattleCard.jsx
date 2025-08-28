@@ -292,13 +292,13 @@ const MediaBattleCard = ({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Avatar className="w-12 h-12 ring-3 ring-gradient-to-r from-purple-500 to-pink-500">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} />
               <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-600 text-white font-bold">
-                {((poll.author || 'U') + '').charAt(0).toUpperCase()}
+                {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-bold text-gray-900">{poll.author}</h3>
+              <h3 className="font-bold text-gray-900">{poll.author?.display_name || poll.author?.username || 'Usuario'}</h3>
               <p className="text-sm text-gray-500">{poll.timeAgo}</p>
             </div>
           </div>
