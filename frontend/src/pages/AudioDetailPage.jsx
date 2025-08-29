@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { useToast } from '../hooks/use-toast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useResponsiveLayout, useDynamicClasses } from '../hooks/useResponsiveLayout';
+import { useTikTok } from '../contexts/TikTokContext';
 import audioManager from '../services/AudioManager';
 import { Button } from '../components/ui/button';
 import PollCard from '../components/PollCard';
