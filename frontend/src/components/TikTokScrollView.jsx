@@ -979,48 +979,79 @@ const TikTokScrollView = ({
            width: '100dvw'
          }}>
 
+      {/* Use Sound Button - Solo para AudioDetailPage */}
+      {fromAudioDetailPage && currentAudio && onUseSound && (
+        <div className="fixed z-50 flex gap-2"
+             style={{
+               top: 'max(1rem, env(safe-area-inset-top))',
+               right: 'max(1rem, env(safe-area-inset-right))'
+             }}>
+          {/* Botón cerrar */}
+          <Button
+            onClick={onExitTikTok}
+            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full transition-all duration-200 hover:scale-110 shadow-xl"
+            size="sm"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+          
+          {/* Botón Use Sound */}
+          <Button
+            onClick={() => {
+              onUseSound();
+              onExitTikTok(); // Cerrar la vista después de usar el sonido
+            }}
+            className="bg-green-600 hover:bg-green-700 text-white backdrop-blur-md border-none px-4 py-2.5 h-10 rounded-full transition-all duration-200 hover:scale-105 shadow-xl flex items-center gap-2"
+          >
+            <Music className="w-4 h-4" />
+            <span className="font-semibold text-sm">Use Sound</span>
+          </Button>
+        </div>
+      )}
 
-      {/* Navigation hints - Enhanced design and positioning */}
-      <div className="fixed z-40 flex flex-col gap-4 transition-opacity duration-300"
-           style={{
-             left: 'max(1rem, env(safe-area-inset-left))',
-             top: '50%',
-             transform: 'translateY(-50%)'
-           }}>
-        <Button
-          onClick={() => {
-            const container = containerRef.current;
-            if (container && activeIndex > 0) {
-              container.scrollTo({
-                top: (activeIndex - 1) * container.clientHeight,
-                behavior: 'smooth'
-              });
-            }
-          }}
-          disabled={activeIndex === 0}
-          className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
-          size="sm"
-        >
-          <ChevronUp className="w-5 h-5" />
-        </Button>
-        
-        <Button
-          onClick={() => {
-            const container = containerRef.current;
-            if (container && activeIndex < polls.length - 1) {
-              container.scrollTo({
-                top: (activeIndex + 1) * container.clientHeight,
-                behavior: 'smooth'
-              });
-            }
-          }}
-          disabled={activeIndex === polls.length - 1}
-          className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
-          size="sm"
-        >
-          <ChevronDown className="w-5 h-5" />
-        </Button>
-      </div>
+      {/* Navigation hints - Enhanced design and positioning - OCULTAR cuando viene de AudioDetailPage */}
+      {!fromAudioDetailPage && (
+        <div className="fixed z-40 flex flex-col gap-4 transition-opacity duration-300"
+             style={{
+               left: 'max(1rem, env(safe-area-inset-left))',
+               top: '50%',
+               transform: 'translateY(-50%)'
+             }}>
+          <Button
+            onClick={() => {
+              const container = containerRef.current;
+              if (container && activeIndex > 0) {
+                container.scrollTo({
+                  top: (activeIndex - 1) * container.clientHeight,
+                  behavior: 'smooth'
+                });
+              }
+            }}
+            disabled={activeIndex === 0}
+            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
+            size="sm"
+          >
+            <ChevronUp className="w-5 h-5" />
+          </Button>
+          
+          <Button
+            onClick={() => {
+              const container = containerRef.current;
+              if (container && activeIndex < polls.length - 1) {
+                container.scrollTo({
+                  top: (activeIndex + 1) * container.clientHeight,
+                  behavior: 'smooth'
+                });
+              }
+            }}
+            disabled={activeIndex === polls.length - 1}
+            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
+            size="sm"
+          >
+            <ChevronDown className="w-5 h-5" />
+          </Button>
+        </div>
+      )}
 
       {/* Main scroll container - Perfect full screen with enhanced snap */}
       <div 
