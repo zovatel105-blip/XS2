@@ -6774,6 +6774,9 @@ def main():
     test_results['user_login'] = test_user_login(base_url)
     test_results['get_current_user'] = test_get_current_user(base_url)
     
+    # 🎯 PRIORITY TEST: Voting Endpoints Synchronization (MAIN FOCUS)
+    test_results['🎯_voting_synchronization'] = test_voting_endpoints_synchronization(base_url)
+    
     # 🎵 PRIORITY TEST: Polls Music Structure Analysis (MAIN FOCUS)
     test_results['🎵_polls_music_structure'] = test_polls_music_structure(base_url)
     
