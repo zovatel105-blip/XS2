@@ -440,8 +440,72 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                 <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
               )}
 
-              {/* Combined Profile + Title Layout - Conditional positioning */}
-              {/* Contenedores de texto eliminados por solicitud del usuario */}
+              {/* Combined Profile + Title Layout - Solo aparece si hay contenido */}
+              {(option.text || (option.mentioned_users && option.mentioned_users.length > 0)) && (
+                <div className={cn(
+                  "absolute left-4 right-4 z-20",
+                  optionIndex < 2 ? "top-6" : "bottom-6"
+                )}>
+                  <div className={cn(
+                    "flex items-center px-4 py-4 rounded-2xl backdrop-blur-md shadow-2xl border border-white/30",
+                    "bg-transparent"
+                  )}>
+                    {/* Show mentioned users only if they exist */}
+                    {option.mentioned_users && option.mentioned_users.length > 0 && (
+                      <div className="flex items-center gap-2 flex-shrink-0 mr-3">
+                        {option.mentioned_users.slice(0, 3).map((mentionedUserId, mentionIndex) => (
+                          <button
+                            key={mentionedUserId}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // TODO: Navigate to mentioned user profile
+                              console.log('Navigate to mentioned user:', mentionedUserId);
+                            }}
+                            className="group relative transition-transform duration-200 hover:scale-110 flex-shrink-0"
+                          >
+                            {/* MENCIÓN - Diseño distintivo con borde plateado y badge de mención */}
+                            <div className="relative">
+                              <Avatar className="w-8 h-8 transition-all duration-200 ring-2 ring-gray-300 shadow-lg shadow-gray-300/30">
+                                <AvatarImage src={`/default-avatar.png`} />
+                                <AvatarFallback className="bg-gradient-to-br from-purple-400 to-purple-600 text-white font-bold text-xs">
+                                  @
+                                </AvatarFallback>
+                              </Avatar>
+                              
+                              {/* Badge de mención */}
+                              <div className="absolute -bottom-0.5 -right-0.5 bg-purple-500 rounded-full p-0.5 shadow-sm">
+                                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                              </div>
+                            </div>
+                            
+                            {/* Hover tooltip mejorado */}
+                            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                              <div className="bg-purple-800/90 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm whitespace-nowrap border border-purple-600/30 shadow-lg">
+                                <div className="font-medium">Usuario mencionado</div>
+                                <div className="text-purple-300 text-[10px]">Mención</div>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                        {option.mentioned_users.length > 3 && (
+                          <div className="text-white/70 text-xs font-medium">
+                            +{option.mentioned_users.length - 3}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Title - Solo aparece si existe */}
+                    {option.text && (
+                      <div className="flex-1 flex justify-center">
+                        <div className="text-white font-bold text-lg leading-tight text-center px-2 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+                          {option.text}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Winner Badge - On winning option only */}
               {isWinner && poll.totalVotes > 0 && (
