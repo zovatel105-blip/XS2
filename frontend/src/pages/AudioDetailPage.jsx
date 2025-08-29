@@ -364,13 +364,13 @@ const AudioDetailPage = () => {
         
         if (append) {
           setPosts(prevPosts => {
-            const newPosts = [...prevPosts, ...postsData];
-            console.log(`📊 POSTS AGREGADOS - Antes: ${prevPosts.length}, Agregados: ${postsData.length}, Total: ${newPosts.length}`);
+            const newPosts = [...prevPosts, ...transformedPosts];  // ✅ FIXED: Use transformed data
+            console.log(`📊 POSTS AGREGADOS - Antes: ${prevPosts.length}, Agregados: ${transformedPosts.length}, Total: ${newPosts.length}`);
             return newPosts;
           });
         } else {
-          setPosts(postsData);
-          console.log(`📊 POSTS INICIALES ESTABLECIDOS: ${postsData.length}`);
+          setPosts(transformedPosts);  // ✅ FIXED: Use transformed data
+          console.log(`📊 POSTS INICIALES ESTABLECIDOS: ${transformedPosts.length}`);
         }
         
         setTotalPosts(total);
