@@ -447,7 +447,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
               )}>
                 <div className={cn(
                   "flex items-center px-4 py-4 rounded-2xl backdrop-blur-md shadow-2xl border border-white/30",
-                  "bg-black/80"
+                  "bg-transparent"
                 )}>
                   {/* Show mentioned users only if they exist */}
                   {option.mentioned_users && option.mentioned_users.length > 0 && (
