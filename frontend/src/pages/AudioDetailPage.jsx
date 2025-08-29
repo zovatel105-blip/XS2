@@ -375,12 +375,12 @@ const AudioDetailPage = () => {
         
         setTotalPosts(total);
         setHasMorePosts(hasMore);
-        setCurrentOffset(offset + postsData.length);
+        setCurrentOffset(offset + transformedPosts.length);  // ✅ FIXED: Use transformed data length
         
         console.log(`📊 ESTADO ACTUALIZADO:`, {
           totalPosts: total,
           hasMorePosts: hasMore,
-          newOffset: offset + postsData.length
+          newOffset: offset + transformedPosts.length  // ✅ FIXED: Use transformed data length
         });
         
       } else {
