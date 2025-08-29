@@ -999,6 +999,9 @@ const AudioDetailPage = () => {
             onExitTikTok={handleExitTikTok}
             showLogo={false}
             initialIndex={selectedPostIndex}
+            fromAudioDetailPage={true}
+            currentAudio={audio}
+            onUseSound={handleUseThisSound}
           />
         </div>
       )}
