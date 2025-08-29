@@ -27,6 +27,7 @@ const AudioDetailPage = () => {
   const { t, formatNumber, formatDuration, formatDate } = useTranslation();
   const layout = useResponsiveLayout();
   const classes = useDynamicClasses(layout);
+  const { hideRightNavigationBar, showRightNavigationBar } = useTikTok();
   
   const [audio, setAudio] = useState(null);
   const [posts, setPosts] = useState([]);
