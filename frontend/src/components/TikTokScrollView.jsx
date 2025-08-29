@@ -21,10 +21,7 @@ import realMusicService from '../services/realMusicService';
 
 // Componente UserButton clickeable
 const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserClick, optionIndex }) => (
-  <div className={cn(
-    "absolute flex flex-col items-center gap-2 z-20",
-    optionIndex < 2 ? "bottom-4 right-4" : "top-4 right-4"
-  )}>
+  <div className="absolute flex flex-col items-center gap-2 z-20 bottom-4 right-4">
     {/* Avatar del usuario - clickeable */}
     <button
       onClick={(e) => {
