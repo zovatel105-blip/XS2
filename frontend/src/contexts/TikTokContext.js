@@ -47,9 +47,12 @@ export const TikTokProvider = ({ children }) => {
     <TikTokContext.Provider 
       value={{
         isTikTokMode,
+        hideRightNavigation,
         enterTikTokMode,
         exitTikTokMode,
-        toggleTikTokMode
+        toggleTikTokMode,
+        hideRightNavigationBar,
+        showRightNavigationBar
       }}
     >
       {children}
