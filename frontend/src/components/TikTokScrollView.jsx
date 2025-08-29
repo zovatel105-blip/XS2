@@ -663,7 +663,21 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   );
 };
 
-const TikTokScrollView = ({ polls, onVote, onLike, onShare, onComment, onSave, onExitTikTok, onCreatePoll, showLogo = true }) => {
+const TikTokScrollView = ({ 
+  polls, 
+  onVote, 
+  onLike, 
+  onShare, 
+  onComment, 
+  onSave, 
+  onExitTikTok, 
+  onCreatePoll, 
+  showLogo = true,
+  initialIndex = 0,
+  fromAudioDetailPage = false,
+  currentAudio = null,
+  onUseSound = null
+}) => {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
