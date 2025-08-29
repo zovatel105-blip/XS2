@@ -716,9 +716,87 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handlePollLike = (pollId) => {
+  const handlePollLike = async (pollId) => {
     console.log('❤️ Like poll:', pollId);
-    // TODO: Implement like functionality
+    
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        toast({
+          title: "Inicia sesión",
+          description: "Necesitas iniciar sesión para dar like",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Optimistic update
+      let wasLiked = false;
+      setPosts(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          wasLiked = poll.userLiked;
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes - 1 : poll.likes + 1
+          };
+        }
+        return poll;
+      }));
+
+      // Send like to backend
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${pollId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error liking poll');
+      }
+
+      const result = await response.json();
+      
+      // Update with actual server response
+      setPosts(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: result.liked,
+            likes: result.likes
+          };
+        }
+        return poll;
+      }));
+      
+      toast({
+        title: result.liked ? "¡Te gusta!" : "Like removido",
+        description: result.liked ? "Has dado like a esta publicación" : "Ya no te gusta esta publicación",
+      });
+      
+    } catch (error) {
+      console.error('Error liking poll:', error);
+      
+      // Revert optimistic update
+      setPosts(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes + 1 : poll.likes - 1
+          };
+        }
+        return poll;
+      }));
+      
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo procesar el like. Intenta de nuevo.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handlePollShare = (pollId) => {
