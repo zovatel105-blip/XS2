@@ -623,6 +623,10 @@ const AudioDetailPage = () => {
     // Encontrar el índice del post seleccionado
     const index = posts.findIndex(p => p.id === post.id);
     setSelectedPostIndex(index >= 0 ? index : 0);
+    
+    // Ocultar la navegación lateral derecha cuando se abre desde AudioDetailPage
+    hideRightNavigationBar();
+    
     setShowTikTokView(true);
   };
 
