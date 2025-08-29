@@ -6793,7 +6793,7 @@ def main():
     
     # Print summary
     print("\n" + "=" * 60)
-    print("🎯 TESTING SUMMARY - POLLS MUSIC STRUCTURE FOCUS")
+    print("🎯 TESTING SUMMARY - VOTING SYNCHRONIZATION & POLLS MUSIC FOCUS")
     print("=" * 60)
     
     passed_tests = sum(1 for result in test_results.values() if result)
@@ -6805,13 +6805,23 @@ def main():
     
     print(f"\nOverall Result: {passed_tests}/{total_tests} tests passed")
     
+    # Special focus on voting synchronization result
+    voting_sync_passed = test_results.get('🎯_voting_synchronization', False)
+    if voting_sync_passed:
+        print("\n🎉 ✅ VOTING SYNCHRONIZATION TEST PASSED: Vote sync between pages working correctly")
+        print("✅ Votes made in FeedPage will appear correctly in AudioDetailPage")
+        print("✅ Like and share states are properly synchronized")
+    else:
+        print("\n❌ ⚠️ VOTING SYNCHRONIZATION TEST FAILED: Vote sync issues detected")
+        print("❌ This explains why votes don't sync between FeedPage and AudioDetailPage")
+    
     # Special focus on polls music structure result
     polls_music_passed = test_results.get('🎵_polls_music_structure', False)
     if polls_music_passed:
-        print("\n🎉 ✅ POLLS MUSIC STRUCTURE TEST PASSED: Music data structure is correct")
+        print("✅ POLLS MUSIC STRUCTURE TEST PASSED: Music data structure is correct")
         print("✅ Music IDs, titles, artists, and preview URLs are properly configured")
     else:
-        print("\n❌ ⚠️ POLLS MUSIC STRUCTURE TEST FAILED: Music navigation issues detected")
+        print("❌ POLLS MUSIC STRUCTURE TEST FAILED: Music navigation issues detected")
         print("❌ This explains why clicking music players doesn't navigate to detail pages")
     
     # Also report on audio detail page
