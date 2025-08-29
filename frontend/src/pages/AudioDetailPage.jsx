@@ -339,7 +339,27 @@ const AudioDetailPage = () => {
           author: p.author?.username || 'N/A',
           options_count: p.options?.length || 0,
           created_at: p.created_at,
-          media_url: p.media_url || 'NO_MEDIA'
+          media_url: p.media_url || 'NO_MEDIA',
+          user_vote: p.user_vote || 'NO_VOTE',  // Log voting state
+          user_liked: p.user_liked || false     // Log like state
+        })));
+        
+        // Transform posts data to match frontend format (fixing snake_case to camelCase)
+        const transformedPosts = postsData.map(post => ({
+          ...post,
+          userVote: post.user_vote,      // ✅ FIXED: Convert user_vote to userVote
+          userLiked: post.user_liked,    // ✅ FIXED: Convert user_liked to userLiked
+          totalVotes: post.total_votes,  // ✅ FIXED: Convert total_votes to totalVotes
+          authorUser: post.author,       // ✅ Add authorUser for compatibility
+          commentsCount: post.comments_count  // ✅ Add commentsCount for compatibility
+        }));
+        
+        console.log('🔄 POSTS TRANSFORMADOS:', transformedPosts.map(p => ({
+          id: p.id,
+          title: p.title,
+          userVote: p.userVote,   // Should now show actual vote
+          userLiked: p.userLiked, // Should now show actual like status
+          totalVotes: p.totalVotes
         })));
         
         if (append) {
