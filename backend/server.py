@@ -3904,6 +3904,27 @@ async def get_posts_using_audio(
                     created_at=author.get("created_at", datetime.utcnow().isoformat())
                 )
         
+        # Get user votes and likes for current user (fixing voting state sync issue)
+        poll_ids = [poll["id"] for poll in polls]
+        
+        # Query user votes for all posts
+        user_votes_cursor = db.votes.find({
+            "poll_id": {"$in": poll_ids},
+            "user_id": current_user.id
+        })
+        user_votes = await user_votes_cursor.to_list(len(poll_ids))
+        user_votes_dict = {vote["poll_id"]: vote["option_id"] for vote in user_votes}
+        logger.info(f"🗳️ Usuario {current_user.id} tiene votos en {len(user_votes_dict)} posts")
+        
+        # Query user likes for all posts  
+        user_likes_cursor = db.poll_likes.find({
+            "poll_id": {"$in": poll_ids},
+            "user_id": current_user.id
+        })
+        user_likes = await user_likes_cursor.to_list(len(poll_ids))
+        liked_poll_ids = set(like["poll_id"] for like in user_likes)
+        logger.info(f"❤️ Usuario {current_user.id} tiene likes en {len(liked_poll_ids)} posts")
+        
         # Construir respuesta de polls con mejor logging
         poll_responses = []
         logger.info(f"🏗️ Construyendo respuesta para {len(polls)} posts")
