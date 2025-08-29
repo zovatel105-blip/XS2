@@ -4017,8 +4017,8 @@ async def get_posts_using_audio(
                     shares=poll_data.get("shares", 0),
                     comments_count=poll_data.get("comments_count", 0),
                     music=music_info,
-                    user_vote=None,  # Se puede mejorar para incluir el voto del usuario actual
-                    user_liked=False,  # Se puede mejorar para incluir si le dado like
+                    user_vote=user_votes_dict.get(poll_data["id"]),  # ✅ FIXED: Now includes actual user vote
+                    user_liked=poll_data["id"] in liked_poll_ids,    # ✅ FIXED: Now includes actual user like status
                     created_at=created_at_dt,
                     mentioned_users=poll_data.get("mentioned_users", []),
                     tags=poll_data.get("tags", []),
