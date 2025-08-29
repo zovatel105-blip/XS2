@@ -779,35 +779,22 @@ const AudioDetailPage = () => {
   const handlePollShare = async (pollId) => {
     console.log('📤 Share poll:', pollId);
     
-    try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        toast({
-          title: "Inicia sesión",
-          description: "Necesitas iniciar sesión para compartir",
-          variant: "destructive",
-        });
-        return;
-      }
+    if (!localStorage.getItem('authToken')) {
+      toast({
+        title: "Inicia sesión",
+        description: "Necesitas iniciar sesión para compartir",
+        variant: "destructive",
+      });
+      return;
+    }
 
+    try {
       // Find the poll to share
       const poll = posts.find(p => p.id === pollId);
       if (!poll) return;
 
-      // Increment share count on backend
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${pollId}/share`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error sharing poll');
-      }
-
-      const result = await response.json();
+      // Increment share count on backend using pollService
+      const result = await pollService.sharePoll(pollId);
       
       // Update local state
       setPosts(prev => prev.map(p => {
