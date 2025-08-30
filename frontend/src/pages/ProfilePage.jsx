@@ -846,19 +846,24 @@ const ProfilePage = () => {
 
         {/* NOMBRE + ROL OPTIMIZADO MÓVIL */}
         <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
-              {displayUser.displayName || displayUser.username}
-            </h2>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-px h-4 sm:h-6 bg-gray-300 hidden sm:block"></div>
-              <span className="text-sm sm:text-base text-gray-600 sm:text-gray-700">•</span>
-              <p className="text-sm sm:text-lg font-bold text-gray-700">
-                {isOwnProfile ? "Creador de contenido" : "Usuario activo"}
-              </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+            {/* Nombre principal */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-base sm:text-xl font-bold text-gray-900 truncate flex-shrink-0">
+                {displayUser.displayName || displayUser.username}
+              </h2>
               {displayUser.verified && (
                 <Check className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
               )}
+            </div>
+            
+            {/* Separador y rol */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-px h-4 sm:h-6 bg-gray-300 hidden sm:block"></div>
+              <span className="text-gray-400 sm:hidden">•</span>
+              <p className="text-xs sm:text-base font-semibold text-gray-600 sm:text-gray-700">
+                {isOwnProfile ? "Creador de contenido" : "Usuario activo"}
+              </p>
             </div>
           </div>
         </div>
