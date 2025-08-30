@@ -446,24 +446,6 @@ const RegisterPage = ({ onSwitchToLogin }) => {
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Las contraseñas no coinciden",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      toast({
-        title: "Error",
-        description: "La contraseña debe tener al menos 6 caracteres",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
