@@ -244,7 +244,7 @@ const LoginPage = ({ onSwitchToRegister }) => {
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-100/30 to-pink-100/30 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               </div>
               {validationErrors.password && (
-                <p className="mt-2 text-sm text-red-500 flex items-center animate-fadeIn">
+                <p className="mt-2 text-sm text-red-500 flex items-center">
                   <AlertTriangle className="w-4 h-4 mr-1" />
                   {validationErrors.password}
                 </p>
