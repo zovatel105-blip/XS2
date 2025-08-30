@@ -760,24 +760,24 @@ const ProfilePage = () => {
           <p className="text-sm sm:text-base text-blue-600 font-medium">@{displayUser.username}</p>
         </div>
 
-        {/* BOTONES DE ACCIÓN */}
-        <div className="flex gap-3">
+        {/* BOTONES DE ACCIÓN OPTIMIZADOS MÓVIL */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
           <Button 
             variant="outline" 
-            className="flex-1 rounded-full py-3 font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
+            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
             onClick={() => setEditProfileModalOpen(true)}
           >
             Edit profile
           </Button>
           <Button 
             variant="outline" 
-            className="flex-1 rounded-full py-3 font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
+            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
             onClick={() => navigate('/statistics')}
           >
             Statistics
           </Button>
           <Button 
-            className="flex-1 rounded-full py-3 font-semibold bg-blue-600 hover:bg-blue-700"
+            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700"
             onClick={() => navigate('/contact')}
           >
             Contact
