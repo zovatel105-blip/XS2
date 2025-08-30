@@ -429,7 +429,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
 
               {/* Selection indicator */}
               {isSelected && (
-                <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>  {/* ✅ FIXED: Reduced ring thickness and opacity, removed pulse */}
+                <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>
               )}
 
               {/* Winner indicator */}
