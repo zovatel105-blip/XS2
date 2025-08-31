@@ -806,7 +806,7 @@ const ProfilePage = () => {
               {/* Seguidos con ícono - alineación derecha perfecta */}
               <div 
                 className="flex items-center gap-2 justify-end cursor-pointer hover:bg-gray-50 rounded-lg p-1.5 transition-colors active:scale-95 -m-1.5"
-                onClick={() => setShowFollowingModal(true)}
+                onClick={handleFollowingClick}
               >
                 <div className="flex flex-col justify-center min-w-0 text-right">
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{followingCount}</p>
