@@ -716,6 +716,19 @@ const TikTokScrollView = ({
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isScrolling, setIsScrolling] = useState(false);
 
+  // DEBUG: Monitorear cambios de activeIndex para sincronización de audio
+  useEffect(() => {
+    console.log(`🎯 ACTIVE INDEX CHANGED: ${activeIndex}`);
+    if (polls[activeIndex]) {
+      const activePost = polls[activeIndex];
+      console.log(`   📝 Active Post: "${activePost.title}"`);
+      console.log(`   🎵 Has Music: ${!!(activePost.music && activePost.music.preview_url)}`);
+      if (activePost.music) {
+        console.log(`   🎶 Music: ${activePost.music.title} - ${activePost.music.artist}`);
+      }
+    }
+  }, [activeIndex, polls]);
+
   // Scroll to initial index when component mounts (for AudioDetailPage)
   useEffect(() => {
     if (initialIndex > 0 && containerRef.current) {
