@@ -155,14 +155,13 @@ const AvatarUpload = ({
   const displayImage = getDisplayImage();
 
   return (
-    <div className={cn("relative inline-block", className)}>
+    <div className={cn("relative inline-block w-full h-full", className)}>
       {/* Avatar Container */}
       <div
         className={cn(
-          "relative rounded-full overflow-hidden bg-gray-200 border-2 border-gray-300",
+          "relative w-full h-full rounded-full overflow-hidden bg-gray-200",
           "transition-all duration-200 cursor-pointer",
-          config.container,
-          dragOver && "border-blue-500 shadow-lg scale-105",
+          dragOver && "shadow-lg scale-105",
           isUploading && "opacity-75"
         )}
         onDragOver={handleDragOver}
