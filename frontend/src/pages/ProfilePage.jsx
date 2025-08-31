@@ -430,7 +430,8 @@ const ProfilePage = () => {
     totalShares: totalSharesReceived,
     pollsCreated: userPolls.length,
     totalPolls: userPolls.length,
-    verified: authUser?.is_verified || false
+    verified: authUser?.is_verified || false,
+    hasStory: Math.random() > 0.5, // Simulación temporal - luego conectar con backend real
   } : viewedUser || {
     id: 'default_user',
     username: 'usuario',
