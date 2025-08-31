@@ -206,10 +206,25 @@ const ProfilePage = () => {
     setFollowingLoading(true);
     try {
       const targetUserId = userId || authUser?.id;
+      console.log('🔍 LOADING FOLLOWING LIST:');
+      console.log('  Target User ID:', targetUserId);
+      console.log('  Current Auth User:', authUser?.username);
+      
       const followingData = await getUserFollowing(targetUserId);
+      console.log('📊 FOLLOWING DATA RECEIVED:', followingData);
+      console.log('  Following Array:', followingData.following);
+      console.log('  Total Count:', followingData.total);
+      console.log('  Array Length:', followingData.following ? followingData.following.length : 'undefined');
+      
       setFollowingList(followingData.following || []);
+      
+      if (followingData.following && followingData.following.length > 0) {
+        console.log('✅ First following user:', followingData.following[0]);
+      } else {
+        console.log('⚠️ No following users found in response');
+      }
     } catch (error) {
-      console.error('Error loading following list:', error);
+      console.error('❌ Error loading following list:', error);
       toast({
         title: "Error", 
         description: "No se pudo cargar la lista de siguiendo",
