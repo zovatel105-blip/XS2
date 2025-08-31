@@ -32,6 +32,31 @@ function AppContent() {
   const { isTikTokMode } = useTikTok();
   const { isAuthenticated, loading: authLoading } = useAuth();
 
+  // 🎵 CLEANUP GLOBAL: Detener audio en navegación de rutas
+  React.useEffect(() => {
+    const handleRouteChange = async () => {
+      try {
+        console.log('🔄 Route changing - Stopping audio');
+        const audioManager = (await import('./services/AudioManager')).default;
+        await audioManager.stop();
+      } catch (error) {
+        console.error('❌ Error stopping audio on route change:', error);
+      }
+    };
+
+    // Escuchar cambios de ruta
+    const unsubscribe = navigate && (() => {
+      // Este efecto se ejecutará en cada renderizado cuando cambie la ruta
+      handleRouteChange();
+    });
+
+    return () => {
+      if (unsubscribe && typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
+  }, [navigate, window.location.pathname]);
+
   const handleCreatePoll = async (pollData) => {
     const newPoll = createPoll(pollData);
     console.log('Nueva votación creada:', newPoll);
