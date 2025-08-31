@@ -732,30 +732,30 @@ const ProfilePage = () => {
               </button>
             </div>
 
-            {/* LADO DERECHO: Me gusta y Seguidos - íconos a la izquierda */}
+            {/* LADO DERECHO: Me gusta y Seguidos - perfectamente alineado */}
             <div className="flex flex-col gap-4 sm:gap-5 flex-1 min-w-0">
-              {/* Me gusta con ícono - ícono a la izquierda */}
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Heart className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-red-600" />
-                </div>
-                <div className="flex flex-col justify-center min-w-0">
+              {/* Me gusta con ícono - alineación derecha perfecta */}
+              <div className="flex items-center gap-2 justify-end">
+                <div className="flex flex-col justify-center min-w-0 text-right">
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{displayUser.totalLikes || 0}</p>
                   <p className="text-xs sm:text-sm text-gray-600 font-medium leading-none mt-0.5">Me gusta</p>
                 </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Heart className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-red-600" />
+                </div>
               </div>
               
-              {/* Seguidos con ícono - ícono a la izquierda */}
+              {/* Seguidos con ícono - alineación derecha perfecta */}
               <div 
-                className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded-lg p-1.5 transition-colors active:scale-95 -m-1.5"
+                className="flex items-center gap-2 justify-end cursor-pointer hover:bg-gray-50 rounded-lg p-1.5 transition-colors active:scale-95 -m-1.5"
                 onClick={() => setShowFollowingModal(true)}
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <UserPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-purple-600" />
-                </div>
-                <div className="flex flex-col justify-center min-w-0">
+                <div className="flex flex-col justify-center min-w-0 text-right">
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{followingCount}</p>
                   <p className="text-xs sm:text-sm text-gray-600 font-medium leading-none mt-0.5">Seguidos</p>
+                </div>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <UserPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-purple-600" />
                 </div>
               </div>
             </div>
