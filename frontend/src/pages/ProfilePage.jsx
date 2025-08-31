@@ -446,7 +446,8 @@ const ProfilePage = () => {
     totalShares: 0,
     pollsCreated: 0,
     totalPolls: 0,
-    verified: false
+    verified: false,
+    hasStory: Math.random() > 0.5, // Simulación temporal - luego conectar con backend real
   };
 
   // Add null safety check to prevent charAt errors
