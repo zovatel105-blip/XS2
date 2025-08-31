@@ -170,10 +170,25 @@ const ProfilePage = () => {
     setFollowersLoading(true);
     try {
       const targetUserId = userId || authUser?.id;
+      console.log('🔍 LOADING FOLLOWERS LIST:');
+      console.log('  Target User ID:', targetUserId);
+      console.log('  Current Auth User:', authUser?.username);
+      
       const followersData = await getUserFollowers(targetUserId);
+      console.log('📊 FOLLOWERS DATA RECEIVED:', followersData);
+      console.log('  Followers Array:', followersData.followers);
+      console.log('  Total Count:', followersData.total);
+      console.log('  Array Length:', followersData.followers ? followersData.followers.length : 'undefined');
+      
       setFollowersList(followersData.followers || []);
+      
+      if (followersData.followers && followersData.followers.length > 0) {
+        console.log('✅ First follower:', followersData.followers[0]);
+      } else {
+        console.log('⚠️ No followers found in response');
+      }
     } catch (error) {
-      console.error('Error loading followers list:', error);
+      console.error('❌ Error loading followers list:', error);
       toast({
         title: "Error",
         description: "No se pudieron cargar los seguidores",
