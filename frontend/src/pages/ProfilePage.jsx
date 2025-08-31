@@ -822,25 +822,25 @@ const ProfilePage = () => {
         {/* TABS OPTIMIZADAS MÓVIL */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl shadow-sm h-auto p-1">
-            <TabsTrigger value="polls" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm">
-              <Grid3X3 className="w-4 h-4" />
+            <TabsTrigger value="polls" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-3 text-xs sm:text-sm min-h-[56px] active:scale-95 transition-transform">
+              <Grid3X3 className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Publicaciones</span>
-              <span className="sm:hidden">Posts</span>
+              <span className="sm:hidden text-[10px]">Posts</span>
             </TabsTrigger>
-            <TabsTrigger value="liked" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm">
-              <Heart className="w-4 h-4" />
+            <TabsTrigger value="liked" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-3 text-xs sm:text-sm min-h-[56px] active:scale-95 transition-transform">
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Me gusta</span>
-              <span className="sm:hidden">Likes</span>
+              <span className="sm:hidden text-[10px]">Likes</span>
             </TabsTrigger>
-            <TabsTrigger value="mentions" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm">
-              <AtSign className="w-4 h-4" />
+            <TabsTrigger value="mentions" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-3 text-xs sm:text-sm min-h-[56px] active:scale-95 transition-transform">
+              <AtSign className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Menciones</span>
-              <span className="sm:hidden">@</span>
+              <span className="sm:hidden text-[10px]">@</span>
             </TabsTrigger>
-            <TabsTrigger value="saved" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm">
-              <Bookmark className="w-4 h-4" />
+            <TabsTrigger value="saved" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-3 text-xs sm:text-sm min-h-[56px] active:scale-95 transition-transform">
+              <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Guardados</span>
-              <span className="sm:hidden">Saved</span>
+              <span className="sm:hidden text-[10px]">Saved</span>
             </TabsTrigger>
           </TabsList>
 
