@@ -698,9 +698,37 @@ const ProfilePage = () => {
 
             {/* AVATAR EN EL CENTRO - PERFECTAMENTE CENTRADO */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-0.5">
-                {isOwnProfile ? (
+              {/* Borde degradado solo si hay historia */}
+              {displayUser.hasStory ? (
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-0.5">
                   <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
+                    {isOwnProfile ? (
+                      <AvatarUpload
+                        currentAvatar={displayUser.avatar}
+                        onAvatarUpdate={(result, avatarUrl) => {
+                          setViewedUser(prev => ({ ...prev, avatar: avatarUrl }));
+                        }}
+                        className="w-full h-full"
+                        showUploadButton={false}
+                      />
+                    ) : (
+                      <Avatar className="w-full h-full">
+                        <AvatarImage 
+                          src={displayUser.avatar} 
+                          alt={displayUser.username}
+                          className="w-full h-full object-cover object-center"
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-lg sm:text-xl md:text-2xl font-bold w-full h-full flex items-center justify-center">
+                          {(displayUser.displayName || displayUser.username || 'U').charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                // Sin borde degradado si no hay historia
+                <div className="w-full h-full bg-white rounded-full overflow-hidden relative border-2 border-gray-200">
+                  {isOwnProfile ? (
                     <AvatarUpload
                       currentAvatar={displayUser.avatar}
                       onAvatarUpdate={(result, avatarUrl) => {
@@ -709,9 +737,7 @@ const ProfilePage = () => {
                       className="w-full h-full"
                       showUploadButton={false}
                     />
-                  </div>
-                ) : (
-                  <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
+                  ) : (
                     <Avatar className="w-full h-full">
                       <AvatarImage 
                         src={displayUser.avatar} 
@@ -722,12 +748,12 @@ const ProfilePage = () => {
                         {(displayUser.displayName || displayUser.username || 'U').charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
               
-              {/* Botón de acción "+" perfectamente posicionado */}
-              <button className="absolute -bottom-1 -right-1 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 z-10">
+              {/* Botón de acción "+" centrado en la parte inferior */}
+              <button className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 z-10">
                 <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-white" />
               </button>
             </div>
