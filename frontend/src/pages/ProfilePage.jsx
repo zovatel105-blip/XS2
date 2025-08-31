@@ -1182,8 +1182,6 @@ const ProfilePage = () => {
         </div>
       )}
 
-
-
       {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={editProfileModalOpen}
