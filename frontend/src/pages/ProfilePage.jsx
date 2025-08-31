@@ -796,23 +796,23 @@ const ProfilePage = () => {
         </div>
 
         {/* BOTONES DE ACCIÓN OPTIMIZADOS MÓVIL */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Button 
             variant="outline" 
-            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
+            className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300 min-h-[48px] active:scale-95 transition-transform"
             onClick={() => setEditProfileModalOpen(true)}
           >
             Edit profile
           </Button>
           <Button 
             variant="outline" 
-            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300"
+            className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300 min-h-[48px] active:scale-95 transition-transform"
             onClick={() => navigate('/statistics')}
           >
             Statistics
           </Button>
           <Button 
-            className="w-full rounded-full py-2.5 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700"
+            className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 min-h-[48px] active:scale-95 transition-transform"
             onClick={() => navigate('/contact')}
           >
             Contact
