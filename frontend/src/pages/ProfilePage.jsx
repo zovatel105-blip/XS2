@@ -638,23 +638,23 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* ENCABEZADO SUPERIOR OPTIMIZADO MÓVIL */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3">
+        <div className="max-w-4xl mx-auto px-4 sm:px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Menú hamburguesa (izquierda) */}
-            <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-2 active:scale-95 transition-transform">
+            <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]">
               <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </Button>
             
             {/* Nombre de usuario + switch de cuentas (centro) */}
-            <div className="flex items-center gap-1 sm:gap-2 max-w-[180px] sm:max-w-none">
-              <h1 className="text-sm sm:text-lg font-semibold text-gray-900 truncate">@{displayUser.username}</h1>
-              <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-1 sm:p-2 active:scale-95 transition-transform">
+            <div className="flex items-center gap-1 sm:gap-2 max-w-[200px] sm:max-w-none">
+              <h1 className="text-base sm:text-lg font-semibold text-gray-900 truncate">@{displayUser.username}</h1>
+              <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-2 sm:p-2 active:scale-95 transition-transform min-w-[36px] min-h-[36px]">
                 <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
             
             {/* Ícono de configuración (derecha) */}
-            <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-2 active:scale-95 transition-transform" onClick={handleSettingsClick}>
+            <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]" onClick={handleSettingsClick}>
               <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
             </Button>
           </div>
