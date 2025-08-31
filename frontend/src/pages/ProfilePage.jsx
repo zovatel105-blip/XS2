@@ -697,7 +697,7 @@ const ProfilePage = () => {
             </div>
 
             {/* AVATAR EN EL CENTRO - IMAGEN DE PERFIL CON BORDE DEGRADADO */}
-            <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 flex-shrink-0">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-1.5">
                 {isOwnProfile ? (
                   <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
@@ -711,14 +711,14 @@ const ProfilePage = () => {
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                  <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
                     <Avatar className="w-full h-full">
                       <AvatarImage 
                         src={displayUser.avatar} 
                         alt={displayUser.username}
                         className="w-full h-full object-cover object-center"
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-lg sm:text-2xl md:text-3xl font-bold w-full h-full flex items-center justify-center">
+                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-xl sm:text-2xl md:text-3xl font-bold w-full h-full flex items-center justify-center">
                         {(displayUser.displayName || displayUser.username || 'U').charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -726,9 +726,9 @@ const ProfilePage = () => {
                 )}
               </div>
               
-              {/* Botón de acción "+" superpuesto en la parte inferior del avatar */}
-              <button className="absolute -bottom-0.5 -right-0.5 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 z-10">
-                <Plus className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
+              {/* Botón de acción "+" superpuesto en la parte inferior del avatar - Optimizado para móvil */}
+              <button className="absolute -bottom-1 -right-1 w-8 h-8 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 z-10 min-w-[32px] min-h-[32px]">
+                <Plus className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
               </button>
             </div>
 
