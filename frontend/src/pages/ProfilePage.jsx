@@ -700,22 +700,29 @@ const ProfilePage = () => {
             <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-1.5">
                 {isOwnProfile ? (
-                  <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                  <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
                     <AvatarUpload
                       currentAvatar={displayUser.avatar}
                       onAvatarUpdate={(result, avatarUrl) => {
                         setViewedUser(prev => ({ ...prev, avatar: avatarUrl }));
                       }}
                       className="w-full h-full"
+                      showUploadButton={false}
                     />
                   </div>
                 ) : (
-                  <Avatar className="w-full h-full bg-white">
-                    <AvatarImage src={displayUser.avatar} alt={displayUser.username} />
-                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-lg sm:text-2xl md:text-3xl font-bold">
-                      {(displayUser.displayName || displayUser.username || 'U').charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                    <Avatar className="w-full h-full">
+                      <AvatarImage 
+                        src={displayUser.avatar} 
+                        alt={displayUser.username}
+                        className="w-full h-full object-cover object-center"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white text-lg sm:text-2xl md:text-3xl font-bold w-full h-full flex items-center justify-center">
+                        {(displayUser.displayName || displayUser.username || 'U').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                 )}
               </div>
               
