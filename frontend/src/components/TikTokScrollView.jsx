@@ -740,29 +740,34 @@ const TikTokScrollView = ({
   // Performance optimization - prevent unnecessary re-renders
   const memoizedActiveIndex = useMemo(() => activeIndex, [activeIndex]);
 
-  // Optimized scroll handling with debounce and momentum detection
+  // MEJORADA detección de scroll para sincronización perfecta de audio
   const handleScroll = useCallback(() => {
-    if (isScrolling) return;
-    
     const container = containerRef.current;
     if (!container) return;
 
     const scrollTop = container.scrollTop;
     const containerHeight = container.clientHeight;
     
-    // More precise index calculation with snap tolerance
+    // Cálculo más preciso del índice activo
     const exactIndex = scrollTop / containerHeight;
     const newIndex = Math.round(exactIndex);
     
-    // Only update if we've crossed the 50% threshold and it's a valid index
-    const threshold = 0.3; // 30% threshold for better responsiveness
-    if (Math.abs(exactIndex - newIndex) < threshold && 
+    // Umbral más agresivo para cambios rápidos de audio
+    const threshold = 0.25; // 25% threshold para mejor sincronización de audio
+    const indexDifference = Math.abs(exactIndex - newIndex);
+    
+    // Actualizar si hemos cruzado el umbral Y es un índice válido
+    if (indexDifference < threshold && 
         newIndex !== activeIndex && 
         newIndex >= 0 && 
         newIndex < polls.length) {
+      
+      console.log(`🔄 SCROLL SYNC: Changing active index from ${activeIndex} to ${newIndex}`);
+      console.log(`   📊 Exact index: ${exactIndex.toFixed(2)}, Threshold diff: ${indexDifference.toFixed(2)}`);
+      
       setActiveIndex(newIndex);
     }
-  }, [activeIndex, polls.length, isScrolling]);
+  }, [activeIndex, polls.length]);
 
   // Enhanced scroll listener with optimized debouncing
   useEffect(() => {
