@@ -908,7 +908,10 @@ const TikTokScrollView = ({
           });
         }
       } else if (event.key === 'Escape') {
-        onExitTikTok?.();
+        console.log('⌨️ ESCAPE KEY PRESSED - Stopping audio');
+        audioManager.stop().then(() => {
+          onExitTikTok?.();
+        });
       }
     };
 
