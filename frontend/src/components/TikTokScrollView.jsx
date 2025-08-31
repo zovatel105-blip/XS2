@@ -729,6 +729,43 @@ const TikTokScrollView = ({
     }
   }, [activeIndex, polls]);
 
+  // 🎵 SINCRONIZACIÓN CRÍTICA: Detener audio al salir del componente
+  useEffect(() => {
+    return () => {
+      console.log('🚪 EXITING TikTokScrollView - Stopping all audio');
+      audioManager.stop().catch(console.error);
+    };
+  }, []);
+
+  // 🎵 SINCRONIZACIÓN: Detectar cambios de visibilidad (cambio de pestaña/app)
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.hidden) {
+        console.log('👁️ Page hidden - Pausing audio');
+        await audioManager.pause();
+      } else {
+        console.log('👁️ Page visible - Could resume audio if needed');
+        // Nota: No auto-resumimos, dejamos que el usuario decida
+      }
+    };
+
+    const handleBeforeUnload = async () => {
+      console.log('🚪 Page unloading - Stopping all audio');
+      await audioManager.stop();
+    };
+
+    // Escuchar eventos de visibilidad y salida
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handleBeforeUnload);
+    };
+  }, []);
+
   // Scroll to initial index when component mounts (for AudioDetailPage)
   useEffect(() => {
     if (initialIndex > 0 && containerRef.current) {
