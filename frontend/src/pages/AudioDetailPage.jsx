@@ -82,6 +82,16 @@ const AudioDetailPage = () => {
     }
   }, [audio, posts, postsLoading]); // Agregamos postsLoading a las dependencias
 
+  // 🎵 CLEANUP: Detener audio al desmontar componente
+  useEffect(() => {
+    return () => {
+      console.log('🚪 AudioDetailPage unmounting - Stopping audio');
+      import('../services/AudioManager').then(module => {
+        module.default.stop().catch(console.error);
+      });
+    };
+  }, []);
+
   const determineOriginalUser = () => {
     console.log('🔍 === DETERMINANDO USUARIO ORIGINAL ===');
     console.log('🔍 Audio título:', audio?.title);
