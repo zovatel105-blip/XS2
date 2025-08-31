@@ -103,57 +103,91 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
     }
   }, [authorUserId, currentUser, getFollowStatus]);
 
-  // Activar contexto de audio y reproducción automática
+  // SINCRONIZACIÓN COMPLETA DE AUDIO con detección mejorada
   useEffect(() => {
-    const handleAutoPlay = async () => {
+    const handleAudioSync = async () => {
       const hasMusic = poll.music && poll.music.preview_url;
       const currentlyPlayingUrl = audioManager.getCurrentAudioUrl();
+      const isCurrentPostMusic = currentlyPlayingUrl === poll.music?.preview_url;
       
-      console.log(`🎵 Post transition - Active: ${isActive}, Has Music: ${hasMusic}, Current URL: ${currentlyPlayingUrl}, Post URL: ${hasMusic ? poll.music.preview_url : 'none'}`);
+      console.log(`🎵 AUDIO SYNC - Post #${index}:`);
+      console.log(`  ▶️ Active: ${isActive}`);
+      console.log(`  🎵 Has Music: ${hasMusic}`);
+      console.log(`  🎵 Music: ${poll.music?.title || 'N/A'} - ${poll.music?.artist || 'N/A'}`);
+      console.log(`  🔊 Currently Playing: ${currentlyPlayingUrl || 'None'}`);
+      console.log(`  ✅ Is Current Post Music: ${isCurrentPostMusic}`);
       
       if (isActive && hasMusic) {
-        // Solo reproducir si no se está reproduciendo ya esta URL específica
-        if (!audioManager.isPlayingUrl(poll.music.preview_url)) {
+        // Este post está activo y tiene música
+        if (!isCurrentPostMusic) {
           try {
-            // Activar contexto de audio si no está activado
+            // Activar contexto de audio si es necesario
             if (!audioContextActivated) {
+              console.log('🔧 Activating audio context...');
               const activated = await audioManager.activateAudioContext();
               setAudioContextActivated(activated);
+              if (!activated) {
+                console.warn('⚠️ Failed to activate audio context');
+                return;
+              }
             }
 
-            // SINCRONIZACIÓN COMPLETA: Detener completamente cualquier audio anterior
+            // STOP COMPLETO del audio anterior
+            console.log('⏹️ Stopping previous audio...');
             await audioManager.stop();
             
-            // Reproducir música automáticamente con la nueva URL
+            // Esperar un momento para asegurar que se detuvo completamente
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // REPRODUCIR nueva música
+            console.log(`▶️ Starting playback: ${poll.music.title}`);
             const success = await audioManager.play(poll.music.preview_url, {
               startTime: 0,
-              loop: true // Loop para que suene mientras se ve el post
+              loop: true,
+              volume: 0.7 // Volumen óptimo
             });
 
             if (success) {
               setIsMusicPlaying(true);
-              console.log(`🎵 Auto-playing: ${poll.music.title} - ${poll.music.artist}`);
+              console.log(`✅ Successfully playing: ${poll.music.title} - ${poll.music.artist}`);
+            } else {
+              console.error('❌ Failed to start audio playback');
+              setIsMusicPlaying(false);
             }
             
           } catch (error) {
-            console.error('Error en autoplay:', error);
+            console.error('❌ Audio sync error:', error);
+            setIsMusicPlaying(false);
           }
         } else {
-          console.log('🎵 Already playing correct music for this post');
+          // Ya está reproduciendo la música correcta
+          console.log('✅ Already playing correct music - keeping state');
           setIsMusicPlaying(true);
         }
-      } else {
-        // ARREGLO MEJORADO: Si no hay música o el post no está activo, detener completamente
-        if (audioManager.getCurrentAudioUrl()) {
-          console.log('🔇 Stopping all music - post has no music or is inactive');
+      } else if (!isActive || !hasMusic) {
+        // Este post no está activo O no tiene música
+        if (isCurrentPostMusic) {
+          // Solo detener si estaba reproduciendo música de este post
+          console.log('⏹️ Stopping music - post inactive or no music');
           await audioManager.stop();
+          setIsMusicPlaying(false);
+        } else if (!hasMusic && currentlyPlayingUrl) {
+          // Si este post no tiene música pero hay algo reproduciéndose, detenerlo
+          console.log('⏹️ Stopping music - current post has no music');
+          await audioManager.stop();
+          setIsMusicPlaying(false);
+        } else {
+          // Este post no tiene música, mantener estado false
+          setIsMusicPlaying(false);
         }
-        setIsMusicPlaying(false);
       }
     };
 
-    handleAutoPlay();
-  }, [isActive, poll.music?.preview_url, poll.music?.id, audioContextActivated]);
+    // Ejecutar sincronización con un pequeño delay para evitar conflictos de scroll
+    const syncTimeout = setTimeout(handleAudioSync, 50);
+    
+    return () => clearTimeout(syncTimeout);
+  }, [isActive, poll.music?.preview_url, poll.music?.id, poll.music?.title, poll.music?.artist, audioContextActivated, index]);
 
   // Activar audio context en primera interacción
   useEffect(() => {
