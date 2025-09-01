@@ -1367,6 +1367,7 @@ const AudioDetailPage = () => {
             onShare={handlePollShare}
             onComment={handlePollComment}
             onSave={handlePollSave}
+            onCreatePoll={handleCreatePoll}
             onExitTikTok={handleExitTikTok}
             showLogo={false}
             initialIndex={selectedPostIndex}
