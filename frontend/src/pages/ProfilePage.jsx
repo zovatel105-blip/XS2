@@ -694,7 +694,7 @@ const ProfilePage = () => {
       </header>
 
       {/* CONTENIDO PRINCIPAL ANCHO COMPLETO - SIN LIMITACIONES */}
-      <div className="px-1 py-4 sm:py-6 space-y-3 sm:space-y-4">
+      <div className="px-3 py-4 sm:py-6 space-y-3 sm:space-y-4">
         
         {/* AVATAR + MÉTRICAS EXPANDIDO - USANDO TODO EL ANCHO */}
         <div className="bg-white rounded-lg p-2 sm:p-3 shadow-sm">
