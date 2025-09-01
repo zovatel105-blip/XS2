@@ -1306,83 +1306,18 @@ const AudioDetailPage = () => {
             </div>
           </div>
         ) : posts && posts.length > 0 ? (
-          /* Contenedor con scroll para permitir más de 9 publicaciones */
-          <div 
-            className="h-full overflow-y-auto overscroll-behavior-y-contain px-1"
+          <TikTokProfileGrid
+            posts={posts}
+            onPostClick={handlePollClick}
+            loading={loadingMorePosts}
+            hasMore={hasMorePosts}
+            onLoadMore={() => {
+              if (!loadingMorePosts && hasMorePosts) {
+                loadMorePosts();
+              }
+            }}
             onScroll={handleScroll}
-          >
-            {/* Grid personalizado con medidas específicas: 129.46px x 229.66px, separación 1px */}
-            <div className="grid grid-cols-3 gap-px">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="relative bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity overflow-hidden"
-                  style={{ 
-                    width: '129.46px', 
-                    height: '229.66px' 
-                  }}
-                  onClick={() => handlePollClick(post)}
-                >
-                  {/* Post thumbnail */}
-                  {post.media_url ? (
-                    post.media_url.includes('.mp4') || post.media_url.includes('video') ? (
-                      <video
-                        src={post.media_url}
-                        className="w-full h-full object-cover"
-                        muted
-                        playsInline
-                      />
-                    ) : (
-                      <img
-                        src={post.media_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover"
-                      />
-                    )
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-500 flex items-center justify-center">
-                      <Music className="w-8 h-8 text-white" />
-                    </div>
-                  )}
-                  
-                  {/* Vote counter overlay - bottom left */}
-                  <div className="absolute bottom-2 left-2 bg-black/60 rounded-full px-2 py-1 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3 text-white" />
-                    <span className="text-white text-xs font-medium">
-                      {formatNumber(post.totalVotes || 0)}
-                    </span>
-                  </div>
-                  
-                  {/* Optional: Original badge for first post */}
-                  {posts.indexOf(post) === 0 && (
-                    <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                      Original
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            {/* Loading indicator para más posts */}
-            {loadingMorePosts && (
-              <div className="flex items-center justify-center py-4">
-                <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
-                <span className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingMore')}</span>
-              </div>
-            )}
-            
-            {/* Mensaje cuando no hay más posts */}
-            {!hasMorePosts && posts.length >= 12 && (
-              <div className="flex items-center justify-center py-4">
-                <span className={`${classes.infoText} text-gray-400`}>
-                  {totalPosts > posts.length ? 
-                    t('audioDetail.showing', { current: posts.length, total: totalPosts }) : 
-                    t('audioDetail.noMoreContent')
-                  }
-                </span>
-              </div>
-            )}
-          </div>
+          />
         ) : (
           /* Estado vacío */
           <div className="flex items-center justify-center h-full">
