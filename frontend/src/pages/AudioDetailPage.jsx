@@ -213,12 +213,13 @@ const AudioDetailPage = () => {
     if (audio) {
       checkIfFavorited();
       
-      // Extract dominant color from cover
+      // Extract colors from cover for dynamic theming
       if (audio.cover_url) {
-        console.log('🎨 Extracting color from:', audio.cover_url);
-        extractDominantColor(audio.cover_url).then(color => {
-          console.log('🎨 Dominant color extracted:', color);
-          setDominantColor(color);
+        console.log('🎨 Extracting colors from:', audio.cover_url);
+        extractColorsFromCover(audio.cover_url).then(colors => {
+          console.log('🎨 Colors extracted:', colors);
+          setDominantColor(colors.dominant);
+          setGradientColors(colors.gradients);
         });
       }
       
