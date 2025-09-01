@@ -107,19 +107,19 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   useEffect(() => {
     const handleAudioSync = async () => {
       const hasMusic = poll.music && poll.music.preview_url;
-      const currentlyPlayingUrl = audioManager.getCurrentAudioUrl();
-      const isCurrentPostMusic = currentlyPlayingUrl === poll.music?.preview_url;
+      const currentPostId = audioManager.getCurrentPostId();
+      const isPlayingThisPost = audioManager.isPlayingPost(poll.id);
       
-      console.log(`🎵 AUDIO SYNC - Post #${index}:`);
+      console.log(`🎵 AUDIO SYNC - Post #${index} (ID: ${poll.id}):`);
       console.log(`  ▶️ Active: ${isActive}`);
       console.log(`  🎵 Has Music: ${hasMusic}`);
       console.log(`  🎵 Music: ${poll.music?.title || 'N/A'} - ${poll.music?.artist || 'N/A'}`);
-      console.log(`  🔊 Currently Playing: ${currentlyPlayingUrl || 'None'}`);
-      console.log(`  ✅ Is Current Post Music: ${isCurrentPostMusic}`);
+      console.log(`  🔊 Currently Playing Post: ${currentPostId || 'None'}`);
+      console.log(`  ✅ Is Playing This Post: ${isPlayingThisPost}`);
       
       if (isActive && hasMusic) {
         // Este post está activo y tiene música
-        if (!isCurrentPostMusic) {
+        if (!isPlayingThisPost) {
           try {
             // Activar contexto de audio si es necesario
             if (!audioContextActivated) {
@@ -139,17 +139,18 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             // Esperar un momento para asegurar que se detuvo completamente
             await new Promise(resolve => setTimeout(resolve, 100));
             
-            // REPRODUCIR nueva música
-            console.log(`▶️ Starting playback: ${poll.music.title}`);
+            // REPRODUCIR nueva música con postId
+            console.log(`▶️ Starting playback: ${poll.music.title} for post ${poll.id}`);
             const success = await audioManager.play(poll.music.preview_url, {
               startTime: 0,
               loop: true,
-              volume: 0.7 // Volumen óptimo
+              volume: 0.7,
+              postId: poll.id // Agregar ID del post para rastreo específico
             });
 
             if (success) {
               setIsMusicPlaying(true);
-              console.log(`✅ Successfully playing: ${poll.music.title} - ${poll.music.artist}`);
+              console.log(`✅ Successfully playing: ${poll.music.title} - ${poll.music.artist} for post ${poll.id}`);
             } else {
               console.error('❌ Failed to start audio playback');
               setIsMusicPlaying(false);
@@ -160,18 +161,18 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             setIsMusicPlaying(false);
           }
         } else {
-          // Ya está reproduciendo la música correcta
-          console.log('✅ Already playing correct music - keeping state');
+          // Ya está reproduciendo la música correcta para este post específico
+          console.log('✅ Already playing correct music for this post - keeping state');
           setIsMusicPlaying(true);
         }
       } else if (!isActive || !hasMusic) {
         // Este post no está activo O no tiene música
-        if (isCurrentPostMusic) {
-          // Solo detener si estaba reproduciendo música de este post
-          console.log('⏹️ Stopping music - post inactive or no music');
+        if (isPlayingThisPost) {
+          // Solo detener si estaba reproduciendo música de ESTE post específico
+          console.log(`⏹️ Stopping music - post ${poll.id} inactive or no music`);
           await audioManager.stop();
           setIsMusicPlaying(false);
-        } else if (!hasMusic && currentlyPlayingUrl) {
+        } else if (!hasMusic && currentPostId) {
           // Si este post no tiene música pero hay algo reproduciéndose, detenerlo
           console.log('⏹️ Stopping music - current post has no music');
           await audioManager.stop();
@@ -187,7 +188,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
     const syncTimeout = setTimeout(handleAudioSync, 50);
     
     return () => clearTimeout(syncTimeout);
-  }, [isActive, poll.music?.preview_url, poll.music?.id, poll.music?.title, poll.music?.artist, audioContextActivated, index]);
+  }, [isActive, poll.music?.preview_url, poll.id, poll.music?.title, poll.music?.artist, audioContextActivated, index]);
 
   // Activar audio context en primera interacción
   useEffect(() => {
