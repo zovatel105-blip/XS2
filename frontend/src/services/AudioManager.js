@@ -330,10 +330,10 @@ class AudioManager {
   getState() {
     return {
       isPlaying: this.isPlaying,
-      isLooping: this.currentAudio ? this.currentAudio.loop : false,
-      currentTime: this.currentAudio ? this.currentAudio.currentTime : 0,
-      duration: this.currentAudio ? this.currentAudio.duration : 0,
-      volume: this.volume
+      currentUrl: this.currentAudioUrl,
+      currentPostId: this.currentPostId,
+      volume: this.volume,
+      isLooping: this.isLooping()
     };
   }
 
