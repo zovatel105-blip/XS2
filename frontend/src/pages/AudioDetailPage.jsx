@@ -39,8 +39,6 @@ const AudioDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [playbackPosition, setPlaybackPosition] = useState(0);
   const [originalUser, setOriginalUser] = useState(null);
-  const [dominantColor, setDominantColor] = useState('#3b82f6'); // Default blue
-  const [isTrending, setIsTrending] = useState(false);
   
   // Infinite scroll states
   const [hasMorePosts, setHasMorePosts] = useState(false);
