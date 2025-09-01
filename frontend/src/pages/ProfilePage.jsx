@@ -696,9 +696,9 @@ const ProfilePage = () => {
       {/* CONTENIDO PRINCIPAL ANCHO COMPLETO - SIN LIMITACIONES */}
       <div className="px-2 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
-        {/* AVATAR + MÉTRICAS (EN EL CENTRO) - DISEÑO PERFECTAMENTE ALINEADO */}
-        <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-4 sm:gap-6">
+        {/* AVATAR + MÉTRICAS EXPANDIDO - USANDO TODO EL ANCHO */}
+        <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
             
             {/* LADO IZQUIERDO: Votos y Seguidores */}
             <div className="flex flex-col gap-4 sm:gap-5 flex-1 min-w-0">
