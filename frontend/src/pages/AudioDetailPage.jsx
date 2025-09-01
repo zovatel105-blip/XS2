@@ -1296,23 +1296,25 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Cuadrícula de posts con medidas específicas */}
-      <div className={classes.grid}>
+      {/* Cuadrícula de posts con medidas específicas - Ancho completo */}
+      <div className={`${classes.grid} -mx-3 sm:-mx-4 md:-mx-6`}>
         {postsLoading ? (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full px-3 sm:px-4 md:px-6">
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
               <p className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingContent')}</p>
             </div>
           </div>
         ) : posts && posts.length > 0 ? (
-          <TikTokProfileGrid
-            polls={posts}
-            onPollClick={handlePollClick}
-          />
+          <div className="px-1 sm:px-2">
+            <TikTokProfileGrid
+              polls={posts}
+              onPollClick={handlePollClick}
+            />
+          </div>
         ) : (
           /* Estado vacío */
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full px-3 sm:px-4 md:px-6">
             <div className="text-center">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className={`${layout.iconSize} text-gray-400`} />
