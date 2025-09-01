@@ -167,26 +167,27 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
             {/* Subtle dark overlay for better text visibility */}
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
 
-            {/* Play Button (on hover) */}
+            {/* Play Button (responsive for touch) */}
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.div
-                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 md:group-hover:opacity-100 transition-opacity"
                 whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Play className="w-6 h-6 text-white ml-1" />
+                <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white ml-0.5" />
               </motion.div>
             </div>
 
-            {/* Vote Count with Vote icon - Bottom left corner */}
-            <div className="absolute bottom-2 left-2 z-10">
+            {/* Vote Count with Vote icon - Bottom left corner (responsive) */}
+            <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 z-10">
               <div className="flex items-center gap-1 text-white font-bold drop-shadow-lg">
-                <Vote className="w-4 h-4 fill-white" />
-                <span className="text-sm font-bold">{formatViewCount(voteCount)}</span>
+                <Vote className="w-3 h-3 sm:w-4 sm:h-4 fill-white" />
+                <span className="text-xs sm:text-sm font-bold">{formatViewCount(voteCount)}</span>
               </div>
             </div>
 
             {/* Subtle gradient overlay for text readability */}
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-8 sm:h-12 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
           </motion.div>
         );
       })}
