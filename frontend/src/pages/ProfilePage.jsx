@@ -878,7 +878,7 @@ const ProfilePage = () => {
 
         {/* TABS EXPANDIDAS - ANCHO COMPLETO */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-white rounded-lg shadow-sm h-auto p-1">
+          <TabsList className="grid w-full grid-cols-4 bg-white rounded-lg shadow-sm h-auto p-1 mx-0">
             <TabsTrigger value="polls" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm min-h-[48px] active:scale-95 transition-transform">
               <Grid3X3 className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Publicaciones</span>
