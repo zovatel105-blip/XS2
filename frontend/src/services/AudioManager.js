@@ -298,7 +298,14 @@ class AudioManager {
    * Obtiene la URL actual del audio reproduciéndose
    */
   getCurrentAudioUrl() {
-    return this.currentAudio ? this.currentAudio.src : null;
+    return this.currentAudioUrl;
+  }
+
+  /**
+   * Obtiene el ID del post que está reproduciendo actualmente
+   */
+  getCurrentPostId() {
+    return this.currentPostId;
   }
 
   /**
@@ -306,7 +313,15 @@ class AudioManager {
    */
   isPlayingUrl(url) {
     if (!this.currentAudio || !this.isPlaying) return false;
-    return this.currentAudio.src === url;
+    return this.currentAudioUrl === url;
+  }
+
+  /**
+   * Verifica si se está reproduciendo el audio de un post específico
+   */
+  isPlayingPost(postId) {
+    if (!this.currentAudio || !this.isPlaying) return false;
+    return this.currentPostId === postId;
   }
 
   /**
