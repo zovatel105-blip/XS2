@@ -21,6 +21,7 @@ import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useFollow } from '../contexts/FollowContext';
 import { useShare } from '../hooks/useShare';
+import { useTikTok } from '../contexts/TikTokContext';
 import { cn } from '../lib/utils';
 
 const StatCard = ({ icon: Icon, label, value, color = "blue", onClick, clickable = false }) => (
