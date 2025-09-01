@@ -911,10 +911,12 @@ const ProfilePage = () => {
                 <p className="text-gray-600 mb-6">¡Crea tu primera publicación para empezar a obtener votos!</p>
               </div>
             ) : (
-              <TikTokProfileGrid 
-                polls={userPolls} 
-                onPollClick={handlePollClick}
-              />
+              <div className="-mx-4 px-1 sm:px-2">
+                <TikTokProfileGrid 
+                  polls={userPolls} 
+                  onPollClick={handlePollClick}
+                />
+              </div>
             )}
           </TabsContent>
 
