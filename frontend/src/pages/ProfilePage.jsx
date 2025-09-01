@@ -663,9 +663,8 @@ const ProfilePage = () => {
   };
 
   const handleCreatePoll = () => {
-    // Simple handler - just close TikTok view if needed
-    // Could be extended to show create poll modal
-    setShowTikTokView(false);
+    // Exit TikTok mode when user wants to create content
+    exitTikTokMode();
   };
 
   const handleComment = (pollId) => {
