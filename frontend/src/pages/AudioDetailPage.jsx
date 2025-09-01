@@ -56,8 +56,81 @@ const AudioDetailPage = () => {
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
-  // Remove old hardcoded waveform generation
-  // Generate mock waveform data - REMOVED (now using real AudioWaveform component)
+  // Function to extract dominant color from album cover
+  const extractDominantColor = (imageUrl) => {
+    return new Promise((resolve) => {
+      if (!imageUrl) {
+        resolve('#3b82f6'); // Default blue
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          
+          const colorMap = {};
+          // Sample every 4th pixel for performance
+          for (let i = 0; i < data.length; i += 16) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            
+            // Skip very light or very dark colors
+            if (r + g + b < 50 || r + g + b > 650) continue;
+            
+            const color = `${r},${g},${b}`;
+            colorMap[color] = (colorMap[color] || 0) + 1;
+          }
+          
+          // Find most frequent color
+          let maxCount = 0;
+          let dominantRGB = '59,130,246'; // Default blue RGB
+          
+          for (const [color, count] of Object.entries(colorMap)) {
+            if (count > maxCount) {
+              maxCount = count;
+              dominantRGB = color;
+            }
+          }
+          
+          const [r, g, b] = dominantRGB.split(',').map(Number);
+          const hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+          resolve(hexColor);
+        } catch (error) {
+          console.error('Error extracting color:', error);
+          resolve('#3b82f6'); // Default blue
+        }
+      };
+      
+      img.onerror = () => resolve('#3b82f6');
+      img.src = imageUrl;
+    });
+  };
+
+  // Check if audio is trending (simplified logic)
+  const checkIfTrending = (audioData) => {
+    if (!audioData) return false;
+    
+    // Audio is trending if:
+    // 1. Has high usage count (>1000)
+    // 2. Is system music from popular sources
+    // 3. Has been used recently in many posts
+    const usageCount = audioData.uses_count || 0;
+    const isSystemMusic = audioData.is_system_music;
+    const isFromItunes = audioData.source === 'iTunes' || audioData.source === 'iTunes API';
+    
+    return usageCount > 1000 || (isSystemMusic && isFromItunes && usageCount > 100);
+  };
 
   useEffect(() => {
     fetchAudioDetails();
