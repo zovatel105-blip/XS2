@@ -820,8 +820,8 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* NOMBRE + ROL OPTIMIZADO MÓVIL */}
-        <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm">
+        {/* NOMBRE + ROL EXPANDIDO */}
+        <div className="bg-white rounded-xl p-2 sm:p-3 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
             {/* Nombre principal */}
             <div className="flex items-center gap-2">
@@ -844,16 +844,16 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* BIOGRAFÍA OPTIMIZADA MÓVIL */}
-        <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm">
+        {/* BIOGRAFÍA EXPANDIDA */}
+        <div className="bg-white rounded-xl p-2 sm:p-3 shadow-sm">
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-2">
             {displayUser.bio || "🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando"}
           </p>
           <p className="text-sm sm:text-base text-blue-600 font-medium">@{displayUser.username}</p>
         </div>
 
-        {/* BOTONES DE ACCIÓN OPTIMIZADOS MÓVIL */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* BOTONES DE ACCIÓN EXPANDIDOS - USO COMPLETO DEL ANCHO */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <Button 
             variant="outline" 
             className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300 min-h-[48px] active:scale-95 transition-transform"
