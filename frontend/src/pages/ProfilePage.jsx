@@ -642,6 +642,20 @@ const ProfilePage = () => {
     
     const pollIndex = currentPolls.findIndex(p => p.id === poll.id);
     
+    // DEBUG: Log data structure
+    console.log('🔍 PROFILE DEBUG - Poll clicked:', poll);
+    console.log('🔍 PROFILE DEBUG - Current polls array:', currentPolls);
+    console.log('🔍 PROFILE DEBUG - Poll structure:', {
+      hasAuthor: !!poll.author,
+      hasAuthorUser: !!poll.authorUser,
+      hasOptions: !!poll.options,
+      optionsLength: poll.options?.length,
+      hasMusic: !!poll.music,
+      musicStructure: poll.music,
+      hasTotalVotes: !!poll.totalVotes,
+      totalVotes: poll.totalVotes
+    });
+    
     setTikTokPolls(currentPolls);
     setInitialPollIndex(pollIndex >= 0 ? pollIndex : 0);
     setShowTikTokView(true);
