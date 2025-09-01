@@ -1186,67 +1186,65 @@ const AudioDetailPage = () => {
           </Button>
         </div>
 
-        {/* Sección del audio - Ancho completo */}
-        <div className={`relative ${layout.audioSectionHeight} flex items-center py-2 z-10 px-2`}>
-          {/* Miniatura cuadrada del álbum: lado izquierdo */}
-          <div className={classes.cover}>
-            <div className="w-full h-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-              {audio?.cover_url ? (
-                <img 
-                  src={audio.cover_url} 
-                  alt={audio.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <Music className={`${layout.iconSize} text-gray-400`} />
-                </div>
-              )}
-            </div>
-            
-            {/* Botón de play superpuesto */}
-            <button
-              onClick={handlePlayPause}
-              className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
-            >
-              {isPlaying ? (
-                <Pause className={`${layout.playIconSize} text-white`} />
-              ) : (
-                <Play className={`${layout.playIconSize} text-white ml-0.5`} />
-              )}
-            </button>
-          </div>
-
-          {/* Información del audio: ocupa el ancho restante */}
-          <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
-            {/* Título dinámico */}
-            <h2 className={classes.title}>
-              {t('audioDetail.contains')} {audio?.title || 'Título no disponible'}
-            </h2>
-            
-            {/* Fila del artista con avatar, nombre y checkmark */}
-            <div className="flex items-center gap-2">
-              {/* Avatar circular pequeño */}
-              <div className={`${layout.avatarSize} rounded-full bg-gray-300 flex-shrink-0 overflow-hidden`}>
-                {audio?.artist ? (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                    {audio.artist[0].toUpperCase()}
-                  </div>
+        {/* Sección del audio rediseñada */}
+        <div className="relative py-6 px-4 z-10">
+          <div className="flex items-start gap-4">
+            {/* Portada del álbum más grande */}
+            <div className="relative w-20 h-20 flex-shrink-0">
+              <div className="w-full h-full rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-lg">
+                {audio?.cover_url ? (
+                  <img 
+                    src={audio.cover_url} 
+                    alt={audio.title}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full bg-gray-400"></div>
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <Music className="w-8 h-8 text-gray-400" />
+                  </div>
                 )}
               </div>
               
-              {/* Nombre del artista en mayúsculas */}
-              <span className={`${classes.artist} text-gray-900`}>
-                {(audio?.artist || 'Artista desconocido').toUpperCase()}
-              </span>
+              {/* Botón de play más prominente */}
+              <button
+                onClick={handlePlayPause}
+                className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity group"
+              >
+                {isPlaying ? (
+                  <Pause className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                ) : (
+                  <Play className="w-6 h-6 text-white ml-0.5 group-hover:scale-110 transition-transform" />
+                )}
+              </button>
+            </div>
+
+            {/* Información del audio */}
+            <div className="flex-1 min-w-0">
+              {/* Título del audio más prominente */}
+              <h1 className="text-xl font-bold text-black mb-2 leading-tight">
+                Contains: {audio?.title || 'Título no disponible'}
+              </h1>
               
-              {/* Checkmark azul verificado */}
-              <div className={`${layout.iconSize} bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0`}>
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+              {/* Información del artista */}
+              <div className="flex items-center gap-3">
+                {/* Avatar del artista más grande */}
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <span className="text-white font-bold text-lg">
+                    {audio?.artist ? audio.artist[0].toUpperCase() : 'A'}
+                  </span>
+                </div>
+                
+                {/* Nombre del artista */}
+                <span className="text-black font-semibold text-lg tracking-wide">
+                  {(audio?.artist || 'ARTISTA DESCONOCIDO').toUpperCase()}
+                </span>
+                
+                {/* Checkmark de verificación más grande */}
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
