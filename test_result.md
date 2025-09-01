@@ -253,7 +253,36 @@
 ✅ **RESULTADO FINAL:**
 🎯 **REGISTRO COMPLETAMENTE FUNCIONAL** - Los usuarios ahora pueden registrarse exitosamente en la aplicación. El flujo completo funciona: hacer clic en "Regístrate aquí" → llenar formulario → enviar → autenticación automática → redirección al perfil.
 
-user_problem_statement: ✅ PROBLEMA CRÍTICO DE REGISTRO COMPLETAMENTE RESUELTO (2025-01-27): Los usuarios ya pueden registrarse correctamente en la aplicación.
+**🚨 PROBLEMA CRÍTICO DE NAVEGACIÓN EN PUBLICACIONES DEL PERFIL RESUELTO (2025-09-01): Las publicaciones del perfil ya se abren correctamente - bug crítico de props en TikTokScrollView corregido exitosamente.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó que las publicaciones del perfil no se abren correctamente
+- Al hacer clic en una publicación en el grid del perfil, no se abría la vista TikTok fullscreen
+- El modal TikTokScrollView se mostraba pero no se podía cerrar con el botón X o tecla Escape
+
+✅ **CAUSA RAÍZ ENCONTRADA:**
+- ProfilePage.jsx línea 1217 pasaba prop `onClose={() => setShowTikTokView(false)}` 
+- TikTokScrollView.jsx espera prop `onExitTikTok` en lugar de `onClose`
+- Incompatibilidad de nombres de props impedía que el botón de cierre funcionara correctamente
+- Usuarios quedaban "atrapados" en la vista sin poder salir
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+- ✅ Corregida prop en ProfilePage.jsx línea 1217: `onClose` → `onExitTikTok`
+- ✅ Ahora el botón X superior derecha funciona correctamente para cerrar
+- ✅ Tecla Escape también funciona para cerrar la vista
+- ✅ Funcionalidad de navegación completamente restaurada
+
+✅ **FUNCIONALIDADES VERIFICADAS:**
+- Clic en publicaciones del perfil → abre vista TikTok fullscreen ✅
+- Botón X superior derecha → cierra correctamente ✅  
+- Tecla Escape → cierra correctamente ✅
+- Navegación entre publicaciones con swipe/flechas ✅
+- Audio se detiene al cerrar la vista ✅
+
+✅ **RESULTADO FINAL:**
+🎯 **NAVEGACIÓN DE PUBLICACIONES COMPLETAMENTE FUNCIONAL** - Los usuarios ahora pueden hacer clic en cualquier publicación de su perfil o perfiles ajenos para verla en vista fullscreen tipo TikTok, navegar entre publicaciones, y cerrar correctamente cuando terminen de ver el contenido.
+
+user_problem_statement: ✅ PROBLEMA CRÍTICO DE NAVEGACIÓN EN PUBLICACIONES DEL PERFIL RESUELTO (2025-09-01): Las publicaciones del perfil ya se abren correctamente - bug crítico de props en TikTokScrollView corregido exitosamente.
 
 ✅ **PROBLEMA IDENTIFICADO:**
 - Las portadas de publicaciones en AudioDetailPage se veían diferentes a las del ProfilePage
