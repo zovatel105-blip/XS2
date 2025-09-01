@@ -668,9 +668,9 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ENCABEZADO SUPERIOR OPTIMIZADO MÓVIL */}
+      {/* ENCABEZADO SUPERIOR OPTIMIZADO MÓVIL - ANCHO COMPLETO */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-4 py-3">
+        <div className="px-2 py-3">
           <div className="flex items-center justify-between">
             {/* Menú hamburguesa (izquierda) */}
             <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]">
@@ -693,8 +693,8 @@ const ProfilePage = () => {
         </div>
       </header>
 
-      {/* CONTENIDO PRINCIPAL OPTIMIZADO MÓVIL */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      {/* CONTENIDO PRINCIPAL ANCHO COMPLETO - SIN LIMITACIONES */}
+      <div className="px-2 py-4 sm:py-6 space-y-4 sm:space-y-6">
         
         {/* AVATAR + MÉTRICAS (EN EL CENTRO) - DISEÑO PERFECTAMENTE ALINEADO */}
         <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm">
