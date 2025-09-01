@@ -930,10 +930,12 @@ const ProfilePage = () => {
                 <p className="text-gray-600 mb-6">¡Dale like a las publicaciones que más te gusten!</p>
               </div>
             ) : (
-              <TikTokProfileGrid 
-                polls={likedPolls} 
-                onPollClick={handlePollClick}
-              />
+              <div className="-mx-4 px-1 sm:px-2">
+                <TikTokProfileGrid 
+                  polls={likedPolls} 
+                  onPollClick={handlePollClick}
+                />
+              </div>
             )}
           </TabsContent>
 
