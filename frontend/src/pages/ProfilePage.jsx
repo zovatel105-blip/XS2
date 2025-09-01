@@ -701,7 +701,7 @@ const ProfilePage = () => {
           <div className="flex items-center justify-between gap-2 sm:gap-3">
             
             {/* LADO IZQUIERDO: Votos y Seguidores */}
-            <div className="flex flex-col gap-4 sm:gap-5 flex-1 min-w-0">
+            <div className="flex flex-col gap-3 sm:gap-4 flex-1 min-w-0">
               {/* Votos con ícono - perfectamente alineado */}
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
