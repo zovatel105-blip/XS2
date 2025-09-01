@@ -55,8 +55,66 @@ const AudioDetailPage = () => {
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
-  // Remove old hardcoded waveform generation
-  // Generate mock waveform data - REMOVED (now using real AudioWaveform component)
+  // Function to extract dominant color from album cover
+  const extractDominantColor = (imageUrl) => {
+    return new Promise((resolve) => {
+      if (!imageUrl) {
+        resolve('#10b981'); // Default green
+        return;
+      }
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          
+          const colorMap = {};
+          // Sample every 4th pixel for performance
+          for (let i = 0; i < data.length; i += 16) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            
+            // Skip very light or very dark colors
+            if (r + g + b < 50 || r + g + b > 650) continue;
+            
+            const color = `${r},${g},${b}`;
+            colorMap[color] = (colorMap[color] || 0) + 1;
+          }
+          
+          // Find most frequent color
+          let maxCount = 0;
+          let dominantRGB = '16,185,129'; // Default green RGB
+          
+          for (const [color, count] of Object.entries(colorMap)) {
+            if (count > maxCount) {
+              maxCount = count;
+              dominantRGB = color;
+            }
+          }
+          
+          const [r, g, b] = dominantRGB.split(',').map(Number);
+          const hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+          resolve(hexColor);
+        } catch (error) {
+          console.error('Error extracting color:', error);
+          resolve('#10b981'); // Default green
+        }
+      };
+      
+      img.onerror = () => resolve('#10b981');
+      img.src = imageUrl;
+    });
+  };
 
   useEffect(() => {
     fetchAudioDetails();
