@@ -131,6 +131,15 @@ const AudioDetailPage = () => {
     if (audio) {
       checkIfFavorited();
       
+      // Extract dominant color from cover
+      if (audio.cover_url) {
+        console.log('🎨 Extracting color from:', audio.cover_url);
+        extractDominantColor(audio.cover_url).then(color => {
+          console.log('🎨 Dominant color extracted:', color);
+          setDominantColor(color);
+        });
+      }
+      
       // Solo determinar usuario original si no estamos cargando posts
       if (!postsLoading) {
         console.log('✅ Condiciones cumplidas - determinando usuario original');
