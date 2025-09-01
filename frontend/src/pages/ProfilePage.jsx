@@ -845,7 +845,7 @@ const ProfilePage = () => {
         </div>
 
         {/* BIOGRAFÍA EXPANDIDA */}
-        <div className="bg-white rounded-xl p-2 sm:p-3 shadow-sm">
+        <div className="bg-white rounded-lg p-2 sm:p-3 shadow-sm">
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-2">
             {displayUser.bio || "🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando"}
           </p>
