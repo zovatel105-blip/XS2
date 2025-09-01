@@ -109,6 +109,53 @@ code {
 
 
 
+/* TikTok Profile Grid Mobile Optimization */
+.tiktok-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  width: 100%;
+  padding: 0 4px;
+}
+
+.tiktok-profile-grid-item {
+  position: relative;
+  aspect-ratio: 129.46/229.66; /* Mantiene proporción ~1:1.77 */
+  background-color: black;
+  overflow: hidden;
+  cursor: pointer;
+  width: 100%;
+  min-height: 180px;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 480px) {
+  .tiktok-profile-grid {
+    gap: 3px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .tiktok-profile-grid-item {
+    max-width: 129.46px;
+    max-height: 229.66px;
+  }
+}
+
+@media (min-width: 768px) {
+  .tiktok-profile-grid {
+    gap: 4px;
+    max-width: 450px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .tiktok-profile-grid-item {
+    min-height: 200px; /* Slightly larger for touch */
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
