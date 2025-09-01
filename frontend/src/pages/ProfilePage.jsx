@@ -729,7 +729,7 @@ const ProfilePage = () => {
             </div>
 
             {/* AVATAR EN EL CENTRO - PERFECTAMENTE CENTRADO */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0">
+            <div className="relative w-18 h-18 sm:w-22 sm:h-22 md:w-26 md:h-26 flex-shrink-0">
               {/* Borde degradado solo si hay historia */}
               {displayUser.hasStory ? (
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-0.5">
