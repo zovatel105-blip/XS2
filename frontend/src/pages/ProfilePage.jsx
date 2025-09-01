@@ -1213,6 +1213,7 @@ const ProfilePage = () => {
             onLike={handleLike}
             onShare={handleShare}
             onComment={handleComment}
+            onSave={handleSave}
             initialIndex={initialPollIndex}
             onExitTikTok={() => setShowTikTokView(false)}
             showLogo={false}
