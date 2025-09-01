@@ -649,7 +649,6 @@ const ProfilePage = () => {
     console.log('🔍 PROFILE DEBUG - Poll clicked:', poll);
     console.log('🔍 PROFILE DEBUG - Current polls array length:', currentPolls?.length);
     console.log('🔍 PROFILE DEBUG - Poll index found:', pollIndex);
-    console.log('🔍 PROFILE DEBUG - First poll structure:', currentPolls?.[0]);
     
     // Verificar que los datos tienen la estructura correcta
     const validPolls = currentPolls.filter(p => p && p.id && p.authorUser);
@@ -657,9 +656,10 @@ const ProfilePage = () => {
       console.warn('⚠️ PROFILE WARNING - Some polls have invalid structure, filtering...');
     }
     
+    // Use TikTok context instead of manual state
     setTikTokPolls(validPolls);
     setInitialPollIndex(pollIndex >= 0 ? pollIndex : 0);
-    setShowTikTokView(true);
+    enterTikTokMode(); // This will properly set up TikTok mode with context
   };
 
   const handleCreatePoll = () => {
