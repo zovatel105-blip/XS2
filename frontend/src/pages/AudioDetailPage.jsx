@@ -40,6 +40,10 @@ const AudioDetailPage = () => {
   const [playbackPosition, setPlaybackPosition] = useState(0);
   const [originalUser, setOriginalUser] = useState(null);
   const [dominantColor, setDominantColor] = useState('#10b981'); // Default green
+  const [gradientColors, setGradientColors] = useState({
+    primary: '#10b981',
+    secondary: '#f59e0b'
+  });
   
   // Infinite scroll states
   const [hasMorePosts, setHasMorePosts] = useState(false);
