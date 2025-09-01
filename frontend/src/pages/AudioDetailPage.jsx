@@ -1266,8 +1266,8 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Botones de acción */}
-      <div className={classes.actionButtons}>
+      {/* Botones de acción - Ancho completo */}
+      <div className={`${layout.actionButtonsHeight} flex items-center justify-center px-2`}>
         <div className="flex w-full gap-[10%]">
           {/* Botón Add to music app - 45% del ancho */}
           <Button 
