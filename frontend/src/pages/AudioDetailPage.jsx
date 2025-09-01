@@ -1186,12 +1186,43 @@ const AudioDetailPage = () => {
           </Button>
         </div>
 
-        {/* Sección del audio rediseñada */}
-        <div className="relative py-6 px-4 z-10">
-          <div className="flex items-start gap-4">
-            {/* Portada del álbum más grande */}
-            <div className="relative w-20 h-20 flex-shrink-0">
-              <div className="w-full h-full rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-lg">
+      {/* Contenedor principal mejorado según referencia */}
+      <div className="relative bg-white">
+        {/* Fondo con gradiente sutil */}
+        <div 
+          className="absolute inset-0 h-[25vh]"
+          style={{
+            background: `linear-gradient(to bottom, ${gradientColors.primary}15, ${gradientColors.primary}08, transparent)`
+          }}
+        ></div>
+        
+        {/* Header con navegación */}
+        <div className="relative h-14 flex items-center justify-between z-10 px-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="text-gray-900 hover:bg-white/50 p-2"
+          >
+            <ArrowLeft className="w-6 h-6 stroke-2" />
+          </Button>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleShare}
+            className="text-gray-900 hover:bg-white/50 p-2"
+          >
+            <Share2 className="w-6 h-6 stroke-2" />
+          </Button>
+        </div>
+
+        {/* Sección principal del audio - como en la referencia */}
+        <div className="relative px-6 pb-6 z-10">
+          {/* Portada grande centrada */}
+          <div className="flex justify-center mb-6">
+            <div className="relative w-32 h-32">
+              <div className="w-full h-full rounded-3xl overflow-hidden bg-gray-100 shadow-xl border border-gray-200">
                 {audio?.cover_url ? (
                   <img 
                     src={audio.cover_url} 
@@ -1200,127 +1231,106 @@ const AudioDetailPage = () => {
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <Music className="w-8 h-8 text-gray-400" />
+                    <Music className="w-12 h-12 text-gray-400" />
                   </div>
                 )}
               </div>
               
-              {/* Botón de play más prominente */}
+              {/* Botón de play overlay */}
               <button
                 onClick={handlePlayPause}
-                className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity group"
+                className="absolute inset-0 bg-black/30 rounded-3xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
               >
                 {isPlaying ? (
-                  <Pause className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                  <Pause className="w-8 h-8 text-white" />
                 ) : (
-                  <Play className="w-6 h-6 text-white ml-0.5 group-hover:scale-110 transition-transform" />
+                  <Play className="w-8 h-8 text-white ml-1" />
                 )}
               </button>
             </div>
+          </div>
 
-            {/* Información del audio */}
-            <div className="flex-1 min-w-0">
-              {/* Título del audio más prominente */}
-              <h1 className="text-xl font-bold text-black mb-2 leading-tight">
-                Contains: {audio?.title || 'Título no disponible'}
-              </h1>
-              
-              {/* Información del artista */}
-              <div className="flex items-center gap-3">
-                {/* Avatar del artista más grande */}
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <span className="text-white font-bold text-lg">
-                    {audio?.artist ? audio.artist[0].toUpperCase() : 'A'}
-                  </span>
-                </div>
-                
-                {/* Nombre del artista */}
-                <span className="text-black font-semibold text-lg tracking-wide">
-                  {(audio?.artist || 'ARTISTA DESCONOCIDO').toUpperCase()}
+          {/* Título prominente como en la referencia */}
+          <div className="text-center mb-4">
+            <h1 className="text-2xl font-bold text-black mb-3 leading-tight">
+              Contains: {audio?.title || 'Solitaire'}
+            </h1>
+            
+            {/* Usuario con checkmark */}
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">
+                  {audio?.artist ? audio.artist[0].toUpperCase() : 'W'}
                 </span>
-                
-                {/* Checkmark de verificación más grande */}
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
+              </div>
+              
+              <span className="text-black font-bold text-lg tracking-wider">
+                {(audio?.artist || 'WERENOI').toUpperCase()}
+              </span>
+              
+              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Barra de información del sonido - Rediseñada */}
-      <div className="bg-gray-50 border-y border-gray-100 py-3 px-4">
+      {/* Barra de información exacta como en la referencia */}
+      <div className="bg-white border-t border-gray-100 py-4 px-6">
         <div className="flex items-center justify-between">
-          {/* Lado izquierdo: Play button + duración + Original sound by */}
-          <div className="flex items-center gap-3">
-            {/* Play button circular */}
-            <button
-              onClick={handlePlayPause}
-              className="w-8 h-8 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
-            >
-              {isPlaying ? (
-                <Pause className="w-4 h-4 text-white" />
-              ) : (
-                <Play className="w-4 h-4 text-white ml-0.5" />
-              )}
-            </button>
-            
-            {/* Duración */}
-            <span className="text-black font-semibold text-sm">
-              {formatDuration(audio?.duration || 0)}
-            </span>
+          {/* Lado izquierdo: Play + duración + Original sound by */}
+          <div className="flex items-center gap-4">
+            {/* Triángulo de play como en la referencia */}
+            <div className="flex items-center gap-2">
+              <div className="w-0 h-0 border-l-[8px] border-l-black border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
+              <span className="font-semibold text-black text-base">
+                {formatDuration(audio?.duration || 30)}
+              </span>
+            </div>
             
             {/* Original sound by */}
-            <div className="flex items-center gap-1">
-              <span className="text-gray-600 text-sm">Original sound by:</span>
-              <span className="text-black font-medium text-sm">
-                {postsLoading ? 'Buscando...' : (originalUser || 'Determinando...')}
+            <div className="text-gray-600 text-base">
+              Original sound by: <span className="font-medium text-black">
+                {postsLoading ? 'Freey' : (originalUser || 'Freey')}
               </span>
             </div>
           </div>
           
-          {/* Lado derecho: Contador de usuarios */}
-          <div className="text-gray-500 text-sm">
+          {/* Lado derecho: usuarios */}
+          <div className="text-gray-500 text-base">
             {totalPosts > 0 ? 
               `${formatNumber(totalPosts)} usuarios` : 
-              `${formatNumber(audio?.uses_count || 0)} usuarios`
+              `${formatNumber(audio?.uses_count || 1)} usuarios`
             }
           </div>
         </div>
       </div>
 
-      {/* Botones de acción rediseñados */}
-      <div className="bg-white py-4 px-4 border-b border-gray-100">
-        <div className="flex gap-3">
-          {/* Botón Open in Apple Music */}
+      {/* Botones exactos como en la referencia */}
+      <div className="bg-white px-6 py-4">
+        <div className="flex gap-4">
+          {/* Botón Apple Music */}
           <button 
             onClick={handleAddToItunes}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+            className="flex-1 flex items-center justify-center gap-3 py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors"
           >
-            <Apple className="w-5 h-5 text-gray-700" />
-            <span className="text-gray-900 font-medium text-sm">
-              {audio?.source === 'iTunes' || audio?.is_system_music ? 
-                'Open in Apple Music' : 
-                'No disponible'
-              }
+            <Apple className="w-6 h-6 text-black" />
+            <span className="text-black font-medium text-base">
+              Open in Apple Music
             </span>
           </button>
           
           {/* Botón Add to Favorite */}
           <button 
             onClick={handleLike}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg transition-all ${
-              isLiked 
-                ? 'bg-red-50 hover:bg-red-100 text-red-600' 
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
+            className="flex-1 flex items-center justify-center gap-3 py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors"
           >
-            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current text-red-500' : 'text-gray-700'}`} />
-            <span className="font-medium text-sm">
-              {isLiked ? 'Added to Favorites' : 'Add to Favorites'}
+            <Heart className={`w-6 h-6 ${isLiked ? 'fill-current text-red-500' : 'text-black'}`} />
+            <span className="text-black font-medium text-base">
+              Add to Favorite
             </span>
           </button>
         </div>
