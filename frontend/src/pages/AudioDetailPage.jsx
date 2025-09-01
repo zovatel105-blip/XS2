@@ -1361,7 +1361,7 @@ const AudioDetailPage = () => {
       {showTikTokView && (
         <div className="fixed inset-0 z-50 bg-black">
           <TikTokScrollView
-            polls={posts}
+            polls={posts.filter(p => p && p.id && p.authorUser)}
             onVote={handlePollVote}
             onLike={handlePollLike}
             onShare={handlePollShare}
