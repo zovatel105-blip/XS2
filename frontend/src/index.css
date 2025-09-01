@@ -109,13 +109,14 @@ code {
 
 
 
-/* TikTok Profile Grid Mobile Optimization */
+/* TikTok Profile Grid Full Width Optimization */
 .tiktok-profile-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
   width: 100%;
-  padding: 0 4px;
+  padding: 0; /* Sin padding lateral para usar todo el espacio */
+  margin: 0;
 }
 
 .tiktok-profile-grid-item {
@@ -125,27 +126,39 @@ code {
   overflow: hidden;
   cursor: pointer;
   width: 100%;
-  min-height: 180px;
+  min-height: 200px; /* Aumentado para aprovechar más espacio */
 }
 
-/* Responsive breakpoints */
+/* Responsive breakpoints - usando todo el ancho disponible */
 @media (min-width: 480px) {
   .tiktok-profile-grid {
-    gap: 3px;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 2px;
+    /* Removido max-width para usar todo el espacio */
   }
   
   .tiktok-profile-grid-item {
-    max-width: 129.46px;
-    max-height: 229.66px;
+    min-height: 220px; /* Más alto para aprovechar espacio */
   }
 }
 
 @media (min-width: 768px) {
   .tiktok-profile-grid {
+    gap: 3px;
+    /* Sin limitación de ancho máximo */
+  }
+  
+  .tiktok-profile-grid-item {
+    min-height: 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tiktok-profile-grid {
     gap: 4px;
-    max-width: 450px;
+  }
+  
+  .tiktok-profile-grid-item {
+    min-height: 260px; /* Aún más alto en desktop */
   }
 }
 
