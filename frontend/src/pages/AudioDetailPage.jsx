@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Play, Pause, Music, Users, Clock, Calendar, Volume2, Share2, Heart, 
   MessageCircle, MoreVertical, Plus, TrendingUp, Download, Repeat, Shuffle,
-  BarChart3, Star, Eye, Headphones, Radio, Disc3, Send, Apple
+  BarChart3, Star, Eye, Headphones, Radio, Disc3, Send, Apple, Check
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '../hooks/use-toast';
