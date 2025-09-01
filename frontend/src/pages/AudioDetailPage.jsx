@@ -1390,6 +1390,17 @@ const AudioDetailPage = () => {
           />
         </div>
       )}
+
+      {/* Create Poll Modal */}
+      <CreatePollModal
+        isOpen={showCreateModal}
+        onClose={() => {
+          setShowCreateModal(false);
+          setPreSelectedAudio(null);
+        }}
+        preSelectedAudio={preSelectedAudio}
+        onCreatePoll={handleCreatePoll}
+      />
     </div>
   );
 };
