@@ -68,10 +68,8 @@ const FeedPage = () => {
     if (location.state?.createPoll) {
       setShowCreateModal(true);
       setPreSelectedAudio(location.state.selectedAudio);
-      // Clear the state after modal has had time to process the preSelectedAudio
-      setTimeout(() => {
-        window.history.replaceState({}, document.title);
-      }, 100);
+      // Clear the state to prevent reopening on refresh
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
