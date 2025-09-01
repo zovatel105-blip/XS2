@@ -15,6 +15,7 @@ import pollService from '../services/pollService';
 import { Button } from '../components/ui/button';
 import PollCard from '../components/PollCard';
 import PollModal from '../components/PollModal';
+import CreatePollModal from '../components/CreatePollModal';
 import AudioWaveform from '../components/AudioWaveform';
 import TikTokScrollView from '../components/TikTokScrollView';
 import TikTokProfileGrid from '../components/TikTokProfileGrid';
