@@ -691,30 +691,25 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handleCreatePoll = async (pollData) => {
+  const handleCreatePoll = async (newPoll) => {
     try {
-      // Create poll on backend using pollService
-      const newPoll = await pollService.createPoll(pollData);
+      // NOTE: El poll ya fue creado en CreatePollModal, aquí solo manejamos la UI
       console.log('✅ Nueva publicación creada:', newPoll);
       
       // Close modal
       setShowCreateModal(false);
       setPreSelectedAudio(null);
       
-      // Show success message
-      toast({
-        title: "¡Publicación creada!",
-        description: `Tu contenido con "${audio.title}" ha sido publicado exitosamente`,
-      });
+      // No mostramos toast aquí porque ya se muestra en CreatePollModal
       
       // Refresh posts to show new publication
       await fetchPostsUsingAudio(0, false);
       
     } catch (error) {
-      console.error('Error creating poll:', error);
+      console.error('Error handling new poll:', error);
       toast({
         title: "Error",
-        description: "No se pudo crear la publicación. Inténtalo de nuevo.",
+        description: "No se pudo agregar la publicación a la lista.",
         variant: "destructive"
       });
     }
