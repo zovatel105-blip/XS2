@@ -1145,8 +1145,8 @@ const AudioDetailPage = () => {
           }}
         ></div>
         
-        {/* Encabezado superior */}
-        <div className={classes.header}>
+        {/* Encabezado superior - Ancho completo */}
+        <div className={`relative ${layout.headerHeight} flex items-center justify-between z-10 px-2`}>
           {/* Flecha izquierda (←) esquina superior izquierda */}
           <Button 
             variant="ghost" 
