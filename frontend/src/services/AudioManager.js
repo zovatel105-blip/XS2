@@ -10,6 +10,8 @@ class AudioManager {
     this.volume = 0.7;
     this.fadeInterval = null;
     this.playPromise = null;
+    this.currentPostId = null; // Rastrear qué post específico está reproduciendo
+    this.currentAudioUrl = null; // Rastrear URL actual explícitamente
     
     // Bind methods para usar en callbacks
     this.play = this.play.bind(this);
