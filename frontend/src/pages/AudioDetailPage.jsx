@@ -1066,32 +1066,40 @@ const AudioDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Header - Exact mobile style */}
-      <div className="h-14 bg-white flex items-center justify-between px-4 flex-shrink-0">
-        <button onClick={() => navigate(-1)} className="p-1">
-          <ArrowLeft className="w-6 h-6 text-black" />
-        </button>
+    <div className={classes.container}>
+      {/* Contenedor del header y sección audio con degradado difuminado */}
+      <div className="relative">
+        {/* Fondo degradado que se extiende desde header hasta mitad del audio */}
+        <div className={`${classes.gradientBg} h-[17.5vh]`}></div>
         
-        {/* Dynamic title with Share icon - "Tendencia" if trending */}
-        <div className="flex items-center gap-2">
-          <Share2 className="w-5 h-5 text-black" />
-          <h1 className="text-lg font-semibold text-black">
-            {isTrending ? "Tendencia" : "Audio"}
-          </h1>
+        {/* Encabezado superior */}
+        <div className={classes.header}>
+          {/* Flecha izquierda (←) esquina superior izquierda */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="text-gray-900 hover:bg-white/50 p-3"
+          >
+            <ArrowLeft className={`${layout.iconSize} stroke-2`} />
+          </Button>
+          
+          {/* Flecha derecha (→) esquina superior derecha */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleShare}
+            className="text-gray-900 hover:bg-white/50 p-3"
+          >
+            <Share2 className={`${layout.iconSize} stroke-2`} />
+          </Button>
         </div>
-        
-        <button onClick={handleShare} className="p-1">
-          <MoreVertical className="w-6 h-6 text-black" />
-        </button>
-      </div>
 
-      {/* Audio cover and title section */}
-      <div className="px-4 py-4 flex-shrink-0">
-        <div className="flex items-start gap-3">
-          {/* Large album cover - matching reference size */}
-          <div className="relative w-16 h-12 flex-shrink-0">
-            <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100">
+        {/* Sección del audio */}
+        <div className={classes.audioSection}>
+          {/* Miniatura cuadrada del álbum: lado izquierdo */}
+          <div className={classes.cover}>
+            <div className="w-full h-full rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
               {audio?.cover_url ? (
                 <img 
                   src={audio.cover_url} 
@@ -1099,145 +1107,188 @@ const AudioDetailPage = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
-                  <Play className="w-6 h-6 text-white" />
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <Music className={`${layout.iconSize} text-gray-400`} />
                 </div>
               )}
             </div>
             
-            {/* Play button overlay - positioned like in reference */}
+            {/* Botón de play superpuesto */}
             <button
               onClick={handlePlayPause}
-              className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center"
+              className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
             >
               {isPlaying ? (
-                <div className="w-8 h-8 bg-black/60 rounded-full flex items-center justify-center">
-                  <div className="w-1 h-4 bg-white rounded-sm mr-0.5"></div>
-                  <div className="w-1 h-4 bg-white rounded-sm"></div>
-                </div>
+                <Pause className={`${layout.playIconSize} text-white`} />
               ) : (
-                <div className="w-8 h-8 bg-black/60 rounded-full flex items-center justify-center">
-                  <Play className="w-4 h-4 text-white ml-0.5" />
-                </div>
+                <Play className={`${layout.playIconSize} text-white ml-0.5`} />
               )}
             </button>
           </div>
 
-          {/* Audio title and artist */}
-          <div className="flex-1 min-w-0">
-            <h2 className="text-black font-bold text-lg leading-tight">
-              {audio?.title || 'PASSO BEM SOLTO (Ultra Sl...'}
+          {/* Información del audio: ocupa el ancho restante */}
+          <div className="flex-1 ml-4 flex flex-col justify-center min-w-0">
+            {/* Título dinámico */}
+            <h2 className={classes.title}>
+              {t('audioDetail.contains')} {audio?.title || 'Título no disponible'}
             </h2>
-            <p className="text-black font-medium text-base mt-0.5">
-              {audio?.artist || 'ATLXS'}
-            </p>
-          </div>
-        </div>
-
-        {/* Duration and stats bar */}
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-4">
-            <span className="text-black font-medium">
-              {formatDuration(audio?.duration || 23)} · {formatNumber(totalPosts || 395)} mil reels
-            </span>
             
-            {/* Spotify icon and "Añadir" text */}
-            <div className="flex items-center gap-1">
-              <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
+            {/* Fila del artista con avatar, nombre y checkmark */}
+            <div className="flex items-center gap-2">
+              {/* Avatar circular pequeño */}
+              <div className={`${layout.avatarSize} rounded-full bg-gray-300 flex-shrink-0 overflow-hidden`}>
+                {audio?.artist ? (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                    {audio.artist[0].toUpperCase()}
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gray-400"></div>
+                )}
               </div>
-              <span className="text-black font-medium">Añadir</span>
+              
+              {/* Nombre del artista en mayúsculas */}
+              <span className={`${classes.artist} text-gray-900`}>
+                {(audio?.artist || 'Artista desconocido').toUpperCase()}
+              </span>
+              
+              {/* Checkmark azul verificado */}
+              <div className={`${layout.iconSize} bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0`}>
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
             </div>
           </div>
-          
-          {/* Bookmark and Share icons */}
-          <div className="flex items-center gap-4">
-            <button onClick={handleLike} className="p-1">
-              <div className="w-6 h-6 border-2 border-black rounded-sm flex items-center justify-center">
-                {isLiked && <div className="w-3 h-3 bg-black rounded-sm"></div>}
-              </div>
-            </button>
-            <button onClick={handleShare} className="p-1">
-              <Send className="w-6 h-6 text-black" />
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Use Audio Button */}
-      <div className="px-4 pb-4 flex-shrink-0">
-        <button 
-          onClick={handleUseThisSound}
-          className="w-full py-4 rounded-lg font-semibold text-white text-lg"
-          style={{ backgroundColor: dominantColor || '#3b82f6' }}
-        >
-          Usar audio
-        </button>
-      </div>
-
-      {/* Posts grid - 3x3 with exact spacing as reference */}
-      <div className="flex-1 px-0 overflow-y-auto" onScroll={handleScroll}>
-        <div className="grid grid-cols-3 gap-0.5">
-          {postsLoading ? (
-            // Loading skeleton for 9 items
-            Array.from({ length: 9 }).map((_, index) => (
-              <div key={index} className="aspect-square bg-gray-200 animate-pulse"></div>
-            ))
-          ) : posts && posts.length > 0 ? (
-            posts.map((post) => (
-              <div
-                key={post.id}
-                className="relative aspect-square bg-gray-100 cursor-pointer"
-                onClick={() => handlePollClick(post)}
-              >
-                {/* Post thumbnail */}
-                {post.media_url ? (
-                  post.media_url.includes('.mp4') || post.media_url.includes('video') ? (
-                    <video
-                      src={post.media_url}
-                      className="w-full h-full object-cover"
-                      muted
-                      playsInline
-                    />
-                  ) : (
-                    <img
-                      src={post.media_url}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
-                    <Music className="w-8 h-8 text-white" />
-                  </div>
-                )}
-                
-                {/* View counter overlay - bottom left like in reference */}
-                <div className="absolute bottom-2 left-2 flex items-center gap-1">
-                  <Eye className="w-4 h-4 text-white drop-shadow-lg" />
-                  <span className="text-white text-sm font-semibold drop-shadow-lg">
-                    {formatNumber(post.totalVotes || Math.floor(Math.random() * 100) + 10)} mil
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            // Empty state - show 9 placeholder items
-            Array.from({ length: 9 }).map((_, index) => (
-              <div key={index} className="aspect-square bg-gray-100 flex items-center justify-center">
-                <Music className="w-8 h-8 text-gray-300" />
-              </div>
-            ))
-          )}
+      {/* Barra de información del sonido */}
+      <div className={classes.infoBar}>
+        {/* Ícono play: extremo izquierdo, tamaño pequeño */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Play className={`${layout.iconSize} text-gray-600`} />
+          <span className={`${classes.infoText} text-gray-700 font-medium`}>
+            {formatDuration(audio?.duration || 0)}
+          </span>
         </div>
         
-        {/* Loading more indicator */}
-        {loadingMorePosts && (
-          <div className="flex items-center justify-center py-4">
-            <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin mr-2"></div>
-            <span className="text-gray-500 text-sm">Cargando más...</span>
+        {/* "Original sound by: (usuario)" centro-izquierda */}
+        <div className="flex-1 ml-6">
+          <p className={classes.infoText}>
+            <span className="text-gray-500">{t('audioDetail.originalSoundBy')} </span>
+            <span className="font-medium text-gray-700">
+              {postsLoading ? t('audioDetail.searchingFirst') : (originalUser || t('audioDetail.determining'))}
+            </span>
+          </p>
+        </div>
+        
+        {/* Número de personas que utilizaron ese sonido: extremo derecho */}
+        <div className="flex-shrink-0 ml-4">
+          <span className={`${classes.infoText} text-gray-400`}>
+            {totalPosts > 0 ? 
+              t('audioDetail.users', { count: formatNumber(totalPosts) }) : 
+              t('audioDetail.users', { count: formatNumber(audio?.uses_count || 0) })
+            }
+          </span>
+        </div>
+      </div>
+
+      {/* Botones de acción */}
+      <div className={classes.actionButtons}>
+        <div className="flex w-full gap-[10%]">
+          {/* Botón Add to music app - 45% del ancho */}
+          <Button 
+            onClick={handleAddToItunes}
+            className={`${classes.actionButton} bg-gray-100 hover:bg-gray-200 text-gray-700`}
+          >
+            <Apple className={layout.iconSize} />
+            {audio?.source === 'iTunes' || audio?.is_system_music ? 
+              t('buttons.openAppleMusic') : 
+              t('buttons.notAvailable')
+            }
+          </Button>
+          
+          {/* Botón Add to Favorites - 45% del ancho */}
+          <Button 
+            onClick={handleLike}
+            className={`${classes.actionButton} transition-colors ${
+              isLiked 
+                ? 'bg-red-500 hover:bg-red-600 text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
+          >
+            <Heart className={`${layout.iconSize} ${isLiked ? 'fill-current' : ''}`} />
+            {isLiked ? t('buttons.inFavorites') : t('buttons.addToFavorites')}
+          </Button>
+        </div>
+      </div>
+
+      {/* Cuadrícula de posts usando TikTokProfileGrid */}
+      <div className={classes.grid}>
+        {postsLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingContent')}</p>
+            </div>
+          </div>
+        ) : posts && posts.length > 0 ? (
+          /* Contenedor con scroll para permitir más de 9 publicaciones */
+          <div 
+            className="h-full overflow-y-auto overscroll-behavior-y-contain px-1"
+            onScroll={handleScroll}
+          >
+            {/* Usar TikTokProfileGrid para mantener diseño consistente con ProfilePage */}
+            <TikTokProfileGrid 
+              polls={posts} 
+              onPollClick={handlePollClick}
+            />
+            
+            {/* Loading indicator para más posts */}
+            {loadingMorePosts && (
+              <div className="flex items-center justify-center py-4">
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mr-2"></div>
+                <span className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingMore')}</span>
+              </div>
+            )}
+            
+            {/* Mensaje cuando no hay más posts */}
+            {!hasMorePosts && posts.length >= 12 && (
+              <div className="flex items-center justify-center py-4">
+                <span className={`${classes.infoText} text-gray-400`}>
+                  {totalPosts > posts.length ? 
+                    t('audioDetail.showing', { current: posts.length, total: totalPosts }) : 
+                    t('audioDetail.noMoreContent')
+                  }
+                </span>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Estado vacío */
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className={`${layout.iconSize} text-gray-400`} />
+              </div>
+              <h4 className="text-lg font-medium text-gray-900 mb-2">{t('audioDetail.noContent')}</h4>
+              <p className={`${classes.infoText} text-gray-500 max-w-sm mx-auto`}>
+                {t('audioDetail.beFirst')}
+              </p>
+            </div>
           </div>
         )}
+      </div>
+
+      {/* Botón inferior */}
+      <div className={classes.bottomButton}>
+        {/* Botón central "Use sound" */}
+        <Button 
+          onClick={handleUseThisSound}
+          className={classes.mainButton}
+        >
+          {t('buttons.useSound')}
+        </Button>
       </div>
 
       {/* Poll Modal */}
