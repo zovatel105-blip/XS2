@@ -59,11 +59,14 @@ const AudioDetailPage = () => {
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
-  // Function to extract dominant color from album cover
-  const extractDominantColor = (imageUrl) => {
+  // Function to extract dominant color and generate gradient colors from album cover
+  const extractColorsFromCover = (imageUrl) => {
     return new Promise((resolve) => {
       if (!imageUrl) {
-        resolve('#10b981'); // Default green
+        resolve({
+          dominant: '#10b981',
+          gradients: { primary: '#10b981', secondary: '#f59e0b' }
+        });
         return;
       }
 
@@ -82,6 +85,8 @@ const AudioDetailPage = () => {
           const data = imageData.data;
           
           const colorMap = {};
+          const allColors = [];
+          
           // Sample every 4th pixel for performance
           for (let i = 0; i < data.length; i += 16) {
             const r = data[i];
@@ -93,31 +98,104 @@ const AudioDetailPage = () => {
             
             const color = `${r},${g},${b}`;
             colorMap[color] = (colorMap[color] || 0) + 1;
+            allColors.push([r, g, b]);
           }
           
-          // Find most frequent color
+          // Find most frequent color (dominant)
           let maxCount = 0;
-          let dominantRGB = '16,185,129'; // Default green RGB
+          let dominantRGB = [16, 185, 129]; // Default green RGB
           
           for (const [color, count] of Object.entries(colorMap)) {
             if (count > maxCount) {
               maxCount = count;
-              dominantRGB = color;
+              dominantRGB = color.split(',').map(Number);
             }
           }
           
-          const [r, g, b] = dominantRGB.split(',').map(Number);
-          const hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-          resolve(hexColor);
+          // Generate gradient colors
+          const [r, g, b] = dominantRGB;
+          const dominantHex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+          
+          // Create complementary/analogous colors for gradient
+          const hsl = rgbToHsl(r, g, b);
+          
+          // Primary gradient color (slightly lighter/more saturated)
+          const primaryHsl = [hsl[0], Math.min(100, hsl[1] + 20), Math.min(80, hsl[2] + 15)];
+          const primaryRgb = hslToRgb(primaryHsl[0], primaryHsl[1], primaryHsl[2]);
+          const primaryHex = `#${((1 << 24) + (primaryRgb[0] << 16) + (primaryRgb[1] << 8) + primaryRgb[2]).toString(16).slice(1)}`;
+          
+          // Secondary gradient color (complementary hue)
+          const secondaryHsl = [(hsl[0] + 60) % 360, Math.max(30, hsl[1] - 10), Math.max(40, hsl[2] - 10)];
+          const secondaryRgb = hslToRgb(secondaryHsl[0], secondaryHsl[1], secondaryHsl[2]);
+          const secondaryHex = `#${((1 << 24) + (secondaryRgb[0] << 16) + (secondaryRgb[1] << 8) + secondaryRgb[2]).toString(16).slice(1)}`;
+          
+          resolve({
+            dominant: dominantHex,
+            gradients: {
+              primary: primaryHex,
+              secondary: secondaryHex
+            }
+          });
         } catch (error) {
-          console.error('Error extracting color:', error);
-          resolve('#10b981'); // Default green
+          console.error('Error extracting colors:', error);
+          resolve({
+            dominant: '#10b981',
+            gradients: { primary: '#10b981', secondary: '#f59e0b' }
+          });
         }
       };
       
-      img.onerror = () => resolve('#10b981');
+      img.onerror = () => resolve({
+        dominant: '#10b981',
+        gradients: { primary: '#10b981', secondary: '#f59e0b' }
+      });
       img.src = imageUrl;
     });
+  };
+
+  // Helper functions for color conversion
+  const rgbToHsl = (r, g, b) => {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    return [h * 360, s * 100, l * 100];
+  };
+
+  const hslToRgb = (h, s, l) => {
+    h /= 360; s /= 100; l /= 100;
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    if (s === 0) {
+      return [l * 255, l * 255, l * 255];
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      return [
+        Math.round(hue2rgb(p, q, h + 1/3) * 255),
+        Math.round(hue2rgb(p, q, h) * 255),
+        Math.round(hue2rgb(p, q, h - 1/3) * 255)
+      ];
+    }
   };
 
   useEffect(() => {
