@@ -335,7 +335,7 @@ const FeedPage = () => {
     return;
   };
 
-  const handleCreatePoll = async (pollData) => {
+  const handleCreatePoll = async (newPoll) => {
     if (!isAuthenticated) {
       toast({
         title: "Inicia sesión",
@@ -346,8 +346,7 @@ const FeedPage = () => {
     }
 
     try {
-      // Create poll on backend
-      const newPoll = await pollService.createPoll(pollData);
+      // NOTE: El poll ya fue creado en CreatePollModal, aquí solo manejamos la UI
       const transformedPoll = pollService.transformPollData(newPoll);
       
       // Agregar la nueva votación al inicio de la lista
@@ -356,15 +355,12 @@ const FeedPage = () => {
       // Trigger addiction system
       await trackAction('create');
       
-      toast({
-        title: "¡Votación creada!",
-        description: "Tu votación ha sido publicada exitosamente",
-      });
+      // No mostramos toast aquí porque ya se muestra en CreatePollModal
     } catch (error) {
-      console.error('Error creating poll:', error);
+      console.error('Error handling new poll:', error);
       toast({
-        title: "Error al crear votación",
-        description: error.message || "No se pudo crear la votación. Intenta de nuevo.",
+        title: "Error al agregar votación",
+        description: error.message || "No se pudo agregar la votación a la lista.",
         variant: "destructive",
       });
     }
