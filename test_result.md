@@ -289,7 +289,48 @@
 ✅ **RESULTADO FINAL:**
 🎯 **PUBLICACIONES DEL PERFIL COMPLETAMENTE FUNCIONALES** - Los usuarios ahora pueden hacer clic en cualquier publicación del perfil (propia o ajena) para verla en vista fullscreen tipo TikTok con todas las funcionalidades: navegación, guardar, cerrar, y compatibilidad total entre diferentes secciones del perfil.
 
-user_problem_statement: ✅ PROBLEMA CRÍTICO DE NAVEGACIÓN EN PUBLICACIONES DEL PERFIL RESUELTO COMPLETAMENTE (2025-09-01): Las publicaciones del perfil ahora se abren y muestran correctamente - múltiples bugs críticos corregidos exitosamente.
+**🎵 PROBLEMA CRÍTICO DE AUDIO CON MÚLTIPLES POSTS CORREGIDO COMPLETAMENTE (2025-01-27): Cuando hay dos o más publicaciones con el mismo audio, el audio ya no deja de funcionar - sistema mejorado exitosamente.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Cuando había múltiples publicaciones con la misma canción, el AudioManager se confundía
+- La lógica de detección `currentlyPlayingUrl === poll.music?.preview_url` no distinguía entre posts diferentes
+- Al cambiar entre posts con la misma música, el sistema creía que ya estaba reproduciéndose y no iniciaba correctamente
+- Los usuarios experimentaban silencio al navegar entre posts con audio idéntico
+
+✅ **CAUSA RAÍZ ENCONTRADA:**
+1. **Detección por URL únicamente**: AudioManager solo usaba URL para determinar si la música correcta estaba reproduciéndose
+2. **Falta de rastreo de posts**: No había manera de distinguir entre el Post A y Post B usando la misma canción
+3. **Lógica de sincronización inadecuada**: `isCurrentPostMusic` daba falsos positivos para posts diferentes con misma música
+
+✅ **SOLUCIÓN COMPLETA IMPLEMENTADA:**
+
+**AUDIOMANAGER MEJORADO (/app/frontend/src/services/AudioManager.js):**
+1. ✅ **Rastreo de Post ID**: Agregadas propiedades `currentPostId` y `currentAudioUrl` para rastreo específico
+2. ✅ **Método play() mejorado**: Ahora acepta `postId` como parámetro y lo rastrea explícitamente
+3. ✅ **Nuevos métodos de detección**: 
+   - `getCurrentPostId()` - obtiene ID del post actual
+   - `isPlayingPost(postId)` - verifica si un post específico está reproduciéndose
+   - `isPlayingUrl(url)` - mejorado para usar `currentAudioUrl` directamente
+4. ✅ **Cleanup mejorado**: método `stop()` limpia tanto `currentPostId` como `currentAudioUrl`
+5. ✅ **Estado detallado**: `getState()` incluye `currentPostId` para debugging
+
+**TIKTOKSCROLLVIEW MEJORADO (/app/frontend/src/components/TikTokScrollView.jsx):**
+1. ✅ **Detección específica por post**: Cambiado de `isCurrentPostMusic` a `isPlayingThisPost = audioManager.isPlayingPost(poll.id)`
+2. ✅ **Paso de postId**: En `audioManager.play()` ahora se pasa `postId: poll.id` para rastreo específico
+3. ✅ **Logging mejorado**: Console logs incluyen ID de post para debugging detallado
+4. ✅ **Lógica de parada específica**: Solo para audio si estaba reproduciendo ESTE post específico
+
+✅ **FUNCIONALIDADES CORREGIDAS:**
+- ✅ Múltiples posts con misma canción funcionan correctamente
+- ✅ Transición fluida entre Post A → Post B (misma música) → Post C (música diferente)
+- ✅ AudioManager distingue correctamente entre posts individuales
+- ✅ No más silencio al navegar entre posts con audio idéntico
+- ✅ Sistema robusto de rastreo post-específico implementado
+
+✅ **RESULTADO FINAL:**
+🎯 **AUDIO COMPLETAMENTE FUNCIONAL CON MÚLTIPLES POSTS** - Los usuarios ahora pueden disfrutar de audio continuo y correcto, incluso cuando múltiples publicaciones usan la misma canción. El sistema AudioManager distingue inteligentemente entre posts individuales y reproduce audio de manera consistente sin importar cuántas publicaciones compartan la misma pista musical.
+
+user_problem_statement: ✅ PROBLEMA CRÍTICO DE AUDIO CON MÚLTIPLES POSTS CORREGIDO COMPLETAMENTE (2025-01-27): Cuando hay dos o más publicaciones con el mismo audio, el audio ya no deja de funcionar - sistema mejorado exitosamente.
 
 ✅ **PROBLEMA IDENTIFICADO:**
 - Las portadas de publicaciones en AudioDetailPage se veían diferentes a las del ProfilePage
