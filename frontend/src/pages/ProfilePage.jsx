@@ -697,7 +697,7 @@ const ProfilePage = () => {
       <div className="px-1 py-4 sm:py-6 space-y-3 sm:space-y-4">
         
         {/* AVATAR + MÉTRICAS EXPANDIDO - USANDO TODO EL ANCHO */}
-        <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm mx-0">
+        <div className="bg-white rounded-none sm:rounded-lg p-2 sm:p-4 shadow-sm mx-0">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             
             {/* LADO IZQUIERDO: Votos y Seguidores */}
