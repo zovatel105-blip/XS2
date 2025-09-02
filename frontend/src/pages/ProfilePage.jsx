@@ -332,21 +332,48 @@ const ProfilePage = () => {
   useEffect(() => {
     if (userId) {
       setLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        const user = getUserById(userId);
-        if (user) {
-          setViewedUser(user);
-        } else {
-          toast({
-            title: "Usuario no encontrado",
-            description: "El perfil que buscas no existe",
-            variant: "destructive"
-          });
-          navigate('/profile');
+      
+      // Fetch user profile from backend
+      const fetchUserProfile = async () => {
+        try {
+          const profile = await userService.getUserProfile(userId);
+          
+          // Transform backend profile to frontend format
+          const transformedUser = {
+            id: profile.id,
+            username: profile.username || profile.id,
+            displayName: profile.display_name || profile.username || profile.id,
+            avatar: profile.avatar_url || '',
+            verified: profile.is_verified || false,
+            followers: profile.followers_count || 0,
+            following: profile.following_count || 0,
+            likes: profile.likes_count || 0,
+            votes: profile.votes_count || 0,
+            bio: profile.bio || ''
+          };
+          
+          setViewedUser(transformedUser);
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          
+          // Fallback to mock data if API fails
+          const user = getUserById(userId);
+          if (user) {
+            setViewedUser(user);
+          } else {
+            toast({
+              title: "Usuario no encontrado",
+              description: "El perfil que buscas no existe o no se pudo cargar",
+              variant: "destructive"
+            });
+            navigate('/profile');
+          }
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
-      }, 500);
+      };
+      
+      fetchUserProfile();
     } else {
       setViewedUser(null);
       setLoading(false);
