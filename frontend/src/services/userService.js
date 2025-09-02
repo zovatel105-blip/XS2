@@ -55,7 +55,7 @@ class UserService {
   // Search users by query
   async searchUsers(query) {
     try {
-      const response = await fetch(`${config.API.USERS.SEARCH}?q=${encodeURIComponent(query)}`, {
+      const response = await fetch(`${config.API_ENDPOINTS.USERS.SEARCH}?q=${encodeURIComponent(query)}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -70,7 +70,7 @@ class UserService {
   // Get follow status for a user
   async getFollowStatus(userId) {
     try {
-      const response = await fetch(config.API.USERS.FOLLOW_STATUS(userId), {
+      const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOW_STATUS(userId), {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -85,7 +85,7 @@ class UserService {
   // Follow a user
   async followUser(userId) {
     try {
-      const response = await fetch(config.API.USERS.FOLLOW(userId), {
+      const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOW(userId), {
         method: 'POST',
         headers: this.getAuthHeaders(),
       });
@@ -100,7 +100,7 @@ class UserService {
   // Unfollow a user
   async unfollowUser(userId) {
     try {
-      const response = await fetch(config.API.USERS.FOLLOW(userId), {
+      const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOW(userId), {
         method: 'DELETE',
         headers: this.getAuthHeaders(),
       });
@@ -115,7 +115,7 @@ class UserService {
   // Get followers of a user
   async getUserFollowers(userId) {
     try {
-      const response = await fetch(config.API.USERS.FOLLOWERS(userId), {
+      const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOWERS(userId), {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
