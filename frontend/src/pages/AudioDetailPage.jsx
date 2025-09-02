@@ -1194,7 +1194,7 @@ const AudioDetailPage = () => {
               onClick={handleLike}
               className="text-white hover:bg-white/20 backdrop-blur-sm p-3 rounded-full border border-white/20"
             >
-              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
             </Button>
             
             <Button 
