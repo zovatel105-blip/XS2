@@ -1158,62 +1158,46 @@ const AudioDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col">
-      {/* Hero Section con fondo dinámico */}
-      <div className="relative overflow-hidden">
-        {/* Fondo dinámico con blur */}
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Contenedor del header y sección audio con degradado difuminado */}
+      <div className="relative">
+        {/* Fondo degradado dinámico que se extiende desde header hasta mitad del audio */}
         <div 
-          className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-blue-500/15 to-pink-500/20"
+          className="absolute inset-0 h-[17.5vh]"
           style={{
-            backgroundImage: audio?.cover_url ? `url(${audio.cover_url})` : 'none',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(40px) brightness(0.3)',
-            transform: 'scale(1.1)',
+            background: `linear-gradient(to bottom, ${gradientColors.primary}20, ${gradientColors.primary}10, transparent)`
           }}
-        />
+        ></div>
         
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-white" />
-        
-        {/* Header con glassmorphism */}
-        <div className="relative z-20 flex items-center justify-between p-4">
+        {/* Encabezado superior - Ancho completo */}
+        <div className={`relative ${layout.headerHeight} flex items-center justify-between z-10 px-2`}>
+          {/* Flecha izquierda (←) esquina superior izquierda */}
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(-1)}
-            className="text-white hover:bg-white/20 backdrop-blur-sm p-3 rounded-full border border-white/20"
+            className="text-gray-900 hover:bg-white/50 p-3"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className={`${layout.iconSize} stroke-2`} />
           </Button>
           
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleLike}
-              className="text-white hover:bg-white/20 backdrop-blur-sm p-3 rounded-full border border-white/20"
-            >
-              <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleShare}
-              className="text-white hover:bg-white/20 backdrop-blur-sm p-3 rounded-full border border-white/20"
-            >
-              <Share2 className="w-5 h-5" />
-            </Button>
-          </div>
+          {/* Flecha derecha (→) esquina superior derecha */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleShare}
+            className="text-gray-900 hover:bg-white/50 p-3"
+          >
+            <Share2 className={`${layout.iconSize} stroke-2`} />
+          </Button>
         </div>
 
-        {/* Audio Info Section */}
-        <div className="relative z-10 px-6 pb-8 pt-4">
-          {/* Portada con efecto moderno */}
-          <div className="flex justify-center mb-8">
-            <div className="relative group">
-              <div className="w-40 h-40 rounded-3xl overflow-hidden bg-white shadow-2xl border-4 border-white/50 backdrop-blur-sm transform transition-all duration-300 group-hover:scale-105">
+        {/* Sección principal del audio - como en la referencia */}
+        <div className="relative px-6 pb-6 z-10">
+          {/* Portada grande centrada */}
+          <div className="flex justify-center mb-6">
+            <div className="relative w-32 h-32">
+              <div className="w-full h-full rounded-3xl overflow-hidden bg-gray-100 shadow-xl border border-gray-200">
                 {audio?.cover_url ? (
                   <img 
                     src={audio.cover_url} 
@@ -1221,244 +1205,157 @@ const AudioDetailPage = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                    <Music className="w-16 h-16 text-white" />
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <Music className="w-12 h-12 text-gray-400" />
                   </div>
                 )}
               </div>
               
-              {/* Play button overlay moderno */}
+              {/* Botón de play overlay */}
               <button
                 onClick={handlePlayPause}
-                className="absolute inset-0 bg-black/40 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/30 rounded-3xl flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
               >
-                <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center transform transition-transform hover:scale-110">
-                  {isPlaying ? (
-                    <Pause className="w-8 h-8 text-gray-800" />
-                  ) : (
-                    <Play className="w-8 h-8 text-gray-800 ml-1" />
-                  )}
-                </div>
+                {isPlaying ? (
+                  <Pause className="w-8 h-8 text-white" />
+                ) : (
+                  <Play className="w-8 h-8 text-white ml-1" />
+                )}
               </button>
-              
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
             </div>
           </div>
 
-          {/* Título y artista con mejor tipografía */}
-          <div className="text-center text-white mb-6">
-            <h1 className="text-3xl font-bold mb-3 leading-tight drop-shadow-lg">
-              {audio?.title || 'Audio Track'}
+          {/* Título prominente como en la referencia */}
+          <div className="text-center mb-4">
+            <h1 className="text-2xl font-bold text-black mb-3 leading-tight">
+              Contains: {audio?.title || 'Solitaire'}
             </h1>
             
-            {/* Artista con badge verificado */}
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-2 border-white/30">
-                <span className="text-white font-bold text-lg">
-                  {audio?.artist ? audio.artist[0].toUpperCase() : 'A'}
+            {/* Usuario con checkmark */}
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">
+                  {audio?.artist ? audio.artist[0].toUpperCase() : 'W'}
                 </span>
               </div>
               
-              <div className="flex items-center gap-2">
-                <span className="text-white font-semibold text-xl">
-                  {audio?.artist || 'Unknown Artist'}
-                </span>
-                
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border border-white/20">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Audio stats */}
-            <div className="flex items-center justify-center gap-6 mt-4 text-white/80">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span className="text-sm font-medium">{formatDuration(audio?.duration || 30)}</span>
-              </div>
+              <span className="text-black font-bold text-lg tracking-wider">
+                {(audio?.artist || 'WERENOI').toUpperCase()}
+              </span>
               
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span className="text-sm font-medium">{formatNumber(audio?.uses_count || 0)} uses</span>
+              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
               </div>
-              
-              {audio?.category && (
-                <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm border border-white/20">
-                  <span className="text-xs font-medium">{audio.category}</span>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Info strip mejorada */}
-      <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200/50 px-6 py-4 shadow-sm">
+      {/* Barra de información exacta como en la referencia */}
+      <div className="bg-white border-t border-gray-100 py-4 px-6">
         <div className="flex items-center justify-between">
+          {/* Lado izquierdo: Play + duración + Original sound by */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="font-medium">Original sound by</span>
-              <span className="font-bold text-black">
-                {postsLoading ? 'Loading...' : (originalUser || 'Unknown')}
+            {/* Triángulo de play como en la referencia */}
+            <div className="flex items-center gap-2">
+              <div className="w-0 h-0 border-l-[8px] border-l-black border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
+              <span className="font-semibold text-black text-base">
+                {formatDuration(audio?.duration || 30)}
+              </span>
+            </div>
+            
+            {/* Original sound by */}
+            <div className="text-gray-600 text-base">
+              Original sound by: <span className="font-medium text-black">
+                {postsLoading ? 'Freey' : (originalUser || 'Freey')}
               </span>
             </div>
           </div>
           
-          <div className="text-gray-600 font-medium">
+          {/* Lado derecho: usuarios */}
+          <div className="text-gray-500 text-base">
             {totalPosts > 0 ? 
-              `${formatNumber(totalPosts)} posts` : 
-              `${formatNumber(audio?.uses_count || 0)} posts`
+              `${formatNumber(totalPosts)} usuarios` : 
+              `${formatNumber(audio?.uses_count || 1)} usuarios`
             }
           </div>
         </div>
       </div>
 
-      {/* Action buttons mejorados */}
-      <div className="bg-white px-6 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Use This Sound - Botón principal destacado */}
-          <button 
-            onClick={handleUseThisSound}
-            className="flex-1 flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
-          >
-            <Plus className="w-6 h-6" />
-            <span>Use this sound</span>
-          </button>
-          
-          {/* Apple Music button mejorado */}
+      {/* Botones exactos como en la referencia */}
+      <div className="bg-white px-6 py-4">
+        <div className="flex gap-4">
+          {/* Botón Apple Music */}
           <button 
             onClick={handleAddToItunes}
-            className="flex-1 flex items-center justify-center gap-3 py-4 px-6 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-2xl font-medium transition-all duration-300 transform hover:scale-[1.02] border border-gray-200"
+            className="flex-1 flex items-center justify-center gap-3 py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors"
           >
-            <Apple className="w-6 h-6" />
-            <span>Apple Music</span>
+            <Apple className="w-6 h-6 text-black" />
+            <span className="text-black font-medium text-base">
+              Open in Apple Music
+            </span>
           </button>
-        </div>
-        
-        {/* Secondary actions */}
-        <div className="flex items-center justify-center gap-4 mt-4">
+          
+          {/* Botón Add to Favorite */}
           <button 
             onClick={handleLike}
-            className={`p-3 rounded-full transition-all duration-300 ${
-              isLiked 
-                ? 'bg-red-100 text-red-600 hover:bg-red-200' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className="flex-1 flex items-center justify-center gap-3 py-4 px-4 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors"
           >
-            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-          </button>
-          
-          <button 
-            onClick={handleShare}
-            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-300"
-          >
-            <Share2 className="w-5 h-5" />
-          </button>
-          
-          <button 
-            onClick={() => setShowCreateModal(true)}
-            className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-300"
-          >
-            <MessageCircle className="w-5 h-5" />
+            <Heart className={`w-6 h-6 ${isLiked ? 'fill-current text-red-500' : 'text-black'}`} />
+            <span className="text-black font-medium text-base">
+              Add to Favorite
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Posts Grid Section con diseño mejorado */}
-      <div className="flex-1 bg-white">
-        <div className="px-6 py-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">
-              Posts using this sound
-            </h2>
-            {posts && posts.length > 0 && (
-              <span className="text-sm text-gray-500">
-                {formatNumber(posts.length)} posts
-              </span>
-            )}
+      {/* Cuadrícula de posts - Ancho completo sin márgenes */}
+      <div className={`${layout.gridHeight}`}>
+        {postsLoading ? (
+          <div className="flex items-center justify-center h-full px-4">
+            <div className="text-center">
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className={`${classes.infoText} text-gray-500`}>{t('audioDetail.loadingContent')}</p>
+            </div>
           </div>
-          
-          {postsLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <div className="text-center">
-                <div className="w-12 h-12 border-3 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-gray-600 font-medium">Loading posts...</p>
+        ) : posts && posts.length > 0 ? (
+          <div className="px-1">
+            <TikTokProfileGrid
+              polls={posts}
+              onPollClick={handlePollClick}
+            />
+          </div>
+        ) : (
+          /* Estado vacío */
+          <div className="flex items-center justify-center h-full px-4">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className={`${layout.iconSize} text-gray-400`} />
               </div>
-            </div>
-          ) : posts && posts.length > 0 ? (
-            <div className="grid grid-cols-3 gap-1 sm:gap-2">
-              {posts.map((post, index) => (
-                <div 
-                  key={post.id}
-                  onClick={() => handlePollClick(post)}
-                  className="aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer group hover:scale-[1.02] transition-all duration-300 shadow-sm hover:shadow-lg"
-                >
-                  {post.options && post.options.length > 0 && post.options[0].media_url ? (
-                    <div className="relative w-full h-full">
-                      {post.options[0].media_url.includes('.mp4') ? (
-                        <video 
-                          src={post.options[0].media_url}
-                          className="w-full h-full object-cover"
-                          muted
-                          playsInline
-                        />
-                      ) : (
-                        <img 
-                          src={post.options[0].media_url}
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                      
-                      {/* Play overlay */}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Play className="w-8 h-8 text-white" />
-                      </div>
-                      
-                      {/* Stats overlay */}
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <div className="flex items-center justify-between text-white text-xs">
-                          <span className="bg-black/50 px-2 py-1 rounded-full backdrop-blur-sm">
-                            {formatNumber(post.totalVotes || 0)} votes
-                          </span>
-                          {post.music && (
-                            <Music className="w-4 h-4" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                      <div className="text-center text-gray-500">
-                        <MessageCircle className="w-8 h-8 mx-auto mb-2" />
-                        <p className="text-xs font-medium">{post.title}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Music className="w-10 h-10 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No posts yet</h3>
-              <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-                Be the first to create content with this sound!
+              <h4 className="text-lg font-medium text-gray-900 mb-2">{t('audioDetail.noContent')}</h4>
+              <p className={`${classes.infoText} text-gray-500 max-w-sm mx-auto`}>
+                {t('audioDetail.beFirst')}
               </p>
-              <button 
-                onClick={handleUseThisSound}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium transition-colors"
-              >
-                <Plus className="w-5 h-5" />
-                Create now
-              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
+
+      {/* Botón inferior - Ancho completo */}
+      <div className={`${layout.bottomButtonHeight} flex items-center justify-center px-2`}>
+        {/* Botón central "Use sound" con color dinámico */}
+        <button 
+          onClick={handleUseThisSound}
+          className="w-[40%] py-4 rounded-2xl font-semibold text-white text-lg transition-all hover:opacity-90 hover:scale-105"
+          style={{ 
+            backgroundColor: dominantColor,
+            boxShadow: `0 8px 25px ${dominantColor}40`
+          }}
+        >
+          {t('buttons.useSound')}
+        </button>
       </div>
 
       {/* Modales */}
