@@ -62,33 +62,23 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
         return;
       }
 
-      const response = await apiRequest('/auth/profile', {
+      const updatedUser = await apiRequest('/api/auth/profile', {
         method: 'PUT',
         body: JSON.stringify(updateData)
       });
 
-      if (response.ok) {
-        const updatedUser = await response.json();
-        toast({
-          title: "¡Perfil actualizado!",
-          description: "Los cambios se han guardado exitosamente",
-          variant: "default"
-        });
-        
-        // Notify parent component of the update
-        if (onProfileUpdate) {
-          onProfileUpdate(updatedUser);
-        }
-        
-        onClose();
-      } else {
-        const errorData = await response.json();
-        toast({
-          title: "Error al actualizar",
-          description: errorData.detail || "No se pudo actualizar el perfil",
-          variant: "destructive"
-        });
+      toast({
+        title: "¡Perfil actualizado!",
+        description: "Los cambios se han guardado exitosamente",
+        variant: "default"
+      });
+      
+      // Notify parent component of the update
+      if (onProfileUpdate) {
+        onProfileUpdate(updatedUser);
       }
+      
+      onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
