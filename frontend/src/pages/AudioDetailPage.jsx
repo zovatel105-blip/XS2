@@ -1347,7 +1347,7 @@ const AudioDetailPage = () => {
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
           </button>
           
           <button 
