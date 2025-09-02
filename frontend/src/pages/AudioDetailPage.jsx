@@ -1475,7 +1475,6 @@ const AudioDetailPage = () => {
 
       {/* Modales */}
       <PollModal
-      <PollModal
         isOpen={showPollModal}
         onClose={() => setShowPollModal(false)}
         poll={selectedPoll}
