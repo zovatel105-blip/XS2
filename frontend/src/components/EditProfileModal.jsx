@@ -9,7 +9,7 @@ import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 
 const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
-  const { user, apiRequest } = useAuth();
+  const { user, updateUser } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
