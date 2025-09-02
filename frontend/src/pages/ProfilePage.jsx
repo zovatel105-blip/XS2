@@ -17,6 +17,7 @@ import {
   Share2, UserPlus, UserCheck, Menu, ChevronDown, Plus, BarChart3, Mail, MessageCircle 
 } from 'lucide-react';
 import pollService from '../services/pollService';
+import userService from '../services/userService';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useFollow } from '../contexts/FollowContext';
