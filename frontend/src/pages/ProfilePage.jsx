@@ -677,14 +677,9 @@ const ProfilePage = () => {
   };
 
   const handleProfileUpdate = async (updatedUserData) => {
-    // Update user data directly with the response from the API
-    if (updatedUserData) {
-      // Update the AuthContext user state directly
-      await refreshUser();
-    } else {
-      // Fallback to refresh if no data provided
-      await refreshUser();
-    }
+    // The EditProfileModal already updates the user state via updateUser()
+    // This function can be used for any additional UI updates if needed
+    console.log('Profile updated successfully:', updatedUserData);
   };
 
   const handleSettingsClick = () => {
