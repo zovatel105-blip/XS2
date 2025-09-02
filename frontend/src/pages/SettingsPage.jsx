@@ -87,8 +87,9 @@ const SettingsPage = () => {
   };
 
   const handleProfileUpdate = async (updatedUser) => {
-    // Refresh user data after profile update
-    await refreshUser();
+    // The EditProfileModal already updates the user state via updateUser()
+    // This function can be used for any additional UI updates if needed
+    console.log('Profile updated successfully from settings:', updatedUser);
   };
 
   const openModal = (modalName) => {
