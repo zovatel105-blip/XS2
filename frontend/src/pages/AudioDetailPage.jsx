@@ -1340,7 +1340,7 @@ const AudioDetailPage = () => {
         {/* Secondary actions */}
         <div className="flex items-center justify-center gap-4 mt-4">
           <button 
-            onClick={toggleFavorite}
+            onClick={handleLike}
             className={`p-3 rounded-full transition-all duration-300 ${
               isFavorite 
                 ? 'bg-red-100 text-red-600 hover:bg-red-200' 
