@@ -1460,18 +1460,6 @@ const AudioDetailPage = () => {
           )}
         </div>
       </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className={`${layout.iconSize} text-gray-400`} />
-              </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">{t('audioDetail.noContent')}</h4>
-              <p className={`${classes.infoText} text-gray-500 max-w-sm mx-auto`}>
-                {t('audioDetail.beFirst')}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* Modales */}
       <PollModal
