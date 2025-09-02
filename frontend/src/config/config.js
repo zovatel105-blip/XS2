@@ -159,7 +159,8 @@ class AppConfig {
         FOLLOW_STATUS: (id) => `${baseUrl}/api/users/${id}/follow-status`,
         FOLLOWING: `${baseUrl}/api/users/following`,
         FOLLOWERS: (id) => `${baseUrl}/api/users/${id}/followers`,
-        PROFILE: (id) => `${baseUrl}/api/user/profile/${id}`
+        PROFILE: (id) => `${baseUrl}/api/user/profile/${id}`,
+        PROFILE_BY_USERNAME: (username) => `${baseUrl}/api/user/profile/by-username/${username}`
       },
       UPLOAD: {
         FILE: `${baseUrl}/api/upload`,
