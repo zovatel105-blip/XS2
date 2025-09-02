@@ -62,10 +62,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
         return;
       }
 
-      const updatedUser = await apiRequest('/api/auth/profile', {
-        method: 'PUT',
-        body: JSON.stringify(updateData)
-      });
+      const updatedUser = await updateUser(updateData);
 
       toast({
         title: "¡Perfil actualizado!",
