@@ -1693,8 +1693,18 @@ async def get_my_profile(current_user: UserResponse = Depends(get_current_user))
 
 @api_router.get("/user/profile/{user_id}")
 async def get_user_profile(user_id: str):
-    """Get user profile (public endpoint)"""
+    """Get user profile by ID (public endpoint)"""
     profile_data = await db.user_profiles.find_one({"id": user_id})
+    if not profile_data:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    profile = UserProfile(**profile_data)
+    return profile
+
+@api_router.get("/user/profile/by-username/{username}")
+async def get_user_profile_by_username(username: str):
+    """Get user profile by username (public endpoint)"""
+    profile_data = await db.user_profiles.find_one({"username": username})
     if not profile_data:
         raise HTTPException(status_code=404, detail="User not found")
     
