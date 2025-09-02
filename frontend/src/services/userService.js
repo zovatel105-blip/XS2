@@ -2,7 +2,7 @@ import config from '../config/config';
 
 class UserService {
   constructor() {
-    this.baseURL = config.API.USERS.SEARCH.split('/search')[0]; // Get base users URL
+    this.baseURL = config.API_ENDPOINTS.USERS.SEARCH.split('/search')[0]; // Get base users URL
   }
 
   // Get auth headers
