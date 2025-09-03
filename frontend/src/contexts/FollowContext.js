@@ -197,7 +197,7 @@ export const FollowProvider = ({ children }) => {
     }
   }, [apiRequest]);
 
-  const getUserFollowing = async (userId) => {
+  const getUserFollowing = useCallback(async (userId) => {
     try {
       console.log('🌐 API CALL: getUserFollowing');
       console.log('  Endpoint:', `/api/users/${userId}/following`);
@@ -217,7 +217,7 @@ export const FollowProvider = ({ children }) => {
       console.error('  Error details:', error.message);
       return { following: [], total: 0 };
     }
-  };
+  }, [apiRequest]);
 
   const value = {
     followUser,
