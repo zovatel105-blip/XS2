@@ -108,6 +108,8 @@ export const FollowProvider = ({ children }) => {
           newMap.set(originalKey, false);  // Set with original key
           return newMap;
         });
+        // Incrementar versión para forzar re-renders globales
+        incrementFollowStateVersion();
         return { success: true, message: response.message };
       }
     } catch (error) {
