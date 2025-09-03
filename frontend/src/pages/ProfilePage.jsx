@@ -757,7 +757,7 @@ const ProfilePage = () => {
                   <Vote className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-blue-600" />
                 </div>
                 <div className="flex flex-col justify-center min-w-0">
-                  <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{displayUser.totalVotes || 0}</p>
+                  <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
                   <p className="text-xs sm:text-sm text-gray-600 font-medium leading-none mt-0.5">Votos</p>
                 </div>
               </div>
@@ -771,7 +771,7 @@ const ProfilePage = () => {
                   <Users className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-green-600" />
                 </div>
                 <div className="flex flex-col justify-center min-w-0">
-                  <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{followersCount}</p>
+                  <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
                   <p className="text-xs sm:text-sm text-gray-600 font-medium leading-none mt-0.5">Seguidores</p>
                 </div>
               </div>
