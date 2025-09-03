@@ -137,8 +137,11 @@ const ProfilePage = () => {
   useEffect(() => {
     const loadFollowStats = async () => {
       console.log('🔄 LOADING FOLLOW STATS:');
-      console.log('  User ID:', userId || authUser?.id);
+      console.log('  Current Profile User ID (userId):', userId);
+      console.log('  Current Auth User ID (authUser?.id):', authUser?.id);
+      console.log('  Target User ID (will load stats for):', userId || authUser?.id);
       console.log('  Follow State Version:', followStateVersion);
+      console.log('  Refresh Trigger:', refreshTrigger);
       console.log('  Triggered by global follow state change');
       
       if (!authUser?.id && !userId) return;
@@ -146,6 +149,7 @@ const ProfilePage = () => {
       setFollowStatsLoading(true);
       try {
         const targetUserId = userId || authUser?.id;
+        console.log('  📡 Making API calls for user:', targetUserId);
         
         // Load followers and following counts
         const [followersData, followingData] = await Promise.all([
@@ -153,12 +157,21 @@ const ProfilePage = () => {
           getUserFollowing(targetUserId)
         ]);
         
+        console.log('  📊 API Results received:');
+        console.log('    Followers Data:', followersData);
+        console.log('    Following Data:', followingData);
+        console.log('    About to set:', {
+          followersCount: followersData.total || 0,
+          followingCount: followingData.total || 0
+        });
+        
         setFollowersCount(followersData.total || 0);
         setFollowingCount(followingData.total || 0);
         
         console.log('✅ FOLLOW STATS UPDATED:');
         console.log(`  User ${targetUserId} - Followers: ${followersData.total}, Following: ${followingData.total}`);
         console.log('  Follow State Version:', followStateVersion);
+        console.log('  State should now reflect these new values');
       } catch (error) {
         console.error('❌ ERROR loading follow stats:', error);
         // Don't show toast for follow stats errors to avoid spam
