@@ -16,6 +16,7 @@ export const FollowProvider = ({ children }) => {
   const [followingUsers, setFollowingUsers] = useState(new Map()); // userId -> isFollowing boolean
   const [userCache, setUserCache] = useState(new Map()); // username -> user object cache
   const [followStateVersion, setFollowStateVersion] = useState(0); // Version para forzar re-renders
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // Trigger adicional para forzar refreshes
 
   // Función para incrementar la versión cuando cambie el estado de seguimiento
   const incrementFollowStateVersion = useCallback(() => {
@@ -27,6 +28,8 @@ export const FollowProvider = ({ children }) => {
       console.log('  This should trigger useEffect in all ProfilePage instances');
       return newVersion;
     });
+    // También incrementar el refresh trigger para asegurar updates
+    setRefreshTrigger(prev => prev + 1);
   }, []); // Sin dependencias para evitar recreación
 
   const getUserByUsername = async (username) => {
