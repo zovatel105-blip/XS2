@@ -251,38 +251,14 @@ const ProfilePage = () => {
       
       if (isCurrentlyFollowing) {
         await unfollowUser(user.id);
-        // Si estamos viendo el perfil del usuario que acabamos de dejar de seguir, actualizar su contador
-        if (user.id === (viewedUser?.id || userId)) {
-          setFollowersCount(prev => Math.max(0, prev - 1));
-          
-          // Refrescar datos del servidor para sincronizar
-          try {
-            const followersData = await getUserFollowers(user.id);
-            setFollowersCount(followersData.total || 0);
-          } catch (refreshError) {
-            console.warn('Error refreshing followers count:', refreshError);
-          }
-        }
         toast({
           title: "Dejaste de seguir",
           description: `Ya no sigues a @${user.username}`,
         });
       } else {
         await followUser(user.id);
-        // Si estamos viendo el perfil del usuario que acabamos de seguir, actualizar su contador
-        if (user.id === (viewedUser?.id || userId)) {
-          setFollowersCount(prev => prev + 1);
-          
-          // Refrescar datos del servidor para sincronizar
-          try {
-            const followersData = await getUserFollowers(user.id);
-            setFollowersCount(followersData.total || 0);
-          } catch (refreshError) {
-            console.warn('Error refreshing followers count:', refreshError);
-          }
-        }
         toast({
-          title: "¡Ahora sigues!",
+          title: "Siguiendo",
           description: `Ahora sigues a @${user.username}`,
         });
       }
