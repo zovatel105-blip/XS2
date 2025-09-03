@@ -15,6 +15,12 @@ export const FollowProvider = ({ children }) => {
   const { apiRequest } = useAuth();
   const [followingUsers, setFollowingUsers] = useState(new Map()); // userId -> isFollowing boolean
   const [userCache, setUserCache] = useState(new Map()); // username -> user object cache
+  const [followStateVersion, setFollowStateVersion] = useState(0); // Version para forzar re-renders
+
+  // Función para incrementar la versión cuando cambie el estado de seguimiento
+  const incrementFollowStateVersion = useCallback(() => {
+    setFollowStateVersion(prev => prev + 1);
+  }, []);
 
   const getUserByUsername = async (username) => {
     try {
