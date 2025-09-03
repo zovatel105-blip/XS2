@@ -1744,7 +1744,8 @@ async def ensure_user_profile(user_id: str):
 @api_router.get("/user/profile/{user_id}")
 async def get_user_profile(user_id: str):
     """Get user profile by ID (public endpoint)"""
-    profile_data = await db.user_profiles.find_one({"id": user_id})
+    # Ensure profile exists and is up to date
+    profile_data = await ensure_user_profile(user_id)
     if not profile_data:
         raise HTTPException(status_code=404, detail="User not found")
     
@@ -1754,9 +1755,15 @@ async def get_user_profile(user_id: str):
 @api_router.get("/user/profile/by-username/{username}")
 async def get_user_profile_by_username(username: str):
     """Get user profile by username (public endpoint)"""
-    profile_data = await db.user_profiles.find_one({"username": username})
-    if not profile_data:
+    # First find user by username to get user_id
+    user_data = await db.users.find_one({"username": username})
+    if not user_data:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    # Ensure profile exists and is up to date
+    profile_data = await ensure_user_profile(user_data["id"])
+    if not profile_data:
+        raise HTTPException(status_code=404, detail="User profile not found")
     
     profile = UserProfile(**profile_data)
     return profile
