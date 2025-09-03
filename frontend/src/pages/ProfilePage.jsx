@@ -457,12 +457,13 @@ const ProfilePage = () => {
   };
 
   // Determine which user to display and calculate dynamic stats
-  const isOwnProfile = !userId || userId === authUser?.username;
+  const isOwnProfile = !userId || userId === authUser?.username || userId === authUser?.id;
   
   // Debug logging
   console.log('🔍 PROFILE DEBUG:', {
     userId,
     authUser: authUser?.username,
+    authUserId: authUser?.id,
     isOwnProfile,
     viewedUser: viewedUser?.username,
     loading
