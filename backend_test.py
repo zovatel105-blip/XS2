@@ -7077,7 +7077,7 @@ def main():
     
     # Print summary
     print("\n" + "=" * 60)
-    print("🎯 TESTING SUMMARY - VOTING SYNCHRONIZATION & POLLS MUSIC FOCUS")
+    print("🎯 TESTING SUMMARY - PROFILE & FOLLOW ENDPOINTS FOCUS (REVIEW REQUEST)")
     print("=" * 60)
     
     passed_tests = sum(1 for result in test_results.values() if result)
@@ -7089,10 +7089,29 @@ def main():
     
     print(f"\nOverall Result: {passed_tests}/{total_tests} tests passed")
     
+    # Special focus on profile and follow endpoints result (REVIEW REQUEST)
+    profile_follow_passed = test_results.get('🎯_profile_follow_endpoints', False)
+    if profile_follow_passed:
+        print("\n🎉 ✅ PROFILE & FOLLOW ENDPOINTS TEST PASSED: Real counters working correctly")
+        print("✅ Profile endpoints include followers_count and following_count fields")
+        print("✅ Follow/unfollow endpoints update counters properly")
+        print("✅ Complete flow test successful - no hardcoded data detected")
+        print("✅ GET /api/user/profile/{user_id} working with real data")
+        print("✅ GET /api/user/profile/by-username/{username} working with real data")
+        print("✅ POST /api/users/{user_id}/follow updates counters")
+        print("✅ DELETE /api/users/{user_id}/follow updates counters")
+        print("✅ GET /api/users/{user_id}/followers returns real data")
+        print("✅ GET /api/users/{user_id}/following returns real data")
+    else:
+        print("\n❌ ⚠️ PROFILE & FOLLOW ENDPOINTS TEST FAILED: Issues detected")
+        print("❌ Profile endpoints may not include required counter fields")
+        print("❌ Follow/unfollow endpoints may not update counters correctly")
+        print("❌ Hardcoded data may still be present")
+    
     # Special focus on voting synchronization result
     voting_sync_passed = test_results.get('🎯_voting_synchronization', False)
     if voting_sync_passed:
-        print("\n🎉 ✅ VOTING SYNCHRONIZATION TEST PASSED: Vote sync between pages working correctly")
+        print("\n✅ VOTING SYNCHRONIZATION TEST PASSED: Vote sync between pages working correctly")
         print("✅ Votes made in FeedPage will appear correctly in AudioDetailPage")
         print("✅ Like and share states are properly synchronized")
     else:
