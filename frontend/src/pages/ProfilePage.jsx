@@ -993,6 +993,15 @@ const ProfilePage = () => {
                     if (isFollowing(targetUserId)) {
                       await unfollowUser(targetUserId);
                       setFollowersCount(prev => Math.max(0, prev - 1)); // Actualizar contador
+                      
+                      // Refrescar datos del servidor para sincronizar
+                      try {
+                        const followersData = await getUserFollowers(targetUserId);
+                        setFollowersCount(followersData.total || 0);
+                      } catch (refreshError) {
+                        console.warn('Error refreshing followers count:', refreshError);
+                      }
+                      
                       toast({
                         title: "Dejaste de seguir",
                         description: `Ya no sigues a @${viewedUser?.username || userId}`,
@@ -1000,6 +1009,15 @@ const ProfilePage = () => {
                     } else {
                       await followUser(targetUserId);
                       setFollowersCount(prev => prev + 1); // Actualizar contador
+                      
+                      // Refrescar datos del servidor para sincronizar
+                      try {
+                        const followersData = await getUserFollowers(targetUserId);
+                        setFollowersCount(followersData.total || 0);
+                      } catch (refreshError) {
+                        console.warn('Error refreshing followers count:', refreshError);
+                      }
+                      
                       toast({
                         title: "Siguiendo",
                         description: `Ahora sigues a @${viewedUser?.username || userId}`,
