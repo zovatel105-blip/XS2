@@ -170,7 +170,7 @@ const ProfilePage = () => {
     };
 
     loadFollowStats();
-  }, [authUser?.id, userId, getUserFollowers, getUserFollowing, followStateVersion]);
+  }, [authUser?.id, userId, getUserFollowers, getUserFollowing, followStateVersion, refreshTrigger]);
 
   // Load followers list when tab is activated
   const loadFollowersList = async () => {
