@@ -1317,12 +1317,14 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Edit Profile Modal */}
-      <EditProfileModal
-        isOpen={editProfileModalOpen}
-        onClose={() => setEditProfileModalOpen(false)}
-        onUpdate={handleProfileUpdate}
-      />
+      {/* Edit Profile Modal - Solo para perfil propio */}
+      {isOwnProfile && (
+        <EditProfileModal
+          isOpen={editProfileModalOpen}
+          onClose={() => setEditProfileModalOpen(false)}
+          onUpdate={handleProfileUpdate}
+        />
+      )}
 
       {/* Comments Modal */}
       <CommentsModal
@@ -1339,25 +1341,6 @@ const ProfilePage = () => {
         onClose={closeShareModal}
         content={shareModal.content}
       />
-
-      {/* Edit Profile Modal */}
-      <EditProfileModal
-        isOpen={editProfileModalOpen}
-        onClose={() => setEditProfileModalOpen(false)}
-        onUpdate={handleProfileUpdate}
-      />
-
-      {/* Comments Modal */}
-      <CommentsModal
-        isOpen={showCommentsModal}
-        onClose={() => setShowCommentsModal(false)}
-        pollId={selectedPollId}
-        pollTitle={selectedPollTitle}
-        pollAuthor={selectedPollAuthor}
-      />
-
-      {/* Share Modal */}
-      <ShareModal {...shareModal} onClose={closeShareModal} />
         </div>
       )}
     </>
