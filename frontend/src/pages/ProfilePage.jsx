@@ -240,14 +240,24 @@ const ProfilePage = () => {
   // Handle follow/unfollow actions
   const handleFollowToggle = async (user) => {
     try {
-      if (isFollowing(user.id)) {
+      const isCurrentlyFollowing = isFollowing(user.id);
+      
+      if (isCurrentlyFollowing) {
         await unfollowUser(user.id);
+        // Si estamos viendo el perfil del usuario que acabamos de dejar de seguir, actualizar su contador
+        if (user.id === (viewedUser?.id || userId)) {
+          setFollowersCount(prev => Math.max(0, prev - 1));
+        }
         toast({
           title: "Dejaste de seguir",
           description: `Ya no sigues a @${user.username}`,
         });
       } else {
         await followUser(user.id);
+        // Si estamos viendo el perfil del usuario que acabamos de seguir, actualizar su contador
+        if (user.id === (viewedUser?.id || userId)) {
+          setFollowersCount(prev => prev + 1);
+        }
         toast({
           title: "¡Ahora sigues!",
           description: `Ahora sigues a @${user.username}`,
@@ -261,10 +271,10 @@ const ProfilePage = () => {
         await loadFollowingList();
       }
     } catch (error) {
-      console.error('Error toggling follow:', error);
+      console.error('Error toggling follow status:', error);
       toast({
         title: "Error",
-        description: "No se pudo actualizar el seguimiento",
+        description: "No se pudo actualizar el estado de seguimiento",
         variant: "destructive",
       });
     }
