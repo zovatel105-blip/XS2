@@ -898,9 +898,9 @@ const ProfilePage = () => {
         {/* BIOGRAFÍA EXPANDIDA */}
         <div className="bg-white rounded-none sm:rounded-lg p-2 sm:p-4 shadow-sm mx-0">
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-2">
-            {displayUser.bio || "🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando"}
+            {displayUser?.bio || "🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando"}
           </p>
-          <p className="text-sm sm:text-base text-blue-600 font-medium">@{displayUser.username}</p>
+          <p className="text-sm sm:text-base text-blue-600 font-medium">@{displayUser?.username || 'usuario'}</p>
         </div>
 
         {/* BOTONES DE ACCIÓN EXPANDIDOS - USO COMPLETO DEL ANCHO */}
