@@ -73,6 +73,8 @@ export const FollowProvider = ({ children }) => {
           newMap.set(originalKey, true);  // Set with original key (username)
           return newMap;
         });
+        // Incrementar versión para forzar re-renders globales
+        incrementFollowStateVersion();
         return { success: true, message: response.message };
       }
     } catch (error) {
