@@ -413,42 +413,47 @@
 ✅ **RESULTADO FINAL:**
 🎯 **AUDIO COMPLETAMENTE FUNCIONAL CON MÚLTIPLES POSTS** - Los usuarios ahora pueden disfrutar de audio continuo y correcto, incluso cuando múltiples publicaciones usan la misma canción. El sistema AudioManager distingue inteligentemente entre posts individuales y reproduce audio de manera consistente sin importar cuántas publicaciones compartan la misma pista musical.
 
-**🚨 PROBLEMA CRÍTICO RACE CONDITION RESUELTO COMPLETAMENTE (2025-01-27): Eliminada lógica duplicada que causaba conflictos en actualización de contadores de seguidores - troubleshoot_agent identificó causa raíz exacta.**
+**🔧 CORRECCIONES ADICIONALES IMPLEMENTADAS - DEBUGGING DETALLADO (2025-01-27): Agregadas múltiples correcciones y logging exhaustivo para identificar problema persistente en actualización de contadores.**
 
-✅ **INVESTIGACIÓN PROFUNDA COMPLETADA:**
-- troubleshoot_agent realizó investigación formal de 10 pasos después de que la solución inicial no funcionara
-- Usuario reportó con captura de pantalla que contadores seguían en 0 pese a mostrar "Siguiendo"
-- Problema confirmado como RACE CONDITION entre dos sistemas de actualización
+✅ **CORRECCIONES TÉCNICAS ADICIONALES:**
 
-✅ **CAUSA RAÍZ IDENTIFICADA - RACE CONDITION:**
-1. **Lógica Duplicada**: Dos sistemas tratando de actualizar contadores simultáneamente
-   - Sistema Manual: `setFollowersCount()` directo en handlers de follow/unfollow
-   - Sistema followStateVersion: useEffect que se activa cuando cambia followStateVersion
-2. **Competencia de Estado**: Ambos sistemas estaban COMPITIENDO y cancelándose entre sí
-3. **API Calls Redundantes**: Múltiples llamadas al backend creando conflictos de timing
-4. **Updates Manuales**: Líneas 256, 274, 994, 1010 con setFollowersCount manual
+**FOLLOWCONTEXT.JS - FIXES CRÍTICOS:**
+1. ✅ **useCallback Dependencies**: Corregido incrementFollowStateVersion() con dependencias vacías [] para evitar recreación
+2. ✅ **Function Stability**: getUserFollowers() y getUserFollowing() wrapeadas en useCallback con [apiRequest] 
+3. ✅ **Double Trigger System**: Agregado refreshTrigger adicional que se incremental junto con followStateVersion
+4. ✅ **Logging Exhaustivo**: Agregado logging detallado en follow/unfollow success para trackear exactamente cuándo se llama incrementFollowStateVersion
 
-✅ **SOLUCIÓN COMPLETA IMPLEMENTADA:**
+**PROFILEPAGE.JSX - DEPENDENCIES MEJORADAS:**
+1. ✅ **Dual Triggers**: useEffect ahora incluye tanto followStateVersion como refreshTrigger en dependencies
+2. ✅ **Function References**: getUserFollowers y getUserFollowing ahora son estables (useCallback) por lo que no causan re-renders innecesarios
+3. ✅ **Comprehensive Logging**: Logging detallado mantiene tracking de cuando se ejecuta useEffect
 
-**PROFILEPAGE.JSX LIMPIADO (/app/frontend/src/pages/ProfilePage.jsx):**
-1. ✅ **Eliminada Lógica Manual**: Removidas TODAS las llamadas manuales a `setFollowersCount(prev => ...)`
-2. ✅ **Eliminadas Llamadas Redundantes**: Removidas llamadas manuales a `getUserFollowers()` en handlers
-3. ✅ **Simplificado handleFollowToggle**: Solo mantiene follow/unfollow + toast notifications
-4. ✅ **Eliminado Race Condition**: Solo el sistema followStateVersion maneja actualizaciones
+✅ **DEBUGGING IMPLEMENTADO:**
 
-**FOLLOWCONTEXT.JS MEJORADO (/app/frontend/src/contexts/FollowContext.js):**
-1. ✅ **Logging Detallado**: Agregado logging completo en `incrementFollowStateVersion()`
-2. ✅ **Version Tracking**: Console logs muestran versión anterior, nueva versión, y trigger confirmation
-3. ✅ **Debug Information**: Mensajes confirman que debe activar useEffect en ProfilePage instances
+**LOGS ESPERADOS EN CONSOLA:**
+```
+✅ FOLLOW USER SUCCESS - ABOUT TO INCREMENT VERSION
+  User followed: [user-id]
+  Response message: [success message]
+🔄 CALLING incrementFollowStateVersion for FOLLOW
+🔄 INCREMENTING FOLLOW STATE VERSION  
+  Previous version: X
+  New version: X+1
+  This should trigger useEffect in all ProfilePage instances
+🔄 LOADING FOLLOW STATS:
+  User ID: [profile-user-id]
+  Follow State Version: X+1
+  Triggered by global follow state change
+```
 
-✅ **CAMBIOS TÉCNICOS ESPECÍFICOS:**
-- **Líneas 252-283**: Simplificado handleFollowToggle principal eliminando lógica manual
-- **Líneas 991-1024**: Simplificado botón follow del perfil eliminando updates manuales  
-- **FollowContext**: incrementFollowStateVersion() ahora incluye logging detallado para debugging
-- **Sistema Unificado**: SOLO followStateVersion + useEffect maneja actualizaciones ahora
+✅ **ESTRATEGIA DE VERIFICACIÓN:**
+1. **Abrir consola del navegador**
+2. **Realizar follow/unfollow**  
+3. **Verificar secuencia completa de logs**
+4. **Confirmar que useEffect se ejecuta con nueva versión**
+5. **Verificar que API calls se realizan y contadores se actualizan**
 
-✅ **RESULTADO ESPERADO:**
-🎯 **SISTEMA UNIFICADO IMPLEMENTADO** - Eliminado completamente el race condition. Ahora solo hay UN sistema responsable de actualizar contadores: el useEffect con dependencia followStateVersion. Cuando se hace follow/unfollow, incrementFollowStateVersion() se ejecuta, el useEffect detecta el cambio, y actualiza contadores automáticamente. Sin competencia, sin conflictos, sin timing issues.
+Si los logs aparecen pero los contadores no se actualizan, el problema está en el backend o en la lógica de actualización de estado. Si los logs no aparecen, hay un problema en el frontend con las referencias de funciones o el context.
 
 user_problem_statement: 🎯 PROBLEMA CRÍTICO "USUARIO NO ENCONTRADO" CORREGIDO COMPLETAMENTE (2025-01-27): Cuando el usuario hace clic en perfiles desde el feed, ya no aparece "usuario no encontrado" - navegación de perfiles completamente funcional.
 
