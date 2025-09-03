@@ -76,6 +76,10 @@ export const FollowProvider = ({ children }) => {
       });
       
       if (response.message) {
+        console.log('✅ FOLLOW USER SUCCESS - ABOUT TO INCREMENT VERSION');
+        console.log('  User followed:', userId);
+        console.log('  Response message:', response.message);
+        
         // Update local state with both keys to ensure compatibility
         setFollowingUsers(prev => {
           const newMap = new Map(prev);
@@ -84,6 +88,7 @@ export const FollowProvider = ({ children }) => {
           return newMap;
         });
         // Incrementar versión para forzar re-renders globales
+        console.log('🔄 CALLING incrementFollowStateVersion for FOLLOW');
         incrementFollowStateVersion();
         return { success: true, message: response.message };
       }
