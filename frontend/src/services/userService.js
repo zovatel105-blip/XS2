@@ -152,8 +152,21 @@ class UserService {
   }
 
   // Get followers of a user
-  async getUserFollowers(userId) {
+  async getUserFollowers(userIdOrUsername) {
     try {
+      let userId = userIdOrUsername;
+      
+      // If it looks like a username (no UUID format), resolve it to ID via search
+      if (!userIdOrUsername.includes('-') && userIdOrUsername.length > 5) {
+        const searchResult = await this.searchUsers(userIdOrUsername);
+        const user = searchResult.find(u => u.username === userIdOrUsername);
+        if (user) {
+          userId = user.id;
+        } else {
+          throw new Error('Usuario no encontrado');
+        }
+      }
+      
       const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOWERS(userId), {
         method: 'GET',
         headers: this.getAuthHeaders(),
@@ -161,7 +174,7 @@ class UserService {
 
       return await this.handleResponse(response);
     } catch (error) {
-      console.error(`Error getting followers for ${userId}:`, error);
+      console.error(`Error getting followers for ${userIdOrUsername}:`, error);
       throw error;
     }
   }
