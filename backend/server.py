@@ -590,12 +590,23 @@ async def get_music_info(music_id: str):
             return None
     
     # Check if this is a user audio ID (format: user_audio_XXXXX)
+    user_audio_id = None
+    
     if music_id.startswith('user_audio_'):
+        # New format with prefix - extract UUID
+        user_audio_id = music_id.replace('user_audio_', '')
+        print(f"🎵 Fetching user audio info for prefixed ID: {user_audio_id}")
+    else:
+        # Check if this looks like a UUID (backward compatibility)
+        # UUID format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (36 chars with 4 hyphens)
+        import re
+        uuid_pattern = r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        if re.match(uuid_pattern, music_id):
+            user_audio_id = music_id
+            print(f"🔄 Detected bare UUID (backward compatibility): {user_audio_id}")
+    
+    if user_audio_id:
         try:
-            # Extract user audio UUID
-            user_audio_id = music_id.replace('user_audio_', '')
-            print(f"🎵 Fetching user audio info for ID: {user_audio_id}")
-            
             # Query the user_audio collection
             user_audio = await db.user_audio.find_one({"id": user_audio_id})
             print(f"🔍 Database query result: {user_audio is not None}")
@@ -603,7 +614,7 @@ async def get_music_info(music_id: str):
             if user_audio:
                 print(f"📝 Found user audio: {user_audio.get('title')} by {user_audio.get('artist')}")
                 music_info = {
-                    'id': music_id,
+                    'id': music_id,  # Keep original ID for consistency
                     'title': user_audio.get('title'),
                     'artist': user_audio.get('artist'),
                     'duration': user_audio.get('duration', 0),
