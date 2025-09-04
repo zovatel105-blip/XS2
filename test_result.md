@@ -504,6 +504,7 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 - **ESPECÍFICAMENTE**: Funciones `getUserFollowers()` y `getUserFollowing()` en FollowContext.js y userService.js
 - **ENDPOINTS AFECTADOS**: `/api/users/{user_id}/followers`, `/api/users/{user_id}/following`, `/api/users/{user_id}/follow`, `/api/users/{user_id}/follow-status`
 - **ERROR RESULTANTE**: Backend no podía encontrar usuarios porque buscaba UUIDs con valores de usernames
+- **PROBLEMA ADICIONAL**: Inconsistencia entre contador de modal (total backend) vs lista real mostrada
 
 ✅ **SOLUCIÓN COMPLETA IMPLEMENTADA:**
 
@@ -518,6 +519,11 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 4. ✅ **getUserFollowers**: Conversión automática username→UUID, API calls usando UUIDs correctos
 5. ✅ **getUserFollowing**: Sistema completo de resolución implementado
 
+**PROFILEPAGE.JSX CORREGIDO:**
+1. ✅ **Modal Seguidores**: Cambiado `{followersCount} Seguidores` → `{followersList.length} Seguidores` para consistencia real
+2. ✅ **Modal Siguiendo**: Cambiado `{followingCount} Siguiendo` → `{followingList.length} Siguiendo` para consistencia real
+3. ✅ **Sincronización**: Contadores de modales ahora reflejan exactamente la cantidad real de usuarios mostrados
+
 ✅ **LÓGICA DE DETECCIÓN IMPLEMENTADA:**
 - **Detection Rule**: `!input.includes('-') && input.length > 5` identifica usernames
 - **Resolution**: Username → Search API → Find user → Extract UUID → Use UUID in endpoint
@@ -526,13 +532,14 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 
 ✅ **FUNCIONALIDADES CORREGIDAS:**
 - ✅ Modales de seguidores/siguiendo ahora cargan correctamente cuando se pasa username
+- ✅ **CONTADOR REAL**: Modales muestran cantidad exacta de usuarios en la lista (no contador backend)
 - ✅ Sistema de seguir/no seguir funciona con usernames y UUIDs
 - ✅ Estado de seguimiento se resuelve correctamente independiente del formato de entrada
 - ✅ Navegación de perfiles desde menciones, avatares, usernames funciona sin errores
 - ✅ Consistencia completa entre todas las funciones de user management
 
 ✅ **RESULTADO FINAL:**
-🎯 **DISCREPANCIA USERNAME/UUID COMPLETAMENTE ELIMINADA** - El sistema ahora maneja inteligentemente tanto usernames como UUIDs en todas las operaciones de usuario. Los endpoints backend reciben siempre UUIDs válidos independientemente de si el frontend origina la llamada con username o UUID. Compatibilidad total mantenida sin necesidad de cambios en componentes que llaman estas funciones.
+🎯 **DISCREPANCIA USERNAME/UUID COMPLETAMENTE ELIMINADA** - El sistema ahora maneja inteligentemente tanto usernames como UUIDs en todas las operaciones de usuario. Los endpoints backend reciben siempre UUIDs válidos independientemente de si el frontend origina la llamada con username o UUID. **CONTADOR DE MODALES CORREGIDO**: Los modales ahora muestran la cantidad real de usuarios en la lista, eliminando inconsistencias entre total backend vs datos mostrados. Compatibilidad total mantenida sin necesidad de cambios en componentes que llaman estas funciones.
 
 user_problem_statement: 🎯 PROBLEMA CRÍTICO USERNAME/UUID DISCREPANCIA COMPLETAMENTE RESUELTO (2025-01-27): Frontend pasando usernames a endpoints que esperan UUIDs - discrepancia identificada y corregida exitosamente.
 
