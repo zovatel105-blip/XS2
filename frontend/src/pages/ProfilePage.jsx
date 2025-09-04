@@ -762,10 +762,21 @@ const ProfilePage = () => {
               </Button>
             </div>
             
-            {/* Ícono de configuración (derecha) */}
-            <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]" onClick={handleSettingsClick}>
-              <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Button>
+            {/* Botón dinámico (derecha) - Ajustes para perfil propio, Compartir para perfil ajeno */}
+            {isOwnProfile ? (
+              <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]" onClick={handleSettingsClick}>
+                <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
+              </Button>
+            ) : (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]" 
+                onClick={() => shareProfile(displayUser)}
+              >
+                <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
+              </Button>
+            )}
           </div>
         </div>
       </header>
