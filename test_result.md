@@ -592,6 +592,30 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 ✅ **RESULTADO FINAL:**
 🎯 **DISCREPANCIA USERNAME/UUID COMPLETAMENTE ELIMINADA** - El sistema ahora maneja inteligentemente tanto usernames como UUIDs en todas las operaciones de usuario. Los endpoints backend reciben siempre UUIDs válidos independientemente de si el frontend origina la llamada con username o UUID. **CONTADOR DE MODALES CORREGIDO**: Los modales ahora muestran la cantidad real de usuarios en la lista, eliminando inconsistencias entre total backend vs datos mostrados. Compatibilidad total mantenida sin necesidad de cambios en componentes que llaman estas funciones.
 
+backend:
+  - task: "Compatibilidad Hacia Atrás UUID Audio"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "✅ COMPATIBILIDAD UUID AUDIO COMPLETAMENTE IMPLEMENTADA (2025-01-27): PROBLEMA: Las publicaciones del usuario fueron creadas con music_id igual al UUID del audio (sin prefijo 'user_audio_'), pero función actualizada espera prefijo. SOLUCIÓN IMPLEMENTADA: 1) ✅ FUNCIÓN get_music_info() MEJORADA: Agregada detección automática de UUID con regex pattern, soporte para formato antiguo (UUID directo) y nuevo (user_audio_UUID), mantiene ID original para consistencia. 2) ✅ ENDPOINTS DE BÚSQUEDA MEJORADOS: Estrategia 2.5 - búsqueda con UUID sin prefijo cuando viene con prefijo, Estrategia 2.6 - búsqueda con UUID con prefijo cuando viene sin prefijo, compatibilidad bidireccional completa. 3) ✅ LOGGING DETALLADO: Mensajes específicos de compatibilidad, debugging robusto para identificar problemas futuros. RESULTADO: Sistema completamente compatible - posts antiguos (UUID directo) y nuevos (UUID con prefijo) funcionan perfectamente sin importar el formato de entrada."
+
+  - task: "Sistema de Subida de Audios"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, FFmpeg instalación"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "✅ SISTEMA DE SUBIDA DE AUDIOS COMPLETAMENTE OPERACIONAL (2025-01-27): PROBLEMA: Usuario reportaba que no podía subir sus audios al sistema. CAUSA RAÍZ IDENTIFICADA: FFmpeg no estaba instalado en el sistema, causando que el procesamiento de audio fallara. SOLUCIÓN IMPLEMENTADA: 1) ✅ INSTALACIÓN DE FFMPEG: Ejecutado 'apt install ffmpeg' exitosamente, verificada versión 5.1.7 funcionando correctamente, eliminados warnings de FFmpeg en logs del backend. 2) ✅ VERIFICACIÓN DEL SISTEMA: Endpoint POST /api/audio/upload completamente funcional, directorio /app/backend/uploads/audio/ con permisos correctos, procesamiento de audio con FFmpeg operacional. 3) ✅ COMPONENTES VERIFICADOS: Frontend MusicSelector.jsx con lógica de upload correcta, validaciones de tipo y tamaño de archivo funcionando, manejo de errores y autenticación implementado. RESULTADO: Los usuarios ahora pueden subir archivos de audio (MP3, M4A, WAV, AAC) exitosamente. El sistema procesa, optimiza y almacena los audios correctamente."
 user_problem_statement: 🎯 PROBLEMA CRÍTICO COMPATIBILIDAD UUID AUDIO Y SUBIDA DE AUDIOS RESUELTO (2025-01-27): 
 
 1. **COMPATIBILIDAD UUID AUDIO**: Las publicaciones fueron creadas con music_id igual al UUID del audio (sin prefijo "user_audio_"), pero función actualizada espera prefijo. SOLUCIONADO: Agregado soporte para UUID de user audio con y sin prefijo.
