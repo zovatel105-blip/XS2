@@ -969,7 +969,7 @@ const ProfilePage = () => {
               </Button>
             </>
           ) : (
-            // Botones para perfil ajeno
+            // Botones para perfil ajeno - Solo Seguir y Mensaje
             <>
               <Button 
                 variant="outline" 
@@ -1009,13 +1009,8 @@ const ProfilePage = () => {
               >
                 Mensaje
               </Button>
-              <Button 
-                variant="outline"
-                className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-gray-100 hover:bg-gray-200 border-gray-300 min-h-[48px] active:scale-95 transition-transform"
-                onClick={() => shareProfile(viewedUser || { username: userId })}
-              >
-                Compartir
-              </Button>
+              {/* Tercer espacio vacío para mantener grid de 3 columnas */}
+              <div></div>
             </>
           )}
         </div>
