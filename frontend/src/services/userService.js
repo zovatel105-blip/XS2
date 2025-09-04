@@ -96,8 +96,21 @@ class UserService {
   }
 
   // Follow a user
-  async followUser(userId) {
+  async followUser(userIdOrUsername) {
     try {
+      let userId = userIdOrUsername;
+      
+      // If it looks like a username (no UUID format), resolve it to ID via search
+      if (!userIdOrUsername.includes('-') && userIdOrUsername.length > 5) {
+        const searchResult = await this.searchUsers(userIdOrUsername);
+        const user = searchResult.find(u => u.username === userIdOrUsername);
+        if (user) {
+          userId = user.id;
+        } else {
+          throw new Error('Usuario no encontrado');
+        }
+      }
+      
       const response = await fetch(config.API_ENDPOINTS.USERS.FOLLOW(userId), {
         method: 'POST',
         headers: this.getAuthHeaders(),
@@ -105,7 +118,7 @@ class UserService {
 
       return await this.handleResponse(response);
     } catch (error) {
-      console.error(`Error following user ${userId}:`, error);
+      console.error(`Error following user ${userIdOrUsername}:`, error);
       throw error;
     }
   }
