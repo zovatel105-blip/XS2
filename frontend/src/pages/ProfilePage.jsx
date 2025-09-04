@@ -1240,7 +1240,7 @@ const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <UserCheck className="w-6 h-6 text-green-600" />
                 <h2 className="text-xl font-bold text-gray-900">
-                  {followingCount} Siguiendo
+                  {followingList.length} Siguiendo
                 </h2>
               </div>
               <Button
