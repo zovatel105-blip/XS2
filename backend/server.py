@@ -3981,6 +3981,37 @@ async def get_posts_using_audio(
             if poll["id"] not in existing_ids:
                 all_polls.append(poll)
         
+        # Estrategia 2.5: BACKWARD COMPATIBILITY - Si audio_id tiene prefijo "user_audio_", también buscar sin prefijo
+        if audio_id.startswith('user_audio_'):
+            import re
+            bare_uuid = audio_id.replace('user_audio_', '')
+            uuid_pattern = r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+            
+            if re.match(uuid_pattern, bare_uuid):
+                logger.info(f"🔄 COMPATIBILIDAD: Buscando posts con UUID sin prefijo = {bare_uuid}")
+                
+                # Buscar por music_id directo sin prefijo (posts antiguos)
+                backward_filter = {"music_id": bare_uuid}
+                backward_polls = await db.polls.find(backward_filter).to_list(1000)
+                logger.info(f"📊 Posts encontrados por UUID sin prefijo: {len(backward_polls)}")
+                
+                # Evitar duplicados
+                for poll in backward_polls:
+                    if poll["id"] not in existing_ids:
+                        all_polls.append(poll)
+                        existing_ids.add(poll["id"])
+                
+                # También buscar en music.id embebido sin prefijo
+                backward_nested_filter = {"music.id": bare_uuid}
+                backward_nested_polls = await db.polls.find(backward_nested_filter).to_list(1000)
+                logger.info(f"📊 Posts encontrados por music.id sin prefijo: {len(backward_nested_polls)}")
+                
+                # Evitar duplicados
+                for poll in backward_nested_polls:
+                    if poll["id"] not in existing_ids:
+                        all_polls.append(poll)
+                        existing_ids.add(poll["id"])
+        
         # Estrategia 3: Para audio de usuario, buscar en user_audio_use
         if audio_source == "user_audio":
             logger.info(f"🔍 Buscando en user_audio_use para audio de usuario: {audio_id}")
