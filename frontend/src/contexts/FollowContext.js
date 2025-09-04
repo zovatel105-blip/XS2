@@ -188,11 +188,30 @@ export const FollowProvider = ({ children }) => {
     }
   };
 
-  const getUserFollowers = useCallback(async (userId) => {
+  const getUserFollowers = useCallback(async (userIdOrUsername) => {
     try {
+      let userId = userIdOrUsername;
+      let originalKey = userIdOrUsername;
+      
+      // If it looks like a username (no UUID format), try to resolve it to ID
+      if (!userIdOrUsername.includes('-') && userIdOrUsername.length > 5) {
+        console.log('🔍 RESOLVING USERNAME TO UUID: getUserFollowers');
+        console.log('  Original input (username):', userIdOrUsername);
+        
+        const user = await getUserByUsername(userIdOrUsername);
+        if (user) {
+          userId = user.id;
+          console.log('  Resolved UUID:', userId);
+        } else {
+          console.error('❌ USERNAME NOT FOUND:', userIdOrUsername);
+          return { followers: [], total: 0 };
+        }
+      }
+      
       console.log('🌐 API CALL: getUserFollowers');
       console.log('  Endpoint:', `/api/users/${userId}/followers`);
-      console.log('  User ID:', userId);
+      console.log('  User ID (UUID):', userId);
+      console.log('  Original input:', originalKey);
       
       const response = await apiRequest(`/api/users/${userId}/followers`);
       
@@ -204,7 +223,7 @@ export const FollowProvider = ({ children }) => {
       return response;
     } catch (error) {
       console.error('❌ API ERROR: getUserFollowers:', error);
-      console.error('  User ID:', userId);
+      console.error('  Original input:', userIdOrUsername);
       console.error('  Error details:', error.message);
       return { followers: [], total: 0 };
     }
