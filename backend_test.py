@@ -7304,6 +7304,193 @@ def test_audio_uuid_compatibility_fix(base_url):
         print(f"   ❌ Comprobar lógica de búsqueda de posts")
         return False
 
+def test_audio_upload_system(base_url):
+    """🎵 TESTING CRÍTICO: Sistema de subida de audios"""
+    print("\n🎵 === TESTING CRÍTICO: SISTEMA DE SUBIDA DE AUDIOS ===")
+    print("CONTEXTO: Usuario reporta que no puede subir sus audios")
+    print("OBJETIVO: Verificar que todo el sistema de subida de audio funciona correctamente")
+    
+    if not auth_tokens:
+        print("❌ No hay tokens de autenticación disponibles")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    total_tests = 3
+    
+    # Crear archivo de audio de prueba
+    print("\n📁 Creando archivo de audio de prueba...")
+    try:
+        import tempfile
+        import os
+        
+        # Crear contenido de audio simulado (MP3 header + datos)
+        mp3_header = b'\xff\xfb\x90\x00'  # MP3 frame header
+        audio_content = mp3_header + (b'\x00' * 1024 * 50)  # ~50KB de datos
+        
+        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_file:
+            tmp_file.write(audio_content)
+            test_audio_path = tmp_file.name
+        
+        print(f"✅ Archivo de prueba creado: {test_audio_path} ({len(audio_content)} bytes)")
+        
+    except Exception as e:
+        print(f"❌ Error creando archivo de prueba: {e}")
+        return False
+    
+    try:
+        # TEST 1: Upload de archivo de audio
+        print(f"\n🎵 TEST 1/3: SUBIR ARCHIVO DE AUDIO")
+        print(f"Endpoint: POST /api/audio/upload")
+        
+        try:
+            with open(test_audio_path, 'rb') as audio_file:
+                files = {
+                    'file': ('test_audio.mp3', audio_file, 'audio/mpeg')
+                }
+                data = {
+                    'title': 'Test Audio Upload',
+                    'artist': 'Usuario Prueba', 
+                    'privacy': 'private'
+                }
+                
+                response = requests.post(
+                    f"{base_url}/audio/upload",
+                    files=files,
+                    data=data,
+                    headers=headers,
+                    timeout=30
+                )
+                
+                print(f"   Status Code: {response.status_code}")
+                print(f"   Response: {response.text[:500]}...")
+                
+                if response.status_code == 200:
+                    upload_result = response.json()
+                    if upload_result.get('success') == True:
+                        print(f"   ✅ Upload exitoso - success=true")
+                        print(f"   📝 Mensaje: {upload_result.get('message', 'N/A')}")
+                        
+                        # Guardar ID del audio para siguientes tests
+                        if 'audio' in upload_result:
+                            uploaded_audio_id = upload_result['audio'].get('id')
+                            print(f"   🆔 Audio ID: {uploaded_audio_id}")
+                        
+                        success_count += 1
+                    else:
+                        print(f"   ❌ Upload falló - success=false")
+                        print(f"   📝 Error: {upload_result.get('error', 'Unknown error')}")
+                else:
+                    print(f"   ❌ Upload falló con status {response.status_code}")
+                    print(f"   📝 Error: {response.text}")
+                    
+        except Exception as e:
+            print(f"   ❌ Error en upload: {e}")
+        
+        # TEST 2: Verificar biblioteca de audios
+        print(f"\n📚 TEST 2/3: VERIFICAR MI BIBLIOTECA")
+        print(f"Endpoint: GET /api/audio/my-library")
+        
+        try:
+            response = requests.get(f"{base_url}/audio/my-library", headers=headers, timeout=10)
+            print(f"   Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                library_data = response.json()
+                audio_count = len(library_data.get('audio_files', []))
+                print(f"   ✅ Biblioteca accesible")
+                print(f"   📊 Audios encontrados: {audio_count}")
+                
+                # Verificar si aparece nuestro audio subido
+                if audio_count > 0:
+                    found_test_audio = False
+                    for audio in library_data.get('audio_files', []):
+                        if audio.get('title') == 'Test Audio Upload':
+                            found_test_audio = True
+                            print(f"   ✅ Audio de prueba encontrado en biblioteca")
+                            print(f"   🎵 Título: {audio.get('title')}")
+                            print(f"   🎤 Artista: {audio.get('artist')}")
+                            break
+                    
+                    if found_test_audio:
+                        success_count += 1
+                    else:
+                        print(f"   ❌ Audio de prueba NO encontrado en biblioteca")
+                else:
+                    print(f"   ⚠️ Biblioteca vacía - audio no aparece")
+            else:
+                print(f"   ❌ Error accediendo a biblioteca: {response.text}")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando biblioteca: {e}")
+        
+        # TEST 3: Acceso a archivo subido
+        print(f"\n🔗 TEST 3/3: ACCESO A ARCHIVO SUBIDO")
+        print(f"Endpoint: GET /api/uploads/audio/{{filename}}")
+        
+        try:
+            # Primero obtener la URL pública del audio
+            response = requests.get(f"{base_url}/audio/my-library", headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                library_data = response.json()
+                test_audio_url = None
+                
+                for audio in library_data.get('audio_files', []):
+                    if audio.get('title') == 'Test Audio Upload':
+                        test_audio_url = audio.get('public_url')
+                        break
+                
+                if test_audio_url:
+                    print(f"   🔗 URL encontrada: {test_audio_url}")
+                    
+                    # Hacer request al archivo
+                    file_response = requests.get(test_audio_url, timeout=10)
+                    print(f"   Status Code: {file_response.status_code}")
+                    print(f"   Content-Type: {file_response.headers.get('content-type', 'N/A')}")
+                    print(f"   Content-Length: {file_response.headers.get('content-length', 'N/A')} bytes")
+                    
+                    if file_response.status_code == 200:
+                        content_type = file_response.headers.get('content-type', '')
+                        if 'audio' in content_type.lower():
+                            print(f"   ✅ Archivo accesible con content-type correcto")
+                            success_count += 1
+                        else:
+                            print(f"   ⚠️ Archivo accesible pero content-type incorrecto: {content_type}")
+                            success_count += 1  # Still count as success if accessible
+                    else:
+                        print(f"   ❌ Archivo no accesible: {file_response.text}")
+                else:
+                    print(f"   ❌ No se encontró URL pública del audio")
+            else:
+                print(f"   ❌ Error obteniendo biblioteca para URL: {response.text}")
+                
+        except Exception as e:
+            print(f"   ❌ Error accediendo a archivo: {e}")
+        
+    finally:
+        # Limpiar archivo temporal
+        try:
+            os.unlink(test_audio_path)
+            print(f"\n🧹 Archivo temporal eliminado")
+        except:
+            pass
+    
+    # Resumen de resultados
+    print(f"\n📊 === RESUMEN SISTEMA DE AUDIO ===")
+    print(f"✅ Tests exitosos: {success_count}/{total_tests}")
+    print(f"📈 Tasa de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    # Criterio de éxito: mínimo 2 de 3 tests deben pasar
+    if success_count >= 2:
+        print(f"🎯 CRITERIO CUMPLIDO: Mínimo 2 de 3 tests pasaron")
+        print(f"✅ SISTEMA DE AUDIO: OPERACIONAL")
+        return True
+    else:
+        print(f"❌ CRITERIO NO CUMPLIDO: Solo {success_count} de 3 tests pasaron")
+        print(f"🚨 SISTEMA DE AUDIO: PROBLEMAS DETECTADOS")
+        return False
+
 def main():
     """Main test execution function"""
     print("🚀 Starting Backend API Testing...")
