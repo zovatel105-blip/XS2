@@ -598,7 +598,10 @@ async def get_music_info(music_id: str):
             
             # Query the user_audio collection
             user_audio = await db.user_audio.find_one({"id": user_audio_id})
+            print(f"🔍 Database query result: {user_audio is not None}")
+            
             if user_audio:
+                print(f"📝 Found user audio: {user_audio.get('title')} by {user_audio.get('artist')}")
                 music_info = {
                     'id': music_id,
                     'title': user_audio.get('title'),
