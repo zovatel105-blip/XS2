@@ -191,9 +191,23 @@ const ProfilePage = () => {
     
     setFollowersLoading(true);
     try {
-      const targetUserId = userId || authUser?.id;
+      let targetUserId = userId || authUser?.id;
+      
+      // 🔧 RESOLVER USERNAME A UUID SI ES NECESARIO
+      if (userId && !userId.includes('-') && userId.length > 3) {
+        console.log('🔄 RESOLVING USERNAME TO UUID:', userId);
+        const user = await getUserByUsername(userId);
+        if (user?.id) {
+          targetUserId = user.id;
+          console.log('✅ USERNAME RESOLVED:', userId, '->', targetUserId);
+        } else {
+          console.log('❌ USERNAME NOT FOUND:', userId);
+        }
+      }
+      
       console.log('🔍 LOADING FOLLOWERS LIST:');
-      console.log('  Target User ID:', targetUserId);
+      console.log('  Original userId:', userId);
+      console.log('  Resolved Target User ID:', targetUserId);
       console.log('  Current Auth User:', authUser?.username);
       
       const followersData = await getUserFollowers(targetUserId);
