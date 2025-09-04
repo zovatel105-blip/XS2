@@ -84,7 +84,7 @@ const ProfilePage = () => {
   const [showFollowingModal, setShowFollowingModal] = useState(false);
   const { toast } = useToast();
   const { user: authUser, refreshUser } = useAuth();
-  const { getUserFollowers, getUserFollowing, followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion, refreshTrigger } = useFollow();
+  const { getUserFollowers, getUserFollowing, followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion, refreshTrigger, getUserByUsername } = useFollow();
   const { shareModal, shareProfile, closeShareModal } = useShare();
   const { enterTikTokMode, exitTikTokMode, isTikTokMode } = useTikTok();
   const { userId } = useParams();
