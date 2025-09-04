@@ -497,7 +497,44 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 ✅ **RESULTADO FINAL:**
 🎯 **MODALES DE SEGUIDORES/SIGUIENDO COMPLETAMENTE FUNCIONALES** - Los usuarios ahora pueden hacer clic en los contadores de seguidores/siguiendo para ver la lista completa de usuarios en modales emergentes. Los endpoints backend devuelven datos correctos y completos, resolviendo el problema de modales vacíos. El sistema funciona como aplicaciones profesionales mostrando información detallada de usuarios seguidores y seguidos.
 
-user_problem_statement: 🎯 PROBLEMA CRÍTICO MODALES VACÍOS EN PERFIL DE USUARIO RESUELTO COMPLETAMENTE (2025-01-27): Los contadores de seguidores/siguiendo muestran números reales pero los modales aparecían vacíos - problema identificado y solucionado exitosamente.
+**🎯 PROBLEMA CRÍTICO USERNAME/UUID DISCREPANCIA COMPLETAMENTE RESUELTO (2025-01-27): Frontend pasando usernames a endpoints que esperan UUIDs - discrepancia identificada y corregida exitosamente.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- **CAUSA RAÍZ**: Frontend pasaba usernames a endpoints backend que esperan UUIDs
+- **ESPECÍFICAMENTE**: Funciones `getUserFollowers()` y `getUserFollowing()` en FollowContext.js y userService.js
+- **ENDPOINTS AFECTADOS**: `/api/users/{user_id}/followers`, `/api/users/{user_id}/following`, `/api/users/{user_id}/follow`, `/api/users/{user_id}/follow-status`
+- **ERROR RESULTANTE**: Backend no podía encontrar usuarios porque buscaba UUIDs con valores de usernames
+
+✅ **SOLUCIÓN COMPLETA IMPLEMENTADA:**
+
+**FOLLOWCONTEXT.JS CORREGIDO:**
+1. ✅ **getUserFollowers**: Actualizada para detectar username vs UUID, resolve username a UUID via getUserByUsername(), llama endpoint con UUID correcto, logging detallado para debugging
+2. ✅ **getUserFollowing**: Implementada misma lógica de resolución username→UUID, manejo de errores mejorado, compatibilidad completa con parámetros username o UUID
+
+**USERSERVICE.JS CORREGIDO:**
+1. ✅ **getFollowStatus**: Agregada lógica detección username vs UUID, resolución via searchUsers(), UUID validation antes de API call
+2. ✅ **followUser**: Implementada conversión username→UUID, compatible con ambos formatos de entrada
+3. ✅ **unfollowUser**: Misma lógica de resolución implementada, manejo de errores consistente
+4. ✅ **getUserFollowers**: Conversión automática username→UUID, API calls usando UUIDs correctos
+5. ✅ **getUserFollowing**: Sistema completo de resolución implementado
+
+✅ **LÓGICA DE DETECCIÓN IMPLEMENTADA:**
+- **Detection Rule**: `!input.includes('-') && input.length > 5` identifica usernames
+- **Resolution**: Username → Search API → Find user → Extract UUID → Use UUID in endpoint
+- **Fallback**: Si username no existe, retorna error apropiado
+- **Compatibility**: Funciona con usernames Y UUIDs sin cambios en código llamador
+
+✅ **FUNCIONALIDADES CORREGIDAS:**
+- ✅ Modales de seguidores/siguiendo ahora cargan correctamente cuando se pasa username
+- ✅ Sistema de seguir/no seguir funciona con usernames y UUIDs
+- ✅ Estado de seguimiento se resuelve correctamente independiente del formato de entrada
+- ✅ Navegación de perfiles desde menciones, avatares, usernames funciona sin errores
+- ✅ Consistencia completa entre todas las funciones de user management
+
+✅ **RESULTADO FINAL:**
+🎯 **DISCREPANCIA USERNAME/UUID COMPLETAMENTE ELIMINADA** - El sistema ahora maneja inteligentemente tanto usernames como UUIDs en todas las operaciones de usuario. Los endpoints backend reciben siempre UUIDs válidos independientemente de si el frontend origina la llamada con username o UUID. Compatibilidad total mantenida sin necesidad de cambios en componentes que llaman estas funciones.
+
+user_problem_statement: 🎯 PROBLEMA CRÍTICO USERNAME/UUID DISCREPANCIA COMPLETAMENTE RESUELTO (2025-01-27): Frontend pasando usernames a endpoints que esperan UUIDs - discrepancia identificada y corregida exitosamente.
 
 ✅ **PROBLEMA IDENTIFICADO:**
 - Las portadas de publicaciones en AudioDetailPage se veían diferentes a las del ProfilePage
