@@ -14,7 +14,7 @@ def test_ffmpeg_integration():
     # Test 1: Create a test audio file
     print("1. Creating test audio file...")
     try:
-        input_audio = ffmpeg.input('lavfi', f='lavfi', i='sine=frequency=880:duration=1')
+        input_audio = ffmpeg.input('sine=frequency=880:duration=1', f='lavfi')
         output = ffmpeg.output(input_audio, '/app/test_audio_output.mp3')
         ffmpeg.run(output, overwrite_output=True, quiet=True)
         
