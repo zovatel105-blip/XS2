@@ -50,6 +50,9 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
       if (formData.bio.trim() !== (user.bio || '')) {
         updateData.bio = formData.bio.trim();
       }
+      if (formData.occupation.trim() !== (user.occupation || '')) {
+        updateData.occupation = formData.occupation.trim();
+      }
       if (formData.avatar_url.trim() !== (user.avatar_url || '')) {
         updateData.avatar_url = formData.avatar_url.trim();
       }
