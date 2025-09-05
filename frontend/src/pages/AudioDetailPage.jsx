@@ -1146,6 +1146,7 @@ const AudioDetailPage = () => {
 
 
   if (loading) {
+    console.log('📊 === RENDERIZANDO ESTADO DE CARGA ===');
     return (
       <div className="min-h-screen bg-white">
         {/* Header */}
