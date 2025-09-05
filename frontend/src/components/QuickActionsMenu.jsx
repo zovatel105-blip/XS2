@@ -57,9 +57,11 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
 
   const handleSearch = () => {
     toast({
-      title: "🔍 Búsqueda",
-      description: "Funcionalidad de búsqueda próximamente disponible",
+      title: "🔍 Abriendo búsqueda...",
+      description: "Navegando a la página de búsqueda",
     });
+    
+    navigate('/search');
     
     if (onActionSelect) {
       onActionSelect('search');
@@ -68,9 +70,11 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
 
   const handleMoments = () => {
     toast({
-      title: "📸 Historias de Momentos",
-      description: "Ver historias próximamente disponible",
+      title: "📸 Abriendo momentos...",
+      description: "Navegando a historias de momentos",
     });
+    
+    navigate('/moments');
     
     if (onActionSelect) {
       onActionSelect('moments');
