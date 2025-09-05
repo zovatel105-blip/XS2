@@ -446,7 +446,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <CustomLogo size={24} />
+          <LogoWithQuickActions size={24} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
