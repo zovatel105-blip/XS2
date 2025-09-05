@@ -174,6 +174,24 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
               </p>
             </div>
 
+            {/* Occupation */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Ocupación
+              </label>
+              <Input
+                type="text"
+                value={formData.occupation}
+                onChange={(e) => handleChange('occupation', e.target.value)}
+                placeholder="Tu profesión o trabajo"
+                maxLength={100}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500">
+                Máximo 100 caracteres
+              </p>
+            </div>
+
             {/* Avatar URL */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
