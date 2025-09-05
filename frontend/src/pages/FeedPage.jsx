@@ -514,7 +514,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <CustomLogo size={24} />
+          <LogoWithQuickActions size={24} />
         </div>
         
         <TikTokScrollView
