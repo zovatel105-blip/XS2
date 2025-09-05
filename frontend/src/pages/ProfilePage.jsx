@@ -941,8 +941,8 @@ const ProfilePage = () => {
             {/* Nombre de usuario + switch de cuentas (centro) */}
             <div className="flex items-center gap-1 sm:gap-2 max-w-[200px] sm:max-w-none">
               <h1 className="text-base sm:text-lg font-semibold text-gray-900 truncate">@{displayUser?.username || 'usuario'}</h1>
-              {/* Flecha dropdown - Solo en perfil propio */}
-              {isOwnProfile && (
+              {/* Flecha dropdown - Solo en perfil propio cuando hay múltiples cuentas */}
+              {isOwnProfile && hasMultipleAccounts && (
                 <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-2 sm:p-2 active:scale-95 transition-transform min-w-[36px] min-h-[36px]">
                   <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
