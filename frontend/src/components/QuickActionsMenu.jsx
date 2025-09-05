@@ -84,19 +84,19 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       id: 'search',
       icon: Search,
       label: 'Buscar',
-      color: 'bg-blue-500 hover:bg-blue-600',
-      borderColor: 'border-blue-400',
+      color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+      borderColor: 'border-blue-300',
       shadowColor: 'shadow-blue-500/50',
-      position: { x: -60, y: -20 }, // Izquierda superior
+      position: { x: -70, y: -30 }, // Izquierda superior
     },
     {
       id: 'moments',
       icon: Clock,
       label: 'Momentos',
-      color: 'bg-purple-500 hover:bg-purple-600',
-      borderColor: 'border-purple-400',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+      borderColor: 'border-purple-300',
       shadowColor: 'shadow-purple-500/50',
-      position: { x: 60, y: -20 }, // Derecha superior
+      position: { x: 70, y: -30 }, // Derecha superior
     }
   ];
 
