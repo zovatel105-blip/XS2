@@ -962,9 +962,13 @@ const ProfilePage = () => {
                 onClick={() => shareProfile(displayUser)}
               >
                 <img 
-                  src="https://customer-assets.emergentagent.com/job_user-follow-palette/artifacts/8l5kqkl3_1000007682-removebg-preview.png" 
+                  src="https://customer-assets.emergentagent.com/job_white-tiktok-icon/artifacts/z274rovs_1000007682-removebg-preview.png" 
                   alt="Compartir" 
                   className="w-5 h-5 sm:w-6 sm:h-6" 
+                  style={{ 
+                    filter: 'brightness(0) invert(1) drop-shadow(0 0 0.5px white) drop-shadow(0 0 0.5px white)',
+                    imageRendering: 'crisp-edges'
+                  }}
                 />
               </Button>
             )}
