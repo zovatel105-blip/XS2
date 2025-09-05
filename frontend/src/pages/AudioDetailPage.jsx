@@ -1246,8 +1246,8 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Barra de información minimalista */}
-      <div className="bg-white border-t border-gray-100 py-3 px-8">
+      {/* Barra de información más compacta */}
+      <div className="bg-white border-t border-gray-100 py-2 px-6">
         <div className="flex items-center justify-between text-sm text-gray-500">
           {/* Duración simple */}
           <div className="flex items-center gap-2">
