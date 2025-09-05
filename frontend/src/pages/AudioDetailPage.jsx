@@ -1270,32 +1270,32 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Botones minimalistas */}
-      <div className="bg-white px-8 py-6">
-        <div className="flex gap-4">
-          {/* Botón Apple Music minimalista */}
+      {/* Botones modernos y compactos */}
+      <div className="bg-white px-8 py-4">
+        <div className="flex gap-3">
+          {/* Botón Apple Music moderno y compacto */}
           <button 
             onClick={handleAddToItunes}
-            className="flex-1 flex items-center justify-center gap-3 py-4 px-6 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors border border-gray-200"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-black hover:bg-gray-800 rounded-full transition-all duration-200 transform hover:scale-[1.02]"
           >
-            <Apple className="w-5 h-5 text-gray-700" />
-            <span className="text-gray-700 font-medium">
-              Open in Apple Music
+            <Apple className="w-4 h-4 text-white" />
+            <span className="text-white font-medium text-sm">
+              Apple Music
             </span>
           </button>
           
-          {/* Botón Add to Favorite minimalista */}
+          {/* Botón Add to Favorite moderno y compacto */}
           <button 
             onClick={handleLike}
-            className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl transition-colors border ${
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-full transition-all duration-200 transform hover:scale-[1.02] ${
               isLiked 
-                ? 'bg-red-50 hover:bg-red-100 border-red-200 text-red-700' 
-                : 'bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700'
+                ? 'bg-red-500 hover:bg-red-600 text-white' 
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
             }`}
           >
-            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-            <span className="font-medium">
-              {isLiked ? 'Added to Favorites' : 'Add to Favorite'}
+            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            <span className="font-medium text-sm">
+              {isLiked ? 'Favorited' : 'Favorite'}
             </span>
           </button>
         </div>
