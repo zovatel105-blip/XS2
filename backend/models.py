@@ -80,6 +80,7 @@ class Token(BaseModel):
 class UserUpdate(BaseModel):
     display_name: Optional[str] = None
     bio: Optional[str] = None
+    occupation: Optional[str] = None
     avatar_url: Optional[str] = None
 
 class PasswordChange(BaseModel):
