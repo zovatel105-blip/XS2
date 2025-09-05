@@ -1379,7 +1379,7 @@ const ProfilePage = () => {
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center gap-3">
-                <UserPlus className="w-6 h-6 text-blue-600" />
+                <UserPlus className="w-6 h-6 text-gray-500" />
                 <h2 className="text-xl font-bold text-gray-900">
                   {followersList.length} Seguidores
                 </h2>
