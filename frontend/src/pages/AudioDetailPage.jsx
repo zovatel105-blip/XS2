@@ -1219,6 +1219,11 @@ const AudioDetailPage = () => {
     );
   }
 
+  console.log('🎨 === RENDERIZANDO COMPONENTE PRINCIPAL ===');
+  console.log('🎨 Dominant Color actual:', dominantColor);
+  console.log('🎨 Gradient Colors actual:', gradientColors);
+  console.log('🎨 Audio cover URL:', audio?.cover_url);
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Contenedor del header y sección audio con degradado difuminado */}
