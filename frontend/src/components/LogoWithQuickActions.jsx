@@ -106,20 +106,6 @@ const LogoWithQuickActions = ({ size = 24, className = "" }) => {
         onClose={handleCloseMenu}
         onActionSelect={handleActionSelect}
       />
-
-      {/* CSS personalizado para animaciones */}
-      <style jsx>{`
-        @keyframes pulse-ring {
-          0% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(1.3);
-            opacity: 0;
-          }
-        }
-      `}</style>
     </>
   );
 };
