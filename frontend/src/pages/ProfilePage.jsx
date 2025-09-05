@@ -1262,7 +1262,7 @@ const ProfilePage = () => {
             {userPolls.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Grid3X3 className="w-12 h-12 text-gray-400" />
+                  <LayoutGrid className="w-12 h-12 text-gray-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">No has creado publicaciones</h3>
                 <p className="text-gray-600 mb-6">¡Crea tu primera publicación para empezar a obtener votos!</p>
