@@ -67,8 +67,12 @@ const AudioDetailPage = () => {
 
   // Function to extract dominant color and generate gradient colors from album cover
   const extractColorsFromCover = (imageUrl) => {
+    console.log('🎨 === INICIANDO EXTRACCIÓN DE COLORES ===');
+    console.log('🎨 URL de imagen:', imageUrl);
+    
     return new Promise((resolve) => {
       if (!imageUrl) {
+        console.log('🎨 No hay URL de imagen, usando colores por defecto');
         resolve({
           dominant: '#10b981',
           gradients: { primary: '#10b981', secondary: '#f59e0b' }
@@ -80,6 +84,7 @@ const AudioDetailPage = () => {
       img.crossOrigin = 'anonymous';
       
       img.onload = () => {
+        console.log('🎨 Imagen cargada exitosamente, procesando colores...');
         try {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
@@ -122,6 +127,8 @@ const AudioDetailPage = () => {
           const [r, g, b] = dominantRGB;
           const dominantHex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
           
+          console.log('🎨 Color dominante encontrado:', dominantHex, 'RGB:', dominantRGB);
+          
           // Create complementary/analogous colors for gradient
           const hsl = rgbToHsl(r, g, b);
           
@@ -135,15 +142,18 @@ const AudioDetailPage = () => {
           const secondaryRgb = hslToRgb(secondaryHsl[0], secondaryHsl[1], secondaryHsl[2]);
           const secondaryHex = `#${((1 << 24) + (secondaryRgb[0] << 16) + (secondaryRgb[1] << 8) + secondaryRgb[2]).toString(16).slice(1)}`;
           
-          resolve({
+          const result = {
             dominant: dominantHex,
             gradients: {
               primary: primaryHex,
               secondary: secondaryHex
             }
-          });
+          };
+          
+          console.log('🎨 Colores finales generados:', result);
+          resolve(result);
         } catch (error) {
-          console.error('Error extracting colors:', error);
+          console.error('❌ Error procesando imagen:', error);
           resolve({
             dominant: '#10b981',
             gradients: { primary: '#10b981', secondary: '#f59e0b' }
@@ -151,10 +161,15 @@ const AudioDetailPage = () => {
         }
       };
       
-      img.onerror = () => resolve({
-        dominant: '#10b981',
-        gradients: { primary: '#10b981', secondary: '#f59e0b' }
-      });
+      img.onerror = (error) => {
+        console.error('❌ Error cargando imagen:', error);
+        resolve({
+          dominant: '#10b981',
+          gradients: { primary: '#10b981', secondary: '#f59e0b' }
+        });
+      };
+      
+      console.log('🎨 Iniciando carga de imagen...');
       img.src = imageUrl;
     });
   };
