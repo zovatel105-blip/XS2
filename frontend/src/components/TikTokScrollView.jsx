@@ -633,7 +633,12 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
               }}
               className="flex items-center gap-1 text-white hover:text-green-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm"
             >
-              <Share2 className="w-5 h-5" />
+              <img 
+                src="https://customer-assets.emergentagent.com/job_white-tiktok-icon/artifacts/z274rovs_1000007682-removebg-preview.png" 
+                alt="Share Icon" 
+                className="w-5 h-5 filter brightness-0 invert"
+                style={{ filter: 'brightness(0) invert(1)' }}
+              />
               <span className="font-medium text-sm">{formatNumber(poll.shares)}</span>
             </Button>
 
