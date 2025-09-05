@@ -1165,8 +1165,8 @@ const ProfilePage = () => {
                 variant="outline" 
                 className={`w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold text-white min-h-[48px] active:scale-95 transition-transform flex items-center justify-center gap-2 ${
                   isFollowing(viewedUser?.id || userId) 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'bg-red-600 hover:bg-red-700'
+                    ? 'bg-green-300 hover:bg-green-400 text-green-800' 
+                    : 'bg-red-300 hover:bg-red-400 text-red-800'
                 }`}
                 onClick={async () => {
                   const targetUserId = viewedUser?.id || userId;
