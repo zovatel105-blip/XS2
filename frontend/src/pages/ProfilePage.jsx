@@ -685,17 +685,101 @@ const ProfilePage = () => {
   };
 
   const handleLike = async (pollId) => {
-    try {
-      // In a real implementation, this would call the backend API
-      // For now, we'll just show a success message
+    if (!authUser) {
       toast({
-        title: "¡Te gusta!",
-        description: "Has dado like a esta votación",
+        title: "Inicia sesión",
+        description: "Necesitas iniciar sesión para dar like",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Optimistic update for main polls array
+      let wasLiked = false;
+      setPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          wasLiked = poll.userLiked;
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes - 1 : poll.likes + 1
+          };
+        }
+        return poll;
+      }));
+
+      // Update tikTokPolls if it exists
+      setTikTokPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes - 1 : poll.likes + 1
+          };
+        }
+        return poll;
+      }));
+
+      // Send like to backend
+      const result = await pollService.toggleLike(pollId);
+      
+      // Update with actual server response
+      setPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: result.liked,
+            likes: result.likes
+          };
+        }
+        return poll;
+      }));
+
+      setTikTokPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: result.liked,
+            likes: result.likes
+          };
+        }
+        return poll;
+      }));
+      
+      toast({
+        title: result.liked ? "¡Te gusta!" : "Like removido",
+        description: result.liked ? "Has dado like a esta votación" : "Ya no te gusta esta votación",
       });
     } catch (error) {
+      console.error('Error liking poll:', error);
+      
+      // Revert optimistic update
+      setPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes + 1 : poll.likes - 1
+          };
+        }
+        return poll;
+      }));
+
+      setTikTokPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          return {
+            ...poll,
+            userLiked: !poll.userLiked,
+            likes: poll.userLiked ? poll.likes + 1 : poll.likes - 1
+          };
+        }
+        return poll;
+      }));
+      
       toast({
         title: "Error",
-        description: "No se pudo dar like a la votación",
+        description: error.message || "No se pudo procesar el like. Intenta de nuevo.",
         variant: "destructive",
       });
     }
