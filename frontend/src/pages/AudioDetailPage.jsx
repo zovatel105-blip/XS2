@@ -1189,7 +1189,7 @@ const AudioDetailPage = () => {
           {/* Espacio central vacío para minimalismo */}
           <div className="flex-1"></div>
           
-          {/* Solo icono de compartir */}
+          {/* Solo icono de compartir con mismo grosor que TikTokScrollView */}
           <button 
             onClick={handleShare}
             className="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -1199,7 +1199,7 @@ const AudioDetailPage = () => {
               alt="Share Icon" 
               className="w-5 h-5"
               style={{ 
-                filter: 'brightness(0)',
+                filter: 'brightness(0) drop-shadow(0 0 0.5px black) drop-shadow(0 0 0.5px black)',
                 imageRendering: 'crisp-edges'
               }}
             />
