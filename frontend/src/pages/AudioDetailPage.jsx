@@ -45,6 +45,7 @@ const AudioDetailPage = () => {
     primary: '#10b981',
     secondary: '#f59e0b'
   });
+  const [showUseButton, setShowUseButton] = useState(false); // Estado para mostrar botón Use Sound
   
   // Infinite scroll states
   const [hasMorePosts, setHasMorePosts] = useState(false);
