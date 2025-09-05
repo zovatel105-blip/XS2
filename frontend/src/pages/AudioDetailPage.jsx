@@ -816,6 +816,7 @@ const AudioDetailPage = () => {
   const handlePollClick = (post) => {
     console.log('🎬 AUDIODETAILPAGE DEBUG - Post clicked:', post);
     console.log('🎬 AUDIODETAILPAGE DEBUG - Current posts array length:', posts?.length);
+    console.log('🎬 AUDIODETAILPAGE DEBUG - Current showTikTokView state BEFORE:', showTikTokView);
     
     // Encontrar el índice del post seleccionado
     const index = posts.findIndex(p => p.id === post.id);
@@ -833,7 +834,13 @@ const AudioDetailPage = () => {
     // Ocultar la navegación lateral derecha cuando se abre desde AudioDetailPage
     hideRightNavigationBar();
     
+    console.log('🎬 AUDIODETAILPAGE DEBUG - About to set showTikTokView to TRUE');
     setShowTikTokView(true);
+    
+    // Verificación adicional después del set
+    setTimeout(() => {
+      console.log('🎬 AUDIODETAILPAGE DEBUG - showTikTokView state AFTER timeout:', showTikTokView);
+    }, 100);
   };
 
   const handlePollVote = async (pollId, optionId) => {
