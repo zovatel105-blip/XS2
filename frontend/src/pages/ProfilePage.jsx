@@ -1149,12 +1149,13 @@ const ProfilePage = () => {
             <>
               <Button 
                 variant="outline" 
-                className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white min-h-[48px] active:scale-95 transition-transform"
+                className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white min-h-[48px] active:scale-95 transition-transform flex items-center justify-center gap-2"
                 onClick={async () => {
                   const targetUserId = viewedUser?.id || userId;
                   try {
                     if (isFollowing(targetUserId)) {
                       await unfollowUser(targetUserId);
+                      setNotificationsEnabled(false); // Reset notifications cuando se deja de seguir
                       toast({
                         title: "Dejaste de seguir",
                         description: `Ya no sigues a @${viewedUser?.username || userId}`,
@@ -1176,7 +1177,32 @@ const ProfilePage = () => {
                   }
                 }}
               >
-                {isFollowing(viewedUser?.id || userId) ? 'Siguiendo' : 'Seguir'}
+                {isFollowing(viewedUser?.id || userId) ? (
+                  <>
+                    <span>Siguiendo</span>
+                    <button
+                      className="ml-1 p-1 hover:bg-blue-800 rounded-full transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Evitar que se ejecute el onClick del botón principal
+                        setNotificationsEnabled(!notificationsEnabled);
+                        toast({
+                          title: notificationsEnabled ? "Notificaciones desactivadas" : "Notificaciones activadas",
+                          description: notificationsEnabled 
+                            ? `Ya no recibirás notificaciones de @${viewedUser?.username || userId}`
+                            : `Recibirás notificaciones cuando @${viewedUser?.username || userId} publique contenido`,
+                        });
+                      }}
+                    >
+                      {notificationsEnabled ? (
+                        <Bell className="w-4 h-4" />
+                      ) : (
+                        <BellOff className="w-4 h-4" />
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  'Seguir'
+                )}
               </Button>
               <Button 
                 variant="outline" 
