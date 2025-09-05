@@ -596,13 +596,14 @@ def test_profile_update_endpoints(base_url):
     headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
     success_count = 0
     
-    # Test 1: Update profile information (display_name, bio, avatar_url)
+    # Test 1: Update profile information (display_name, bio, avatar_url, occupation)
     print("Testing PUT /api/auth/profile...")
     try:
         profile_data = {
             "display_name": "María González Actualizada",
             "bio": "Soy una desarrolladora apasionada por la tecnología y las redes sociales.",
-            "avatar_url": "https://example.com/avatar/maria_updated.jpg"
+            "avatar_url": "https://example.com/avatar/maria_updated.jpg",
+            "occupation": "Desarrollador de Software"
         }
         response = requests.put(f"{base_url}/auth/profile", json=profile_data, headers=headers, timeout=10)
         print(f"Update Profile Status Code: {response.status_code}")
@@ -613,6 +614,7 @@ def test_profile_update_endpoints(base_url):
             print(f"New Display Name: {data['display_name']}")
             print(f"New Bio: {data.get('bio', 'N/A')}")
             print(f"New Avatar URL: {data.get('avatar_url', 'N/A')}")
+            print(f"New Occupation: {data.get('occupation', 'N/A')}")
             success_count += 1
             
             # Verify changes with GET /api/auth/me
@@ -622,11 +624,14 @@ def test_profile_update_endpoints(base_url):
                 verify_data = verify_response.json()
                 if (verify_data['display_name'] == profile_data['display_name'] and
                     verify_data.get('bio') == profile_data['bio'] and
-                    verify_data.get('avatar_url') == profile_data['avatar_url']):
+                    verify_data.get('avatar_url') == profile_data['avatar_url'] and
+                    verify_data.get('occupation') == profile_data['occupation']):
                     print("✅ Profile changes verified successfully")
                     success_count += 1
                 else:
                     print("❌ Profile changes not reflected in GET /api/auth/me")
+                    print(f"Expected occupation: {profile_data['occupation']}")
+                    print(f"Actual occupation: {verify_data.get('occupation', 'N/A')}")
             else:
                 print(f"❌ Failed to verify profile changes: {verify_response.text}")
         else:
