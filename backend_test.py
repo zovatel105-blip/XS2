@@ -7491,6 +7491,142 @@ def test_audio_upload_system(base_url):
         print(f"🚨 SISTEMA DE AUDIO: PROBLEMAS DETECTADOS")
         return False
 
+def test_quick_backend_verification(base_url):
+    """Quick backend verification for bug fix testing - Spanish review request"""
+    print("\n=== VERIFICACIÓN RÁPIDA DEL BACKEND ===")
+    print("CONTEXTO: Verificar que backend funciona correctamente después de corrección de bug frontend")
+    
+    if not auth_tokens:
+        print("❌ No hay tokens de autenticación disponibles")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    total_tests = 3
+    
+    # 1. Test GET /api/polls - Verificar que funciona y retorna datos de música
+    print("\n🎵 1. Testing GET /api/polls - Verificar publicaciones con datos de música")
+    try:
+        response = requests.get(f"{base_url}/polls", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            polls = response.json()
+            print(f"   ✅ Endpoint funciona correctamente")
+            print(f"   📊 Publicaciones encontradas: {len(polls)}")
+            
+            # Analizar estructura de música en publicaciones
+            polls_with_music = 0
+            polls_without_music = 0
+            music_structures = []
+            
+            for poll in polls:
+                if poll.get('music') and poll['music'].get('id'):
+                    polls_with_music += 1
+                    music_info = {
+                        'id': poll['music'].get('id'),
+                        'title': poll['music'].get('title'),
+                        'artist': poll['music'].get('artist'),
+                        'preview_url': poll['music'].get('preview_url')
+                    }
+                    music_structures.append(music_info)
+                    print(f"   🎵 Post con música: {poll.get('title', 'Sin título')[:30]}...")
+                    print(f"      - Music ID: {poll['music'].get('id')}")
+                    print(f"      - Título: {poll['music'].get('title')}")
+                    print(f"      - Artista: {poll['music'].get('artist')}")
+                    print(f"      - Preview URL: {'✅' if poll['music'].get('preview_url') else '❌'}")
+                else:
+                    polls_without_music += 1
+                    print(f"   🔇 Post sin música: {poll.get('title', 'Sin título')[:30]}...")
+            
+            print(f"\n   📊 RESUMEN DE MÚSICA:")
+            print(f"      - Posts con música: {polls_with_music}")
+            print(f"      - Posts sin música: {polls_without_music}")
+            print(f"      - Total posts: {len(polls)}")
+            
+            # Verificar que hay variedad (algunos con música, algunos sin música)
+            if polls_with_music > 0 and polls_without_music > 0:
+                print(f"   ✅ PERFECTO: Hay variedad de posts (con y sin música) para probar el bug fix")
+                success_count += 1
+            elif polls_with_music > 0:
+                print(f"   ⚠️ Solo hay posts con música - bug fix parcialmente testeable")
+                success_count += 0.5
+            else:
+                print(f"   ❌ No hay posts con música - no se puede probar el bug fix completamente")
+        else:
+            print(f"   ❌ Endpoint falló: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en GET /api/polls: {e}")
+    
+    # 2. Test Sistema de Autenticación - Verificar que login funciona
+    print("\n🔐 2. Testing Sistema de Autenticación - Verificar login funcionando")
+    try:
+        # Verificar que el token actual funciona
+        response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            user_data = response.json()
+            print(f"   ✅ Sistema de autenticación funcionando correctamente")
+            print(f"   👤 Usuario autenticado: {user_data.get('username')}")
+            print(f"   📧 Email: {user_data.get('email')}")
+            print(f"   🆔 User ID: {user_data.get('id')}")
+            success_count += 1
+        else:
+            print(f"   ❌ Autenticación falló: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en autenticación: {e}")
+    
+    # 3. Test Estructura de Música - Verificar datos correctos para testing
+    print("\n🎼 3. Testing Estructura de Música - Verificar datos correctos para testing del bug fix")
+    try:
+        # Obtener biblioteca de música para verificar estructura
+        response = requests.get(f"{base_url}/music/library-with-previews", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            music_data = response.json()
+            print(f"   ✅ Biblioteca de música accesible")
+            print(f"   🎵 Canciones disponibles: {music_data.get('total', 0)}")
+            print(f"   🔗 Previews reales: {'✅' if music_data.get('has_real_previews') else '❌'}")
+            
+            # Verificar algunas canciones específicas
+            music_list = music_data.get('music', [])
+            if music_list:
+                print(f"   📋 Ejemplos de música disponible:")
+                for i, song in enumerate(music_list[:3]):  # Mostrar primeras 3
+                    print(f"      {i+1}. {song.get('title')} - {song.get('artist')}")
+                    print(f"         ID: {song.get('id')}")
+                    print(f"         Preview: {'✅' if song.get('preview_url') else '❌'}")
+                
+                success_count += 1
+            else:
+                print(f"   ⚠️ No hay música en la biblioteca")
+        else:
+            print(f"   ❌ Error accediendo biblioteca de música: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en estructura de música: {e}")
+    
+    # Resumen de verificación rápida
+    print(f"\n📋 === RESUMEN DE VERIFICACIÓN RÁPIDA ===")
+    print(f"✅ Tests exitosos: {success_count}/{total_tests}")
+    print(f"📊 Tasa de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 2.5:  # Al menos 2.5/3 para considerar exitoso
+        print(f"🎯 CONCLUSIÓN: Backend está estable y funcionando correctamente")
+        print(f"   ✅ GET /api/polls funciona y retorna datos de música")
+        print(f"   ✅ Sistema de autenticación operacional")
+        print(f"   ✅ Estructura de música correcta para testing del bug fix")
+        print(f"   🚀 LISTO PARA PROCEDER CON TESTING DEL FRONTEND")
+        return True
+    else:
+        print(f"🚨 CONCLUSIÓN: Problemas detectados en backend")
+        print(f"   ❌ Revisar endpoints antes de proceder con frontend testing")
+        return False
+
 def main():
     """Main test execution function"""
     print("🚀 Starting Backend API Testing...")
@@ -7502,17 +7638,48 @@ def main():
         print("❌ Could not determine backend URL from frontend .env file")
         sys.exit(1)
     
-    print(f"Backend URL: {base_url}")
+    print(f"🌐 Backend URL: {base_url}")
     print("=" * 60)
     
     # Track test results
     test_results = {}
     
-    # Run core tests first to get auth tokens
-    test_results['health_check'] = test_health_check(base_url)
-    test_results['user_registration'] = test_user_registration(base_url)
-    test_results['user_login'] = test_user_login(base_url)
-    test_results['get_current_user'] = test_get_current_user(base_url)
+    # Run essential tests first for authentication
+    essential_tests = [
+        ("Health Check", test_health_check),
+        ("User Registration", test_user_registration),
+        ("User Login", test_user_login),
+    ]
+    
+    print("🔧 Running essential setup tests...")
+    for test_name, test_func in essential_tests:
+        print(f"\n{'='*20} {test_name} {'='*20}")
+        try:
+            result = test_func(base_url)
+            test_results[test_name] = result
+            status = "✅ PASSED" if result else "❌ FAILED"
+            print(f"\n{status}: {test_name}")
+            
+            if not result and test_name in ["User Registration", "User Login"]:
+                print(f"❌ Critical test failed: {test_name}")
+                print("Cannot proceed with backend verification without authentication")
+                sys.exit(1)
+        except Exception as e:
+            print(f"\n❌ ERROR in {test_name}: {str(e)}")
+            test_results[test_name] = False
+            if test_name in ["User Registration", "User Login"]:
+                sys.exit(1)
+    
+    # Now run the quick verification test
+    print(f"\n{'='*20} Quick Backend Verification {'='*20}")
+    try:
+        result = test_quick_backend_verification(base_url)
+        test_results["Quick Backend Verification"] = result
+        status = "✅ PASSED" if result else "❌ FAILED"
+        print(f"\n{status}: Quick Backend Verification")
+    except Exception as e:
+        print(f"\n❌ ERROR in Quick Backend Verification: {str(e)}")
+        test_results["Quick Backend Verification"] = False
     
     # 🎯 CRITICAL PRIORITY TEST: Audio UUID Compatibility Fix (REVIEW REQUEST)
     test_results['🎯_audio_uuid_compatibility'] = test_audio_uuid_compatibility_fix(base_url)
