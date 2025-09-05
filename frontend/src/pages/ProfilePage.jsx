@@ -504,7 +504,7 @@ const ProfilePage = () => {
     username: authUser?.username || 'usuario_actual',
     displayName: authUser?.display_name || authUser?.username || 'Mi Perfil',
     email: authUser?.email || 'user@example.com',
-    bio: authUser?.bio || '🎯 Creando votaciones épicas | 📊 Fan de las estadísticas | 🚀 Siempre innovando',
+    bio: authUser?.bio || '',
     avatar: authUser?.avatar_url || null,
     followers: followersCount, // Dynamic from follow system
     following: followingCount,  // Dynamic from follow system
