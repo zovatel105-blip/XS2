@@ -15,6 +15,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
   const [formData, setFormData] = useState({
     display_name: '',
     bio: '',
+    occupation: '',
     avatar_url: ''
   });
 
