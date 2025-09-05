@@ -929,8 +929,8 @@ const ProfilePage = () => {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="px-2 py-3">
           <div className="flex items-center justify-between">
-            {/* Menú hamburguesa (izquierda) - Solo en perfil propio */}
-            {isOwnProfile ? (
+            {/* Menú hamburguesa (izquierda) - Solo en perfil propio cuando hay múltiples cuentas */}
+            {isOwnProfile && hasMultipleAccounts ? (
               <Button variant="ghost" size="sm" className="hover:bg-gray-100 p-3 active:scale-95 transition-transform min-w-[44px] min-h-[44px]">
                 <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </Button>
