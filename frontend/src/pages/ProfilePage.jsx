@@ -1114,7 +1114,7 @@ const ProfilePage = () => {
         {/* BIOGRAFÍA EXPANDIDA */}
         <div className="bg-white rounded-none sm:rounded-lg p-2 sm:p-4 shadow-sm mx-0">
           <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-            {displayUser?.bio || (isOwnProfile ? "Agregar biografía..." : "Este usuario no ha agregado una biografía.")}
+            {displayUser?.bio || (isOwnProfile ? "Agregar biografía..." : "")}
           </p>
         </div>
 
