@@ -13,7 +13,7 @@ import TikTokProfileGrid from '../components/TikTokProfileGrid';
 import TikTokScrollView from '../components/TikTokScrollView';
 import AvatarUpload from '../components/AvatarUpload';
 import { 
-  Settings, Users, Vote, Trophy, Heart, Share, ArrowLeft, AtSign, Bookmark, Grid3X3, Check, 
+  Settings, Users, Vote, Trophy, Heart, Share, ArrowLeft, AtSign, Bookmark, LayoutGrid, Check, 
   Share2, UserPlus, UserCheck, Menu, ChevronDown, Plus, BarChart3, Mail, MessageCircle, Send, Hash, Bell, BellOff, UserCircle 
 } from 'lucide-react';
 import pollService from '../services/pollService';
