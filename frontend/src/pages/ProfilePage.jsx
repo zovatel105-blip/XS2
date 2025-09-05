@@ -1103,7 +1103,7 @@ const ProfilePage = () => {
               <div className="w-px h-4 sm:h-6 bg-gray-300 hidden sm:block"></div>
               <span className="text-gray-400 sm:hidden">•</span>
               <p className="text-xs sm:text-base font-semibold text-gray-600 sm:text-gray-700">
-                {isOwnProfile ? "Creador de contenido" : "Usuario activo"}
+                {displayUser?.occupation || (isOwnProfile ? "Agregar profesión" : "Sin profesión")}
               </p>
             </div>
           </div>
