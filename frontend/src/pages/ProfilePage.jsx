@@ -983,8 +983,8 @@ const ProfilePage = () => {
                 className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded-lg p-1.5 transition-colors active:scale-95 -m-1.5"
                 onClick={handleFollowersClick}
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-500" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-green-600" />
                 </div>
                 <div className="flex flex-col justify-center min-w-0">
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
