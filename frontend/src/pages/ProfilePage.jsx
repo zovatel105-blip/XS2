@@ -1199,7 +1199,7 @@ const ProfilePage = () => {
                   <>
                     <span>Siguiendo</span>
                     <button
-                      className="ml-1 p-1 hover:bg-blue-800 rounded-full transition-colors"
+                      className="ml-1 p-1 hover:bg-green-800 rounded-full transition-colors"
                       onClick={(e) => {
                         e.stopPropagation(); // Evitar que se ejecute el onClick del botón principal
                         setNotificationsEnabled(!notificationsEnabled);
