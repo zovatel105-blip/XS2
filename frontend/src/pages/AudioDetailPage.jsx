@@ -1188,15 +1188,48 @@ const AudioDetailPage = () => {
             <ArrowLeft className={`${layout.iconSize} stroke-2`} />
           </Button>
           
-          {/* Flecha derecha (→) esquina superior derecha */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={handleShare}
-            className="text-gray-900 hover:bg-white/50 p-3"
-          >
-            <Share2 className={`${layout.iconSize} stroke-2`} />
-          </Button>
+          {/* Iconos esquina superior derecha como en la referencia */}
+          <div className="flex items-center gap-2">
+            {/* Botón compartir */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleShare}
+              className="text-gray-900 hover:bg-white/50 p-3"
+            >
+              <img 
+                src="https://customer-assets.emergentagent.com/job_white-tiktok-icon/artifacts/z274rovs_1000007682-removebg-preview.png" 
+                alt="Share Icon" 
+                className="w-5 h-5"
+                style={{ 
+                  filter: 'brightness(0) drop-shadow(0 0 0.5px black) drop-shadow(0 0 0.5px black)',
+                  imageRendering: 'crisp-edges'
+                }}
+              />
+            </Button>
+            
+            {/* Botón home */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/feed')}
+              className="text-gray-900 hover:bg-white/50 p-3"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+            </Button>
+            
+            {/* Botón sonido/mute */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handlePlayPause}
+              className="text-gray-900 hover:bg-white/50 p-3"
+            >
+              <Volume2 className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Sección principal del audio - como en la referencia */}
