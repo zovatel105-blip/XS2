@@ -587,8 +587,8 @@ const ProfilePage = () => {
     }
 
     try {
-      // Optimistic update for all poll arrays in profile
-      const updatePollsArray = (pollsArray) => pollsArray.map(poll => {
+      // Optimistic update for main polls array
+      setPolls(prev => prev.map(poll => {
         if (poll.id === pollId) {
           // Don't allow multiple votes
           if (poll.userVote) return poll;
@@ -604,14 +604,25 @@ const ProfilePage = () => {
           };
         }
         return poll;
-      });
+      }));
 
-      // Update all relevant poll arrays
-      setUserPolls(prev => updatePollsArray(prev));
-      setLikedPolls(prev => updatePollsArray(prev));
-      setMentionedPolls(prev => updatePollsArray(prev));
-      setSavedPolls(prev => updatePollsArray(prev));
-      setTikTokPolls(prev => updatePollsArray(prev));
+      // Update tikTokPolls if it exists
+      setTikTokPolls(prev => prev.map(poll => {
+        if (poll.id === pollId) {
+          if (poll.userVote) return poll;
+          
+          return {
+            ...poll,
+            userVote: optionId,
+            options: poll.options.map(opt => ({
+              ...opt,
+              votes: opt.id === optionId ? opt.votes + 1 : opt.votes
+            })),
+            totalVotes: poll.totalVotes + 1
+          };
+        }
+        return poll;
+      }));
 
       // Send vote to backend
       await pollService.voteOnPoll(pollId, optionId);
@@ -624,21 +635,18 @@ const ProfilePage = () => {
       // Refresh poll data to get accurate counts
       const updatedPoll = await pollService.refreshPoll(pollId);
       if (updatedPoll) {
-        const updateWithRefreshedPoll = (pollsArray) => pollsArray.map(poll => 
+        setPolls(prev => prev.map(poll => 
           poll.id === pollId ? updatedPoll : poll
-        );
-
-        setUserPolls(prev => updateWithRefreshedPoll(prev));
-        setLikedPolls(prev => updateWithRefreshedPoll(prev));
-        setMentionedPolls(prev => updateWithRefreshedPoll(prev));
-        setSavedPolls(prev => updateWithRefreshedPoll(prev));
-        setTikTokPolls(prev => updateWithRefreshedPoll(prev));
+        ));
+        setTikTokPolls(prev => prev.map(poll => 
+          poll.id === pollId ? updatedPoll : poll
+        ));
       }
     } catch (error) {
       console.error('Error voting:', error);
       
-      // Revert optimistic update for all poll arrays
-      const revertPollsArray = (pollsArray) => pollsArray.map(poll => {
+      // Revert optimistic update
+      setPolls(prev => prev.map(poll => {
         if (poll.id === pollId && poll.userVote === optionId) {
           return {
             ...poll,
@@ -651,13 +659,22 @@ const ProfilePage = () => {
           };
         }
         return poll;
-      });
+      }));
 
-      setUserPolls(prev => revertPollsArray(prev));
-      setLikedPolls(prev => revertPollsArray(prev));
-      setMentionedPolls(prev => revertPollsArray(prev));
-      setSavedPolls(prev => revertPollsArray(prev));
-      setTikTokPolls(prev => revertPollsArray(prev));
+      setTikTokPolls(prev => prev.map(poll => {
+        if (poll.id === pollId && poll.userVote === optionId) {
+          return {
+            ...poll,
+            userVote: null,
+            options: poll.options.map(opt => ({
+              ...opt,
+              votes: opt.id === optionId ? opt.votes - 1 : opt.votes
+            })),
+            totalVotes: poll.totalVotes - 1
+          };
+        }
+        return poll;
+      }));
       
       toast({
         title: "Error al votar",
