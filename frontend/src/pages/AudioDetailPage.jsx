@@ -1165,41 +1165,7 @@ const AudioDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col relative">
-      {/* Sidebar derecha flotante como en la referencia */}
-      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-30 flex flex-col gap-4">
-        {/* Botón Plus */}
-        <button 
-          onClick={() => navigate('/feed')}
-          className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-        >
-          <Plus className="w-6 h-6 text-white" />
-        </button>
-        
-        {/* Botón Comentarios */}
-        <button 
-          onClick={() => {
-            toast({
-              title: "Comentarios",
-              description: "Funcionalidad de comentarios disponible en las publicaciones"
-            });
-          }}
-          className="w-12 h-12 bg-black/80 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-        >
-          <MessageCircle className="w-6 h-6 text-white" />
-        </button>
-        
-        {/* Botón Usuario */}
-        <button 
-          onClick={() => navigate('/profile')}
-          className="w-12 h-12 bg-black/80 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-        >
-          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V4.5L11 5.5L7 4.5V6.5L1 7V9L7 8V18C7 19.1 7.9 20 9 20H15C16.1 20 17 19.1 17 18V8L21 9Z"/>
-          </svg>
-        </button>
-      </div>
-
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Contenedor del header y sección audio con degradado difuminado */}
       <div className="relative">
         {/* Fondo degradado dinámico que se extiende desde header hasta mitad del audio */}
