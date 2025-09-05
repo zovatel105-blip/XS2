@@ -209,6 +209,18 @@ const AudioDetailPage = () => {
     fetchPostsUsingAudio(0, false); // Cargar posts iniciales
   }, [audioId]);
 
+  // Extract colors from cover when audio changes
+  useEffect(() => {
+    if (audio && audio.cover_url) {
+      console.log('🎨 Extracting colors from:', audio.cover_url);
+      extractColorsFromCover(audio.cover_url).then(colors => {
+        console.log('🎨 Colors extracted:', colors);
+        setDominantColor(colors.dominant);
+        setGradientColors(colors.gradients);
+      });
+    }
+  }, [audio?.cover_url]); // Solo ejecutar cuando cambie la URL de la portada
+
   // Check favorites and determine original user after audio is loaded
   useEffect(() => {
     console.log('🔄 useEffect triggered - audio y posts cambiaron');
@@ -219,16 +231,6 @@ const AudioDetailPage = () => {
     if (audio) {
       checkIfFavorited();
       
-      // Extract colors from cover for dynamic theming
-      if (audio.cover_url) {
-        console.log('🎨 Extracting colors from:', audio.cover_url);
-        extractColorsFromCover(audio.cover_url).then(colors => {
-          console.log('🎨 Colors extracted:', colors);
-          setDominantColor(colors.dominant);
-          setGradientColors(colors.gradients);
-        });
-      }
-      
       // Solo determinar usuario original si no estamos cargando posts
       if (!postsLoading) {
         console.log('✅ Condiciones cumplidas - determinando usuario original');
@@ -237,7 +239,7 @@ const AudioDetailPage = () => {
         console.log('⏳ Posts aún cargando - esperando...');
       }
     }
-  }, [audio, posts, postsLoading]); // Agregamos postsLoading a las dependencias
+  }, [audio, posts, postsLoading]); // Removida la lógica de colores de aquí
 
   // 🎵 CLEANUP: Detener audio al desmontar componente
   useEffect(() => {
