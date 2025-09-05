@@ -386,12 +386,12 @@ const ProfilePage = () => {
     }
   }, [userId, navigate, toast]);
 
-  // Initialize saved polls (mock data)
+  // Initialize saved polls - Start with empty array, only user can save posts manually
   useEffect(() => {
     // In real app, this would be fetched from backend
-    const mockSavedPolls = polls.filter((poll, index) => index % 3 === 0); // Every 3rd poll as example
-    setSavedPolls(mockSavedPolls);
-  }, [polls]);
+    // For now, start with empty array - posts are only saved when user clicks save button
+    setSavedPolls([]);
+  }, []);
 
   const handleShareProfile = () => {
     // Intentar usar Web Share API primero (mejor para móviles)
