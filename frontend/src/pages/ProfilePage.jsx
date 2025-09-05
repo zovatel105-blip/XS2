@@ -1125,17 +1125,7 @@ const ProfilePage = () => {
               </div>
             )}
             
-            {/* Solo mostrar "Agregar profesión" en perfil propio cuando no hay ocupación */}
-            {isOwnProfile && !displayUser?.occupation && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-px h-4 sm:h-6 bg-gray-300 hidden sm:block"></div>
-                <span className="text-gray-400 sm:hidden">•</span>
-                <p className="text-xs sm:text-base font-semibold text-gray-400 sm:text-gray-500 cursor-pointer hover:text-gray-600 transition-colors"
-                   onClick={() => setEditProfileModalOpen(true)}>
-                  Agregar profesión
-                </p>
-              </div>
-            )}
+
           </div>
         </div>
 
