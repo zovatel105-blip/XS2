@@ -1643,6 +1643,26 @@ async def update_profile(
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # SYNC DATA: Also update user_profiles collection to maintain consistency
+    # Update user_profiles with the same fields to keep both collections in sync
+    user_profile_fields = {}
+    if "display_name" in update_fields:
+        user_profile_fields["display_name"] = update_fields["display_name"]
+    if "bio" in update_fields:
+        user_profile_fields["bio"] = update_fields["bio"]
+    if "occupation" in update_fields:
+        user_profile_fields["occupation"] = update_fields["occupation"]
+    if "avatar_url" in update_fields:
+        user_profile_fields["avatar_url"] = update_fields["avatar_url"]
+    
+    if user_profile_fields:
+        await db.user_profiles.update_one(
+            {"user_id": current_user.id},
+            {"$set": user_profile_fields},
+            upsert=True  # Create if doesn't exist
+        )
+        logger.info(f"✅ Synced user_profiles for user {current_user.id}: {user_profile_fields}")
+    
     # Return updated user
     updated_user = await db.users.find_one({"id": current_user.id})
     return UserResponse(**updated_user)
