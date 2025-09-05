@@ -1320,7 +1320,7 @@ const AudioDetailPage = () => {
       </div>
 
       {/* Cuadrícula de posts - Ancho completo sin márgenes */}
-      <div className={`${layout.gridHeight}`}>
+      <div className={`${layout.gridHeight}`} data-grid-container>
         {postsLoading ? (
           <div className="flex items-center justify-center h-full px-4">
             <div className="text-center">
