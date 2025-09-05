@@ -1466,7 +1466,7 @@ const ProfilePage = () => {
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center gap-3">
-                <UserCheck className="w-6 h-6 text-green-600" />
+                <UserCheck className="w-6 h-6 text-slate-500" />
                 <h2 className="text-xl font-bold text-gray-900">
                   {followingList.length} Siguiendo
                 </h2>
