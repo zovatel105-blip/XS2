@@ -1206,61 +1206,38 @@ const AudioDetailPage = () => {
           </button>
         </div>
 
-        {/* Sección principal del audio - Diseño mejorado más moderno */}
-        <div className="relative px-6 pb-8 z-10">
-          {/* Portada mejorada con mejor presentación */}
+        {/* Sección principal minimalista */}
+        <div className="relative px-8 py-12 z-10">
+          {/* Portada simple y centrada */}
           <div className="flex justify-center mb-8">
-            <div className="relative">
-              <div className="w-40 h-40 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl border border-white/20">
-                {audio?.cover_url ? (
-                  <img 
-                    src={audio.cover_url} 
-                    alt={audio.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                    <Music className="w-16 h-16 text-gray-500" />
-                  </div>
-                )}
-              </div>
-              
-              {/* Botón de play mejorado */}
-              <button
-                onClick={handlePlayPause}
-                className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-3xl flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-300"
-              >
-                <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                  {isPlaying ? (
-                    <Pause className="w-8 h-8 text-black" />
-                  ) : (
-                    <Play className="w-8 h-8 text-black ml-1" />
-                  )}
+            <div className="w-36 h-36 rounded-2xl overflow-hidden bg-gray-50 shadow-sm">
+              {audio?.cover_url ? (
+                <img 
+                  src={audio.cover_url} 
+                  alt={audio.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <Music className="w-12 h-12 text-gray-400" />
                 </div>
-              </button>
+              )}
             </div>
           </div>
 
-          {/* Información del audio mejorada */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-black text-black mb-4 leading-tight tracking-tight">
+          {/* Información del audio minimalista */}
+          <div className="text-center space-y-4">
+            <h1 className="text-2xl font-medium text-gray-900 leading-relaxed">
               Contains: {audio?.title || 'Audio'}
             </h1>
             
-            {/* Usuario con diseño mejorado */}
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">
-                  {audio?.artist ? audio.artist[0].toUpperCase() : 'A'}
-                </span>
-              </div>
-              
-              <span className="text-black font-bold text-xl tracking-wider">
-                {(audio?.artist || 'ARTIST').toUpperCase()}
+            {/* Usuario simple */}
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-gray-600 font-medium">
+                {audio?.artist || 'Artist'}
               </span>
-              
-              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
