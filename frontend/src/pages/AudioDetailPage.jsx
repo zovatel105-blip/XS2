@@ -1246,29 +1246,22 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Barra de información exacta como en la referencia */}
-      <div className="bg-white border-t border-gray-100 py-4 px-6">
-        <div className="flex items-center justify-between">
-          {/* Lado izquierdo: Play + duración + Original sound by */}
-          <div className="flex items-center gap-4">
-            {/* Triángulo de play como en la referencia */}
-            <div className="flex items-center gap-2">
-              <div className="w-0 h-0 border-l-[8px] border-l-black border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
-              <span className="font-semibold text-black text-base">
-                {formatDuration(audio?.duration || 30)}
-              </span>
-            </div>
-            
-            {/* Original sound by */}
-            <div className="text-gray-600 text-base">
-              Original sound by: <span className="font-medium text-black">
-                {postsLoading ? 'Freey' : (originalUser || 'Freey')}
-              </span>
-            </div>
+      {/* Barra de información minimalista */}
+      <div className="bg-white border-t border-gray-100 py-3 px-8">
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          {/* Duración simple */}
+          <div className="flex items-center gap-2">
+            <Play className="w-3 h-3" />
+            <span>{formatDuration(audio?.duration || 30)}</span>
           </div>
           
-          {/* Lado derecho: usuarios */}
-          <div className="text-gray-500 text-base">
+          {/* Original sound by */}
+          <div>
+            Original sound by: <span className="text-gray-700">{postsLoading ? 'Free' : (originalUser || 'Free')}</span>
+          </div>
+          
+          {/* Usuarios */}
+          <div>
             {totalPosts > 0 ? 
               `${formatNumber(totalPosts)} usuarios` : 
               `${formatNumber(audio?.uses_count || 1)} usuarios`
