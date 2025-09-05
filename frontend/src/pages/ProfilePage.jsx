@@ -505,6 +505,7 @@ const ProfilePage = () => {
     displayName: authUser?.display_name || authUser?.username || 'Mi Perfil',
     email: authUser?.email || 'user@example.com',
     bio: authUser?.bio || '',
+    occupation: authUser?.occupation || '', // ✅ ADDED: Include occupation field
     avatar: authUser?.avatar_url || null,
     followers: followersCount, // Dynamic from follow system
     following: followingCount,  // Dynamic from follow system
