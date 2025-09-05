@@ -1239,7 +1239,7 @@ const ProfilePage = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className={`grid w-full ${isOwnProfile ? 'grid-cols-4' : 'grid-cols-2'} bg-white rounded-none sm:rounded-lg shadow-sm h-auto p-1 mx-0`}>
             <TabsTrigger value="polls" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 text-xs sm:text-sm min-h-[48px] active:scale-95 transition-transform">
-              <Grid3X3 className="w-4 h-4 sm:w-5 sm:h-5" />
+              <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">Publicaciones</span>
             </TabsTrigger>
             {isOwnProfile && (
