@@ -15,6 +15,8 @@ import MessagesPage from './pages/MessagesPage';
 import SettingsPage from './pages/SettingsPage';
 import AuthPage from './pages/AuthPage';
 import AudioDetailPage from './pages/AudioDetailPage';
+import SearchPage from './pages/SearchPage';
+import MomentsPage from './pages/MomentsPage';
 import TestFOMO from './TestFOMO';
 import { Toaster } from './components/ui/toaster';
 import { createPoll } from './services/mockData';
