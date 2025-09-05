@@ -66,6 +66,7 @@ class UserResponse(BaseModel):
     display_name: str
     avatar_url: Optional[str] = None
     bio: Optional[str] = None
+    occupation: Optional[str] = None  # Field for user's profession/job
     is_verified: bool
     created_at: datetime
     last_login: Optional[datetime] = None
