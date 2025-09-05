@@ -1079,8 +1079,8 @@ const ProfilePage = () => {
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-none">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
                   <p className="text-xs sm:text-sm text-gray-600 font-medium leading-none mt-0.5">Seguidos</p>
                 </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-neutral-200 rounded-full flex items-center justify-center flex-shrink-0">
-                  <UserPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-neutral-500" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <UserPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-purple-600" />
                 </div>
               </div>
             </div>
