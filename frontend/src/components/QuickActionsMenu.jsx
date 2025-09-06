@@ -159,16 +159,16 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
       borderColor: 'border-blue-300',
       shadowColor: 'shadow-blue-500/50',
-      position: { x: 32, y: -12 }, // Ajustado: más visible, superior derecha
+      position: { x: 22, y: -22 }, // Círculo rojo superior derecha
     },
     {
-      id: 'create',
-      icon: Plus,
-      label: 'Crear',
-      color: 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
-      borderColor: 'border-green-300',
-      shadowColor: 'shadow-green-500/50',
-      position: { x: 32, y: 12 }, // Ajustado: más visible, derecha del logo
+      id: 'moments',
+      icon: Clock,
+      label: 'Historias',
+      color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
+      borderColor: 'border-orange-300',
+      shadowColor: 'shadow-orange-500/50',
+      position: { x: -22, y: -22 }, // Círculo rojo superior izquierda
     },
     {
       id: 'profile',
@@ -177,7 +177,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
       borderColor: 'border-purple-300',
       shadowColor: 'shadow-purple-500/50',
-      position: { x: 0, y: 32 }, // Posición exacta: directamente abajo del logo
+      position: { x: 0, y: 32 }, // Posición exacta: directamente abajo del logo (YA ESTÁ BIEN)
     },
     {
       id: 'favorites',
@@ -186,7 +186,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
       borderColor: 'border-pink-300',
       shadowColor: 'shadow-pink-500/50',
-      position: { x: -22, y: 22 }, // Posición exacta: inferior izquierda del logo
+      position: { x: -22, y: 22 }, // Posición exacta: inferior izquierda del logo (YA ESTÁ BIEN)
     }
   ];
 
