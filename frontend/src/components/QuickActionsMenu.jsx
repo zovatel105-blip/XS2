@@ -159,7 +159,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       borderColor: 'border-orange-300',
       shadowColor: 'shadow-orange-500/50',
-      position: { x: -8, y: -22 }, // ARCO 120°: un poco más a la derecha
+      position: { x: -5, y: -25 }, // ARCO 120° ROTADO: ~120° (más arriba-derecha)
     },
     {
       id: 'search',
@@ -168,7 +168,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
       borderColor: 'border-blue-300',
       shadowColor: 'shadow-blue-500/50',
-      position: { x: -20, y: -7 }, // ARCO 120°: un poco más a la derecha
+      position: { x: -22, y: -12 }, // ARCO 120° ROTADO: ~160° (derecha-superior)
     },
     {
       id: 'profile',
@@ -177,7 +177,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
       borderColor: 'border-purple-300',
       shadowColor: 'shadow-purple-500/50',
-      position: { x: -20, y: 7 }, // ARCO 120°: un poco más a la derecha
+      position: { x: -22, y: 12 }, // ARCO 120° ROTADO: ~200° (derecha-inferior)
     },
     {
       id: 'favorites',
@@ -186,7 +186,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
       borderColor: 'border-pink-300',
       shadowColor: 'shadow-pink-500/50',
-      position: { x: -8, y: 22 }, // ARCO 120°: un poco más a la derecha
+      position: { x: -5, y: 25 }, // ARCO 120° ROTADO: ~240° (abajo-derecha)
     }
   ];
 
