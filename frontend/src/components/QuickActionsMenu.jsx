@@ -159,7 +159,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       borderColor: 'border-orange-300',
       shadowColor: 'shadow-orange-500/50',
-      position: { x: -20, y: -2 }, // ARCO: separación mínima, superior
+      position: { x: -13, y: -22 }, // ARCO 120°: 150° (radio 25px)
     },
     {
       id: 'search',
@@ -168,7 +168,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
       borderColor: 'border-blue-300',
       shadowColor: 'shadow-blue-500/50',
-      position: { x: -24, y: 10 }, // ARCO: separación mínima, media-superior
+      position: { x: -25, y: -7 }, // ARCO 120°: 190° (radio 25px)
     },
     {
       id: 'profile',
@@ -177,7 +177,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
       borderColor: 'border-purple-300',
       shadowColor: 'shadow-purple-500/50',
-      position: { x: -24, y: 22 }, // ARCO: separación mínima, media-inferior
+      position: { x: -25, y: 7 }, // ARCO 120°: 230° (radio 25px)
     },
     {
       id: 'favorites',
@@ -186,7 +186,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
       borderColor: 'border-pink-300',
       shadowColor: 'shadow-pink-500/50',
-      position: { x: -20, y: 32 }, // ARCO: separación mínima, inferior
+      position: { x: -13, y: 22 }, // ARCO 120°: 270° (radio 25px)
     }
   ];
 
