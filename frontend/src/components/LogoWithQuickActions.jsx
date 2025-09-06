@@ -100,10 +100,19 @@ const LogoWithQuickActions = ({ size = 24, className = "" }) => {
         }}
         title="Mantén presionado para acciones rápidas"
       >
+        {/* Efectos de ondas concéntricas estilo Pinterest */}
+        {isPressed && (
+          <>
+            <div className="absolute inset-0 rounded-full bg-white/40 animate-ping" style={{zIndex: -1}} />
+            <div className="absolute inset-0 rounded-full bg-white/30 animate-ping" style={{zIndex: -2, animationDelay: '150ms'}} />
+            <div className="absolute inset-0 rounded-full bg-white/20 animate-ping" style={{zIndex: -3, animationDelay: '300ms'}} />
+          </>
+        )}
+        
         <CustomLogo 
           size={size} 
-          className={`transition-all duration-200 ${
-            isPressed ? 'brightness-75' : ''
+          className={`transition-all duration-300 ${
+            isPressed ? 'brightness-110 drop-shadow-lg' : 'hover:brightness-105'
           }`} 
         />
         
