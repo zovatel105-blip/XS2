@@ -199,19 +199,8 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
         onClick={onClose}
       />
 
-      {/* Centro del menú - Logo */}
+      {/* Centro del menú - Sin logo duplicado */}
       <div className="relative">
-        <div 
-          className={`w-8 h-8 rounded-full bg-white/95 backdrop-blur-md border border-white/60 shadow-lg flex items-center justify-center transition-all duration-300 ${
-            isVisible ? 'scale-110 shadow-xl' : 'scale-100'
-          }`}
-        >
-          <img
-            src="https://customer-assets.emergentagent.com/job_red-circle-edit/artifacts/7rnoyyyr_file_00000000f1a8620ab186d3fbdb296465.png"
-            alt="Logo"
-            className="w-5 h-5 object-contain rounded"
-          />
-        </div>
 
         {/* Botón cerrar */}
         <button
