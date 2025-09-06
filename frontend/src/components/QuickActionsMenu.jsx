@@ -159,16 +159,52 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
       borderColor: 'border-blue-300',
       shadowColor: 'shadow-blue-500/50',
-      position: { x: -70, y: -30 }, // Izquierda superior
+      position: { x: -80, y: -40 }, // Izquierda superior
+    },
+    {
+      id: 'create',
+      icon: Plus,
+      label: 'Crear',
+      color: 'bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+      borderColor: 'border-green-300',
+      shadowColor: 'shadow-green-500/50',
+      position: { x: 80, y: -40 }, // Derecha superior
+    },
+    {
+      id: 'profile',
+      icon: User,
+      label: 'Perfil',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+      borderColor: 'border-purple-300',
+      shadowColor: 'shadow-purple-500/50',
+      position: { x: -80, y: 40 }, // Izquierda inferior
+    },
+    {
+      id: 'favorites',
+      icon: Heart,
+      label: 'Favoritos',
+      color: 'bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
+      borderColor: 'border-pink-300',
+      shadowColor: 'shadow-pink-500/50',
+      position: { x: 80, y: 40 }, // Derecha inferior
+    },
+    {
+      id: 'settings',
+      icon: Settings,
+      label: 'Ajustes',
+      color: 'bg-gradient-to-br from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700',
+      borderColor: 'border-gray-300',
+      shadowColor: 'shadow-gray-500/50',
+      position: { x: 0, y: -70 }, // Centro superior
     },
     {
       id: 'moments',
       icon: Clock,
       label: 'Momentos',
-      color: 'bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
-      borderColor: 'border-purple-300',
-      shadowColor: 'shadow-purple-500/50',
-      position: { x: 70, y: -30 }, // Derecha superior
+      color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
+      borderColor: 'border-orange-300',
+      shadowColor: 'shadow-orange-500/50',
+      position: { x: 0, y: 70 }, // Centro inferior
     }
   ];
 
