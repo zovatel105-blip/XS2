@@ -26,13 +26,17 @@ const useLongPress = (onLongPress, onShortPress, delay = 500) => {
   }, [onLongPress, delay]);
 
   const clear = useCallback((event) => {
+    console.log('🛑 LONGPRESS HOOK: clear() called', event?.type, 'preventClick:', preventClick.current);
+    
     if (timeout.current) {
+      console.log('🔄 LONGPRESS HOOK: Clearing timeout');
       clearTimeout(timeout.current);
       timeout.current = null;
     }
 
     // Si no fue un long press y hay callback para short press
     if (!preventClick.current && onShortPress) {
+      console.log('👆 LONGPRESS HOOK: Calling onShortPress');
       onShortPress(event);
     }
 
