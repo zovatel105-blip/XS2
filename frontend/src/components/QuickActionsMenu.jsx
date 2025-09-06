@@ -157,7 +157,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       borderColor: 'border-orange-300',
       shadowColor: 'shadow-orange-500/50',
-      position: { x: -5, y: -25 }, // ARCO 120° ROTADO: ~120° (más arriba-derecha)
+      position: { x: -22, y: 12 }, // RESTAURADO: posición donde estaba Perfil (antes de eliminar logo duplicado)
     },
     {
       id: 'search',
