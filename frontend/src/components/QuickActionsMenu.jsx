@@ -263,12 +263,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
         </svg>
       </div>
 
-      {/* Instrucciones de uso */}
-      <div className={`absolute -bottom-16 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-black/80 text-white text-sm rounded-lg whitespace-nowrap transition-all duration-300 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}>
-        Selecciona una acción rápida
-      </div>
+
     </div>
   );
 };
