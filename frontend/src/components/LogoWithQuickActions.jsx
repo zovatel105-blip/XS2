@@ -67,6 +67,9 @@ const LogoWithQuickActions = ({ size = 24, className = "" }) => {
     600 // 600ms para activar long press
   );
 
+  // Debug logging para el estado del menú
+  console.log('🔍 LogoWithQuickActions render - showQuickActions:', showQuickActions);
+
   return (
     <>
       <div
