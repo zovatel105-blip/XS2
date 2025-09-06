@@ -157,7 +157,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       borderColor: 'border-orange-300',
       shadowColor: 'shadow-orange-500/50',
-      position: { x: -22, y: 12 }, // MOVIDO: a la posición donde estaba Perfil
+      position: { x: -5, y: -25 }, // RESTAURADO: posición original superior
     },
     {
       id: 'search',
