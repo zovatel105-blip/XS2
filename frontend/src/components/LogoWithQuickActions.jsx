@@ -77,11 +77,31 @@ const LogoWithQuickActions = ({ size = 24, className = "" }) => {
         className={`${className} flex items-center justify-center cursor-pointer select-none transition-all duration-200 ${
           isPressed ? 'scale-95' : 'hover:scale-105'
         }`}
-        onMouseDown={() => setIsPressed(true)}
-        onMouseUp={() => setIsPressed(false)}
-        onMouseLeave={() => setIsPressed(false)}
-        onTouchStart={() => setIsPressed(true)}
-        onTouchEnd={() => setIsPressed(false)}
+        onMouseDown={(e) => {
+          console.log('🖱️ MouseDown event - combined handler');
+          longPressProps.onMouseDown(e);
+          setIsPressed(true);
+        }}
+        onMouseUp={(e) => {
+          console.log('🖱️ MouseUp event - combined handler');
+          longPressProps.onMouseUp(e);
+          setIsPressed(false);
+        }}
+        onMouseLeave={(e) => {
+          console.log('🖱️ MouseLeave event - combined handler');
+          longPressProps.onMouseLeave(e);
+          setIsPressed(false);
+        }}
+        onTouchStart={(e) => {
+          console.log('📱 TouchStart event - combined handler');
+          longPressProps.onTouchStart(e);
+          setIsPressed(true);
+        }}
+        onTouchEnd={(e) => {
+          console.log('📱 TouchEnd event - combined handler');
+          longPressProps.onTouchEnd(e);
+          setIsPressed(false);
+        }}
         style={{ 
           width: `${size}px`, 
           height: `${size}px`,
