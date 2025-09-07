@@ -274,40 +274,59 @@ const SearchPage = () => {
         </div>
       </div>
 
-      {/* Tabs and Sort */}
-      {hasSearched && (
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex space-x-1">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-t-lg border-b-2 transition-all ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600 bg-blue-50'
-                      : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                  }`}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="flex items-center justify-between py-3">
+              {/* Filter Tabs */}
+              <div className="flex space-x-1">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => handleTabChange(tab.id)}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        activeTab === tab.id
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Icon size={16} />
+                      <span className="hidden sm:inline">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              
+              {/* Sort Options */}
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500 hidden sm:inline">Ordenar:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                  className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <Icon size={18} />
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              );
-            })}
+                  {sortOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-6">
         {!searchQuery.trim() ? (
-          <div className="text-center py-16">
-            <Search size={64} className="text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">Busca lo que quieras</h3>
-            <p className="text-gray-500">Encuentra usuarios, hashtags, música y más...</p>
-          </div>
+          /* Discovery Section - when no search query */
+          <DiscoverySection
+            trendingContent={discoveryData.trending_posts || []}
+            suggestedUsers={discoveryData.suggested_users || []}
+            trendingHashtags={discoveryData.trending_hashtags || []}
+          />
         ) : isLoading ? (
           <div className="text-center py-16">
             <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
