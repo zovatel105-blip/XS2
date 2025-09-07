@@ -200,10 +200,6 @@ const SearchPage = () => {
     setActiveTab(tabId);
   };
 
-  const handleSortChange = (sortId) => {
-    setSortBy(sortId);
-  };
-
   const handleResultClick = (result) => {
     console.log('Result clicked:', result);
   };
