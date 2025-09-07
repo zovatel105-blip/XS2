@@ -15,7 +15,6 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAutocompleteLoading, setIsAutocompleteLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
-  const [sortBy, setSortBy] = useState('popularity');
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [hasSearched, setHasSearched] = useState(false);
