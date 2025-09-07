@@ -1874,6 +1874,464 @@ async def search_users(q: str = "", current_user: UserResponse = Depends(get_cur
     
     return [UserResponse(**user) for user in users]
 
+# =============  UNIVERSAL SEARCH ENDPOINTS =============
+
+from difflib import SequenceMatcher
+import re
+
+def calculate_similarity(a, b):
+    """Calculate similarity between two strings for fuzzy search"""
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
+def extract_hashtags_from_text(text):
+    """Extract hashtags from text content"""
+    if not text:
+        return []
+    hashtag_pattern = r'#(\w+)'
+    hashtags = re.findall(hashtag_pattern, text)
+    return [f"#{tag}" for tag in hashtags]
+
+@api_router.get("/search/universal")
+async def universal_search(
+    q: str = "",
+    filter_type: str = "all",  # all, users, posts, hashtags, sounds
+    sort_by: str = "relevance",  # relevance, popularity, recent
+    limit: int = 20,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Universal search across all content types"""
+    if not q.strip():
+        return {
+            "success": True,
+            "results": [],
+            "suggestions": await get_search_suggestions(current_user.id),
+            "trending": await get_trending_content(current_user.id)
+        }
+    
+    query = q.strip().lower()
+    results = []
+    
+    try:
+        # Search Users
+        if filter_type in ["all", "users"]:
+            users_results = await search_users_advanced(query, current_user.id, limit)
+            results.extend(users_results)
+        
+        # Search Posts
+        if filter_type in ["all", "posts"]:
+            posts_results = await search_posts_advanced(query, current_user.id, limit)
+            results.extend(posts_results)
+        
+        # Search Hashtags
+        if filter_type in ["all", "hashtags"]:
+            hashtags_results = await search_hashtags_advanced(query, current_user.id, limit)
+            results.extend(hashtags_results)
+        
+        # Search Sounds/Music
+        if filter_type in ["all", "sounds"]:
+            sounds_results = await search_sounds_advanced(query, current_user.id, limit)
+            results.extend(sounds_results)
+        
+        # Sort results
+        if sort_by == "popularity":
+            results.sort(key=lambda x: x.get("popularity_score", 0), reverse=True)
+        elif sort_by == "recent":
+            results.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        else:  # relevance
+            results.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
+        
+        # Limit final results
+        results = results[:limit]
+        
+        return {
+            "success": True,
+            "results": results,
+            "total": len(results),
+            "query": q,
+            "filter_type": filter_type,
+            "sort_by": sort_by
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in universal search: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")
+
+async def search_users_advanced(query: str, current_user_id: str, limit: int):
+    """Advanced user search with fuzzy matching"""
+    search_regex = {"$regex": query, "$options": "i"}
+    
+    # Find users matching query
+    users = await db.users.find({
+        "$and": [
+            {"id": {"$ne": current_user_id}},
+            {
+                "$or": [
+                    {"username": search_regex},
+                    {"display_name": search_regex},
+                    {"bio": search_regex}
+                ]
+            }
+        ]
+    }).limit(limit * 2).to_list(limit * 2)  # Get more for fuzzy filtering
+    
+    results = []
+    for user in users:
+        # Calculate relevance score
+        username_sim = calculate_similarity(query, user.get("username", ""))
+        display_name_sim = calculate_similarity(query, user.get("display_name", ""))
+        bio_sim = calculate_similarity(query, user.get("bio", "")) * 0.5
+        
+        relevance_score = max(username_sim, display_name_sim, bio_sim)
+        
+        # Get user profile for additional data
+        profile = await db.user_profiles.find_one({"user_id": user["id"]})
+        followers_count = profile.get("followers_count", 0) if profile else 0
+        
+        # Check if current user follows this user
+        is_following = await db.follows.find_one({
+            "follower_id": current_user_id,
+            "following_id": user["id"]
+        }) is not None
+        
+        results.append({
+            "type": "user",
+            "id": user["id"],
+            "username": user["username"],
+            "display_name": user.get("display_name", ""),
+            "bio": user.get("bio", "")[:100] + "..." if user.get("bio", "") and len(user.get("bio", "")) > 100 else user.get("bio", ""),
+            "avatar": user.get("avatar"),
+            "followers_count": followers_count,
+            "is_following": is_following,
+            "relevance_score": relevance_score,
+            "popularity_score": followers_count,
+            "created_at": user.get("created_at", ""),
+            "verified": user.get("verified", False)
+        })
+    
+    # Filter by relevance threshold and return top results
+    results = [r for r in results if r["relevance_score"] > 0.3]
+    return sorted(results, key=lambda x: x["relevance_score"], reverse=True)[:limit]
+
+async def search_posts_advanced(query: str, current_user_id: str, limit: int):
+    """Advanced posts search"""
+    search_regex = {"$regex": query, "$options": "i"}
+    
+    # Find posts matching query in content or title
+    posts = await db.polls.find({
+        "$or": [
+            {"content": search_regex},
+            {"title": search_regex}
+        ]
+    }).limit(limit * 2).to_list(limit * 2)
+    
+    results = []
+    for post in posts:
+        # Calculate relevance score
+        content_sim = calculate_similarity(query, post.get("content", ""))
+        title_sim = calculate_similarity(query, post.get("title", ""))
+        relevance_score = max(content_sim, title_sim)
+        
+        # Get engagement metrics
+        votes_count = len(post.get("votes", []))
+        comments_count = await db.comments.count_documents({"poll_id": post["id"]})
+        
+        # Get author info
+        author = await db.users.find_one({"id": post["user_id"]})
+        
+        results.append({
+            "type": "post",
+            "id": post["id"],
+            "title": post.get("title", ""),
+            "content": post.get("content", "")[:150] + "..." if post.get("content", "") and len(post.get("content", "")) > 150 else post.get("content", ""),
+            "image_url": post.get("image_url"),
+            "video_url": post.get("video_url"),
+            "votes_count": votes_count,
+            "comments_count": comments_count,
+            "author": {
+                "username": author.get("username", "") if author else "",
+                "display_name": author.get("display_name", "") if author else "",
+                "avatar": author.get("avatar") if author else None
+            },
+            "relevance_score": relevance_score,
+            "popularity_score": votes_count + comments_count,
+            "created_at": post.get("created_at", "")
+        })
+    
+    results = [r for r in results if r["relevance_score"] > 0.2]
+    return sorted(results, key=lambda x: x["relevance_score"], reverse=True)[:limit]
+
+async def search_hashtags_advanced(query: str, current_user_id: str, limit: int):
+    """Advanced hashtags search"""
+    # Ensure query starts with # for hashtag search
+    hashtag_query = query if query.startswith("#") else f"#{query}"
+    
+    # Aggregate hashtags from posts content
+    pipeline = [
+        {
+            "$match": {
+                "content": {"$regex": hashtag_query, "$options": "i"}
+            }
+        },
+        {
+            "$group": {
+                "_id": None,
+                "posts": {"$push": "$$ROOT"}
+            }
+        }
+    ]
+    
+    result = await db.polls.aggregate(pipeline).to_list(1)
+    if not result:
+        return []
+    
+    posts = result[0]["posts"]
+    hashtag_counts = {}
+    
+    # Extract and count hashtags
+    for post in posts:
+        hashtags = extract_hashtags_from_text(post.get("content", ""))
+        for hashtag in hashtags:
+            if hashtag.lower().find(query.lower()) != -1:
+                if hashtag not in hashtag_counts:
+                    hashtag_counts[hashtag] = {
+                        "count": 0,
+                        "recent_posts": []
+                    }
+                hashtag_counts[hashtag]["count"] += 1
+                if len(hashtag_counts[hashtag]["recent_posts"]) < 3:
+                    hashtag_counts[hashtag]["recent_posts"].append({
+                        "id": post["id"],
+                        "content": post.get("content", "")[:100],
+                        "image_url": post.get("image_url")
+                    })
+    
+    results = []
+    for hashtag, data in hashtag_counts.items():
+        relevance_score = calculate_similarity(query, hashtag)
+        results.append({
+            "type": "hashtag",
+            "id": hashtag,
+            "hashtag": hashtag,
+            "posts_count": data["count"],
+            "recent_posts": data["recent_posts"],
+            "relevance_score": relevance_score,
+            "popularity_score": data["count"],
+            "created_at": ""
+        })
+    
+    results = [r for r in results if r["relevance_score"] > 0.3]
+    return sorted(results, key=lambda x: x["relevance_score"], reverse=True)[:limit]
+
+async def search_sounds_advanced(query: str, current_user_id: str, limit: int):
+    """Advanced sounds/music search"""
+    search_regex = {"$regex": query, "$options": "i"}
+    
+    # Search in user audios
+    audios = await db.audios.find({
+        "$or": [
+            {"title": search_regex},
+            {"description": search_regex}
+        ]
+    }).limit(limit).to_list(limit)
+    
+    results = []
+    for audio in audios:
+        # Calculate relevance score
+        title_sim = calculate_similarity(query, audio.get("title", ""))
+        desc_sim = calculate_similarity(query, audio.get("description", "")) * 0.7
+        relevance_score = max(title_sim, desc_sim)
+        
+        # Count posts using this audio
+        posts_using_count = await db.polls.count_documents({"audio_id": audio["id"]})
+        
+        # Get author info
+        author = await db.users.find_one({"id": audio["user_id"]})
+        
+        results.append({
+            "type": "sound",
+            "id": audio["id"],
+            "title": audio.get("title", ""),
+            "description": audio.get("description", ""),
+            "duration": audio.get("duration", 0),
+            "audio_url": audio.get("audio_url"),
+            "cover_image": audio.get("cover_image"),
+            "posts_using_count": posts_using_count,
+            "author": {
+                "username": author.get("username", "") if author else "",
+                "display_name": author.get("display_name", "") if author else "",
+                "avatar": author.get("avatar") if author else None
+            },
+            "relevance_score": relevance_score,
+            "popularity_score": posts_using_count,
+            "created_at": audio.get("created_at", "")
+        })
+    
+    results = [r for r in results if r["relevance_score"] > 0.2]
+    return sorted(results, key=lambda x: x["relevance_score"], reverse=True)[:limit]
+
+@api_router.get("/search/suggestions")
+async def get_search_suggestions(current_user_id: str = None):
+    """Get search suggestions including recent searches and popular terms"""
+    suggestions = {
+        "recent_searches": [],
+        "popular_terms": [],
+        "trending_hashtags": [],
+        "suggested_users": []
+    }
+    
+    try:
+        # Get popular hashtags from recent posts
+        pipeline = [
+            {"$match": {"created_at": {"$gte": (datetime.utcnow() - timedelta(days=7)).isoformat()}}},
+            {"$project": {"content": 1}},
+            {"$limit": 1000}
+        ]
+        
+        recent_posts = await db.polls.aggregate(pipeline).to_list(1000)
+        hashtag_counts = {}
+        
+        for post in recent_posts:
+            hashtags = extract_hashtags_from_text(post.get("content", ""))
+            for hashtag in hashtags:
+                hashtag_counts[hashtag] = hashtag_counts.get(hashtag, 0) + 1
+        
+        # Get top trending hashtags
+        trending = sorted(hashtag_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+        suggestions["trending_hashtags"] = [{"hashtag": h[0], "count": h[1]} for h in trending]
+        
+        # Get suggested users (users with high follower count)
+        pipeline = [
+            {"$sort": {"followers_count": -1}},
+            {"$limit": 5}
+        ]
+        
+        top_profiles = await db.user_profiles.aggregate(pipeline).to_list(5)
+        for profile in top_profiles:
+            user = await db.users.find_one({"id": profile["user_id"]})
+            if user and user["id"] != current_user_id:
+                suggestions["suggested_users"].append({
+                    "id": user["id"],
+                    "username": user["username"],
+                    "display_name": user.get("display_name", ""),
+                    "avatar": user.get("avatar"),
+                    "followers_count": profile.get("followers_count", 0)
+                })
+        
+        return suggestions
+        
+    except Exception as e:
+        logger.error(f"Error getting search suggestions: {str(e)}")
+        return suggestions
+
+async def get_trending_content(current_user_id: str):
+    """Get trending content for discovery section"""
+    try:
+        # Get trending posts (high engagement in last 24 hours)
+        recent_time = (datetime.utcnow() - timedelta(hours=24)).isoformat()
+        
+        pipeline = [
+            {"$match": {"created_at": {"$gte": recent_time}}},
+            {"$addFields": {"votes_count": {"$size": "$votes"}}},
+            {"$sort": {"votes_count": -1}},
+            {"$limit": 10}
+        ]
+        
+        trending_posts = await db.polls.aggregate(pipeline).to_list(10)
+        
+        results = []
+        for post in trending_posts:
+            author = await db.users.find_one({"id": post["user_id"]})
+            comments_count = await db.comments.count_documents({"poll_id": post["id"]})
+            
+            results.append({
+                "type": "trending_post",
+                "id": post["id"],
+                "title": post.get("title", ""),
+                "content": post.get("content", "")[:100],
+                "image_url": post.get("image_url"),
+                "votes_count": len(post.get("votes", [])),
+                "comments_count": comments_count,
+                "author": {
+                    "username": author.get("username", "") if author else "",
+                    "display_name": author.get("display_name", "") if author else "",
+                    "avatar": author.get("avatar") if author else None
+                },
+                "created_at": post.get("created_at", "")
+            })
+        
+        return results[:5]  # Return top 5 trending posts
+        
+    except Exception as e:
+        logger.error(f"Error getting trending content: {str(e)}")
+        return []
+
+@api_router.get("/search/autocomplete")
+async def search_autocomplete(
+    q: str = "",
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Real-time autocomplete suggestions"""
+    if len(q) < 2:
+        return {"suggestions": []}
+    
+    query = q.lower().strip()
+    suggestions = []
+    
+    try:
+        # User suggestions
+        users = await db.users.find({
+            "$and": [
+                {"id": {"$ne": current_user.id}},
+                {
+                    "$or": [
+                        {"username": {"$regex": f"^{query}", "$options": "i"}},
+                        {"display_name": {"$regex": f"^{query}", "$options": "i"}}
+                    ]
+                }
+            ]
+        }).limit(5).to_list(5)
+        
+        for user in users:
+            suggestions.append({
+                "type": "user",
+                "text": f"@{user['username']}",
+                "display": f"{user.get('display_name', user['username'])} (@{user['username']})",
+                "avatar": user.get("avatar")
+            })
+        
+        # Hashtag suggestions
+        if query.startswith("#") or not query.startswith("@"):
+            hashtag_query = query if query.startswith("#") else f"#{query}"
+            pipeline = [
+                {"$match": {"content": {"$regex": hashtag_query, "$options": "i"}}},
+                {"$limit": 100}
+            ]
+            
+            posts = await db.polls.aggregate(pipeline).to_list(100)
+            hashtag_counts = {}
+            
+            for post in posts:
+                hashtags = extract_hashtags_from_text(post.get("content", ""))
+                for hashtag in hashtags:
+                    if hashtag.lower().startswith(query.lower()):
+                        hashtag_counts[hashtag] = hashtag_counts.get(hashtag, 0) + 1
+            
+            # Get top hashtags
+            top_hashtags = sorted(hashtag_counts.items(), key=lambda x: x[1], reverse=True)[:3]
+            for hashtag, count in top_hashtags:
+                suggestions.append({
+                    "type": "hashtag",
+                    "text": hashtag,
+                    "display": f"{hashtag} ({count} posts)",
+                    "count": count
+                })
+        
+        return {"suggestions": suggestions[:8]}  # Limit to 8 suggestions
+        
+    except Exception as e:
+        logger.error(f"Error in autocomplete: {str(e)}")
+        return {"suggestions": []}
+
 # =============  FOLLOW ENDPOINTS =============
 
 # Helper function to update follow counts
