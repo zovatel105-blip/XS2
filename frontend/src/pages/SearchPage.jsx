@@ -232,21 +232,50 @@ const SearchPage = () => {
             </button>
             
             <div className="flex-1 relative">
-              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" />
+              
+              {searchQuery && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 z-10"
+                >
+                  <X size={18} />
+                </button>
+              )}
+              
               <input
+                ref={searchInputRef}
                 type="text"
-                placeholder="Buscar usuarios, hashtags, música..."
+                placeholder="Buscar usuarios, posts, hashtags, sonidos..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                onKeyDown={handleKeyDown}
+                className="w-full pl-10 pr-10 py-3 bg-gray-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                 autoFocus
+              />
+              
+              {isAutocompleteLoading && (
+                <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                  <Loader size={16} className="text-gray-400 animate-spin" />
+                </div>
+              )}
+              
+              <AutocompleteDropdown
+                suggestions={autocompleteResults}
+                isVisible={showAutocomplete}
+                onSuggestionClick={handleSuggestionClick}
+                selectedIndex={selectedSuggestionIndex}
+                onClose={() => setShowAutocomplete(false)}
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs and Sort */}
+      {hasSearched && (
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex space-x-1">
