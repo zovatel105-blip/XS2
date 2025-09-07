@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, User, Hash, Music, ArrowLeft, TrendingUp, Loader, X } from 'lucide-react';
+import { Search, User, Hash, Music, ArrowLeft, TrendingUp, Loader, X, FileText } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 import searchService from '../services/searchService';
