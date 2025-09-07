@@ -331,14 +331,10 @@ const SearchPage = () => {
         ) : searchResults.length > 0 ? (
           /* Search Results */
           <div>
-            <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+            <div className="mb-4">
               <p className="text-sm text-gray-600 text-center sm:text-left">
                 {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "{searchQuery}"
               </p>
-              <div className="flex items-center justify-center sm:justify-end space-x-2 text-xs text-gray-500">
-                <TrendingUp size={14} />
-                <span>Ordenado por {sortOptions.find(s => s.id === sortBy)?.label.toLowerCase()}</span>
-              </div>
             </div>
             
             <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
