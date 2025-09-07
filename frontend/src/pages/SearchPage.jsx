@@ -47,16 +47,10 @@ const SearchPage = () => {
     { id: 'sounds', label: 'Sonidos', icon: Music },
   ];
 
-  const sortOptions = [
-    { id: 'popularity', label: 'Popularidad' },
-    { id: 'recent', label: 'Reciente' },
-  ];
-
-  const updateURLParams = (query, filter, sort) => {
+  const updateURLParams = (query, filter) => {
     const params = new URLSearchParams();
     if (query) params.set('q', query);
     if (filter !== 'all') params.set('filter', filter);
-    if (sort !== 'popularity') params.set('sort', sort);
     setSearchParams(params);
   };
 
