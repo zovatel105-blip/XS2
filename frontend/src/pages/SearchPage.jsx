@@ -29,7 +29,7 @@ const SearchPage = () => {
   useEffect(() => {
     const query = searchParams.get('q') || '';
     const filter = searchParams.get('filter') || 'all';
-    const sort = searchParams.get('sort') || 'relevance';
+    const sort = searchParams.get('sort') || 'popularity';
     
     setSearchQuery(query);
     setActiveTab(filter);
