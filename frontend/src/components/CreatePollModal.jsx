@@ -79,6 +79,7 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
   });
   
   const { toast } = useToast();
+  const { hideRightNavigationBar, showRightNavigationBar } = useTikTok();
 
   // Initialize with pre-selected audio if provided
   useEffect(() => {
