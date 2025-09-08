@@ -113,6 +113,7 @@ function AppContent() {
             <Route path="/audio/:audioId" element={<AudioDetailPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/moments" element={<MomentsPage />} />
+            <Route path="/create" element={<ContentCreationPage />} />
 
             {/* Demo & Test Pages - Remove in production */}
             <Route path="/explore-demo" element={<ExploreDemo />} />
