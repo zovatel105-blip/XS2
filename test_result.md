@@ -863,12 +863,13 @@ Preview limpio de cada tarjeta:
 - **Información contextual**: header con datos relevantes para la publicación
 - **Experiencia limpia**: fullscreen enfocado en el contenido real
 
-**9. BOTONES PRINCIPALES VISIBLES Y FUNCIONALES:**
-- ✅ **Botón "Add sound"**: En top bar centro, estilo pill con ícono música
-- ✅ **Botón "Publicar"**: En bottom bar, rojo, rounded-full, con loading state
-- ✅ **Funcionalidades completas**: MusicSelector abre al clic, validaciones activas
-- ✅ **Estados visuales**: Botón música muestra canción seleccionada, botón publicar con spinner
-- ✅ **Ayuda contextual**: Mensajes de "Necesitas al menos 2 opciones" y "Agrega un título"
+**9. BOTONES PRINCIPALES EN SIDEBAR DERECHO IMPLEMENTADOS:**
+- ✅ **Botón "Add sound"**: En sidebar derecho, cuadrado 12x12, ícono música
+- ✅ **Botón "Layout"**: En sidebar derecho, cuadrado 12x12, ícono grid
+- ✅ **Botón "Publicar"**: En sidebar derecho, cuadrado 12x12, rojo, ícono envío
+- ✅ **Funcionalidades completas**: MusicSelector, LayoutSelector, validaciones activas
+- ✅ **Estados visuales**: Loading spinner en publicar, tooltips informativos
+- ✅ **Bottom bar simplificado**: Solo título e información de estado
 
 **🎉 IMPLEMENTACIÓN 100% COMPLETA Y REFINADA** - La pantalla de creación de contenido estilo TikTok está terminada con:
 ✅ **Diseño limpio según referencia** (sin elementos tachados)
