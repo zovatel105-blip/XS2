@@ -167,7 +167,7 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
               {/* Title/Description input */}
               <div className="p-3 bg-gray-900">
                 <div className="flex items-center gap-2 mb-2">
-                  <divClassName="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs font-bold">{String.fromCharCode(65 + slotIndex)}</span>
                   </div>
                   <span className="text-gray-300 text-sm font-medium">Opción {String.fromCharCode(65 + slotIndex)}</span>
