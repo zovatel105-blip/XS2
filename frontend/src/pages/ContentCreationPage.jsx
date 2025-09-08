@@ -331,11 +331,11 @@ const ContentCreationPage = () => {
         {/* Add Sound button - Center */}
         <button
           onClick={() => setShowMusicSelector(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-full text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-full text-white transition-colors max-w-xs"
         >
-          <Music className="w-5 h-5" />
-          <span className="text-sm font-medium">
-            {selectedMusic ? selectedMusic.title : 'Add sound'}
+          <Music className="w-5 h-5 flex-shrink-0" />
+          <span className="text-sm font-medium truncate">
+            {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
           </span>
         </button>
 
