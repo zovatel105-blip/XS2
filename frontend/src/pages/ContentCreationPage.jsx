@@ -89,84 +89,89 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                       className="w-full h-full object-cover"
                     />
                     
-                    {/* Published Post Style - Exactly like real TikTok */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent">
+                    {/* Feed-style TikTok Post - Fullscreen */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30">
                       
-                      {/* Top Section - Real user profile */}
-                      <div className="absolute top-4 left-4 right-16">
+                      {/* Top Section - User profile like feed */}
+                      <div className="absolute top-6 left-4 right-20 z-20">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-sm font-bold">{String.fromCharCode(65 + slotIndex)}</span>
+                          <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center border-2 border-white">
+                            <span className="text-white font-bold">{String.fromCharCode(65 + slotIndex)}</span>
                           </div>
-                          <div>
-                            <span className="text-white text-sm font-semibold">@usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
-                            <div className="text-white/70 text-xs">Opción {String.fromCharCode(65 + slotIndex)}</div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-white font-bold text-lg">@usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
+                              <button className="bg-red-500 text-white text-sm px-4 py-1 rounded-full font-bold">
+                                Seguir
+                              </button>
+                            </div>
+                            <p className="text-white/80 text-sm">Opción {String.fromCharCode(65 + slotIndex)} • Hace 2h</p>
                           </div>
-                          <button className="border border-white text-white text-xs px-3 py-1 rounded font-medium">
-                            Seguir
-                          </button>
                         </div>
                       </div>
 
-                      {/* Right Side - Real TikTok interaction buttons */}
-                      <div className="absolute right-3 bottom-20 flex flex-col gap-6">
+                      {/* Right Side - Feed interaction buttons */}
+                      <div className="absolute right-4 bottom-32 flex flex-col gap-8 z-20">
                         <div className="flex flex-col items-center">
-                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
-                            <span className="text-white text-xl">❤️</span>
+                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
+                            <span className="text-2xl">❤️</span>
                           </div>
-                          <span className="text-white text-xs font-semibold">12.5K</span>
+                          <span className="text-white text-sm font-bold">15.2K</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
-                            <span className="text-white text-xl">💬</span>
+                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
+                            <span className="text-2xl">💬</span>
                           </div>
-                          <span className="text-white text-xs font-semibold">834</span>
+                          <span className="text-white text-sm font-bold">1,248</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
-                            <span className="text-white text-xl">📤</span>
+                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
+                            <span className="text-2xl">📤</span>
                           </div>
-                          <span className="text-white text-xs font-semibold">2.1K</span>
+                          <span className="text-white text-sm font-bold">3.1K</span>
                         </div>
                         <div className="flex flex-col items-center">
-                          <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
-                            <Music className="w-4 h-4 text-white" />
+                          <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center animate-spin-slow">
+                            <Music className="w-5 h-5 text-white" />
                           </div>
                         </div>
                       </div>
                       
-                      {/* Bottom Section - Real post description */}
-                      <div className="absolute bottom-4 left-4 right-20">
-                        {/* Post Description */}
-                        <div className="mb-2">
-                          <p className="text-white font-semibold text-base leading-tight">
-                            {option.text || `¿Qué opinas de esta opción ${String.fromCharCode(65 + slotIndex)}?`}
-                          </p>
-                        </div>
-                        
-                        {/* Hashtags and mentions */}
-                        <div className="flex flex-wrap gap-1 mb-2">
-                          <span className="text-white text-sm">#votación</span>
-                          <span className="text-white text-sm">#opción{String.fromCharCode(65 + slotIndex)}</span>
-                          {option.mentionedUsers && option.mentionedUsers.map((user) => (
-                            <span key={user.id} className="text-white text-sm font-medium">
-                              @{user.username}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        {/* Music info */}
-                        <div className="flex items-center gap-2">
-                          <Music className="w-3 h-3 text-white" />
-                          <span className="text-white text-sm">♪ sonido original - usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
+                      {/* Bottom Section - Feed-style description */}
+                      <div className="absolute bottom-6 left-4 right-24 z-20">
+                        <div className="space-y-3">
+                          {/* Main description */}
+                          <div>
+                            <p className="text-white font-medium text-xl leading-snug">
+                              {option.text || `¿Cuál eliges? 🤔 Opción ${String.fromCharCode(65 + slotIndex)} parece interesante...`}
+                            </p>
+                          </div>
+                          
+                          {/* Hashtags and mentions - like real posts */}
+                          <div className="flex flex-wrap gap-2">
+                            <span className="text-white font-medium">#votación</span>
+                            <span className="text-white font-medium">#opción{String.fromCharCode(65 + slotIndex)}</span>
+                            <span className="text-white font-medium">#elige</span>
+                            {option.mentionedUsers && option.mentionedUsers.map((user) => (
+                              <span key={user.id} className="text-white font-medium">
+                                @{user.username}
+                              </span>
+                            ))}
+                          </div>
+                          
+                          {/* Music info - rotating disc style */}
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
+                              <Music className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="text-white text-base">♪ sonido original - usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Video progress bar */}
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5">
-                        <div className="w-full bg-white/20 h-full">
-                          <div className="bg-white h-full w-4/5 transition-all duration-1000"></div>
-                        </div>
+                      {/* Video progress bar - like real videos */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+                        <div className="h-full bg-white animate-pulse" style={{width: '75%'}}></div>
                       </div>
                     </div>
 
