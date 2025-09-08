@@ -410,18 +410,33 @@ const ContentCreationPage = () => {
           <div className="mt-6">
             <button
               onClick={handleCreate}
-              disabled={isCreating || !title.trim() || images.filter(img => img).length === 0}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg"
+              disabled={isCreating || !title.trim() || images.filter(img => img).length < 2}
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
             >
               {isCreating ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creando...
+                  Creando publicación...
                 </div>
               ) : (
-                'Crear publicación'
+                <div className="flex items-center justify-center gap-2">
+                  <span>Crear publicación</span>
+                  {images.filter(img => img).length >= 2 && title.trim() && (
+                    <span className="text-sm opacity-75">({images.filter(img => img).length} opciones)</span>
+                  )}
+                </div>
               )}
             </button>
+            {/* Help text */}
+            {(!title.trim() || images.filter(img => img).length < 2) && (
+              <p className="text-gray-400 text-sm mt-2 text-center">
+                {!title.trim() 
+                  ? "Agrega una pregunta o descripción" 
+                  : images.filter(img => img).length < 2 
+                    ? `Necesitas al menos 2 imágenes (tienes ${images.filter(img => img).length})`
+                    : ""}
+              </p>
+            )}
           </div>
         </div>
 
