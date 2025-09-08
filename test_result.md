@@ -732,15 +732,17 @@ Si los logs aparecen pero los contadores no se actualizan, el problema está en 
 - ✅ **Notificaciones**: Toast cuando se menciona un usuario exitosamente
 - ✅ **Datos Estructurados**: Menciones y texto incluidos en pollData para backend
 
-**7. PREVIEW REALISTA IMPLEMENTADO COMPLETAMENTE:**
-- ✅ **Vista Previa Authentic**: Cada slot muestra exactamente cómo se verá publicado
-- ✅ **Overlay de Texto**: Texto superpuesto sobre imagen con gradient background
-- ✅ **Menciones en Preview**: @username mostrados como badges en la vista previa
-- ✅ **Indicadores Visuales**: Letras de opción, porcentajes simulados, "Vista previa"
-- ✅ **Botones de Edición**: Botón editar (lápiz) y eliminar (X) en hover
-- ✅ **Gradiente Realista**: from-black/70 via-transparent para legibilidad
-- ✅ **Badges de Usuario**: Backdrop blur y transparencia como en publicaciones reales
-- ✅ **Indicador de Progreso**: Barra que muestra opciones completadas vs total slots
+**7. PREVIEW REALISTA ESTILO TIKTOK FULLSCREEN IMPLEMENTADO:**
+- ✅ **Tarjetas Fullscreen**: Cada slot tiene aspecto 9:16 como pantalla de móvil TikTok
+- ✅ **UI Idéntica a TikTok**: Botones de like, comentar, compartir en lateral derecho
+- ✅ **Header Realista**: Avatar circular, nombre de opción y badge "Vista previa"
+- ✅ **Overlay Profesional**: Gradiente from-black/80 via-black/20 para autenticidad
+- ✅ **Texto Grande**: Font-size lg para descripción como posts reales de TikTok
+- ✅ **Menciones Premium**: Badges con backdrop-blur y bordes redondeados
+- ✅ **Barra de Progreso**: Simulación de progreso de video en parte inferior
+- ✅ **Música Integrada**: Indicador "Sonido original" como en TikTok real
+- ✅ **Botones de Edición**: Edit/Delete ocultos hasta hover con shadow-lg
+- ✅ **Área de Upload**: Diseño elegante con iconos grandes para slots vacíos
 
 **7. CORRECCIONES Y MEJORAS DE CREATEPOLLMODAL APLICADAS:**
 - ✅ **Autenticación Robusta**: Verificación de sesión activa con redirección automática
