@@ -89,31 +89,23 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       className="w-full h-full object-cover"
                     />
                     
-                    {/* Feed-style TikTok Post - Fullscreen */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30">
+                    {/* Clean Image Preview with Essential Info */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40">
                       
-                      {/* Top Section - Complete info like feed */}
-                      <div className="absolute top-4 left-4 right-20 z-20 space-y-3">
-                        {/* User profile */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center border-2 border-white">
-                            <span className="text-white font-bold">{String.fromCharCode(65 + slotIndex)}</span>
+                      {/* Top Section - Essential info only */}
+                      <div className="absolute top-4 left-4 right-4 z-20 space-y-3">
+                        {/* Option identifier */}
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">{String.fromCharCode(65 + slotIndex)}</span>
                           </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-white font-bold text-lg">@usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
-                              <button className="bg-red-500 text-white text-sm px-4 py-1 rounded-full font-bold">
-                                Seguir
-                              </button>
-                            </div>
-                            <p className="text-white/80 text-sm">Opción {String.fromCharCode(65 + slotIndex)} • Hace 2h</p>
-                          </div>
+                          <span className="text-white/80 text-sm">Opción {String.fromCharCode(65 + slotIndex)}</span>
                         </div>
 
                         {/* Main title from global title */}
                         {title && (
-                          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3">
-                            <p className="text-white font-bold text-xl leading-tight">
+                          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3">
+                            <p className="text-white font-bold text-lg leading-tight">
                               {title}
                             </p>
                           </div>
@@ -121,12 +113,12 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
 
                         {/* Selected Music Display */}
                         {selectedMusic && (
-                          <div className="bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-3">
-                            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
-                              <Music className="w-4 h-4 text-white" />
+                          <div className="bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-3">
+                            <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
+                              <Music className="w-3 h-3 text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-white font-semibold text-sm truncate">♪ {selectedMusic.title}</p>
+                              <p className="text-white font-medium text-sm truncate">♪ {selectedMusic.title}</p>
                               <p className="text-white/70 text-xs truncate">{selectedMusic.artist}</p>
                             </div>
                           </div>
@@ -139,9 +131,9 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                             array.findIndex(u => u.id === user.id) === index
                           );
                           return uniqueMentions.length > 0 ? (
-                            <div className="bg-black/30 backdrop-blur-sm rounded-lg p-2">
+                            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-2">
                               <div className="flex flex-wrap gap-2">
-                                {uniqueMentions.slice(0, 3).map((user) => (
+                                {uniqueMentions.slice(0, 4).map((user) => (
                                   <span
                                     key={user.id}
                                     className="inline-flex items-center gap-1 bg-purple-600/80 text-white text-sm px-3 py-1 rounded-full font-medium"
@@ -150,9 +142,9 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                                     {user.username}
                                   </span>
                                 ))}
-                                {uniqueMentions.length > 3 && (
+                                {uniqueMentions.length > 4 && (
                                   <span className="text-white/80 text-sm px-2 py-1">
-                                    +{uniqueMentions.length - 3} más
+                                    +{uniqueMentions.length - 4} más
                                   </span>
                                 )}
                               </div>
@@ -160,70 +152,17 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                           ) : null;
                         })()}
                       </div>
-
-                      {/* Right Side - Feed interaction buttons */}
-                      <div className="absolute right-4 bottom-32 flex flex-col gap-8 z-20">
-                        <div className="flex flex-col items-center">
-                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
-                            <span className="text-2xl">❤️</span>
-                          </div>
-                          <span className="text-white text-sm font-bold">15.2K</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
-                            <span className="text-2xl">💬</span>
-                          </div>
-                          <span className="text-white text-sm font-bold">1,248</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <div className="w-14 h-14 bg-white/15 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 hover:bg-white/25 transition-colors">
-                            <span className="text-2xl">📤</span>
-                          </div>
-                          <span className="text-white text-sm font-bold">3.1K</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center animate-spin-slow">
-                            <Music className="w-5 h-5 text-white" />
-                          </div>
-                        </div>
-                      </div>
                       
-                      {/* Bottom Section - Feed-style description */}
-                      <div className="absolute bottom-6 left-4 right-24 z-20">
-                        <div className="space-y-3">
-                          {/* Main description */}
-                          <div>
-                            <p className="text-white font-medium text-xl leading-snug">
-                              {option.text || `¿Cuál eliges? 🤔 Opción ${String.fromCharCode(65 + slotIndex)} parece interesante...`}
+                      {/* Bottom Section - Only option specific text */}
+                      {option.text && (
+                        <div className="absolute bottom-4 left-4 right-4 z-20">
+                          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3">
+                            <p className="text-white font-medium text-base leading-tight">
+                              {option.text}
                             </p>
                           </div>
-                          
-                          {/* Hashtags and mentions - like real posts */}
-                          <div className="flex flex-wrap gap-2">
-                            <span className="text-white font-medium">#votación</span>
-                            <span className="text-white font-medium">#opción{String.fromCharCode(65 + slotIndex)}</span>
-                            <span className="text-white font-medium">#elige</span>
-                            {option.mentionedUsers && option.mentionedUsers.map((user) => (
-                              <span key={user.id} className="text-white font-medium">
-                                @{user.username}
-                              </span>
-                            ))}
-                          </div>
-                          
-                          {/* Music info - rotating disc style */}
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
-                              <Music className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="text-white text-base">♪ sonido original - usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
-                          </div>
                         </div>
-                      </div>
-
-                      {/* Video progress bar - like real videos */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-                        <div className="h-full bg-white animate-pulse" style={{width: '75%'}}></div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Minimalist edit controls - top corner */}
