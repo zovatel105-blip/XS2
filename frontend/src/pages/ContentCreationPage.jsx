@@ -198,13 +198,37 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl hover:border-gray-600 transition-all duration-300 group-hover:scale-105">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
-                        <Plus className="w-8 h-8 text-white" />
+                  {/* Fullscreen Upload Area - Like TikTok camera */}
+                  <div className="w-full h-full flex items-center justify-center bg-black relative">
+                    {/* Animated background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-blue-900/20"></div>
+                    
+                    {/* Upload Content */}
+                    <div className="text-center z-10">
+                      <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl animate-pulse">
+                        <Plus className="w-10 h-10 text-white" />
                       </div>
-                      <span className="text-white text-lg font-semibold">Opción {String.fromCharCode(65 + slotIndex)}</span>
-                      <p className="text-gray-400 text-sm mt-1">Toca para agregar imagen</p>
+                      <h3 className="text-white text-2xl font-bold mb-2">Opción {String.fromCharCode(65 + slotIndex)}</h3>
+                      <p className="text-gray-300 text-lg">Toca para agregar tu imagen</p>
+                      <p className="text-gray-500 text-sm mt-4">Se verá exactamente como en el feed</p>
+                    </div>
+
+                    {/* TikTok-style decorative elements */}
+                    <div className="absolute top-6 right-6 flex flex-col gap-4 opacity-30">
+                      <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                        <span className="text-white">❤️</span>
+                      </div>
+                      <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                        <span className="text-white">💬</span>
+                      </div>
+                      <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                        <span className="text-white">📤</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom decorative bar */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+                      <div className="h-full w-0 bg-white animate-pulse"></div>
                     </div>
                   </div>
                 )}
