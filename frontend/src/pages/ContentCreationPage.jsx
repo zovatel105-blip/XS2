@@ -198,14 +198,13 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:text-gray-300 transition-colors border-2 border-dashed border-gray-600 rounded-xl bg-gray-800/50">
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl hover:border-gray-600 transition-all duration-300 group-hover:scale-105">
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4 mx-auto">
-                        <Plus className="w-8 h-8" />
+                      <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
+                        <Plus className="w-8 h-8 text-white" />
                       </div>
-                      <span className="text-lg font-medium">Agregar imagen</span>
-                      <p className="text-sm text-gray-500 mt-2">Opción {String.fromCharCode(65 + slotIndex)}</p>
-                      <p className="text-xs text-gray-600 mt-1">Vista previa estilo TikTok</p>
+                      <span className="text-white text-lg font-semibold">Opción {String.fromCharCode(65 + slotIndex)}</span>
+                      <p className="text-gray-400 text-sm mt-1">Toca para agregar imagen</p>
                     </div>
                   </div>
                 )}
