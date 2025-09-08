@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Compass, Plus, Bell, User, MessageCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-import CreatePollModal from './CreatePollModal';
 
 const NavigationItem = ({ to, icon: Icon, label, isActive }) => {
   return (
