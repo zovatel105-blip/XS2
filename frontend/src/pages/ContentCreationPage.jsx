@@ -92,8 +92,9 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                     {/* Feed-style TikTok Post - Fullscreen */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30">
                       
-                      {/* Top Section - User profile like feed */}
-                      <div className="absolute top-6 left-4 right-20 z-20">
+                      {/* Top Section - Complete info like feed */}
+                      <div className="absolute top-4 left-4 right-20 z-20 space-y-3">
+                        {/* User profile */}
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center border-2 border-white">
                             <span className="text-white font-bold">{String.fromCharCode(65 + slotIndex)}</span>
@@ -108,6 +109,56 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                             <p className="text-white/80 text-sm">Opción {String.fromCharCode(65 + slotIndex)} • Hace 2h</p>
                           </div>
                         </div>
+
+                        {/* Main title from global title */}
+                        {title && (
+                          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3">
+                            <p className="text-white font-bold text-xl leading-tight">
+                              {title}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Selected Music Display */}
+                        {selectedMusic && (
+                          <div className="bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
+                              <Music className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-white font-semibold text-sm truncate">♪ {selectedMusic.title}</p>
+                              <p className="text-white/70 text-xs truncate">{selectedMusic.artist}</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Global Mentions Display */}
+                        {(() => {
+                          const allMentions = options.flatMap(opt => opt.mentionedUsers || []);
+                          const uniqueMentions = allMentions.filter((user, index, array) => 
+                            array.findIndex(u => u.id === user.id) === index
+                          );
+                          return uniqueMentions.length > 0 ? (
+                            <div className="bg-black/30 backdrop-blur-sm rounded-lg p-2">
+                              <div className="flex flex-wrap gap-2">
+                                {uniqueMentions.slice(0, 3).map((user) => (
+                                  <span
+                                    key={user.id}
+                                    className="inline-flex items-center gap-1 bg-purple-600/80 text-white text-sm px-3 py-1 rounded-full font-medium"
+                                  >
+                                    <AtSign className="w-3 h-3" />
+                                    {user.username}
+                                  </span>
+                                ))}
+                                {uniqueMentions.length > 3 && (
+                                  <span className="text-white/80 text-sm px-2 py-1">
+                                    +{uniqueMentions.length - 3} más
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ) : null;
+                        })()}
                       </div>
 
                       {/* Right Side - Feed interaction buttons */}
