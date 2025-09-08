@@ -93,48 +93,49 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     {/* Clean Image Preview with Essential Info */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40">
                       
-                      {/* Top Section - Essential info only */}
-                      <div className="absolute top-4 left-4 right-4 z-20 space-y-3">
-                        {/* Option identifier */}
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">{String.fromCharCode(65 + slotIndex)}</span>
-                          </div>
-                          <span className="text-white/80 text-sm">Opción {String.fromCharCode(65 + slotIndex)}</span>
-                        </div>
-
-                        {/* Main title from global title */}
-                        {title && (
-                          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3">
-                            <p className="text-white font-bold text-lg leading-tight">
+                      {/* Title Centered at Top */}
+                      {title && (
+                        <div className="absolute top-4 left-4 right-4 z-20 text-center">
+                          <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3 mx-auto inline-block">
+                            <p className="text-white font-bold text-xl leading-tight">
                               {title}
                             </p>
                           </div>
-                        )}
+                        </div>
+                      )}
 
-                        {/* Selected Music Display */}
-                        {selectedMusic && (
-                          <div className="bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-3">
-                            <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
+                      {/* Top Left - Option identifier */}
+                      <div className="absolute top-4 left-4 z-20">
+                        <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">{String.fromCharCode(65 + slotIndex)}</span>
+                        </div>
+                      </div>
+
+                      {/* Top Right - Music Display */}
+                      {selectedMusic && (
+                        <div className="absolute top-4 right-4 z-20">
+                          <div className="bg-black/50 backdrop-blur-sm rounded-full px-3 py-2 flex items-center gap-2">
+                            <div className="w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center animate-spin">
                               <Music className="w-3 h-3 text-white" />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white font-medium text-sm truncate">♪ {selectedMusic.title}</p>
-                              <p className="text-white/70 text-xs truncate">{selectedMusic.artist}</p>
+                            <div className="min-w-0 max-w-32">
+                              <p className="text-white font-medium text-xs truncate">♪ {selectedMusic.title}</p>
                             </div>
                           </div>
-                        )}
+                        </div>
+                      )}
 
-                        {/* Global Mentions Display */}
-                        {(() => {
-                          const allMentions = options.flatMap(opt => opt.mentionedUsers || []);
-                          const uniqueMentions = allMentions.filter((user, index, array) => 
-                            array.findIndex(u => u.id === user.id) === index
-                          );
-                          return uniqueMentions.length > 0 ? (
-                            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-2">
-                              <div className="flex flex-wrap gap-2">
-                                {uniqueMentions.slice(0, 4).map((user) => (
+                      {/* Bottom Left - Global Mentions */}
+                      {(() => {
+                        const allMentions = options.flatMap(opt => opt.mentionedUsers || []);
+                        const uniqueMentions = allMentions.filter((user, index, array) => 
+                          array.findIndex(u => u.id === user.id) === index
+                        );
+                        return uniqueMentions.length > 0 ? (
+                          <div className="absolute bottom-16 left-4 right-4 z-20">
+                            <div className="bg-black/50 backdrop-blur-sm rounded-lg p-2">
+                              <div className="flex flex-wrap gap-2 justify-center">
+                                {uniqueMentions.slice(0, 3).map((user) => (
                                   <span
                                     key={user.id}
                                     className="inline-flex items-center gap-1 bg-purple-600/80 text-white text-sm px-3 py-1 rounded-full font-medium"
@@ -143,16 +144,16 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                                     {user.username}
                                   </span>
                                 ))}
-                                {uniqueMentions.length > 4 && (
+                                {uniqueMentions.length > 3 && (
                                   <span className="text-white/80 text-sm px-2 py-1">
-                                    +{uniqueMentions.length - 4} más
+                                    +{uniqueMentions.length - 3} más
                                   </span>
                                 )}
                               </div>
                             </div>
-                          ) : null;
-                        })()}
-                      </div>
+                          </div>
+                        ) : null;
+                      })()}
                       
                       {/* Bottom Section - Only option specific text */}
                       {option.text && (
