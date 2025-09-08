@@ -577,15 +577,13 @@ const ContentCreationPage = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex">
-        {/* Central Zone - Clean like TikTok */}
+        {/* Central Zone */}
         <div className="flex-1 bg-black flex flex-col">
-          {/* Title Display - Centered at top */}
-          <div className="p-4 text-center border-b border-gray-800">
-            {title ? (
-              <h2 className="text-white text-2xl font-bold">{title}</h2>
-            ) : (
-              <p className="text-gray-500 text-lg">Escribe un título abajo para verlo aquí</p>
-            )}
+          {/* Title Display - Always visible for testing */}
+          <div className="p-6 text-center bg-gray-900 border-b-2 border-white">
+            <h1 className="text-white text-3xl font-bold">
+              {title || 'TU TÍTULO APARECERÁ AQUÍ'}
+            </h1>
           </div>
 
           {/* Main Content Area */}
