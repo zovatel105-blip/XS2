@@ -360,7 +360,7 @@ const ContentCreationPage = () => {
         music_id: selectedMusic?.id || null, // Use music_id format
         tags: [], // No tags
         category: 'general', // Default category
-        mentioned_users: [], // No global mentions
+        mentioned_users: [...new Set(allMentionedUsers)], // All mentioned users from all options (remove duplicates)
         video_playback_settings: null, // No video settings
         layout: selectedLayout.id // Custom field for layout
       };
