@@ -509,7 +509,7 @@ const ContentCreationPage = () => {
           <div className="mt-6">
             <button
               onClick={handleCreate}
-              disabled={isCreating || !title.trim() || images.filter(img => img).length < 2}
+              disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
               className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
             >
               {isCreating ? (
