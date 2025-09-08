@@ -75,90 +75,124 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                 {String.fromCharCode(65 + slotIndex)}
               </div>
               
-              {/* Image or upload area with preview overlay */}
+              {/* Image or upload area with fullscreen-style preview */}
               <div 
-                className="w-full h-40 cursor-pointer hover:bg-gray-700 transition-colors relative rounded-lg overflow-hidden"
+                className="w-full aspect-[9/16] cursor-pointer hover:bg-gray-700 transition-colors relative rounded-xl overflow-hidden shadow-2xl"
                 onClick={() => onImageUpload(slotIndex)}
               >
                 {option.media ? (
                   <>
-                    {/* Background Image */}
+                    {/* Background Image - Fullscreen style */}
                     <img 
                       src={option.media.url} 
                       alt={`Opción ${slotIndex + 1}`}
                       className="w-full h-full object-cover"
                     />
                     
-                    {/* Preview Overlay - How it will look when published */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-2">
-                      {/* Option Text Overlay */}
-                      {option.text && (
-                        <div className="text-white font-semibold text-sm leading-tight mb-1 drop-shadow-lg">
-                          {option.text}
-                        </div>
-                      )}
+                    {/* TikTok-style Preview Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/20">
                       
-                      {/* Mentioned Users in Preview */}
-                      {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-1">
-                          {option.mentionedUsers.slice(0, 2).map((user) => (
-                            <span
-                              key={user.id}
-                              className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs px-1.5 py-0.5 rounded-full"
-                            >
-                              <AtSign className="w-2 h-2" />
-                              {user.username}
-                            </span>
-                          ))}
-                          {option.mentionedUsers.length > 2 && (
-                            <span className="text-white/80 text-xs">+{option.mentionedUsers.length - 2} más</span>
-                          )}
+                      {/* Top Section - Like TikTok profile info */}
+                      <div className="absolute top-4 left-4 right-16">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                            <span className="text-black text-sm font-bold">{String.fromCharCode(65 + slotIndex)}</span>
+                          </div>
+                          <span className="text-white text-sm font-semibold">Opción {String.fromCharCode(65 + slotIndex)}</span>
+                          <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                            <span className="text-white text-xs">Vista previa</span>
+                          </div>
                         </div>
-                      )}
+                      </div>
+
+                      {/* Right Side - TikTok style buttons */}
+                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-4">
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <span className="text-white text-lg">❤️</span>
+                        </div>
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <span className="text-white text-lg">💬</span>
+                        </div>
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <span className="text-white text-lg">📤</span>
+                        </div>
+                      </div>
                       
-                      {/* Vote percentage preview (fake for preview) */}
-                      <div className="flex items-center justify-between">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-full px-2 py-1">
-                          <span className="text-white text-xs font-medium">Opción {String.fromCharCode(65 + slotIndex)}</span>
+                      {/* Bottom Section - TikTok style description */}
+                      <div className="absolute bottom-4 left-4 right-16">
+                        {/* Option Text */}
+                        {option.text && (
+                          <div className="mb-3">
+                            <p className="text-white font-semibold text-lg leading-tight drop-shadow-lg">
+                              {option.text}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {/* Mentioned Users */}
+                        {option.mentionedUsers && option.mentionedUsers.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {option.mentionedUsers.map((user) => (
+                              <span
+                                key={user.id}
+                                className="inline-flex items-center gap-1 bg-white/25 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full font-medium"
+                              >
+                                <AtSign className="w-3 h-3" />
+                                {user.username}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Music info - TikTok style */}
+                        <div className="flex items-center gap-2 text-white/90">
+                          <Music className="w-4 h-4" />
+                          <span className="text-sm">Sonido original</span>
                         </div>
-                        <div className="text-white/80 text-xs">
-                          Vista previa
+                      </div>
+
+                      {/* Progress bar - like TikTok video progress */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1">
+                        <div className="w-full bg-white/30 h-full">
+                          <div className="bg-white h-full w-3/4 transition-all duration-300"></div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Edit/Remove buttons */}
-                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                    {/* Edit/Remove buttons - Hidden until hover */}
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Focus on text input for this option
                           const textInput = document.querySelector(`input[data-option-index="${slotIndex}"]`);
                           if (textInput) textInput.focus();
                         }}
-                        className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                        className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"
                         title="Editar texto"
                       >
-                        <Edit3 className="w-3 h-3" />
+                        <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           onImageRemove(slotIndex);
                         }}
-                        className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                        className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
                         title="Eliminar imagen"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:text-gray-300 transition-colors border-2 border-dashed border-gray-600 rounded-lg">
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:text-gray-300 transition-colors border-2 border-dashed border-gray-600 rounded-xl bg-gray-800/50">
                     <div className="text-center">
-                      <Plus className="w-8 h-8 mx-auto mb-2" />
-                      <span className="text-sm font-medium">Agregar imagen</span>
-                      <p className="text-xs text-gray-500 mt-1">Opción {String.fromCharCode(65 + slotIndex)}</p>
+                      <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <Plus className="w-8 h-8" />
+                      </div>
+                      <span className="text-lg font-medium">Agregar imagen</span>
+                      <p className="text-sm text-gray-500 mt-2">Opción {String.fromCharCode(65 + slotIndex)}</p>
+                      <p className="text-xs text-gray-600 mt-1">Vista previa estilo TikTok</p>
                     </div>
                   </div>
                 )}
