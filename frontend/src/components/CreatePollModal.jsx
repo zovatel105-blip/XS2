@@ -90,6 +90,20 @@ const CreatePollModal = ({ onCreatePoll, children, isOpen: externalIsOpen, onClo
 
   // Use external control if provided, otherwise use internal state
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  // Hide/show RightSideNavigation when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      hideRightNavigationBar();
+    } else {
+      showRightNavigationBar();
+    }
+    
+    // Cleanup: restore navigation when component unmounts
+    return () => {
+      showRightNavigationBar();
+    };
+  }, [isOpen, hideRightNavigationBar, showRightNavigationBar]);
   const setIsOpen = externalOnClose ? (open) => {
     if (!open) externalOnClose();
   } : setInternalIsOpen;
