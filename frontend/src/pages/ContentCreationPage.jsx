@@ -61,8 +61,8 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
   const slots = Array.from({ length: getSlotsCount() }, (_, index) => index);
 
   return (
-    <div className="space-y-6">
-      <div className={`grid gap-4 w-full ${getLayoutStyle()}`}>
+    <div className="h-full flex items-center justify-center">
+      <div className={`grid gap-3 w-full max-w-4xl ${getLayoutStyle()}`}>
         {slots.map((slotIndex) => {
           const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
           return (
