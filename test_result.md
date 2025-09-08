@@ -887,7 +887,15 @@ Sidebar Derecho (20px width):
 └── 📤 Publicar (12x12)
 ```
 
-**OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, y todos los botones principales agrupados en el sidebar derecho como solicitado.
+**10. RIGHTSIDENAVIGATION OCULTA EN CREATEPOLLMODAL:**
+- ✅ **Import agregado**: useTikTok context importado en CreatePollModal
+- ✅ **useEffect implementado**: Controla visibilidad de RightSideNavigation
+- ✅ **hideRightNavigationBar()**: Se ejecuta cuando modal se abre
+- ✅ **showRightNavigationBar()**: Se ejecuta cuando modal se cierra
+- ✅ **Cleanup function**: Restaura navegación al desmontar componente
+- ✅ **No conflicto**: RightSideNavigation no aparece en CreatePollModal
+
+**OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho como solicitado, y RightSideNavigation correctamente oculta cuando CreatePollModal está abierto.
 
 ✅ **MEJORAS IMPLEMENTADAS COMPLETAMENTE:**
 
