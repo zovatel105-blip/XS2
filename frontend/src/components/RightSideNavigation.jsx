@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Swords, Plus, MessageCircle, User } from 'lucide-react';
 import { cn } from '../lib/utils';
-import CreatePollModal from './CreatePollModal';
+
 
 const RightSideNavigation = ({ onCreatePoll }) => {
   const navigate = useNavigate();
