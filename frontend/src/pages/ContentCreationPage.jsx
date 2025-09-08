@@ -579,7 +579,11 @@ const ContentCreationPage = () => {
 
           {/* Layout Preview */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="w-full max-w-md bg-gray-900 rounded-lg p-2">
+            <div className="w-full max-w-lg bg-gray-900 rounded-lg p-3">
+              <div className="mb-3 text-center">
+                <h3 className="text-white font-medium text-sm">Vista previa - Layout: {selectedLayout.name}</h3>
+                <p className="text-gray-400 text-xs mt-1">{selectedLayout.description}</p>
+              </div>
               <LayoutPreview
                 layout={selectedLayout}
                 options={options}
@@ -588,6 +592,26 @@ const ContentCreationPage = () => {
                 onOptionTextChange={handleOptionTextChange}
                 onMentionSelect={handleMentionSelect}
               />
+              
+              {/* Progress indicator */}
+              {options.filter(opt => opt && opt.media).length > 0 && (
+                <div className="mt-3 bg-gray-800 rounded-lg p-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-400">Progreso:</span>
+                    <span className="text-white">
+                      {options.filter(opt => opt && opt.media).length} / {getSlotsCount()} opciones
+                    </span>
+                  </div>
+                  <div className="mt-1 w-full bg-gray-700 rounded-full h-1">
+                    <div 
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${(options.filter(opt => opt && opt.media).length / getSlotsCount()) * 100}%`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
