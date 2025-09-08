@@ -122,6 +122,7 @@ const ContentCreationPage = () => {
   const [title, setTitle] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [currentSlotIndex, setCurrentSlotIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize with pre-selected audio if provided
   useEffect(() => {
