@@ -51,11 +51,27 @@ const BottomNavigation = ({ onCreatePoll }) => {
           />
 
           {/* Create Content Button - Navigate to creation page */}
-          <NavigationItem
+          <NavLink
             to="/create"
-            icon={Plus}
-            label="Crear"
-          />
+            className="flex flex-col items-center gap-1 px-3 py-2 transition-all duration-300 min-w-[60px] group"
+          >
+            {({ isActive }) => (
+              <>
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300",
+                  isActive
+                    ? "bg-gradient-to-r from-blue-700 to-purple-700"
+                    : "bg-gradient-to-r from-blue-600 to-purple-600"
+                )}>
+                  <Plus className="w-5 h-5 text-white" />
+                </div>
+                <span className={cn(
+                  "text-xs font-medium",
+                  isActive ? "text-blue-700" : "text-blue-600"
+                )}>Crear</span>
+              </>
+            )}
+          </NavLink>
 
           <NavigationItem
             to="/messages"
