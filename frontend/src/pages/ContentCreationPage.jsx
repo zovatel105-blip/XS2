@@ -93,16 +93,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     {/* Clean Image Preview with Essential Info */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40">
                       
-                      {/* Title Centered at Top */}
-                      {title && (
-                        <div className="absolute top-4 left-4 right-4 z-20 text-center">
-                          <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3 mx-auto inline-block">
-                            <p className="text-white font-bold text-xl leading-tight">
-                              {title}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+
 
                       {/* Top Left - Option identifier */}
                       <div className="absolute top-4 left-4 z-20">
