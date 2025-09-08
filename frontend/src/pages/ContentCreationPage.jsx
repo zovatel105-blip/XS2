@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Music, LayoutGrid, Plus, Upload, Image as ImageIcon, Video } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
+import { useAuth } from '../contexts/AuthContext';
 import MusicSelector from '../components/MusicSelector';
 import { fileToBase64 } from '../services/mockData';
 import pollService from '../services/pollService';
