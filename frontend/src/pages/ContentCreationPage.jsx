@@ -699,35 +699,95 @@ const ContentCreationPage = () => {
           </div>
         </div>
 
-        {/* Right Sidebar Menu */}
-        <div className="w-20 bg-black border-l border-gray-800 p-4 flex flex-col items-center">
+        {/* Right Sidebar Menu - Like TikTok */}
+        <div className="w-16 bg-black flex flex-col items-center pt-4">
           {/* Layout Button */}
           <div className="relative">
             <button
               onClick={() => setShowLayoutMenu(!showLayoutMenu)}
-              className="w-12 h-12 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-white transition-colors"
+              className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors"
             >
-              <LayoutGrid className="w-6 h-6" />
+              <LayoutGrid className="w-5 h-5" />
             </button>
 
-            {/* Layout Menu */}
+            {/* Layout Menu - Vertical like TikTok */}
             {showLayoutMenu && (
-              <div className="absolute right-full top-0 mr-2 w-64 bg-gray-800 rounded-lg shadow-xl border border-gray-600 overflow-hidden z-10">
-                <div className="p-3 border-b border-gray-600">
-                  <h3 className="text-white font-medium">Plantillas de Layout</h3>
-                  <p className="text-gray-400 text-sm">Selecciona cómo organizar tu contenido</p>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
+              <div className="absolute right-full top-0 mr-3 w-20 bg-gray-800 rounded-2xl shadow-xl overflow-hidden z-10">
+                <div className="py-2">
                   {LAYOUT_OPTIONS.map((layout) => (
                     <button
                       key={layout.id}
                       onClick={() => handleLayoutSelect(layout)}
-                      className={`w-full px-4 py-3 text-left hover:bg-gray-700 transition-colors border-b border-gray-700 last:border-b-0 ${
-                        selectedLayout.id === layout.id ? 'bg-blue-600 hover:bg-blue-500' : ''
+                      className={`w-full p-3 flex flex-col items-center hover:bg-gray-700 transition-colors ${
+                        selectedLayout.id === layout.id ? 'bg-white text-black' : 'text-white'
                       }`}
+                      title={layout.description}
                     >
-                      <div className="text-white font-medium">{layout.name}</div>
-                      <div className="text-gray-300 text-sm">{layout.description}</div>
+                      {/* Layout Icon */}
+                      <div className="w-8 h-6 mb-1 flex items-center justify-center">
+                        {layout.id === 'off' && <div className="w-6 h-4 border border-current rounded"></div>}
+                        {layout.id === 'vertical' && (
+                          <div className="flex gap-0.5">
+                            <div className="w-2.5 h-4 border border-current rounded-sm"></div>
+                            <div className="w-2.5 h-4 border border-current rounded-sm"></div>
+                          </div>
+                        )}
+                        {layout.id === 'horizontal' && (
+                          <div className="flex flex-col gap-0.5">
+                            <div className="w-6 h-1.5 border border-current rounded-sm"></div>
+                            <div className="w-6 h-1.5 border border-current rounded-sm"></div>
+                          </div>
+                        )}
+                        {layout.id === 'triptych-vertical' && (
+                          <div className="flex gap-0.5">
+                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
+                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
+                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
+                          </div>
+                        )}
+                        {layout.id === 'triptych-horizontal' && (
+                          <div className="flex flex-col gap-0.5">
+                            <div className="w-6 h-1 border border-current rounded-sm"></div>
+                            <div className="w-6 h-1 border border-current rounded-sm"></div>
+                            <div className="w-6 h-1 border border-current rounded-sm"></div>
+                          </div>
+                        )}
+                        {layout.id === 'grid-2x2' && (
+                          <div className="grid grid-cols-2 gap-0.5">
+                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
+                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
+                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
+                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
+                          </div>
+                        )}
+                        {layout.id === 'grid-3x3' && (
+                          <div className="grid grid-cols-3 gap-0.5">
+                            {[...Array(9)].map((_, i) => (
+                              <div key={i} className="w-1.5 h-1.5 border border-current rounded-sm"></div>
+                            ))}
+                          </div>
+                        )}
+                        {layout.id === 'horizontal-3x3' && (
+                          <div className="flex flex-col gap-0.5">
+                            <div className="flex gap-0.5">
+                              {[...Array(3)].map((_, i) => (
+                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
+                              ))}
+                            </div>
+                            <div className="flex gap-0.5">
+                              {[...Array(3)].map((_, i) => (
+                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
+                              ))}
+                            </div>
+                            <div className="flex gap-0.5">
+                              {[...Array(3)].map((_, i) => (
+                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs font-medium">{layout.name}</span>
                     </button>
                   ))}
                 </div>
