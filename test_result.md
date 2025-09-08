@@ -905,7 +905,19 @@ Sidebar Derecho (20px width):
 - ✅ **Condicional mejorado**: Muestra placeholder o título según estado
 - ✅ **Input conectado**: onChange actualiza estado y display en tiempo real
 
-**OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho, RightSideNavigation correctamente oculta en creación, y título perfectamente centrado en la parte superior de cada tarjeta como solicitado.
+**CÓDIGO IMPLEMENTADO PARA TÍTULO:**
+```jsx
+{/* Title Display - Centered at top */}
+<div className="p-4 text-center border-b border-gray-800">
+  {title ? (
+    <h2 className="text-white text-2xl font-bold">{title}</h2>
+  ) : (
+    <p className="text-gray-500 text-lg">Escribe un título abajo para verlo aquí</p>
+  )}
+</div>
+```
+
+**OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho, RightSideNavigation correctamente oculta en creación, y título principal perfectamente centrado en la zona central superior como solicitado.
 
 ✅ **MEJORAS IMPLEMENTADAS COMPLETAMENTE:**
 
