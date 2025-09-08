@@ -199,44 +199,49 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
               </div>
 
               {/* Title/Description input */}
-              <div className="p-3 bg-gray-900">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">{String.fromCharCode(65 + slotIndex)}</span>
+              <div className="p-4 bg-gray-900 rounded-b-xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">{String.fromCharCode(65 + slotIndex)}</span>
                   </div>
-                  <span className="text-gray-300 text-sm font-medium">Opción {String.fromCharCode(65 + slotIndex)}</span>
+                  <span className="text-white text-sm font-semibold">Opción {String.fromCharCode(65 + slotIndex)}</span>
+                  {option.media && (
+                    <div className="flex items-center gap-1 text-green-400 text-xs">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      Preview activo
+                    </div>
+                  )}
                 </div>
                 
                 <UserMentionInput
-                  placeholder={`Describe esta opción (opcional)...`}
+                  placeholder={`Describe la opción ${String.fromCharCode(65 + slotIndex)} (aparecerá en el preview)...`}
                   value={option.text}
                   onChange={(newText) => onOptionTextChange(slotIndex, newText)}
                   onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
-                  className="w-full bg-gray-800 text-white text-sm px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-gray-800 text-white text-sm px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   data-option-index={slotIndex}
                 />
                 
                 {/* Mentioned users display - Edit Mode */}
                 {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-gray-400 text-xs mb-1">Usuarios mencionados:</p>
-                    <div className="flex flex-wrap gap-1">
+                  <div className="mt-3">
+                    <p className="text-gray-400 text-xs mb-2 font-medium">Usuarios mencionados en esta opción:</p>
+                    <div className="flex flex-wrap gap-2">
                       {option.mentionedUsers.map((user, userIndex) => (
                         <span
                           key={user.id}
-                          className="inline-flex items-center gap-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full"
+                          className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm px-3 py-1.5 rounded-full font-medium"
                         >
                           <AtSign className="w-3 h-3" />
                           {user.username}
                           <button
                             onClick={() => {
-                              // Remove this mentioned user
                               const newMentioned = option.mentionedUsers.filter((_, i) => i !== userIndex);
                               updateOption(slotIndex, 'mentionedUsers', newMentioned);
                             }}
-                            className="ml-1 w-3 h-3 text-purple-200 hover:text-white"
+                            className="ml-1 w-4 h-4 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
                           >
-                            <X className="w-3 h-3" />
+                            <X className="w-2.5 h-2.5" />
                           </button>
                         </span>
                       ))}
@@ -244,13 +249,10 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                   </div>
                 )}
                 
-                {/* Preview indicator */}
-                {option.media && (
-                  <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    Vista previa arriba muestra cómo se verá publicado
-                  </div>
-                )}
+                {/* Tips */}
+                <div className="mt-3 text-xs text-gray-500 bg-gray-800 p-2 rounded-lg">
+                  💡 <strong>Tip:</strong> El texto y menciones aparecerán exactamente como se muestran en el preview de arriba
+                </div>
               </div>
             </div>
           );
