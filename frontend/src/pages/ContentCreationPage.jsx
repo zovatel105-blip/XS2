@@ -631,9 +631,16 @@ const ContentCreationPage = () => {
               <button
                 onClick={handleCreate}
                 disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
-                className="px-8 py-2 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 text-white font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                className="px-12 py-3 bg-red-500 hover:bg-red-600 disabled:bg-gray-500 text-white font-bold rounded-full disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
               >
-                {isCreating ? 'Publicando...' : 'Publicar'}
+                {isCreating ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Publicando...
+                  </div>
+                ) : (
+                  'Publicar'
+                )}
               </button>
             </div>
           </div>
