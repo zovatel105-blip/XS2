@@ -557,109 +557,101 @@ const ContentCreationPage = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex">
-        {/* Central Zone */}
-        <div className="flex-1 bg-black p-4 flex flex-col">
-          {/* Title Input */}
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Escribe una pregunta o descripción..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+        {/* Central Zone - Fullscreen Preview */}
+        <div className="flex-1 bg-black relative overflow-hidden">
+          {/* Fullscreen Layout Preview */}
+          <div className="absolute inset-0">
+            <LayoutPreview
+              layout={selectedLayout}
+              options={options}
+              onImageUpload={handleImageUpload}
+              onImageRemove={handleImageRemove}
+              onOptionTextChange={handleOptionTextChange}
+              onMentionSelect={handleMentionSelect}
+              fullscreen={true}
             />
           </div>
 
-          {/* Selected Music Display */}
-          {selectedMusic && (
-            <div className="mb-4 bg-gray-800 rounded-lg p-3 border border-gray-600">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-                  <Music className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{selectedMusic.title}</p>
-                  <p className="text-gray-400 text-sm truncate">{selectedMusic.artist}</p>
-                </div>
-                <button
-                  onClick={() => setSelectedMusic(null)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white rounded-full hover:bg-gray-700"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Layout Preview */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-full max-w-lg bg-gray-900 rounded-lg p-3">
-              <div className="mb-3 text-center">
-                <h3 className="text-white font-medium text-sm">Vista previa - Layout: {selectedLayout.name}</h3>
-                <p className="text-gray-400 text-xs mt-1">{selectedLayout.description}</p>
-              </div>
-              <LayoutPreview
-                layout={selectedLayout}
-                options={options}
-                onImageUpload={handleImageUpload}
-                onImageRemove={handleImageRemove}
-                onOptionTextChange={handleOptionTextChange}
-                onMentionSelect={handleMentionSelect}
+          {/* Overlay Controls - Bottom */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 space-y-4">
+            {/* Title Input */}
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="Escribe una pregunta o descripción..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded-full border border-white/20 focus:border-white/40 focus:outline-none placeholder-gray-300"
               />
-              
-              {/* Progress indicator */}
-              {options.filter(opt => opt && opt.media).length > 0 && (
-                <div className="mt-3 bg-gray-800 rounded-lg p-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-400">Progreso:</span>
-                    <span className="text-white">
-                      {options.filter(opt => opt && opt.media).length} / {getSlotsCount()} opciones
-                    </span>
-                  </div>
-                  <div className="mt-1 w-full bg-gray-700 rounded-full h-1">
-                    <div 
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all duration-300"
-                      style={{
-                        width: `${(options.filter(opt => opt && opt.media).length / getSlotsCount()) * 100}%`
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
 
-          {/* Create Button */}
-          <div className="mt-6">
+            {/* Selected Music Display */}
+            {selectedMusic && (
+              <div className="bg-black/60 backdrop-blur-sm rounded-full p-3 border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <Music className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium text-sm truncate">🎵 {selectedMusic.title}</p>
+                    <p className="text-gray-300 text-xs truncate">{selectedMusic.artist}</p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedMusic(null)}
+                    className="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-white rounded-full hover:bg-white/20"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Progress indicator */}
+            <div className="bg-black/60 backdrop-blur-sm rounded-full p-2 border border-white/20">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-gray-300">Progreso:</span>
+                <span className="text-white">
+                  {options.filter(opt => opt && opt.media).length} / {getSlotsCount()} opciones
+                </span>
+              </div>
+              <div className="mt-2 w-full bg-white/20 rounded-full h-1">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-1 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${(options.filter(opt => opt && opt.media).length / getSlotsCount()) * 100}%`
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Create Button */}
             <button
               onClick={handleCreate}
               disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] border border-white/20"
             >
               {isCreating ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creando publicación...
+                  Creando...
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-2">
-                  <span>Crear publicación</span>
+                  <span>Publicar</span>
                   {options.filter(opt => opt && opt.media).length >= 2 && title.trim() && (
-                    <span className="text-sm opacity-75">({options.filter(opt => opt && opt.media).length} opciones)</span>
+                    <span className="text-sm opacity-75">({options.filter(opt => opt && opt.media).length})</span>
                   )}
                 </div>
               )}
             </button>
-            {/* Help text */}
-            {(!title.trim() || options.filter(opt => opt && opt.media).length < 2) && (
-              <p className="text-gray-400 text-sm mt-2 text-center">
-                {!title.trim() 
-                  ? "Agrega una pregunta o descripción" 
-                  : options.filter(opt => opt && opt.media).length < 2 
-                    ? `Necesitas al menos 2 imágenes (tienes ${options.filter(opt => opt && opt.media).length})`
-                    : ""}
-              </p>
-            )}
+          </div>
+
+          {/* Layout Info Overlay - Top */}
+          <div className="absolute top-4 left-4 right-4 flex justify-center">
+            <div className="bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+              <p className="text-white text-sm font-medium">{selectedLayout.name}</p>
+              <p className="text-gray-300 text-xs">{selectedLayout.description}</p>
+            </div>
           </div>
         </div>
 
