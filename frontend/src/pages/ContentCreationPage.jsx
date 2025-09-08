@@ -580,19 +580,19 @@ const ContentCreationPage = () => {
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Central Zone */}
+      {/* Main Content - Mobile Optimized */}
+      <div className="flex-1 flex flex-col md:flex-row">
+        {/* Central Zone - Mobile First */}
         <div className="flex-1 bg-black flex flex-col">
-          {/* Title Display - Always visible for testing */}
-          <div className="p-6 text-center bg-gray-900 border-b-2 border-white">
-            <h1 className="text-white text-3xl font-bold">
+          {/* Title Display - Mobile Responsive */}
+          <div className="p-4 text-center bg-gray-900 border-b border-gray-700 md:p-6">
+            <h1 className="text-white text-xl font-bold md:text-3xl">
               {title || 'TU TÍTULO APARECERÁ AQUÍ'}
             </h1>
           </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 p-4">
+          {/* Main Content Area - Mobile Optimized */}
+          <div className="flex-1 p-2 md:p-4">
             <LayoutPreview
               layout={selectedLayout}
               options={options}
@@ -605,18 +605,50 @@ const ContentCreationPage = () => {
             />
           </div>
 
-          {/* Bottom Info Bar - Simplified */}
-          <div className="bg-black border-t border-gray-800 p-4">
-            {/* Title Input */}
+          {/* Bottom Actions - Mobile Optimized */}
+          <div className="bg-black border-t border-gray-800 p-4 pb-6 md:pb-4">
+            {/* Title Input - Mobile Friendly */}
             <input
               type="text"
               placeholder="Describe tu publicación..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent text-white px-0 py-2 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400 text-lg"
+              className="w-full bg-transparent text-white px-0 py-3 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400 text-base md:text-lg"
             />
 
-            {/* Status Info */}
+            {/* Mobile Action Buttons */}
+            <div className="mt-4 flex gap-3 md:hidden">
+              {/* Add Sound Button */}
+              <button
+                onClick={() => setShowMusicSelector(true)}
+                className="flex-1 bg-gray-700 active:bg-gray-600 rounded-lg p-3 flex items-center justify-center gap-2 text-white transition-colors"
+              >
+                <Music className="w-5 h-5" />
+                <span className="text-sm font-medium truncate">
+                  {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Agregar música'}
+                </span>
+              </button>
+
+              {/* Publish Button */}
+              <button
+                onClick={handleCreate}
+                disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
+                className="bg-red-500 active:bg-red-600 disabled:bg-gray-500 rounded-lg p-3 flex items-center justify-center gap-2 text-white transition-colors disabled:opacity-50 min-w-24"
+              >
+                {isCreating ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    <span className="text-sm font-medium">Publicar</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Status Info - Mobile Optimized */}
             <div className="mt-3 flex items-center justify-between text-sm">
               <div className="text-gray-400">
                 {options.filter(opt => opt && opt.media).length} / {getSlotsCount()} opciones
@@ -625,12 +657,12 @@ const ContentCreationPage = () => {
               {selectedMusic && (
                 <div className="flex items-center gap-2 text-white">
                   <Music className="w-4 h-4" />
-                  <span className="truncate max-w-40">{selectedMusic.title}</span>
+                  <span className="truncate max-w-32 text-xs">{selectedMusic.title}</span>
                 </div>
               )}
             </div>
 
-            {/* Help text */}
+            {/* Help text - Mobile Friendly */}
             {(!title.trim() || options.filter(opt => opt && opt.media).length < 2) && (
               <div className="mt-2 text-center">
                 <p className="text-gray-500 text-xs">
@@ -643,8 +675,8 @@ const ContentCreationPage = () => {
           </div>
         </div>
 
-        {/* Right Sidebar Menu - Like TikTok */}
-        <div className="w-20 bg-black flex flex-col items-center pt-4 gap-4">
+        {/* Desktop Sidebar - Hidden on Mobile */}
+        <div className="hidden md:flex w-20 bg-black flex-col items-center pt-4 gap-4">
           {/* Add Sound Button */}
           <button
             onClick={() => setShowMusicSelector(true)}
