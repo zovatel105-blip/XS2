@@ -170,29 +170,31 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                       </div>
                     </div>
 
-                    {/* Edit/Remove buttons - Hidden until hover */}
-                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-30">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const textInput = document.querySelector(`input[data-option-index="${slotIndex}"]`);
-                          if (textInput) textInput.focus();
-                        }}
-                        className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors shadow-lg"
-                        title="Editar texto"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onImageRemove(slotIndex);
-                        }}
-                        className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                        title="Eliminar imagen"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                    {/* Hidden edit controls - only show on click */}
+                    <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity bg-black/50 flex items-center justify-center z-30">
+                      <div className="flex gap-3">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const textInput = document.querySelector(`input[data-option-index="${slotIndex}"]`);
+                            if (textInput) textInput.focus();
+                          }}
+                          className="w-12 h-12 bg-white/20 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+                          title="Editar"
+                        >
+                          <Edit3 className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onImageRemove(slotIndex);
+                          }}
+                          className="w-12 h-12 bg-white/20 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+                          title="Cambiar"
+                        >
+                          <Upload className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   </>
                 ) : (
