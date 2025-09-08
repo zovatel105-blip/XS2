@@ -11,18 +11,10 @@ import time
 import random
 from datetime import datetime, timedelta
 
-# Get backend URL from frontend .env file
+# Get backend URL - use localhost since services are running locally
 def get_backend_url():
-    try:
-        with open('/app/frontend/.env', 'r') as f:
-            for line in f:
-                if line.startswith('REACT_APP_BACKEND_URL='):
-                    base_url = line.split('=', 1)[1].strip()
-                    return f"{base_url}/api"
-        return None
-    except Exception as e:
-        print(f"Error reading frontend .env file: {e}")
-        return None
+    # Backend is running on localhost:8001 with /api prefix
+    return "http://localhost:8001/api"
 
 # Global variables for test data
 test_users = []
