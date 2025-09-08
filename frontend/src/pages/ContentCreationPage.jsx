@@ -194,12 +194,39 @@ const ContentCreationPage = () => {
   const handleLayoutSelect = (layout) => {
     setSelectedLayout(layout);
     setShowLayoutMenu(false);
-    // Clear images when changing layout to avoid confusion
-    setImages([]);
+    // Clear options when changing layout to avoid confusion
+    setOptions([]);
     toast({
       title: "📐 Layout seleccionado",
       description: layout.description,
     });
+  };
+
+  const updateOption = (index, field, value) => {
+    const newOptions = [...options];
+    while (newOptions.length <= index) {
+      newOptions.push({ text: '', media: null, mentionedUsers: [] });
+    }
+    newOptions[index] = { ...newOptions[index], [field]: value };
+    setOptions(newOptions);
+  };
+
+  const handleOptionTextChange = (index, text) => {
+    updateOption(index, 'text', text);
+  };
+
+  const handleMentionSelect = (index, user) => {
+    const currentOption = options[index] || { text: '', media: null, mentionedUsers: [] };
+    const currentMentioned = currentOption.mentionedUsers || [];
+    const exists = currentMentioned.find(u => u.id === user.id);
+    
+    if (!exists) {
+      updateOption(index, 'mentionedUsers', [...currentMentioned, user]);
+      toast({
+        title: "Usuario mencionado",
+        description: `@${user.username} será notificado en la opción ${String.fromCharCode(65 + index)}`,
+      });
+    }
   };
 
   const handleImageUpload = (slotIndex) => {
