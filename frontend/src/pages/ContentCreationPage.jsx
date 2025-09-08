@@ -211,19 +211,17 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                 )}
               </div>
 
-              {/* Simple Edit Controls - Hidden by default */}
-              {option.media && (
-                <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <UserMentionInput
-                    placeholder={`Texto para opción ${String.fromCharCode(65 + slotIndex)}...`}
-                    value={option.text}
-                    onChange={(newText) => onOptionTextChange(slotIndex, newText)}
-                    onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
-                    className="w-full bg-black/50 text-white text-sm px-3 py-2 rounded-lg border border-gray-600 focus:border-white focus:outline-none"
-                    data-option-index={slotIndex}
-                  />
-                </div>
-              )}
+              {/* Hidden edit input - appears only when editing */}
+              <div className="absolute -bottom-16 left-0 right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/80 backdrop-blur-sm p-2 rounded-lg">
+                <UserMentionInput
+                  placeholder={`Descripción opción ${String.fromCharCode(65 + slotIndex)}...`}
+                  value={option.text}
+                  onChange={(newText) => onOptionTextChange(slotIndex, newText)}
+                  onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
+                  className="w-full bg-transparent text-white text-sm px-2 py-1 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400"
+                  data-option-index={slotIndex}
+                />
+              </div>
             </div>
           );
         })}
