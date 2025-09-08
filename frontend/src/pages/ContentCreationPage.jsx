@@ -430,12 +430,23 @@ const ContentCreationPage = () => {
       {/* Music Selector Modal */}
       {showMusicSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh]">
-            <MusicSelector
-              onMusicSelect={handleMusicSelect} 
-              onClose={() => setShowMusicSelector(false)}
-              selectedMusic={selectedMusic}
-            />
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Seleccionar Música</h3>
+              <button
+                onClick={() => setShowMusicSelector(false)}
+                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[70vh]">
+              <MusicSelector
+                onSelectMusic={handleMusicSelect}
+                selectedMusic={selectedMusic}
+                pollTitle={title}
+              />
+            </div>
           </div>
         </div>
       )}
