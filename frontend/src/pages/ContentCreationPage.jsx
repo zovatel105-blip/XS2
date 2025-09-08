@@ -588,6 +588,13 @@ const ContentCreationPage = () => {
       <div className="flex-1 flex">
         {/* Central Zone - Clean like TikTok */}
         <div className="flex-1 bg-black flex flex-col">
+          {/* Title Display - Centered at top */}
+          {title && (
+            <div className="p-4 text-center">
+              <h2 className="text-white text-2xl font-bold">{title}</h2>
+            </div>
+          )}
+
           {/* Main Content Area */}
           <div className="flex-1 p-4">
             <LayoutPreview
