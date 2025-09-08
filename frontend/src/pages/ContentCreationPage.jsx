@@ -89,72 +89,83 @@ const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onO
                       className="w-full h-full object-cover"
                     />
                     
-                    {/* TikTok-style Preview Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/20">
+                    {/* Published Post Style - Exactly like real TikTok */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent">
                       
-                      {/* Top Section - Like TikTok profile info */}
+                      {/* Top Section - Real user profile */}
                       <div className="absolute top-4 left-4 right-16">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                            <span className="text-black text-sm font-bold">{String.fromCharCode(65 + slotIndex)}</span>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-sm font-bold">{String.fromCharCode(65 + slotIndex)}</span>
                           </div>
-                          <span className="text-white text-sm font-semibold">Opción {String.fromCharCode(65 + slotIndex)}</span>
-                          <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-                            <span className="text-white text-xs">Vista previa</span>
+                          <div>
+                            <span className="text-white text-sm font-semibold">@usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
+                            <div className="text-white/70 text-xs">Opción {String.fromCharCode(65 + slotIndex)}</div>
                           </div>
+                          <button className="border border-white text-white text-xs px-3 py-1 rounded font-medium">
+                            Seguir
+                          </button>
                         </div>
                       </div>
 
-                      {/* Right Side - TikTok style buttons */}
-                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-4">
-                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <span className="text-white text-lg">❤️</span>
+                      {/* Right Side - Real TikTok interaction buttons */}
+                      <div className="absolute right-3 bottom-20 flex flex-col gap-6">
+                        <div className="flex flex-col items-center">
+                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
+                            <span className="text-white text-xl">❤️</span>
+                          </div>
+                          <span className="text-white text-xs font-semibold">12.5K</span>
                         </div>
-                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <span className="text-white text-lg">💬</span>
+                        <div className="flex flex-col items-center">
+                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
+                            <span className="text-white text-xl">💬</span>
+                          </div>
+                          <span className="text-white text-xs font-semibold">834</span>
                         </div>
-                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                          <span className="text-white text-lg">📤</span>
+                        <div className="flex flex-col items-center">
+                          <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-1">
+                            <span className="text-white text-xl">📤</span>
+                          </div>
+                          <span className="text-white text-xs font-semibold">2.1K</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                            <Music className="w-4 h-4 text-white" />
+                          </div>
                         </div>
                       </div>
                       
-                      {/* Bottom Section - TikTok style description */}
-                      <div className="absolute bottom-4 left-4 right-16">
-                        {/* Option Text */}
-                        {option.text && (
-                          <div className="mb-3">
-                            <p className="text-white font-semibold text-lg leading-tight drop-shadow-lg">
-                              {option.text}
-                            </p>
-                          </div>
-                        )}
+                      {/* Bottom Section - Real post description */}
+                      <div className="absolute bottom-4 left-4 right-20">
+                        {/* Post Description */}
+                        <div className="mb-2">
+                          <p className="text-white font-semibold text-base leading-tight">
+                            {option.text || `¿Qué opinas de esta opción ${String.fromCharCode(65 + slotIndex)}?`}
+                          </p>
+                        </div>
                         
-                        {/* Mentioned Users */}
-                        {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {option.mentionedUsers.map((user) => (
-                              <span
-                                key={user.id}
-                                className="inline-flex items-center gap-1 bg-white/25 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full font-medium"
-                              >
-                                <AtSign className="w-3 h-3" />
-                                {user.username}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        {/* Hashtags and mentions */}
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          <span className="text-white text-sm">#votación</span>
+                          <span className="text-white text-sm">#opción{String.fromCharCode(65 + slotIndex)}</span>
+                          {option.mentionedUsers && option.mentionedUsers.map((user) => (
+                            <span key={user.id} className="text-white text-sm font-medium">
+                              @{user.username}
+                            </span>
+                          ))}
+                        </div>
                         
-                        {/* Music info - TikTok style */}
-                        <div className="flex items-center gap-2 text-white/90">
-                          <Music className="w-4 h-4" />
-                          <span className="text-sm">Sonido original</span>
+                        {/* Music info */}
+                        <div className="flex items-center gap-2">
+                          <Music className="w-3 h-3 text-white" />
+                          <span className="text-white text-sm">♪ sonido original - usuario_{String.fromCharCode(65 + slotIndex).toLowerCase()}</span>
                         </div>
                       </div>
 
-                      {/* Progress bar - like TikTok video progress */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1">
-                        <div className="w-full bg-white/30 h-full">
-                          <div className="bg-white h-full w-3/4 transition-all duration-300"></div>
+                      {/* Video progress bar */}
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5">
+                        <div className="w-full bg-white/20 h-full">
+                          <div className="bg-white h-full w-4/5 transition-all duration-1000"></div>
                         </div>
                       </div>
                     </div>
