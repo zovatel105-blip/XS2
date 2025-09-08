@@ -805,27 +805,31 @@ Los usuarios ahora tienen una experiencia completa de creación de contenido id�
 9. **Recibir feedback detallado** sobre errores y validaciones
 10. **Navegación fluida** con manejo de estados de autenticación
 
-**🎯 FUNCIONALIDAD COMPLETA TIPO TIKTOK CON DISEÑO LIMPIO IMPLEMENTADA**: Los usuarios pueden crear publicaciones tipo encuesta con múltiples opciones, cada una con imagen, título personalizado, menciones de usuarios, música de fondo, y selección de layout visual. **DISEÑO EXACTAMENTE IGUAL A LA REFERENCIA DE USUARIO** siguiendo la estructura limpia de TikTok:
+**🎯 FUNCIONALIDAD COMPLETA TIPO TIKTOK CON PREVIEW FULLSCREEN COMO FEED IMPLEMENTADA**: Los usuarios pueden crear publicaciones tipo encuesta con múltiples opciones, cada una con imagen, título personalizado, menciones de usuarios, música de fondo, y selección de layout visual. **CADA TARJETA SE VE EXACTAMENTE COMO EN EL FEED DE TIKTOK REAL** ocupando toda la pantalla disponible:
 
-📱 **ESTRUCTURA IDÉNTICA A TIKTOK (SEGÚN REFERENCIA):**
+📱 **ESTRUCTURA LIMPIA SEGÚN REFERENCIA:**
 - **Top Bar**: X (izquierda), "Add sound" pill (centro), vacío (derecha)
-- **Zona Central**: Completamente negra para mostrar contenido limpio
-- **Sidebar Derecho**: Solo botón de layouts con íconos visuales
-- **Bottom Bar**: Input de descripción, música seleccionada, botón "Publicar"
+- **Zona Central**: Fullscreen negro para preview de feed auténtico
+- **Sidebar Derecho**: Solo botón de layouts con íconos visuales minimalistas
+- **Bottom Bar**: Input de descripción, música, botón "Publicar" rojo
 
-🎨 **MENÚ DE LAYOUTS VERTICAL COMO TIKTOK:**
-- Íconos visuales para cada layout (Off, Vertical, Horizontal, etc.)
-- Selección resaltada en blanco como en referencia
-- Desplegable vertical desde el botón lateral
-- Grid 2x2, 3x3 y todas las opciones con íconos representativos
+🎬 **PREVIEW FULLSCREEN COMO FEED REAL:**
+- **Cada tarjeta ocupa toda la pantalla** como video en feed
+- **UI exacta de TikTok**: Profile, botones laterales con números reales
+- **Interacciones simuladas**: 15.2K likes, 1,248 comentarios, 3.1K shares
+- **Música animada**: Disco giratorio con efecto spinning
+- **Gradientes auténticos**: from-black/95 via-transparent to-black/30
+- **Progreso de video**: Barra inferior animada al 75%
 
-🃏 **TARJETAS DE PREVIEW FULLSCREEN:**
-- Aspecto 9:16 como pantalla móvil real
-- UI completa de TikTok con botones laterales
-- Preview auténtico del contenido final
-- Controles de edición ocultos hasta hover
+🎨 **EXPERIENCIA DE FEED AUTÉNTICA:**
+- **Perfil usuario real**: @usuario_a, @usuario_b con botón "Seguir"
+- **Timestamps reales**: "Hace 2h" como posts verdaderos
+- **Hashtags naturales**: #votación #opciónA #elige
+- **Menciones integradas**: @username aparece naturalmente
+- **Botones grandes**: 14x14 con backdrop-blur como app real
+- **Texto grande**: text-xl para legibilidad como feed original
 
-La experiencia es ahora **EXACTAMENTE como la referencia mostrada** con diseño limpio, sin elementos innecesarios, y estructura idéntica a TikTok real.
+**RESULTADO FINAL**: La experiencia es **INDISTINGUIBLE DEL FEED REAL DE TIKTOK** - cada opción se presenta como un video completo ya publicado con toda la UI, interacciones, y elementos visuales exactos de la plataforma original. Los usuarios ven exactamente cómo aparecerá su contenido en el feed antes de publicar.
 
 ✅ **MEJORAS IMPLEMENTADAS COMPLETAMENTE:**
 
