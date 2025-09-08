@@ -20,7 +20,7 @@ const LAYOUT_OPTIONS = [
   { id: 'horizontal-3x3', name: 'Horizontal 3x3', description: 'Pantalla dividida en 9 partes (horizontal de 3x3)' }
 ];
 
-const LayoutPreview = ({ layout, images = [], onImageUpload, onImageRemove }) => {
+const LayoutPreview = ({ layout, options = [], onImageUpload, onImageRemove, onOptionTextChange, onMentionSelect }) => {
   const getLayoutStyle = () => {
     switch (layout.id) {
       case 'off':
