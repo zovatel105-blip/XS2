@@ -649,6 +649,8 @@ const ContentCreationPage = () => {
             <LayoutPreview
               layout={selectedLayout}
               options={options}
+              title={title}
+              selectedMusic={selectedMusic}
               onImageUpload={handleImageUpload}
               onImageRemove={handleImageRemove}
               onOptionTextChange={handleOptionTextChange}
