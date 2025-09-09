@@ -1788,8 +1788,25 @@ async def ensure_user_profile(user_id: str):
         followers_count = await db.follows.count_documents({"following_id": user_id})
         following_count = await db.follows.count_documents({"follower_id": user_id})
         
-        # Count total votes and polls (you can extend this later)
-        total_polls = await db.polls.count_documents({"author_id": user_id})
+        # Count total votes and polls
+        total_polls = await db.polls.count_documents({"author_id": user_id, "is_active": True})
+        
+        # Calculate actual vote statistics
+        total_votes_received = 0
+        user_polls = await db.polls.find({"author_id": user_id, "is_active": True}).to_list(length=None)
+        for poll in user_polls:
+            total_votes_received += poll.get("total_votes", 0)
+        
+        # Count votes made by this user
+        votes_made_by_user = await db.votes.count_documents({"user_id": user_id})
+        
+        # Count likes received on user's polls
+        likes_received = 0
+        for poll in user_polls:
+            likes_received += poll.get("likes", 0)
+        
+        # Count likes given by this user
+        likes_given_by_user = await db.poll_likes.count_documents({"user_id": user_id})
         
         # Prepare profile data
         profile_update = {
