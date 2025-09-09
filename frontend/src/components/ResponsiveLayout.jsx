@@ -52,9 +52,9 @@ const ResponsiveLayout = ({ children, onCreatePoll }) => {
         {isAuthenticated && !shouldHideRightNavigation && !isCreatePage && <RightSideNavigation onCreatePoll={onCreatePoll} />}
       </div>
       
-      {/* Mobile Right Side Navigation - Only when not in TikTok mode */}
+      {/* Mobile Right Side Navigation - Only when not in TikTok mode and NOT on create page */}
       <div className="lg:hidden">
-        {!shouldUseTikTokLayout && isAuthenticated && !hideRightNavigation && (
+        {!shouldUseTikTokLayout && isAuthenticated && !shouldHideRightNavigation && !isCreatePage && (
           <RightSideNavigation onCreatePoll={onCreatePoll} />
         )}
       </div>
