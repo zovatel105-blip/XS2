@@ -657,96 +657,20 @@ const ContentCreationPage = () => {
               <LayoutGrid className="w-6 h-6" />
             </button>
 
-            {/* Layout Menu - Mobile/Desktop Adaptive */}
+            {/* Layout Menu */}
             {showLayoutMenu && (
-              <div className="fixed inset-x-4 top-20 bg-gray-800 rounded-2xl shadow-xl overflow-hidden z-50 md:absolute md:right-full md:top-0 md:mr-3 md:w-20 md:inset-x-auto">
-                {/* Mobile Header */}
-                <div className="md:hidden p-4 border-b border-gray-700 flex items-center justify-between">
-                  <h3 className="text-white font-semibold">Seleccionar Layout</h3>
-                  <button 
-                    onClick={() => setShowLayoutMenu(false)}
-                    className="w-8 h-8 text-gray-400 hover:text-white rounded-full flex items-center justify-center"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                
-                {/* Layout Options */}
-                <div className="py-2 md:py-2 grid grid-cols-2 gap-2 p-4 md:grid-cols-1 md:gap-0 md:p-0">
+              <div className="absolute right-full top-0 mr-3 w-64 bg-gray-800 rounded-lg shadow-xl overflow-hidden z-50">
+                <div className="py-2">
                   {LAYOUT_OPTIONS.map((layout) => (
                     <button
                       key={layout.id}
                       onClick={() => handleLayoutSelect(layout)}
-                      className={`p-3 md:w-full flex flex-col items-center hover:bg-gray-700 active:bg-gray-600 transition-colors rounded-lg md:rounded-none ${
-                        selectedLayout.id === layout.id ? 'bg-white text-black' : 'text-white'
+                      className={`w-full px-4 py-2 text-left hover:bg-gray-700 transition-colors ${
+                        selectedLayout.id === layout.id ? 'bg-gray-600 text-white' : 'text-gray-300'
                       }`}
-                      title={layout.description}
                     >
-                      {/* Layout Icon */}
-                      <div className="w-8 h-6 mb-1 flex items-center justify-center">
-                        {layout.id === 'off' && <div className="w-6 h-4 border border-current rounded"></div>}
-                        {layout.id === 'vertical' && (
-                          <div className="flex gap-0.5">
-                            <div className="w-2.5 h-4 border border-current rounded-sm"></div>
-                            <div className="w-2.5 h-4 border border-current rounded-sm"></div>
-                          </div>
-                        )}
-                        {layout.id === 'horizontal' && (
-                          <div className="flex flex-col gap-0.5">
-                            <div className="w-6 h-1.5 border border-current rounded-sm"></div>
-                            <div className="w-6 h-1.5 border border-current rounded-sm"></div>
-                          </div>
-                        )}
-                        {layout.id === 'triptych-vertical' && (
-                          <div className="flex gap-0.5">
-                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
-                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
-                            <div className="w-1.5 h-4 border border-current rounded-sm"></div>
-                          </div>
-                        )}
-                        {layout.id === 'triptych-horizontal' && (
-                          <div className="flex flex-col gap-0.5">
-                            <div className="w-6 h-1 border border-current rounded-sm"></div>
-                            <div className="w-6 h-1 border border-current rounded-sm"></div>
-                            <div className="w-6 h-1 border border-current rounded-sm"></div>
-                          </div>
-                        )}
-                        {layout.id === 'grid-2x2' && (
-                          <div className="grid grid-cols-2 gap-0.5">
-                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
-                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
-                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
-                            <div className="w-2.5 h-2 border border-current rounded-sm"></div>
-                          </div>
-                        )}
-                        {layout.id === 'grid-3x3' && (
-                          <div className="grid grid-cols-3 gap-0.5">
-                            {[...Array(9)].map((_, i) => (
-                              <div key={i} className="w-1.5 h-1.5 border border-current rounded-sm"></div>
-                            ))}
-                          </div>
-                        )}
-                        {layout.id === 'horizontal-3x3' && (
-                          <div className="flex flex-col gap-0.5">
-                            <div className="flex gap-0.5">
-                              {[...Array(3)].map((_, i) => (
-                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
-                              ))}
-                            </div>
-                            <div className="flex gap-0.5">
-                              {[...Array(3)].map((_, i) => (
-                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
-                              ))}
-                            </div>
-                            <div className="flex gap-0.5">
-                              {[...Array(3)].map((_, i) => (
-                                <div key={i} className="w-1.5 h-1 border border-current rounded-sm"></div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-xs font-medium">{layout.name}</span>
+                      <div className="font-medium">{layout.name}</div>
+                      <div className="text-sm text-gray-400">{layout.description}</div>
                     </button>
                   ))}
                 </div>
