@@ -343,7 +343,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     </div>
                   </>
                 ) : (
-                  /* Fullscreen Upload Area - Exactly like the reference image */}
+                  /* Fullscreen Upload Area - Exactly like the reference image */
                   <div className="w-full h-full flex items-center justify-center relative">
                     {/* Main gradient background - matches the reference */}
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
