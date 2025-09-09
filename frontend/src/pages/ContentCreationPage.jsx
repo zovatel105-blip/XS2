@@ -759,22 +759,22 @@ const ContentCreationPage = () => {
       {!previewMode && (
         <div className="absolute top-0 left-0 right-0 z-50">
           {/* Main Controls Row */}
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Close button - Left */}
             <button
               onClick={handleClose}
-              className="w-8 h-8 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
 
             {/* Add Sound button - Center (pill style) */}
             <button
               onClick={() => setShowMusicSelector(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full text-white transition-colors"
+              className="flex items-center gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full text-white transition-colors"
             >
-              <Music className="w-5 h-5" />
-              <span className="text-sm font-medium truncate max-w-40">
+              <Music className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs sm:text-sm font-medium truncate max-w-24 sm:max-w-40">
                 {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
               </span>
             </button>
@@ -782,23 +782,23 @@ const ContentCreationPage = () => {
             {/* Preview button - Right */}
             <button
               onClick={() => setPreviewMode(true)}
-              className="w-8 h-8 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
+              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
               title="Vista previa fullscreen"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
           </div>
 
           {/* Description Input - Small, below Add Sound */}
-          <div className="px-4 pb-2">
+          <div className="px-3 sm:px-4 pb-2">
             <input
               type="text"
               placeholder="Describe tu publicación..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300 text-sm"
+              className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300 text-xs sm:text-sm"
             />
           </div>
         </div>
