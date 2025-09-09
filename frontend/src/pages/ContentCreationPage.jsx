@@ -242,7 +242,8 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                         </div>
                       </div>
 
-                      {/* Right Side Actions like TikTok */}
+                      {/* Right Side Actions like TikTok - HIDDEN */}
+                      {false && (
                       <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
                         <div className="flex flex-col gap-4">
                           {/* Like Button */}
@@ -264,6 +265,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                           <p className="text-white text-xs text-center font-medium">3.1K</p>
                         </div>
                       </div>
+                      )}
 
                       {/* Music Disc - Spinning like TikTok */}
                       {selectedMusic && (
