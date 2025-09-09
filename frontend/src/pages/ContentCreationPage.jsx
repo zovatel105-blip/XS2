@@ -452,7 +452,7 @@ const ContentCreationPage = () => {
   }, [enterTikTokMode, exitTikTokMode]);
 
   // States
-  const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]); // Off by default
+  const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[1]); // 2x1 layout by default for demo
   const [showLayoutMenu, setShowLayoutMenu] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
   const [selectedMusic, setSelectedMusic] = useState(null);
