@@ -382,17 +382,17 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       </div>
                     </div>
                     
-                    {/* Central upload content - matches reference exactly */}
-                    <div className="text-center z-10">
-                      {/* Large circular button with gradient - exactly like reference */}
-                      <div className="w-32 h-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-8 mx-auto shadow-2xl">
-                        <Plus className="w-12 h-12 text-white" />
+                    {/* Central upload content - responsive for mobile */}
+                    <div className="text-center z-10 px-4">
+                      {/* Large circular button with gradient - responsive */}
+                      <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4 sm:mb-6 lg:mb-8 mx-auto shadow-2xl">
+                        <Plus className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
                       </div>
                       
-                      {/* Text exactly like reference */}
-                      <h3 className="text-white text-3xl font-bold mb-4">Opción {String.fromCharCode(65 + slotIndex)}</h3>
-                      <p className="text-white text-xl mb-2">Toca para agregar tu imagen</p>
-                      <p className="text-gray-300 text-base">Se verá exactamente como en el feed</p>
+                      {/* Text responsive for mobile */}
+                      <h3 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 lg:mb-4">Opción {String.fromCharCode(65 + slotIndex)}</h3>
+                      <p className="text-white text-base sm:text-lg lg:text-xl mb-1 sm:mb-2">Toca para agregar tu imagen</p>
+                      <p className="text-gray-300 text-sm sm:text-base">Se verá exactamente como en el feed</p>
                     </div>
 
                     {/* Letter identifier - top left like TikTok */}
