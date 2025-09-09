@@ -815,19 +815,19 @@ const ContentCreationPage = () => {
             {/* Add Sound Button */}
             <button
               onClick={() => setShowMusicSelector(true)}
-              className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg"
+              className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg"
               title={selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
             >
-              <Music className="w-6 h-6" />
+              <Music className="w-5 h-5" />
             </button>
 
             {/* Layout Button */}
             <div className="relative">
               <button
                 onClick={() => setShowLayoutMenu(!showLayoutMenu)}
-                className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors"
+                className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors"
               >
-                <LayoutGrid className="w-6 h-6" />
+                <LayoutGrid className="w-5 h-5" />
               </button>
 
               {/* Layout Menu */}
