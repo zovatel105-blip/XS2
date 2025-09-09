@@ -3678,6 +3678,18 @@ async def toggle_poll_like(
         # Get updated count
         updated_poll = await db.polls.find_one({"id": poll_id})
         
+        # Update user profiles after like removal
+        try:
+            # Update the liker's profile (decrement likes_given)
+            await ensure_user_profile(current_user.id)
+            
+            # Update the poll author's profile (decrement likes_count)
+            poll_author_id = poll.get("author_id")
+            if poll_author_id:
+                await ensure_user_profile(poll_author_id)
+        except Exception as e:
+            print(f"Error updating profiles after like removal: {e}")
+        
         return {
             "liked": False,
             "likes": updated_poll["likes"]
