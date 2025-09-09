@@ -20,6 +20,7 @@ import SearchPage from './pages/SearchPage';
 import MomentsPage from './pages/MomentsPage';
 import ContentCreationPage from './pages/ContentCreationPage';
 import TestFOMO from './TestFOMO';
+import DemoLayoutPage from './DemoLayoutPage';
 import { Toaster } from './components/ui/toaster';
 import { createPoll } from './services/mockData';
 import { useToast } from './hooks/use-toast';
