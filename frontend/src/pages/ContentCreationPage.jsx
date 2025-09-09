@@ -752,9 +752,9 @@ const ContentCreationPage = () => {
       )}
 
       {/* Main Content */}
-      <div className={`flex-1 ${previewMode ? 'flex' : 'flex'}`}>
-        {/* Central Zone - Full width in preview mode */}
-        <div className={`${previewMode ? 'w-full' : 'flex-1'} bg-black flex flex-col relative`}>
+      <div className="flex-1 relative">
+        {/* Central Zone - Full width always */}
+        <div className="w-full bg-black flex flex-col relative">
           {/* Exit preview button - Only visible in preview mode */}
           {previewMode && (
             <button
@@ -809,30 +809,30 @@ const ContentCreationPage = () => {
           )}
         </div>
 
-        {/* Right Sidebar - Compact - Hidden in preview mode */}
+        {/* Floating Right Sidebar - Overlay on top of content - Hidden in preview mode */}
         {!previewMode && (
-          <div className="w-16 bg-black flex flex-col items-center pt-4 gap-3">
+          <div className="absolute top-4 right-4 z-40 flex flex-col gap-3">
             {/* Add Sound Button */}
             <button
               onClick={() => setShowMusicSelector(true)}
-              className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg"
+              className="w-12 h-12 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all shadow-lg border border-white/10"
               title={selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
             >
-              <Music className="w-5 h-5" />
+              <Music className="w-6 h-6" />
             </button>
 
             {/* Layout Button */}
             <div className="relative">
               <button
                 onClick={() => setShowLayoutMenu(!showLayoutMenu)}
-                className="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors"
+                className="w-12 h-12 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all shadow-lg border border-white/10"
               >
-                <LayoutGrid className="w-5 h-5" />
+                <LayoutGrid className="w-6 h-6" />
               </button>
 
               {/* Layout Menu */}
               {showLayoutMenu && (
-                <div className="absolute right-full top-0 mr-3 w-64 bg-gray-800 rounded-lg shadow-xl overflow-hidden z-50">
+                <div className="absolute right-full top-0 mr-3 w-64 bg-gray-900 rounded-lg shadow-xl overflow-hidden z-50 border border-white/10">
                   <div className="py-2">
                     {LAYOUT_OPTIONS.map((layout) => (
                       <button
@@ -855,13 +855,13 @@ const ContentCreationPage = () => {
             <button
               onClick={handleCreate}
               disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
-              className="w-10 h-10 bg-red-500 hover:bg-red-600 disabled:bg-gray-500 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-12 h-12 bg-red-500/90 backdrop-blur-sm hover:bg-red-600/90 disabled:bg-gray-500/70 rounded-full flex items-center justify-center text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed border border-white/10"
               title={isCreating ? 'Publicando...' : 'Publicar'}
             >
               {isCreating ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               )}
