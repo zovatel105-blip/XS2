@@ -102,6 +102,7 @@ const CreatePreviewDemo = () => {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
 
