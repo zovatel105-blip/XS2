@@ -715,16 +715,31 @@ const ContentCreationPage = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex flex-col">
-      {/* Top Bar - Compact - Hidden in preview mode */}
+    <div className="fixed inset-0 bg-black z-50 relative">
+      {/* Main Content Area - Preview ocupa TODA la pantalla */}
+      <div className="w-full h-full">
+        <LayoutPreview
+          layout={selectedLayout}
+          options={options}
+          title={title}
+          selectedMusic={selectedMusic}
+          onImageUpload={handleImageUpload}
+          onImageRemove={handleImageRemove}
+          onOptionTextChange={handleOptionTextChange}
+          onMentionSelect={handleMentionSelect}
+          fullscreen={previewMode}
+        />
+      </div>
+
+      {/* Header Controls - Floating on top - Hidden in preview mode */}
       {!previewMode && (
-        <div className="bg-black">
+        <div className="absolute top-0 left-0 right-0 z-50">
           {/* Main Controls Row */}
           <div className="flex items-center justify-between px-4 py-3">
             {/* Close button - Left */}
             <button
               onClick={handleClose}
-              className="w-8 h-8 flex items-center justify-center text-white"
+              className="w-8 h-8 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
             >
               <X className="w-6 h-6" />
             </button>
@@ -732,7 +747,7 @@ const ContentCreationPage = () => {
             {/* Add Sound button - Center (pill style) */}
             <button
               onClick={() => setShowMusicSelector(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-full text-white transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full text-white transition-colors"
             >
               <Music className="w-5 h-5" />
               <span className="text-sm font-medium truncate max-w-40">
@@ -743,7 +758,7 @@ const ContentCreationPage = () => {
             {/* Preview button - Right */}
             <button
               onClick={() => setPreviewMode(true)}
-              className="w-8 h-8 flex items-center justify-center text-white bg-gray-700 rounded-lg"
+              className="w-8 h-8 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg"
               title="Vista previa fullscreen"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -759,47 +774,25 @@ const ContentCreationPage = () => {
               placeholder="Describe tu publicación..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent text-white px-0 py-1 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400 text-sm"
+              className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300 text-sm"
             />
           </div>
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="flex-1 relative">
-        {/* Central Zone - Full width and height always */}
-        <div className="w-full h-full bg-black relative">
-          {/* Exit preview button - Only visible in preview mode */}
-          {previewMode && (
-            <button
-              onClick={() => setPreviewMode(false)}
-              className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          )}
+      {/* Exit preview button - Only visible in preview mode */}
+      {previewMode && (
+        <button
+          onClick={() => setPreviewMode(false)}
+          className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      )}
 
-          {/* Main Content Area - Fullscreen Layout Preview */}
-          <div className="w-full h-full">
-            <LayoutPreview
-              layout={selectedLayout}
-              options={options}
-              title={title}
-              selectedMusic={selectedMusic}
-              onImageUpload={handleImageUpload}
-              onImageRemove={handleImageRemove}
-              onOptionTextChange={handleOptionTextChange}
-              onMentionSelect={handleMentionSelect}
-              fullscreen={previewMode}
-            />
-          </div>
-
-
-        </div>
-
-        {/* Floating Right Sidebar - Overlay on top of content - Hidden in preview mode */}
-        {!previewMode && (
-          <div className="absolute top-4 right-4 z-40 flex flex-col gap-3">
+      {/* Floating Right Sidebar - Overlay on top of content - Hidden in preview mode */}
+      {!previewMode && (
+        <div className="absolute top-20 right-4 z-40 flex flex-col gap-3">
             {/* Add Sound Button */}
             <button
               onClick={() => setShowMusicSelector(true)}
