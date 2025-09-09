@@ -855,13 +855,13 @@ const ContentCreationPage = () => {
             <button
               onClick={handleCreate}
               disabled={isCreating || !title.trim() || options.filter(opt => opt && opt.media).length < 2}
-              className="w-12 h-12 bg-red-500 hover:bg-red-600 disabled:bg-gray-500 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-10 h-10 bg-red-500 hover:bg-red-600 disabled:bg-gray-500 rounded-lg flex items-center justify-center text-white transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               title={isCreating ? 'Publicando...' : 'Publicar'}
             >
               {isCreating ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               )}
