@@ -618,17 +618,8 @@ const ContentCreationPage = () => {
       <div className="flex-1 flex">
         {/* Central Zone */}
         <div className="flex-1 bg-black flex flex-col">
-          {/* Title Display - Centered at top */}
-          <div className="p-6 text-center border-b border-gray-800">
-            {title ? (
-              <h2 className="text-white text-2xl font-bold">{title}</h2>
-            ) : (
-              <p className="text-gray-500 text-lg">Escribe un título abajo para verlo aquí</p>
-            )}
-          </div>
-
-          {/* Main Content Area */}
-          <div className="flex-1 p-4">
+          {/* Main Content Area - Fullscreen Layout Preview */}
+          <div className="flex-1">
             <LayoutPreview
               layout={selectedLayout}
               options={options}
