@@ -444,9 +444,18 @@ const ContentCreationPage = () => {
   useEffect(() => {
     enterTikTokMode();
     
+    // Remove any body margins/padding that could cause white space
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+    
     // Exit TikTok mode when leaving the page
     return () => {
       exitTikTokMode();
+      // Restore body styles
+      document.body.style.overflow = 'auto';
     };
   }, [enterTikTokMode, exitTikTokMode]);
 
