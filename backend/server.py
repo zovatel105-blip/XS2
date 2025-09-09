@@ -1820,9 +1820,10 @@ async def ensure_user_profile(user_id: str):
             "followers_count": followers_count,
             "following_count": following_count,
             "total_polls_created": total_polls,
-            "total_votes": 0,  # Can be calculated later from votes collection
-            "likes_count": 0,  # Can be calculated later
-            "votes_count": 0,  # Can be calculated later
+            "total_votes": total_votes_received,  # Total votes received on user's polls
+            "likes_count": likes_received,  # Total likes received on user's polls
+            "votes_count": votes_made_by_user,  # Total votes made by this user
+            "likes_given": likes_given_by_user,  # Total likes given by this user
             "last_activity": datetime.utcnow(),
             "created_at": profile_data.get("created_at", datetime.utcnow()) if profile_data else datetime.utcnow()
         }
