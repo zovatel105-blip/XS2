@@ -99,8 +99,8 @@ const CreatePreviewDemo = () => {
         </div>
       </div>
 
-        {/* Floating Right Sidebar - Overlay on top of content */}
-        <div className="absolute top-4 right-4 z-40 flex flex-col gap-3">
+      {/* Floating Right Sidebar - Overlay on top of content */}
+      <div className="absolute top-20 right-4 z-40 flex flex-col gap-3">
           {/* Add Sound Button */}
           <button className="w-12 h-12 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all shadow-lg border border-white/10">
             <Music className="w-6 h-6" />
