@@ -119,32 +119,6 @@ function AppContent() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/moments" element={<MomentsPage />} />
             <Route path="/create" element={<ContentCreationPage />} />
-            <Route path="/layout-demo" element={<DemoLayoutPage />} />
-            <Route path="/test-auth" element={
-              <div style={{ padding: '20px', fontFamily: 'monospace', color: 'white', backgroundColor: 'black' }}>
-                <h2>Auth Test Page</h2>
-                <p><strong>REACT_APP_BACKEND_URL:</strong> {process.env.REACT_APP_BACKEND_URL || 'UNDEFINED'}</p>
-                <button onClick={async () => {
-                  try {
-                    console.log('Testing login with URL:', process.env.REACT_APP_BACKEND_URL);
-                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ email: 'test@test.com', password: 'test123456' })
-                    });
-                    console.log('Response status:', response.status);
-                    const data = await response.json();
-                    console.log('Response data:', data);
-                    alert('Login response: ' + JSON.stringify(data, null, 2));
-                  } catch (error) {
-                    console.error('Login error:', error);
-                    alert('Error: ' + error.message);
-                  }
-                }} style={{ padding: '10px', margin: '10px', backgroundColor: '#333', color: 'white', border: 'none', cursor: 'pointer' }}>
-                  Test Login API
-                </button>
-              </div>
-            } />
 
             {/* Demo & Test Pages - Remove in production */}
             <Route path="/explore-demo" element={<ExploreDemo />} />
