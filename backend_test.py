@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
     # Use external URL as configured in frontend/.env
-    return "https://tiktok-creator-45.preview.emergentagent.com/api"
+    return "https://feed-preview-mode.preview.emergentagent.com/api"
 
 # Global variables for test data
 test_users = []
