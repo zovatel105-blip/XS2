@@ -27,9 +27,9 @@ const ResponsiveLayout = ({ children, onCreatePoll }) => {
     return (
       <div className={`relative h-screen ${backgroundClass}`}>
         {children}
-        {/* Right side navigation for mobile TikTok mode */}
+        {/* Right side navigation for mobile TikTok mode - HIDDEN on create page */}
         <div className="lg:hidden">
-          {isAuthenticated && !hideRightNavigation && <RightSideNavigation onCreatePoll={onCreatePoll} />}
+          {isAuthenticated && !shouldHideRightNavigation && !isCreatePage && <RightSideNavigation onCreatePoll={onCreatePoll} />}
         </div>
       </div>
     );
