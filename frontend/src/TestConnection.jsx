@@ -9,36 +9,53 @@ const TestConnection = () => {
     setResult('Testing...');
     
     try {
-      console.log('Testing connection to:', process.env.REACT_APP_BACKEND_URL);
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      console.log('Testing connection to:', backendUrl);
       
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      // First, test if we can reach the backend at all
+      setResult(`Testing connection to: ${backendUrl}\nStep 1: Testing basic connectivity...`);
       
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
+      const healthResponse = await fetch(`${backendUrl}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      setResult(`Step 1 Result: ${healthResponse.status} ${healthResponse.statusText}\nStep 2: Testing OPTIONS preflight...`);
+      
+      // Test OPTIONS preflight
+      const optionsResponse = await fetch(`${backendUrl}/api/auth/login`, {
+        method: 'OPTIONS',
+        headers: {
+          'Origin': window.location.origin,
+          'Access-Control-Request-Method': 'POST',
+          'Access-Control-Request-Headers': 'Content-Type'
+        }
+      });
+      
+      setResult(`Step 2 Result: OPTIONS ${optionsResponse.status}\nStep 3: Testing actual login POST...`);
+      
+      // Test actual login
+      const loginResponse = await fetch(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: 'test@test.com', password: 'test123456' }),
-        signal: controller.signal
+        body: JSON.stringify({ email: 'test@test.com', password: 'test123456' })
       });
       
-      clearTimeout(timeoutId);
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-      
-      if (response.ok) {
-        const data = await response.json();
-        setResult(`SUCCESS: ${JSON.stringify(data, null, 2)}`);
+      if (loginResponse.ok) {
+        const data = await loginResponse.json();
+        setResult(`SUCCESS!\nStep 1: Health check - ${healthResponse.status}\nStep 2: OPTIONS - ${optionsResponse.status}\nStep 3: POST login - ${loginResponse.status}\n\nLogin response: ${JSON.stringify(data.user, null, 2)}`);
       } else {
-        const errorData = await response.text();
-        setResult(`HTTP ERROR ${response.status}: ${errorData}`);
+        const errorData = await loginResponse.text();
+        setResult(`PARTIAL SUCCESS\nStep 1: Health - ${healthResponse.status}\nStep 2: OPTIONS - ${optionsResponse.status}\nStep 3: POST login - ${loginResponse.status}\n\nError: ${errorData}`);
       }
       
     } catch (error) {
       console.error('Fetch error:', error);
-      setResult(`NETWORK ERROR: ${error.name} - ${error.message}`);
+      setResult(`NETWORK ERROR: ${error.name} - ${error.message}\n\nDetails:\n- Error stack: ${error.stack}\n- URL being tested: ${process.env.REACT_APP_BACKEND_URL}\n- Browser: ${navigator.userAgent}`);
     }
     
     setLoading(false);
