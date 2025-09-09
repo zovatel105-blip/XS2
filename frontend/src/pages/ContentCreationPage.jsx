@@ -716,9 +716,9 @@ const ContentCreationPage = () => {
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex flex-col">
-      {/* Top Bar - Hidden in preview mode */}
+      {/* Top Bar - Compact - Hidden in preview mode */}
       {!previewMode && (
-        <div className="flex items-center justify-between px-4 py-4 bg-black">
+        <div className="flex items-center justify-between px-4 py-3 bg-black">
           {/* Close button - Left */}
           <button
             onClick={handleClose}
