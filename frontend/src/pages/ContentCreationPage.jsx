@@ -311,6 +311,7 @@ const ContentCreationPage = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [currentSlotIndex, setCurrentSlotIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false); // New state for fullscreen preview
 
   // Initialize with pre-selected audio if provided
   useEffect(() => {
