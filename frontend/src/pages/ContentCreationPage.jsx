@@ -408,14 +408,13 @@ const ContentCreationPage = () => {
   const { hideRightNavigationBar, showRightNavigationBar } = useTikTok();
   const fileInputRef = useRef(null);
 
-  // Redirect if not authenticated (unless it's demo mode)
+  // Redirect if not authenticated
   useEffect(() => {
-    const isDemoMode = location.pathname.startsWith('/create-demo');
-    if (!isAuthenticated && !isDemoMode) {
+    if (!isAuthenticated) {
       navigate('/');
       return;
     }
-  }, [isAuthenticated, navigate, location.pathname]);
+  }, [isAuthenticated, navigate]);
 
   // Hide RightSideNavigation when on create page
   useEffect(() => {
