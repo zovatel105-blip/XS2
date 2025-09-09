@@ -825,8 +825,8 @@ const ContentCreationPage = () => {
         </button>
       )}
 
-      {/* Floating Right Sidebar - Overlay on top of content - Hidden in preview mode */}
-      {!previewMode && (
+      {/* Floating Right Sidebar - Overlay on top of content - COMPLETELY HIDDEN */}
+      {false && !previewMode && (
         <div className="absolute top-16 sm:top-20 right-2 sm:right-4 z-40 flex flex-col gap-2 sm:gap-3">
           {/* Add Sound Button */}
           <button
