@@ -86,10 +86,17 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.error('Token validation error:', error);
-          // Clear invalid tokens
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('authUser');
-          localStorage.removeItem('userId');
+          // Only clear tokens if it's a network error or authentication error
+          // Don't clear on temporary network issues
+          if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            console.warn('Network error during token validation, keeping token');
+            // Keep the token and user data for now
+          } else {
+            // Clear invalid tokens for other errors
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('authUser');
+            localStorage.removeItem('userId');
+          }
         }
       }
       setLoading(false);
