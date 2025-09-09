@@ -780,27 +780,27 @@ const ContentCreationPage = () => {
             />
           </div>
 
-          {/* Bottom Actions - Hidden in preview mode */}
+          {/* Bottom Actions - Compact - Hidden in preview mode */}
           {!previewMode && (
-            <div className="bg-black border-t border-gray-800 p-4">
+            <div className="bg-black border-t border-gray-800 p-3">
               {/* Title Input */}
               <input
                 type="text"
                 placeholder="Describe tu publicación..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-transparent text-white px-0 py-3 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400 text-lg"
+                className="w-full bg-transparent text-white px-0 py-2 border-b border-gray-600 focus:border-white focus:outline-none placeholder-gray-400 text-base"
               />
 
               {/* Status Info */}
-              <div className="mt-3 flex items-center justify-between text-sm">
+              <div className="mt-2 flex items-center justify-between text-sm">
                 <div className="text-gray-400">
                   {options.filter(opt => opt && opt.media).length} / {getSlotsCount()} opciones
                 </div>
                 
                 {selectedMusic && (
                   <div className="flex items-center gap-2 text-white">
-                    <Music className="w-4 h-4" />
+                    <Music className="w-3 h-3" />
                     <span className="truncate max-w-32 text-xs">{selectedMusic.title}</span>
                   </div>
                 )}
