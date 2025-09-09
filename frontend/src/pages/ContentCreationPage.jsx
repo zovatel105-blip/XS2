@@ -847,9 +847,8 @@ const ContentCreationPage = () => {
                 </svg>
               )}
             </button>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Music Selector Modal */}
       {showMusicSelector && (
