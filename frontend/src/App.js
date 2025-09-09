@@ -94,7 +94,8 @@ function AppContent() {
                     location.startsWith('/feed-demo') || 
                     location.startsWith('/test-fomo') ||
                     location.startsWith('/test-connection') ||
-                    location.startsWith('/create-preview-demo');
+                    location.startsWith('/create-preview-demo') ||
+                    location.startsWith('/create-demo');
 
   // Show auth page if not authenticated and not on demo page
   if (!isAuthenticated && !isDemoPage) {
