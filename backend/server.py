@@ -5058,7 +5058,7 @@ async def check_audio_in_favorites(
         logger.error(f"Error checking audio in favorites: {str(e)}")
         raise HTTPException(status_code=500, detail="Error checking favorites")
 
-# Incluir el router en la aplicación
+# Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # En producción, especifica los dominios permitidos
@@ -5067,6 +5067,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Incluir el router en la aplicación
 app.include_router(api_router)
 
 if __name__ == "__main__":
