@@ -366,8 +366,8 @@ const ContentCreationPage = () => {
       case 'triptych-vertical': return 3;
       case 'triptych-horizontal': return 3;
       case 'grid-2x2': return 4;
-      case 'grid-3x3': return 9;
-      case 'horizontal-3x3': return 9;
+      case 'grid-3x2': return 6;
+      case 'horizontal-3x2': return 6;
       default: return 1;
     }
   };
