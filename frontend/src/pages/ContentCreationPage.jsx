@@ -431,7 +431,18 @@ const ContentCreationPage = () => {
   const [showLayoutMenu, setShowLayoutMenu] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
   const [selectedMusic, setSelectedMusic] = useState(null);
-  const [options, setOptions] = useState([]); // Changed from images to options
+  const [options, setOptions] = useState([
+    {
+      text: "Esta es la Opción A - Preview fullscreen",
+      media: { url: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=500&h=800&fit=crop" },
+      mentionedUsers: []
+    },
+    {
+      text: "Esta es la Opción B - Ocupa toda la pantalla",
+      media: { url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=800&fit=crop" },
+      mentionedUsers: []
+    }
+  ]); // Inicializado con opciones demo para mostrar el preview
   const [title, setTitle] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [currentSlotIndex, setCurrentSlotIndex] = useState(0);
