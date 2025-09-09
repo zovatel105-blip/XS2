@@ -440,15 +440,15 @@ const ContentCreationPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Hide RightSideNavigation when on create page
+  // Enter TikTok mode when on create page (hides all navigation)
   useEffect(() => {
-    hideRightNavigationBar();
+    enterTikTokMode();
     
-    // Restore navigation when leaving the page
+    // Exit TikTok mode when leaving the page
     return () => {
-      showRightNavigationBar();
+      exitTikTokMode();
     };
-  }, [hideRightNavigationBar, showRightNavigationBar]);
+  }, [enterTikTokMode, exitTikTokMode]);
 
   // States
   const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]); // Off by default
