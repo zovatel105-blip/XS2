@@ -558,26 +558,29 @@ const ContentCreationPage = () => {
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex flex-col">
-      {/* Top Bar - Mobile Optimized */}
-      <div className="flex items-center justify-between px-4 py-3 bg-black border-b border-gray-800 md:py-4">
+      {/* Top Bar - Exactly like TikTok reference */}
+      <div className="flex items-center justify-between px-4 py-4 bg-black">
         {/* Close button - Left */}
         <button
           onClick={handleClose}
-          className="w-10 h-10 flex items-center justify-center text-white active:bg-gray-800 rounded-full transition-colors md:w-8 md:h-8"
+          className="w-8 h-8 flex items-center justify-center text-white"
         >
           <X className="w-6 h-6" />
         </button>
 
-        {/* Title for mobile */}
-        <h1 className="text-white font-semibold text-lg md:hidden">Crear</h1>
-
-        {/* Mobile menu button - Right */}
+        {/* Add Sound button - Center (pill style) */}
         <button
-          onClick={() => setShowLayoutMenu(!showLayoutMenu)}
-          className="w-10 h-10 flex items-center justify-center text-white active:bg-gray-800 rounded-full transition-colors md:w-8 md:h-8"
+          onClick={() => setShowMusicSelector(true)}
+          className="flex items-center gap-2 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-full text-white transition-colors"
         >
-          <LayoutGrid className="w-6 h-6" />
+          <Music className="w-5 h-5" />
+          <span className="text-sm font-medium truncate max-w-40">
+            {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
+          </span>
         </button>
+
+        {/* Empty space - Right */}
+        <div className="w-8"></div>
       </div>
 
       {/* Main Content - Mobile Optimized */}
