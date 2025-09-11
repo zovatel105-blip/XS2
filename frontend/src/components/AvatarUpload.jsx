@@ -289,6 +289,19 @@ const AvatarUpload = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Image Crop Modal */}
+      <ImageCropModal
+        isOpen={showCropModal}
+        onClose={handleCropCancel}
+        onSave={handleCropSave}
+        imageFile={selectedFile}
+        aspectRatio={1} // Square crop for avatars
+        cropShape="round"
+        title="Recortar Foto de Perfil"
+        minWidth={200}
+        minHeight={200}
+      />
     </div>
   );
 };
