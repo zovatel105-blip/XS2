@@ -48,6 +48,22 @@ const TikTokVotingCard = ({
     }
   };
   
+  // Get maximum number of options to show based on layout
+  const getMaxOptions = () => {
+    const layout = poll.layout || 'vertical';
+    switch (layout) {
+      case 'off': return 1;
+      case 'vertical': return 2;
+      case 'horizontal': return 2;
+      case 'triptych-vertical': return 3;
+      case 'triptych-horizontal': return 3;
+      case 'grid-2x2': return 4;
+      case 'grid-3x2': return 6;
+      case 'horizontal-3x2': return 6;
+      default: return 2;
+    }
+  };
+
   // Get appropriate aspect ratio based on layout
   const getAspectRatio = () => {
     const layout = poll.layout || 'vertical';
