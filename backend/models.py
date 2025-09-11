@@ -296,6 +296,7 @@ class PollCreate(BaseModel):
     # New fields for enhanced functionality
     mentioned_users: List[str] = []  # List of user IDs mentioned in the poll
     video_playback_settings: Optional[dict] = None  # Video playback configuration
+    layout: Optional[str] = None  # Layout configuration (e.g., 'grid-3x2', 'vertical', etc.)
 
 class PollResponse(BaseModel):
     id: str
