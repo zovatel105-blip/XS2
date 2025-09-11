@@ -23,7 +23,7 @@ const TikTokVotingCard = ({
   
   const cardRef = useRef(null);
   
-  // Convert layout ID to CSS grid classes
+  // Convert layout ID to CSS grid classes  
   const getLayoutGridClass = () => {
     const layout = poll.layout || 'vertical'; // Default to vertical if no layout
     
@@ -36,24 +36,45 @@ const TikTokVotingCard = ({
     
     switch (layout) {
       case 'off':
-        return 'grid-cols-1 grid-rows-1';
+        return 'grid-cols-1';
       case 'vertical': // "Lado a lado" - 2 elementos horizontalmente
-        return 'grid-cols-2 grid-rows-1';
+        return 'grid-cols-2';
       case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
-        console.log(`🔧 HORIZONTAL LAYOUT APPLIED: grid-cols-1 grid-rows-2`);
-        return 'grid-cols-1 grid-rows-2';
+        console.log(`🔧 HORIZONTAL LAYOUT APPLIED: using CSS grid with rows`);
+        return 'grid-cols-1'; // Will use inline style for rows
       case 'triptych-vertical': // "Lado a lado" - 3 elementos horizontalmente
-        return 'grid-cols-3 grid-rows-1';
+        return 'grid-cols-3';
       case 'triptych-horizontal': // "Arriba y abajo" - 3 elementos verticalmente
-        return 'grid-cols-1 grid-rows-3';
+        return 'grid-cols-1'; // Will use inline style for rows
       case 'grid-2x2':
-        return 'grid-cols-2 grid-rows-2';
+        return 'grid-cols-2';
       case 'grid-3x2': // 3 columnas x 2 filas
-        return 'grid-cols-3 grid-rows-2';
+        return 'grid-cols-3';
       case 'horizontal-3x2': // 2 columnas x 3 filas
-        return 'grid-cols-2 grid-rows-3';
+        return 'grid-cols-2';
       default:
-        return 'grid-cols-2 grid-rows-1'; // Default fallback
+        return 'grid-cols-2'; // Default fallback
+    }
+  };
+
+  // Get inline grid style for layouts that need specific row configuration
+  const getGridStyle = () => {
+    const layout = poll.layout || 'vertical';
+    const baseStyle = { gap: '1px' };
+    
+    switch (layout) {
+      case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
+        return { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+      case 'triptych-horizontal': // "Arriba y abajo" - 3 elementos verticalmente  
+        return { ...baseStyle, gridTemplateRows: 'repeat(3, 1fr)' };
+      case 'grid-2x2':
+        return { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+      case 'grid-3x2': // 3 columnas x 2 filas
+        return { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+      case 'horizontal-3x2': // 2 columnas x 3 filas
+        return { ...baseStyle, gridTemplateRows: 'repeat(3, 1fr)' };
+      default:
+        return baseStyle;
     }
   };
 
