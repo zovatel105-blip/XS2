@@ -123,12 +123,28 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
               >
                 {option.media ? (
                   <>
-                    {/* Background Image - Fullscreen style */}
-                    <img 
-                      src={option.media.url} 
-                      alt={`Opción ${slotIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+                    {/* Background Media - Fullscreen style */}
+                    {option.media.type === 'video' ? (
+                      <div className="relative w-full h-full">
+                        <img 
+                          src={option.media.thumbnail || option.media.url} 
+                          alt={`Video Opción ${slotIndex + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Video play overlay */}
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                          <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                            <Video className="w-8 h-8 text-gray-900 ml-1" />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <img 
+                        src={option.media.url} 
+                        alt={`Opción ${slotIndex + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                     
                     {/* Clean Image Preview - NO decorative elements */}
                     <div className="absolute inset-0">
