@@ -376,11 +376,9 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
               </h2>
             </div>
 
-            </div>
-
             {/* Media Grid - Takes most space */}
             <div className="px-4 pb-4 flex-1 flex flex-col justify-center min-h-0">
-              <div className="grid grid-cols-2 gap-3 h-full max-h-80">
+              <div className={`grid ${getLayoutGridClass()} h-full max-h-80`} style={getGridStyle()}>
                 {poll.options.map((option) => {
                   const percentage = getPercentage(option.votes);
                   const isWinner = option.id === winningOption.id && poll.totalVotes > 0;
