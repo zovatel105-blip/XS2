@@ -431,7 +431,7 @@ const ContentCreationPage = () => {
         formData.append('upload_type', 'GENERAL');
         
         const token = localStorage.getItem('authToken');
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL}/api/upload`, {
+        const response = await fetch(`${config.BACKEND_URL}/api/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`
