@@ -297,7 +297,10 @@ const TikTokLayoutCrop = ({
         <div 
           ref={containerRef}
           className="absolute inset-0 overflow-hidden"
-          onTouchStart={handleMediaTouchStart}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ touchAction: 'none' }}
         >
           {mediaSrc && (
             <>
