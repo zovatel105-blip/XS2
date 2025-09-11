@@ -1,14 +1,15 @@
 /**
- * AvatarUpload - Specialized component for uploading profile avatars
+ * AvatarUpload - Specialized component for uploading profile avatars with crop functionality
  */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, Loader2, X, Check } from 'lucide-react';
+import { Camera, Upload, Loader2, X, Check, Crop } from 'lucide-react';
 import { Button } from './ui/button';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import uploadService from '../services/uploadService';
 import { cn } from '../lib/utils';
+import ImageCropModal from './ImageCropModal';
 
 const AvatarUpload = ({
   currentAvatar = null,
