@@ -27,9 +27,11 @@ const TikTokVotingCard = ({
   const getLayoutGridClass = () => {
     const layout = poll.layout || 'vertical'; // Default to vertical if no layout
     
-    // Debug logging for posts with clear layout info
-    if (poll.title && (poll.title.includes('LADO A LADO') || poll.title.includes('ARRIBA Y ABAJO'))) {
-      console.log(`🎨 LAYOUT DEBUG - Poll: "${poll.title}" | Layout: "${layout}" | Grid Class: grid-cols-${layout === 'horizontal' ? '1' : layout === 'vertical' ? '2' : 'unknown'} grid-rows-${layout === 'horizontal' ? '2' : layout === 'vertical' ? '1' : 'unknown'}`);
+    // Enhanced debug logging
+    if (poll.title && poll.title.includes('ARRIBA Y ABAJO')) {
+      console.log(`🚨 CRITICAL DEBUG - Poll: "${poll.title}"`);
+      console.log(`   Layout from DB: "${layout}"`);
+      console.log(`   Expected for horizontal: grid-cols-1 grid-rows-2`);
     }
     
     switch (layout) {
@@ -38,6 +40,7 @@ const TikTokVotingCard = ({
       case 'vertical': // "Lado a lado" - 2 elementos horizontalmente
         return 'grid-cols-2 grid-rows-1';
       case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
+        console.log(`🔧 HORIZONTAL LAYOUT APPLIED: grid-cols-1 grid-rows-2`);
         return 'grid-cols-1 grid-rows-2';
       case 'triptych-vertical': // "Lado a lado" - 3 elementos horizontalmente
         return 'grid-cols-3 grid-rows-1';
