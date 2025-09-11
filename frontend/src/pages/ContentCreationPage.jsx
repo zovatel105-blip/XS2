@@ -11,6 +11,92 @@ import pollService from '../services/pollService';
 import UploadWidget from '../components/UploadWidget';
 import config from '../config/config';
 
+// Layout Icon Components
+const LayoutIcon = ({ type }) => {
+  const iconProps = {
+    className: "w-8 h-8 text-white",
+    strokeWidth: 1.5
+  };
+
+  switch (type) {
+    case 'off':
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded bg-gray-600 flex items-center justify-center">
+          <div className="w-4 h-4 bg-white rounded"></div>
+        </div>
+      );
+    case 'vertical': // Lado a lado
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded flex">
+          <div className="w-1/2 bg-white"></div>
+          <div className="w-px bg-gray-400"></div>
+          <div className="w-1/2 bg-gray-600"></div>
+        </div>
+      );
+    case 'horizontal': // Arriba y abajo
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded flex flex-col">
+          <div className="h-1/2 bg-white"></div>
+          <div className="h-px bg-gray-400"></div>
+          <div className="h-1/2 bg-gray-600"></div>
+        </div>
+      );
+    case 'triptych-vertical': // 3 lado a lado
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded flex">
+          <div className="w-1/3 bg-white"></div>
+          <div className="w-px bg-gray-400"></div>
+          <div className="w-1/3 bg-gray-600"></div>
+          <div className="w-px bg-gray-400"></div>
+          <div className="w-1/3 bg-white"></div>
+        </div>
+      );
+    case 'triptych-horizontal': // 3 arriba y abajo
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded flex flex-col">
+          <div className="h-1/3 bg-white"></div>
+          <div className="h-px bg-gray-400"></div>
+          <div className="h-1/3 bg-gray-600"></div>
+          <div className="h-px bg-gray-400"></div>
+          <div className="h-1/3 bg-white"></div>
+        </div>
+      );
+    case 'grid-2x2': // 2x2 grid
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-2 grid-rows-2 gap-px">
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-white"></div>
+        </div>
+      );
+    case 'grid-3x2': // 3x2 grid
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-3 grid-rows-2 gap-px">
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+        </div>
+      );
+    case 'horizontal-3x2': // 2x3 grid
+      return (
+        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-2 grid-rows-3 gap-px">
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-gray-600"></div>
+          <div className="bg-white"></div>
+          <div className="bg-white"></div>
+          <div className="bg-gray-600"></div>
+        </div>
+      );
+    default:
+      return <div className="w-8 h-8 border-2 border-white rounded bg-gray-600"></div>;
+  }
+};
+
 const LAYOUT_OPTIONS = [
   { id: 'off', name: 'Off', description: 'Sin layout (solo una imagen)' },
   { id: 'vertical', name: 'Lado a lado', description: 'Pantalla dividida en 2 partes lado a lado' },
