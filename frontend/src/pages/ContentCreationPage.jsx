@@ -492,6 +492,18 @@ const ContentCreationPage = () => {
     }
   };
 
+  // Handle crop from preview (TikTok style)
+  const handleCropFromPreview = (slotIndex) => {
+    const option = options[slotIndex];
+    if (!option?.media?.file || option.media.type !== 'image') {
+      return;
+    }
+    
+    setCurrentSlotIndex(slotIndex);
+    setSelectedFileForCrop(option.media.file);
+    setShowCropModal(true);
+  };
+
   const handleImageUpload = (slotIndex) => {
     setCurrentSlotIndex(slotIndex);
     fileInputRef.current?.click();
