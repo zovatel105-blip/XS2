@@ -75,6 +75,16 @@ UPLOAD_DIR = config.UPLOAD_BASE_DIR
 # Mount static files to serve uploads
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
+# Cache for iTunes API responses to improve performance
+itunes_cache = {}
+CACHE_EXPIRY_HOURS = 24  # Cache iTunes data for 24 hours
+
+def is_cache_valid(cached_item):
+    """Check if cached item is still valid"""
+    if not cached_item:
+        return False
+    return (datetime.utcnow() - cached_item['cached_at']).total_seconds() < (CACHE_EXPIRY_HOURS * 3600)
+
 # Create a router with configurable prefix
 api_router = APIRouter(prefix=config.API_PREFIX)
 
