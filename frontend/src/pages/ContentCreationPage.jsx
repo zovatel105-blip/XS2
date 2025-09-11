@@ -249,20 +249,6 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     {/* Minimalist edit controls - top corner */}
                     <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity z-30">
                       <div className="flex gap-2">
-                        {/* Crop button for images */}
-                        {option.media.type === 'image' && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onCropFromPreview(slotIndex);
-                            }}
-                            className="w-8 h-8 bg-black/70 backdrop-blur-sm hover:bg-black/80 rounded-full flex items-center justify-center text-white transition-all shadow-lg border border-white/20"
-                            title="Ajustar imagen"
-                          >
-                            <Crop className="w-4 h-4" />
-                          </button>
-                        )}
-                        
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
