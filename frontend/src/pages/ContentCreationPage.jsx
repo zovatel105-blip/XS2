@@ -578,73 +578,57 @@ const ContentCreationPage = () => {
       console.log('🎥 Processing video with base64...');
       const base64 = await fileToBase64(file);
         
-        // Create thumbnail like the original modal
-        const canvas = document.createElement('canvas');
-        canvas.width = 400;
-        canvas.height = 600;
-        const ctx = canvas.getContext('2d');
-        
-        // Fondo degradado
-        const gradient = ctx.createLinearGradient(0, 0, 0, 600);
-        gradient.addColorStop(0, '#1f2937');
-        gradient.addColorStop(1, '#111827');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 400, 600);
-        
-        // Ícono de play
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(160, 250);
-        ctx.lineTo(160, 350);
-        ctx.lineTo(240, 300);
-        ctx.closePath();
-        ctx.fill();
-        
-        // Agregar texto
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
-        ctx.textAlign = 'center';
-        ctx.fillText('Video Preview', 200, 380);
-        
-        mediaData = {
-          type: 'video',
-          url: base64,
-          thumbnail: canvas.toDataURL('image/png'),
-          file: file,
-          name: file.name,
-          size: file.size
-        };
-        
-      } else {
-        console.log('🖼️ Processing image with base64...');
-        // For images, continue using base64 (it's fine for images)
-        const base64 = await fileToBase64(file);
-        mediaData = {
-          url: base64,
-          type: 'image',
-          file: file,
-          name: file.name,
-          size: file.size
-        };
-      }
+      // Create thumbnail like the original modal
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+      
+      // Fondo degradado
+      const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+      gradient.addColorStop(0, '#1f2937');
+      gradient.addColorStop(1, '#111827');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 400, 600);
+      
+      // Ícono de play
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(160, 250);
+      ctx.lineTo(160, 350);
+      ctx.lineTo(240, 300);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Agregar texto
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+      ctx.textAlign = 'center';
+      ctx.fillText('Video Preview', 200, 380);
+      
+      const mediaData = {
+        type: 'video',
+        url: base64,
+        thumbnail: canvas.toDataURL('image/png'),
+        file: file,
+        name: file.name,
+        size: file.size
+      };
       
       updateOption(currentSlotIndex, 'media', mediaData);
 
       toast({
-        title: `✅ ${isVideo ? 'Video' : 'Imagen'} agregado`,
-        description: `${isVideo ? 'Video' : 'Imagen'} agregado a la opción ${String.fromCharCode(65 + currentSlotIndex)}`,
+        title: "✅ Video agregado",
+        description: `Video agregado a la opción ${String.fromCharCode(65 + currentSlotIndex)}`,
       });
     } catch (error) {
-      console.error('❌ File upload error:', error);
+      console.error('❌ Video upload error:', error);
       toast({
         title: "Error",
-        description: error.message || "No se pudo cargar la imagen. Intenta con otra imagen.",
+        description: error.message || "No se pudo cargar el video. Intenta con otro video.",
         variant: "destructive"
       });
     }
-
-    // Reset file input
-    event.target.value = '';
   };
 
   const handleImageRemove = (slotIndex) => {
