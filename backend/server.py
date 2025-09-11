@@ -600,6 +600,13 @@ async def get_music_info(music_id: str):
                             'source': 'iTunes'
                         }
                         print(f"✅ Successfully fetched iTunes track: {music_info['title']} - {music_info['artist']}")
+                        
+                        # Cache the result
+                        itunes_cache[itunes_track_id] = {
+                            'data': music_info,
+                            'cached_at': datetime.utcnow()
+                        }
+                        
                         return music_info
                     else:
                         print(f"❌ No results found for iTunes track ID: {itunes_track_id}")
