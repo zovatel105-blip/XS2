@@ -9,6 +9,7 @@ import UserMentionInput from '../components/UserMentionInput';
 import { fileToBase64 } from '../services/mockData';
 import pollService from '../services/pollService';
 import UploadWidget from '../components/UploadWidget';
+import config from '../config/config';
 
 const LAYOUT_OPTIONS = [
   { id: 'off', name: 'Off', description: 'Sin layout (solo una imagen)' },
