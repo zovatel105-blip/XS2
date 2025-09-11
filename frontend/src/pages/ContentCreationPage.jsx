@@ -207,7 +207,14 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
               {/* Fullscreen Feed-style Preview */}
               <div 
                 className="w-full h-full cursor-pointer relative overflow-hidden"
-                onClick={() => onImageUpload(slotIndex)}
+                onClick={() => {
+                  // If image exists, open crop directly. If not, upload new image.
+                  if (option.media && option.media.type === 'image') {
+                    handleCropFromPreview(slotIndex);
+                  } else {
+                    handleImageUpload(slotIndex);
+                  }
+                }}
               >
                 {option.media ? (
                   <>
