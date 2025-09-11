@@ -75,11 +75,38 @@ const SimpleCropModal = ({
     const scaleY = frameHeight / mediaHeight;
     const initialScale = Math.max(scaleX, scaleY);
     
+    console.log(`📐 Auto-fit: scale=${initialScale}, frameSize=${frameWidth}x${frameHeight}`);
+    
     setTransform(prev => ({
       ...prev,
       scale: initialScale
     }));
   }, [mediaType, frameAspectRatio]);
+
+  // Add global event listeners for mouse events
+  useEffect(() => {
+    const handleGlobalMouseMove = (e) => {
+      if (isDragging) {
+        handleMouseMove(e);
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        handleMouseUp();
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging]);
 
   // Get distance between two touches
   const getDistance = (touches) => {
