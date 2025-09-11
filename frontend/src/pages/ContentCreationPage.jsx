@@ -823,6 +823,7 @@ const ContentCreationPage = () => {
           onImageRemove={handleImageRemove}
           onOptionTextChange={handleOptionTextChange}
           onMentionSelect={handleMentionSelect}
+          onCropFromPreview={handleCropFromPreview}
           fullscreen={previewMode}
         />
       </div>
