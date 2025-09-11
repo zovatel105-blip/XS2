@@ -3692,6 +3692,12 @@ async def vote_on_poll(
         poll_author_id = poll.get("author_id")
         if poll_author_id:
             await ensure_user_profile(poll_author_id)
+            
+        # Clear follow status cache for affected users
+        cache_keys_to_clear = [key for key in follow_status_cache.keys() if current_user.id in key or poll_author_id in key]
+        for key in cache_keys_to_clear:
+            follow_status_cache.pop(key, None)
+            
     except Exception as e:
         print(f"Error updating profiles after vote: {e}")
     
