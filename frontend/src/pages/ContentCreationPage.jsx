@@ -570,28 +570,14 @@ const ContentCreationPage = () => {
 
   // Handle crop save
   const handleCropSave = (cropResult) => {
-    setShowCropModal(false);
-    setSelectedFileForCrop(null);
-    
-    // Replace the image in the current slot with cropped version
-    const mediaData = {
-      url: cropResult.base64,
-      type: 'image',
-      file: cropResult.file
-    };
-
-    updateOption(currentSlotIndex, 'media', mediaData);
-
-    toast({
-      title: "Imagen ajustada",
-      description: "La imagen se ha recortado exitosamente",
-    });
+    // This function is now replaced by handleInlineCropSave
+    console.log('handleCropSave called but should use inline crop');
   };
 
   // Handle crop cancel
   const handleCropCancel = () => {
-    setShowCropModal(false);
-    setSelectedFileForCrop(null);
+    // This function is now replaced by handleInlineCropCancel
+    console.log('handleCropCancel called but should use inline crop');
   };
 
   // Process image file (after crop)
