@@ -166,7 +166,12 @@ class UserService {
         headers: this.getAuthHeaders(),
       });
 
-      return await this.handleResponse(response);
+      const result = await this.handleResponse(response);
+      
+      // Clear cache for this user after unfollow action
+      this.followStatusCache.delete(userId);
+      
+      return result;
     } catch (error) {
       console.error(`Error unfollowing user ${userIdOrUsername}:`, error);
       throw error;
