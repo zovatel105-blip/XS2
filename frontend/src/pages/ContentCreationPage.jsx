@@ -171,7 +171,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                             onImageRemove(slotIndex);
                           }}
                           className="w-8 h-8 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
-                          title="Cambiar imagen"
+                          title="Cambiar imagen/video"
                         >
                           <Upload className="w-4 h-4" />
                         </button>
