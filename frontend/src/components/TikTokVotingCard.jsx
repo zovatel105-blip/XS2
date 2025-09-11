@@ -29,20 +29,20 @@ const TikTokVotingCard = ({
     switch (layout) {
       case 'off':
         return 'grid-cols-1 grid-rows-1';
-      case 'vertical':
+      case 'vertical': // "Lado a lado" - 2 elementos horizontalmente
         return 'grid-cols-2 grid-rows-1';
-      case 'horizontal':
+      case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
         return 'grid-cols-1 grid-rows-2';
-      case 'triptych-vertical':
+      case 'triptych-vertical': // "Lado a lado" - 3 elementos horizontalmente
         return 'grid-cols-3 grid-rows-1';
-      case 'triptych-horizontal':
+      case 'triptych-horizontal': // "Arriba y abajo" - 3 elementos verticalmente
         return 'grid-cols-1 grid-rows-3';
       case 'grid-2x2':
         return 'grid-cols-2 grid-rows-2';
-      case 'grid-3x2':
+      case 'grid-3x2': // 3 columnas x 2 filas
         return 'grid-cols-3 grid-rows-2';
-      case 'horizontal-3x2':
-        return 'grid-cols-2 grid-rows-3'; // Changed to 2 cols x 3 rows for better visibility
+      case 'horizontal-3x2': // 2 columnas x 3 filas
+        return 'grid-cols-2 grid-rows-3';
       default:
         return 'grid-cols-2 grid-rows-1'; // Default fallback
     }
