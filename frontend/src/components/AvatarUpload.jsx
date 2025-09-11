@@ -36,7 +36,7 @@ const AvatarUpload = ({
 
   const config = sizeConfig[size] || sizeConfig.lg;
 
-  // Handle file selection
+  // Handle file selection - now opens crop modal
   const handleFileSelect = (file) => {
     if (!file) return;
 
@@ -55,15 +55,24 @@ const AvatarUpload = ({
       return;
     }
 
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    // Set selected file and open crop modal
+    setSelectedFile(file);
+    setShowCropModal(true);
+  };
 
-    // Upload file
-    uploadAvatar(file);
+  // Handle crop save
+  const handleCropSave = (cropResult) => {
+    setPreview(cropResult.base64);
+    setShowCropModal(false);
+    
+    // Upload the cropped image
+    uploadAvatar(cropResult.file);
+  };
+
+  // Handle crop cancel
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setSelectedFile(null);
   };
 
   // Upload avatar
