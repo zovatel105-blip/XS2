@@ -91,7 +91,7 @@ const TikTokVotingCard = ({
       case 'triptych-horizontal':
         return 'aspect-[16/9] sm:aspect-[18/9]'; // Responsive horizontal format
       case 'horizontal-3x2':
-        return 'aspect-[16/6] sm:aspect-[20/7]'; // Better ratio for horizontal 3x2 - less extreme
+        return 'aspect-[8/12] sm:aspect-[9/13]'; // Vertical-ish format for 2x3 grid
       case 'grid-3x2':
         return 'aspect-[4/3] sm:aspect-[3/2]'; // Responsive slightly wider than square
       case 'grid-2x2':
