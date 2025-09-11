@@ -47,6 +47,22 @@ const TikTokVotingCard = ({
         return 'grid-cols-2 grid-rows-1'; // Default fallback
     }
   };
+
+  // Get container max width based on layout
+  const getMaxWidth = () => {
+    const layout = poll.layout || 'vertical';
+    switch (layout) {
+      case 'horizontal-3x2':
+        return 'max-w-4xl'; // Extra wide for 6 horizontal items
+      case 'grid-3x2':
+      case 'triptych-horizontal':
+        return 'max-w-2xl'; // Wider than default
+      case 'grid-2x2':
+        return 'max-w-lg'; // Medium width
+      default:
+        return 'max-w-sm'; // Default narrow width
+    }
+  };
   
   // Get maximum number of options to show based on layout
   const getMaxOptions = () => {
