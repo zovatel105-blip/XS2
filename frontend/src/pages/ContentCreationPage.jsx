@@ -19,7 +19,7 @@ const LAYOUT_OPTIONS = [
   { id: 'triptych-horizontal', name: 'Triptych horizontal', description: 'Pantalla dividida en 3 partes horizontales' },
   { id: 'grid-2x2', name: 'Grid 2x2', description: 'Pantalla dividida en 4 partes (cuadrícula de 2x2)' },
   { id: 'grid-3x2', name: 'Grid 3x2', description: 'Pantalla dividida en 6 partes (cuadrícula de 3x2)' },
-  { id: 'horizontal-3x2', name: 'Horizontal 3x2', description: 'Pantalla dividida en 6 partes (horizontal de 3x2)' }
+  { id: 'horizontal-3x2', name: 'Grid 2x3', description: 'Pantalla dividida en 6 partes (cuadrícula de 2x3)' }
 ];
 
 const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUpload, onImageRemove, onOptionTextChange, onMentionSelect, fullscreen = false }) => {
