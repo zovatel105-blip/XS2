@@ -183,6 +183,71 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const { shareModal, sharePoll, closeShareModal } = useShare();
   
+  // Convert layout ID to CSS grid classes for feed
+  const getLayoutGridClass = () => {
+    const layout = poll.layout || 'vertical'; // Default to vertical if no layout
+    
+    // Debug logging for horizontal layout issues
+    if (poll.title && poll.title.includes('ARRIBA Y ABAJO')) {
+      console.log(`🔥 POLLCARD DEBUG - Poll: "${poll.title}"`);
+      console.log(`   Layout from DB: "${layout}"`);
+      console.log(`   Will use grid-cols-1 for horizontal layout`);
+    }
+    
+    switch (layout) {
+      case 'off':
+        return 'grid-cols-1';
+      case 'vertical': // "Lado a lado" - 2 elementos horizontalmente
+        return 'grid-cols-2';
+      case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
+        console.log(`🔥 POLLCARD HORIZONTAL: Using grid-cols-1 with grid-template-rows`);
+        return 'grid-cols-1'; // Use 1 column, styles will add rows
+      case 'triptych-vertical': // "Lado a lado" - 3 elementos horizontalmente
+        return 'grid-cols-3';
+      case 'triptych-horizontal': // "Arriba y abajo" - 3 elementos verticalmente
+        return 'grid-cols-1'; // Use 1 column, styles will add rows
+      case 'grid-2x2':
+        return 'grid-cols-2';
+      case 'grid-3x2': // 3 columnas x 2 filas
+        return 'grid-cols-3';
+      case 'horizontal-3x2': // 2 columnas x 3 filas
+        return 'grid-cols-2';
+      default:
+        return 'grid-cols-2'; // Default fallback
+    }
+  };
+
+  // Get inline grid style for layouts that need specific row configuration
+  const getGridStyle = () => {
+    const layout = poll.layout || 'vertical';
+    const baseStyle = { gap: '12px' }; // 3 = 12px in Tailwind
+    
+    // Debug logging for horizontal layout
+    if (poll.title && poll.title.includes('ARRIBA Y ABAJO')) {
+      console.log(`🔥 POLLCARD getGridStyle called for: "${poll.title}"`);
+      console.log(`   Layout: "${layout}"`);
+    }
+    
+    switch (layout) {
+      case 'horizontal': // "Arriba y abajo" - 2 elementos verticalmente
+        const horizontalStyle = { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+        if (poll.title && poll.title.includes('ARRIBA Y ABAJO')) {
+          console.log(`   Applying horizontal style:`, horizontalStyle);
+        }
+        return horizontalStyle;
+      case 'triptych-horizontal': // "Arriba y abajo" - 3 elementos verticalmente  
+        return { ...baseStyle, gridTemplateRows: 'repeat(3, 1fr)' };
+      case 'grid-2x2':
+        return { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+      case 'grid-3x2': // 3 columnas x 2 filas
+        return { ...baseStyle, gridTemplateRows: 'repeat(2, 1fr)' };
+      case 'horizontal-3x2': // 2 columnas x 3 filas
+        return { ...baseStyle, gridTemplateRows: 'repeat(3, 1fr)' };
+      default:
+        return baseStyle;
+    }
+  };
+  
   // Get social proof for this poll
   const socialProof = socialProofData[poll.id] || null;
 
