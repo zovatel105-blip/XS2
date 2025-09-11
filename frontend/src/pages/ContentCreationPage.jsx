@@ -13,10 +13,10 @@ import config from '../config/config';
 
 const LAYOUT_OPTIONS = [
   { id: 'off', name: 'Off', description: 'Sin layout (solo una imagen)' },
-  { id: 'vertical', name: 'Vertical', description: 'Pantalla dividida en 2 partes verticales' },
-  { id: 'horizontal', name: 'Horizontal', description: 'Pantalla dividida en 2 partes horizontales' },
-  { id: 'triptych-vertical', name: 'Triptych vertical', description: 'Pantalla dividida en 3 partes verticales' },
-  { id: 'triptych-horizontal', name: 'Triptych horizontal', description: 'Pantalla dividida en 3 partes horizontales' },
+  { id: 'vertical', name: 'Lado a lado', description: 'Pantalla dividida en 2 partes lado a lado' },
+  { id: 'horizontal', name: 'Arriba y abajo', description: 'Pantalla dividida en 2 partes arriba y abajo' },
+  { id: 'triptych-vertical', name: 'Triptych lado a lado', description: 'Pantalla dividida en 3 partes lado a lado' },
+  { id: 'triptych-horizontal', name: 'Triptych arriba y abajo', description: 'Pantalla dividida en 3 partes arriba y abajo' },
   { id: 'grid-2x2', name: 'Grid 2x2', description: 'Pantalla dividida en 4 partes (cuadrícula de 2x2)' },
   { id: 'grid-3x2', name: 'Grid 3x2', description: 'Pantalla dividida en 6 partes (cuadrícula de 3x2)' },
   { id: 'horizontal-3x2', name: 'Grid 2x3', description: 'Pantalla dividida en 6 partes (cuadrícula de 2x3)' }
