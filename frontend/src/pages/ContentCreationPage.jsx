@@ -510,13 +510,73 @@ const ContentCreationPage = () => {
       return;
     }
 
+    // For images, open crop modal
+    if (isImage) {
+      setSelectedFileForCrop(file);
+      setShowCropModal(true);
+      return;
+    }
+
+    // For videos, process directly (no crop)
+    if (isVideo) {
+      processVideoFile(file);
+    }
+
+    // Reset file input
+    event.target.value = '';
+  };
+
+  // Handle crop save
+  const handleCropSave = (cropResult) => {
+    setShowCropModal(false);
+    setSelectedFileForCrop(null);
+    
+    // Process the cropped image
+    processImageFile(cropResult.file, cropResult.base64);
+  };
+
+  // Handle crop cancel
+  const handleCropCancel = () => {
+    setShowCropModal(false);
+    setSelectedFileForCrop(null);
+  };
+
+  // Process image file (after crop)
+  const processImageFile = async (file, base64 = null) => {
     try {
       let mediaData;
       
-      if (isVideo) {
-        console.log('🎥 Processing video with base64 (like original modal)...');
-        // Use base64 for videos like the original CreatePollModal did
-        const base64 = await fileToBase64(file);
+      if (!base64) {
+        base64 = await fileToBase64(file);
+      }
+      
+      mediaData = {
+        url: base64,
+        type: 'image',
+        file: file
+      };
+
+      updateOption(currentSlotIndex, 'media', mediaData);
+
+      toast({
+        title: "Imagen cargada",
+        description: "La imagen se ha agregado exitosamente",
+      });
+    } catch (error) {
+      console.error('Error processing image:', error);
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo cargar la imagen. Intenta con otra imagen.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Process video file
+  const processVideoFile = async (file) => {
+    try {
+      console.log('🎥 Processing video with base64...');
+      const base64 = await fileToBase64(file);
         
         // Create thumbnail like the original modal
         const canvas = document.createElement('canvas');
