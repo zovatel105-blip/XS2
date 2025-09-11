@@ -382,21 +382,23 @@ const ContentCreationPage = () => {
     if (!file) return;
 
     const isImage = file.type.startsWith('image/');
-    if (!isImage) {
+    const isVideo = file.type.startsWith('video/');
+    
+    if (!isImage && !isVideo) {
       toast({
         title: "Error",
-        description: "Solo se permiten archivos de imagen (JPG, PNG, GIF, WEBP)",
+        description: "Solo se permiten archivos de imagen o video (JPG, PNG, GIF, WEBP, MP4, MOV, AVI)",
         variant: "destructive"
       });
       return;
     }
 
-    // Check file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Check file size (max 50MB for videos, 10MB for images)
+    const maxSize = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024; // 50MB for video, 10MB for image
     if (file.size > maxSize) {
       toast({
         title: "Error",
-        description: "La imagen es muy grande. Máximo 10MB permitido.",
+        description: `El archivo es muy grande. Máximo ${isVideo ? '50MB' : '10MB'} permitido.`,
         variant: "destructive"
       });
       return;
@@ -404,19 +406,51 @@ const ContentCreationPage = () => {
 
     try {
       const base64 = await fileToBase64(file);
-      const mediaData = {
+      let mediaData = {
         url: base64,
-        type: 'image',
+        type: isVideo ? 'video' : 'image',
         file: file,
         name: file.name,
         size: file.size
       };
       
+      // Para videos, crear thumbnail
+      if (isVideo) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
+        
+        // Fondo degradado
+        const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+        gradient.addColorStop(0, '#1f2937');
+        gradient.addColorStop(1, '#111827');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 400, 600);
+        
+        // Ícono de play
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(160, 250);
+        ctx.lineTo(160, 350);
+        ctx.lineTo(240, 300);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Agregar texto
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+        ctx.textAlign = 'center';
+        ctx.fillText('Video Preview', 200, 380);
+        
+        mediaData.thumbnail = canvas.toDataURL('image/png');
+      }
+      
       updateOption(currentSlotIndex, 'media', mediaData);
 
       toast({
-        title: "✅ Imagen agregada",
-        description: `Imagen agregada a la opción ${String.fromCharCode(65 + currentSlotIndex)}`,
+        title: `✅ ${isVideo ? 'Video' : 'Imagen'} agregado`,
+        description: `${isVideo ? 'Video' : 'Imagen'} agregado a la opción ${String.fromCharCode(65 + currentSlotIndex)}`,
       });
     } catch (error) {
       console.error('Error loading image:', error);
