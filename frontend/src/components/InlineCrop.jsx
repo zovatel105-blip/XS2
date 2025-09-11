@@ -44,73 +44,73 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle touch start
+  // Handle touch start - simplified for mobile
   const handleTouchStart = (e) => {
     if (!isActive) return;
     
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const touches = e.touches;
-    console.log(`🎯 Inline crop touch start: ${touches.length} fingers`);
+    const touches = e.touches || [e]; // Support both touch and mouse
+    console.log(`🎯 Touch start: ${touches.length} fingers`);
     
     if (touches.length === 1) {
       setIsDragging(true);
       setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
+      console.log('🖐️ Single touch - drag mode');
     } else if (touches.length === 2) {
       setIsDragging(false);
       setLastDistance(getDistance(touches));
+      console.log('🤏 Two fingers - pinch mode');
     }
   };
 
-  // Handle touch move
+  // Handle touch move - simplified for mobile
   const handleTouchMove = (e) => {
     if (!isActive) return;
     
-    e.preventDefault();
+    e.preventDefault(); // Critical for mobile
     e.stopPropagation();
     
-    const touches = e.touches;
+    const touches = e.touches || [e]; // Support both touch and mouse
     
     if (touches.length === 1 && isDragging) {
       // Single finger drag - move image
-      const deltaX = touches[0].clientX - lastTouch.x;
-      const deltaY = touches[0].clientY - lastTouch.y;
+      const touch = touches[0];
+      const deltaX = touch.clientX - lastTouch.x;
+      const deltaY = touch.clientY - lastTouch.y;
       
-      setTransform(prev => ({
-        ...prev,
-        translateX: prev.translateX + deltaX,
-        translateY: prev.translateY + deltaY
-      }));
-      
-      setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-      console.log(`🔄 Inline drag: ${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}`);
+      if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) { // Avoid micro movements
+        setTransform(prev => ({
+          ...prev,
+          translateX: prev.translateX + deltaX,
+          translateY: prev.translateY + deltaY
+        }));
+        
+        setLastTouch({ x: touch.clientX, y: touch.clientY });
+        console.log(`🔄 Moved: ${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}`);
+      }
       
     } else if (touches.length === 2) {
       // Two finger pinch - zoom image
       const distance = getDistance(touches);
       const scaleFactor = distance / lastDistance;
       
-      if (scaleFactor > 0.1 && scaleFactor < 10) {
+      if (scaleFactor > 0.5 && scaleFactor < 2) { // Reasonable scale bounds
         setTransform(prev => ({
           ...prev,
-          scale: Math.max(0.5, Math.min(3, prev.scale * scaleFactor))
+          scale: Math.max(0.3, Math.min(4, prev.scale * scaleFactor))
         }));
         
         setLastDistance(distance);
-        console.log(`🔍 Inline zoom: ${(transform.scale * scaleFactor).toFixed(2)}x`);
+        console.log(`🔍 Zoom: ${(transform.scale * scaleFactor).toFixed(2)}x`);
       }
     }
   };
 
-  // Handle touch end
+  // Handle touch end - simplified
   const handleTouchEnd = (e) => {
     if (!isActive) return;
     
-    e.preventDefault();
-    e.stopPropagation();
     setIsDragging(false);
-    console.log('✋ Inline touch ended');
+    console.log('✋ Touch ended');
   };
 
   // Reset transform
