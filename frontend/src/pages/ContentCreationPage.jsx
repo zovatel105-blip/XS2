@@ -545,9 +545,9 @@ const ContentCreationPage = () => {
         
         return {
           text: opt.text.trim() || '', // Use provided text or empty string
-          media_type: 'image',
+          media_type: opt.media.type, // Use the actual media type (image or video)
           media_url: opt.media.url,
-          thumbnail_url: opt.media.url, // For images, thumbnail is same as url
+          thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
           mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
         };
       });
