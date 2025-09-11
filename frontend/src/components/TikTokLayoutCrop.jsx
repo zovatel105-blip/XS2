@@ -338,7 +338,7 @@ const TikTokLayoutCrop = ({
           {/* Crop Frame - TikTok Style */}
           <div
             ref={frameRef}
-            className="absolute border-4 border-white shadow-2xl bg-transparent"
+            className="absolute border-4 border-white shadow-2xl bg-transparent pointer-events-none"
             style={{
               left: `${cropFrame.x}%`,
               top: `${cropFrame.y}%`,
@@ -346,7 +346,6 @@ const TikTokLayoutCrop = ({
               height: `${cropFrame.height}%`,
               transform: 'translate(-50%, -50%)'
             }}
-            onTouchStart={handleFrameTouchStart}
           >
             {/* Grid lines inside frame */}
             <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
