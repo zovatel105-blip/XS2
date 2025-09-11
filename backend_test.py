@@ -8124,14 +8124,26 @@ def main():
     # Track test results
     test_results = {}
     
-    # Run essential tests first for authentication
+    # Run focused layout test first (as requested in review)
+    print("🎯 Running focused layout functionality test...")
+    print(f"\n{'='*20} Layout Functionality Test {'='*20}")
+    try:
+        result = test_layout_functionality(base_url)
+        test_results["Layout Functionality"] = result
+        status = "✅ PASSED" if result else "❌ FAILED"
+        print(f"\n{status}: Layout Functionality Test")
+    except Exception as e:
+        print(f"\n❌ ERROR in Layout Functionality Test: {str(e)}")
+        test_results["Layout Functionality"] = False
+    
+    # Run essential tests for authentication
     essential_tests = [
         ("Health Check", test_health_check),
         ("User Registration", test_user_registration),
         ("User Login", test_user_login),
     ]
     
-    print("🔧 Running essential setup tests...")
+    print("\n🔧 Running essential setup tests...")
     for test_name, test_func in essential_tests:
         print(f"\n{'='*20} {test_name} {'='*20}")
         try:
@@ -8176,14 +8188,24 @@ def main():
     print(f"\n📈 Overall Results: {passed_tests}/{total_tests} tests passed")
     print(f"🎯 Success Rate: {(passed_tests/total_tests)*100:.1f}%")
     
-    # Check if quick verification passed
-    if test_results.get("Quick Backend Verification", False):
+    # Check if layout test and quick verification passed
+    layout_passed = test_results.get("Layout Functionality", False)
+    verification_passed = test_results.get("Quick Backend Verification", False)
+    
+    if layout_passed and verification_passed:
         print("\n🎉 BACKEND VERIFICATION SUCCESSFUL!")
+        print("✅ Layout functionality working correctly")
         print("✅ Backend está estable y funcionando correctamente")
         print("🚀 Listo para proceder con testing del frontend")
         sys.exit(0)
+    elif layout_passed:
+        print("\n⚠️ LAYOUT FUNCTIONALITY WORKING BUT OTHER ISSUES DETECTED")
+        print("✅ Layout functionality confirmed working")
+        print("❌ Some backend verification issues detected")
+        sys.exit(1)
     else:
         print("\n⚠️ BACKEND VERIFICATION ISSUES DETECTED")
+        print("❌ Layout functionality needs attention")
         print("❌ Revisar problemas antes de proceder con frontend testing")
         sys.exit(1)
 
