@@ -3,6 +3,8 @@ import config from '../config/config';
 class UserService {
   constructor() {
     this.baseURL = config.API_ENDPOINTS.USERS.SEARCH.split('/search')[0]; // Get base users URL
+    this.followStatusCache = new Map();
+    this.CACHE_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes cache
   }
 
   // Get auth headers
