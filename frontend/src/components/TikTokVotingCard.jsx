@@ -53,7 +53,7 @@ const TikTokVotingCard = ({
     const layout = poll.layout || 'vertical';
     switch (layout) {
       case 'horizontal-3x2':
-        return 'max-w-5xl sm:max-w-6xl'; // Responsive extra wide for horizontal layout
+        return 'max-w-lg sm:max-w-xl'; // Medium width for 2x3 grid layout
       case 'grid-3x2':
         return 'max-w-3xl sm:max-w-4xl'; // Responsive wide for 3x2 grid
       case 'triptych-horizontal':
