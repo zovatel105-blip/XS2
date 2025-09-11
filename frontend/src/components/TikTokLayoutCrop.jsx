@@ -71,92 +71,109 @@ const TikTokLayoutCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle touch start on crop frame
-  const handleFrameTouchStart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  // Simplified touch handlers that actually work on mobile
+  const handleTouchStart = (e) => {
     const touches = e.touches;
-    if (touches.length === 1) {
-      setIsDraggingFrame(true);
-      setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-      console.log('🖼️ Frame drag started');
-    }
-  };
-
-  // Handle touch start on media (background)
-  const handleMediaTouchStart = (e) => {
-    e.preventDefault();
-    const touches = e.touches;
+    console.log(`🔥 Touch start: ${touches.length} fingers`);
     
     if (touches.length === 1) {
-      setIsDraggingMedia(true);
-      setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-      console.log('🎨 Media drag started');
-    } else if (touches.length === 2) {
-      setLastDistance(getDistance(touches));
-      console.log('🔍 Pinch started');
-    }
-  };
-
-  // Handle touch move
-  const handleTouchMove = (e) => {
-    e.preventDefault();
-    const touches = e.touches;
-    
-    if (touches.length === 1) {
-      const deltaX = touches[0].clientX - lastTouch.x;
-      const deltaY = touches[0].clientY - lastTouch.y;
+      // Single touch - check if touching the frame or background
+      const touch = touches[0];
+      const frameElement = frameRef.current;
       
-      if (isDraggingFrame && containerRef.current) {
-        // Move crop frame
-        const container = containerRef.current;
-        const containerRect = container.getBoundingClientRect();
+      if (frameElement) {
+        const frameRect = frameElement.getBoundingClientRect();
+        const touchX = touch.clientX;
+        const touchY = touch.clientY;
         
-        const deltaXPercent = (deltaX / containerRect.width) * 100;
-        const deltaYPercent = (deltaY / containerRect.height) * 100;
-        
-        setCropFrame(prev => ({
-          ...prev,
-          x: Math.max(0, Math.min(100 - prev.width, prev.x + deltaXPercent)),
-          y: Math.max(0, Math.min(100 - prev.height, prev.y + deltaYPercent))
-        }));
-        
-        console.log('🖼️ Frame moved');
-      } else if (isDraggingMedia) {
-        // Move background media
-        setMediaTransform(prev => ({
-          ...prev,
-          translateX: prev.translateX + deltaX,
-          translateY: prev.translateY + deltaY
-        }));
-        
-        console.log('🎨 Media moved');
+        // Check if touch is inside the crop frame
+        if (touchX >= frameRect.left && touchX <= frameRect.right &&
+            touchY >= frameRect.top && touchY <= frameRect.bottom) {
+          setIsDraggingFrame(true);
+          console.log('📱 Dragging FRAME');
+        } else {
+          setIsDraggingMedia(true);
+          console.log('🖼️ Dragging MEDIA');
+        }
+      } else {
+        setIsDraggingMedia(true);
       }
       
-      setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-    } else if (touches.length === 2 && !isDraggingFrame) {
-      // Pinch zoom on media
-      const distance = getDistance(touches);
-      const scale = distance / lastDistance;
-      
-      setMediaTransform(prev => ({
-        ...prev,
-        scale: Math.max(0.5, Math.min(3, prev.scale * scale))
-      }));
-      
-      setLastDistance(distance);
-      console.log('🔍 Media zoomed');
+      setLastTouch({ x: touch.clientX, y: touch.clientY });
+    } else if (touches.length === 2) {
+      // Two finger pinch - always for media zoom
+      setIsDraggingFrame(false);
+      setIsDraggingMedia(false);
+      setLastDistance(getDistance(touches));
+      console.log('🤏 Pinch started');
     }
   };
 
-  // Handle touch end
+  const handleTouchMove = (e) => {
+    e.preventDefault(); // Prevent scrolling
+    const touches = e.touches;
+    
+    if (touches.length === 1) {
+      const touch = touches[0];
+      const deltaX = touch.clientX - lastTouch.x;
+      const deltaY = touch.clientY - lastTouch.y;
+      
+      console.log(`🔄 Delta: ${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}`);
+      
+      if (isDraggingFrame && containerRef.current) {
+        // Move the crop frame
+        const container = containerRef.current;
+        const rect = container.getBoundingClientRect();
+        
+        // Convert pixel movement to percentage
+        const deltaXPercent = (deltaX / rect.width) * 100;
+        const deltaYPercent = (deltaY / rect.height) * 100;
+        
+        setCropFrame(prev => {
+          const newX = Math.max(prev.width/2, Math.min(100 - prev.width/2, prev.x + deltaXPercent));
+          const newY = Math.max(prev.height/2, Math.min(100 - prev.height/2, prev.y + deltaYPercent));
+          
+          console.log(`📱 Frame moved to: ${newX.toFixed(1)}, ${newY.toFixed(1)}`);
+          return { ...prev, x: newX, y: newY };
+        });
+        
+      } else if (isDraggingMedia) {
+        // Move the background media
+        setMediaTransform(prev => {
+          const newTransform = {
+            ...prev,
+            translateX: prev.translateX + deltaX,
+            translateY: prev.translateY + deltaY
+          };
+          
+          console.log(`🖼️ Media moved to: ${newTransform.translateX.toFixed(1)}, ${newTransform.translateY.toFixed(1)}`);
+          return newTransform;
+        });
+      }
+      
+      setLastTouch({ x: touch.clientX, y: touch.clientY });
+      
+    } else if (touches.length === 2) {
+      // Pinch zoom
+      const distance = getDistance(touches);
+      const scaleFactor = distance / lastDistance;
+      
+      if (scaleFactor > 0.1 && scaleFactor < 10) { // Sanity check
+        setMediaTransform(prev => {
+          const newScale = Math.max(0.5, Math.min(3, prev.scale * scaleFactor));
+          console.log(`🔍 Media zoom: ${newScale.toFixed(2)}x`);
+          return { ...prev, scale: newScale };
+        });
+        
+        setLastDistance(distance);
+      }
+    }
+  };
+
   const handleTouchEnd = (e) => {
-    e.preventDefault();
+    console.log('✋ Touch ended');
     setIsDraggingFrame(false);
     setIsDraggingMedia(false);
-    setIsResizing(false);
-    console.log('👆 Touch ended');
   };
 
   // Reset everything
