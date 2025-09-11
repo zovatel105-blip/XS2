@@ -104,7 +104,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
   // Normal grid mode
   return (
     <div className="w-full h-full">
-      <div className={`grid gap-0 w-full h-full ${getLayoutStyle()}`}>
+      <div className={`grid w-full h-full ${getLayoutStyle()}`} style={{ gap: '1px' }}>
         {slots.map((slotIndex) => {
           const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
           return (
