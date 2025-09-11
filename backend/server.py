@@ -566,6 +566,12 @@ async def get_music_info(music_id: str):
         try:
             # Extract iTunes track ID
             itunes_track_id = music_id.replace('itunes_', '')
+            
+            # Check cache first
+            if itunes_track_id in itunes_cache and is_cache_valid(itunes_cache[itunes_track_id]):
+                print(f"🎵 Using cached iTunes track info for ID: {itunes_track_id}")
+                return itunes_cache[itunes_track_id]['data']
+            
             print(f"🎵 Fetching iTunes track info for ID: {itunes_track_id}")
             
             # Fetch track info directly from iTunes API using track ID
