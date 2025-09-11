@@ -3437,6 +3437,14 @@ async def get_polls(
     authors_list = await authors_cursor.to_list(len(author_ids))
     authors_dict = {user["id"]: UserResponse(**user) for user in authors_list}
     
+    # Batch get follow status for all authors to reduce DB queries
+    follow_relationships_cursor = db.follows.find({
+        "follower_id": current_user.id,
+        "following_id": {"$in": author_ids}
+    })
+    follow_relationships = await follow_relationships_cursor.to_list(len(author_ids))
+    following_dict = {rel["following_id"]: rel for rel in follow_relationships}
+    
     # Get user votes and likes
     poll_ids = [poll["id"] for poll in polls]
     
