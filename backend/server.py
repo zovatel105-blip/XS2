@@ -3570,7 +3570,8 @@ async def create_poll(
         tags=poll_data.tags,
         category=poll_data.category,
         mentioned_users=poll_data.mentioned_users,
-        video_playback_settings=poll_data.video_playback_settings
+        video_playback_settings=poll_data.video_playback_settings,
+        layout=poll_data.layout  # Include layout configuration
     )
     
     # Insert into database
