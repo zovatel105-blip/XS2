@@ -425,49 +425,49 @@ const ContentCreationPage = () => {
       let mediaData;
       
       if (isVideo) {
-        console.log('🎥 Processing video upload...');
-        // For videos, use the proper upload endpoint
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_type', 'GENERAL');
+        console.log('🎥 Processing video with base64 (like original modal)...');
+        // Use base64 for videos like the original CreatePollModal did
+        const base64 = await fileToBase64(file);
         
-        const token = localStorage.getItem('authToken');
-        console.log('🔑 Using token:', token ? 'Token present' : 'No token');
-        console.log('🌐 Upload URL:', `${config.BACKEND_URL}/api/upload`);
+        // Create thumbnail like the original modal
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
         
-        const response = await fetch(`${config.BACKEND_URL}/api/upload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: formData
-        });
+        // Fondo degradado
+        const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+        gradient.addColorStop(0, '#1f2937');
+        gradient.addColorStop(1, '#111827');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 400, 600);
         
-        console.log('📡 Upload response status:', response.status);
+        // Ícono de play
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(160, 250);
+        ctx.lineTo(160, 350);
+        ctx.lineTo(240, 300);
+        ctx.closePath();
+        ctx.fill();
         
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('❌ Upload failed:', response.status, errorText);
-          throw new Error(`Upload failed: ${response.status} - ${errorText}`);
-        }
-        
-        const uploadResult = await response.json();
-        console.log('✅ Upload success:', uploadResult);
+        // Agregar texto
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+        ctx.textAlign = 'center';
+        ctx.fillText('Video Preview', 200, 380);
         
         mediaData = {
-          url: uploadResult.public_url,
-          thumbnail: uploadResult.thumbnail_url,
           type: 'video',
+          url: base64,
+          thumbnail: canvas.toDataURL('image/png'),
           file: file,
           name: file.name,
-          size: file.size,
-          duration: uploadResult.duration,
-          width: uploadResult.width,
-          height: uploadResult.height
+          size: file.size
         };
         
       } else {
-        console.log('🖼️ Processing image upload...');
+        console.log('🖼️ Processing image with base64...');
         // For images, continue using base64 (it's fine for images)
         const base64 = await fileToBase64(file);
         mediaData = {
