@@ -26,6 +26,10 @@ const TikTokVotingCard = ({
   // Convert layout ID to CSS grid classes
   const getLayoutGridClass = () => {
     const layout = poll.layout || 'vertical'; // Default to vertical if no layout
+    
+    // Debug logging
+    console.log(`🎨 TikTokVotingCard - Poll ID: ${poll.id}, Layout: ${layout}, Title: ${poll.title}`);
+    
     switch (layout) {
       case 'off':
         return 'grid-cols-1 grid-rows-1';
