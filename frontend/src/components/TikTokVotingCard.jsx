@@ -246,7 +246,7 @@ const TikTokVotingCard = ({
           </div>
           
           {/* Dynamic Options Grid based on layout */}
-          <div className={`grid w-full h-full ${getLayoutGridClass()}`} style={{ gap: '1px' }}>
+          <div className={`grid w-full h-full ${getLayoutGridClass()}`} style={getGridStyle()}>
             {poll.options.slice(0, getMaxOptions()).map((option, index) => {
               const percentage = getPercentage(option);
               const isWinner = winningOption?.id === option.id;
