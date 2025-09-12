@@ -2,7 +2,7 @@ import config from '../config/config';
 
 class StoryService {
   constructor() {
-    this.baseURL = config.API_BASE_URL || process.env.REACT_APP_BACKEND_URL;
+    this.baseURL = config.BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
   }
 
   // Get auth headers
