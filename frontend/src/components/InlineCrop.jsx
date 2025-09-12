@@ -183,6 +183,8 @@ const InlineCrop = ({
     if (hasChanges) {
       scheduleAutoSave();
     }
+  }, [isActive, hasChanges, scheduleAutoSave]);
+
   // Handle mouse wheel zoom
   const handleWheel = (e) => {
     if (!isActive) return;
@@ -197,20 +199,7 @@ const InlineCrop = ({
     });
     
     setHasChanges(true);
-    
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
-    }
-    autoSaveTimeoutRef.current = setTimeout(() => {
-      if (hasChanges) {
-        onSave({
-          position: position,
-          scale: scale,
-          originalImageSrc: imageSrc
-        });
-        setHasChanges(false);
-      }
-    }, 800);
+    scheduleAutoSave();
   };
 
   // Global event listeners
