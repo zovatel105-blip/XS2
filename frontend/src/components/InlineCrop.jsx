@@ -183,7 +183,35 @@ const InlineCrop = ({
     if (hasChanges) {
       scheduleAutoSave();
     }
-  }, [isActive, hasChanges, scheduleAutoSave]);
+  // Handle mouse wheel zoom
+  const handleWheel = (e) => {
+    if (!isActive) return;
+    
+    e.preventDefault();
+    
+    const scaleDelta = e.deltaY > 0 ? 0.95 : 1.05;
+    
+    setScale(prev => {
+      const newScale = prev * scaleDelta;
+      return Math.max(1, Math.min(3, newScale));
+    });
+    
+    setHasChanges(true);
+    
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      if (hasChanges) {
+        onSave({
+          position: position,
+          scale: scale,
+          originalImageSrc: imageSrc
+        });
+        setHasChanges(false);
+      }
+    }, 800);
+  };
 
   // Global event listeners
   useEffect(() => {
