@@ -258,16 +258,6 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       />
                     )}
                     
-                    {/* DEBUG VISUAL for savedTransform */}
-                    {option.media && option.media.type === 'image' && (
-                      <div className="absolute bottom-2 left-2 bg-blue-500 text-white text-xs p-1 rounded pointer-events-none z-50">
-                        Slot {slotIndex}: T: {option.media.transform ? 'YES' : 'NO'}
-                        {option.media.transform && (
-                          <div>P: {option.media.transform.position?.x},{option.media.transform.position?.y}</div>
-                        )}
-                      </div>
-                    )}
-                    
                     {/* Clean Image Preview - NO decorative elements */}
                     <div className="absolute inset-0">
                       {/* Only show the image, no overlays or decorative elements */}
