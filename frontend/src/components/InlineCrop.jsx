@@ -61,15 +61,14 @@ const InlineCrop = ({
     // Schedule auto-save after 800ms of inactivity
     autoSaveTimeoutRef.current = setTimeout(() => {
       if (hasChanges) {
-        // Save transform parameters (marks image as adjusted)
+        // Save transform parameters for layout positioning
         onSave({
           transform: {
             scale: transform.scale,
             translateX: transform.translateX,
             translateY: transform.translateY
           },
-          originalImageSrc: imageSrc,
-          hasBeenAdjusted: true // Mark as adjusted for smart object-fit
+          originalImageSrc: imageSrc
         });
         setHasChanges(false); // Reset changes after save
       }
