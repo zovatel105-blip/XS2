@@ -5187,6 +5187,323 @@ async def check_audio_in_favorites(
         logger.error(f"Error checking audio in favorites: {str(e)}")
         raise HTTPException(status_code=500, detail="Error checking favorites")
 
+# =============  STORY ENDPOINTS =============
+
+@api_router.post("/stories", response_model=StoryResponse)
+async def create_story(
+    story_data: StoryCreate,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Create a new story"""
+    try:
+        # Create story
+        story = Story(
+            user_id=current_user.id,
+            content_url=story_data.content_url,
+            text_content=story_data.text_content,
+            story_type=story_data.story_type,
+            privacy=story_data.privacy,
+            background_color=story_data.background_color,
+            text_color=story_data.text_color,
+            font_style=story_data.font_style,
+            duration=story_data.duration or 15
+        )
+        
+        # Insert into database
+        await db.stories.insert_one(story.dict())
+        
+        # Return story response
+        return StoryResponse(
+            **story.dict(),
+            username=current_user.username,
+            display_name=current_user.display_name,
+            avatar_url=current_user.avatar_url,
+            is_viewed=False,
+            is_liked=False
+        )
+        
+    except Exception as e:
+        logger.error(f"Error creating story: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error creating story: {str(e)}")
+
+@api_router.get("/stories")
+async def get_stories(
+    limit: int = 50,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get active stories from followed users and own stories"""
+    try:
+        # Get following list
+        follows = await db.follows.find({"follower_id": current_user.id}).to_list(1000)
+        following_ids = [follow["following_id"] for follow in follows]
+        following_ids.append(current_user.id)  # Include own stories
+        
+        # Get active stories from followed users
+        now = datetime.utcnow()
+        stories = await db.stories.find({
+            "user_id": {"$in": following_ids},
+            "is_active": True,
+            "expires_at": {"$gt": now}
+        }).sort("created_at", -1).limit(limit).to_list(limit)
+        
+        if not stories:
+            return []
+        
+        # Get user information
+        user_ids = list(set(story["user_id"] for story in stories))
+        users = await db.users.find({"id": {"$in": user_ids}}).to_list(len(user_ids))
+        users_dict = {user["id"]: user for user in users}
+        
+        # Get view status for current user
+        story_ids = [story["id"] for story in stories]
+        views = await db.story_views.find({
+            "story_id": {"$in": story_ids},
+            "user_id": current_user.id
+        }).to_list(len(story_ids))
+        viewed_story_ids = set(view["story_id"] for view in views)
+        
+        # Get like status for current user
+        likes = await db.story_likes.find({
+            "story_id": {"$in": story_ids},
+            "user_id": current_user.id
+        }).to_list(len(story_ids))
+        liked_story_ids = set(like["story_id"] for like in likes)
+        
+        # Build response
+        result = []
+        for story in stories:
+            user = users_dict.get(story["user_id"])
+            if user:
+                story_response = StoryResponse(
+                    **story,
+                    username=user["username"],
+                    display_name=user["display_name"],
+                    avatar_url=user.get("avatar_url"),
+                    is_viewed=story["id"] in viewed_story_ids,
+                    is_liked=story["id"] in liked_story_ids
+                )
+                result.append(story_response)
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error getting stories: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error getting stories: {str(e)}")
+
+@api_router.get("/stories/user/{user_id}")
+async def get_user_stories(
+    user_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get active stories from a specific user"""
+    try:
+        # Check if user exists
+        user = await db.users.find_one({"id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Check privacy (if not following, only show public stories)
+        is_following = await db.follows.find_one({
+            "follower_id": current_user.id,
+            "following_id": user_id
+        }) is not None
+        
+        privacy_filter = {}
+        if user_id != current_user.id and not is_following:
+            privacy_filter["privacy"] = StoryPrivacy.PUBLIC
+        
+        # Get active stories
+        now = datetime.utcnow()
+        stories = await db.stories.find({
+            "user_id": user_id,
+            "is_active": True,
+            "expires_at": {"$gt": now},
+            **privacy_filter
+        }).sort("created_at", 1).to_list(50)  # Chronological order for story viewing
+        
+        if not stories:
+            return []
+        
+        # Get view and like status for current user
+        story_ids = [story["id"] for story in stories]
+        views = await db.story_views.find({
+            "story_id": {"$in": story_ids},
+            "user_id": current_user.id
+        }).to_list(len(story_ids))
+        viewed_story_ids = set(view["story_id"] for view in views)
+        
+        likes = await db.story_likes.find({
+            "story_id": {"$in": story_ids},
+            "user_id": current_user.id
+        }).to_list(len(story_ids))
+        liked_story_ids = set(like["story_id"] for like in likes)
+        
+        # Build response
+        result = []
+        for story in stories:
+            story_response = StoryResponse(
+                **story,
+                username=user["username"],
+                display_name=user["display_name"],
+                avatar_url=user.get("avatar_url"),
+                is_viewed=story["id"] in viewed_story_ids,
+                is_liked=story["id"] in liked_story_ids
+            )
+            result.append(story_response)
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error getting user stories: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error getting user stories: {str(e)}")
+
+@api_router.post("/stories/{story_id}/view")
+async def view_story(
+    story_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Mark a story as viewed"""
+    try:
+        # Check if story exists and is active
+        story = await db.stories.find_one({
+            "id": story_id,
+            "is_active": True,
+            "expires_at": {"$gt": datetime.utcnow()}
+        })
+        if not story:
+            raise HTTPException(status_code=404, detail="Story not found or expired")
+        
+        # Check if already viewed
+        existing_view = await db.story_views.find_one({
+            "story_id": story_id,
+            "user_id": current_user.id
+        })
+        
+        if not existing_view:
+            # Create view record
+            view = StoryView(
+                story_id=story_id,
+                user_id=current_user.id
+            )
+            await db.story_views.insert_one(view.dict())
+            
+            # Increment view count
+            await db.stories.update_one(
+                {"id": story_id},
+                {"$inc": {"views_count": 1}}
+            )
+        
+        return {"message": "Story viewed successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error viewing story: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error viewing story: {str(e)}")
+
+@api_router.post("/stories/{story_id}/like")
+async def toggle_story_like(
+    story_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Toggle like on a story"""
+    try:
+        # Check if story exists and is active
+        story = await db.stories.find_one({
+            "id": story_id,
+            "is_active": True,
+            "expires_at": {"$gt": datetime.utcnow()}
+        })
+        if not story:
+            raise HTTPException(status_code=404, detail="Story not found or expired")
+        
+        # Check if already liked
+        existing_like = await db.story_likes.find_one({
+            "story_id": story_id,
+            "user_id": current_user.id
+        })
+        
+        if existing_like:
+            # Remove like
+            await db.story_likes.delete_one({
+                "story_id": story_id,
+                "user_id": current_user.id
+            })
+            
+            # Decrement like count
+            await db.stories.update_one(
+                {"id": story_id},
+                {"$inc": {"likes_count": -1}}
+            )
+            
+            return {"liked": False, "message": "Story unliked"}
+        else:
+            # Add like
+            like = StoryLike(
+                story_id=story_id,
+                user_id=current_user.id
+            )
+            await db.story_likes.insert_one(like.dict())
+            
+            # Increment like count
+            await db.stories.update_one(
+                {"id": story_id},
+                {"$inc": {"likes_count": 1}}
+            )
+            
+            return {"liked": True, "message": "Story liked"}
+        
+    except Exception as e:
+        logger.error(f"Error toggling story like: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error toggling story like: {str(e)}")
+
+@api_router.delete("/stories/{story_id}")
+async def delete_story(
+    story_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Delete a story (only by the story owner)"""
+    try:
+        # Check if story exists and belongs to user
+        story = await db.stories.find_one({
+            "id": story_id,
+            "user_id": current_user.id
+        })
+        
+        if not story:
+            raise HTTPException(status_code=404, detail="Story not found or access denied")
+        
+        # Mark story as inactive instead of deleting
+        await db.stories.update_one(
+            {"id": story_id},
+            {"$set": {"is_active": False}}
+        )
+        
+        return {"message": "Story deleted successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error deleting story: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error deleting story: {str(e)}")
+
+@api_router.get("/users/{user_id}/has-stories")
+async def check_user_has_stories(
+    user_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Check if a user has active stories"""
+    try:
+        # Check if user has any active stories
+        now = datetime.utcnow()
+        story_count = await db.stories.count_documents({
+            "user_id": user_id,
+            "is_active": True,
+            "expires_at": {"$gt": now}
+        })
+        
+        return {"has_stories": story_count > 0, "story_count": story_count}
+        
+    except Exception as e:
+        logger.error(f"Error checking user stories: {str(e)}")
+        return {"has_stories": False, "story_count": 0}
+
 # Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
