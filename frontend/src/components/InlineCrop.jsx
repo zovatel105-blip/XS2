@@ -266,13 +266,15 @@ const InlineCrop = ({
   }, [isActive, isInteracting, handleMove, handleEnd]);
 
   if (!isActive) {
-    // Always use savedTransform when inactive, ignore internal state
+    // ALWAYS use savedTransform data directly, no internal state
     const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
     const displayScale = savedTransform?.transform?.scale || 1;
     
-    console.log('📷 Displaying inactive image');
-    console.log('📍 savedTransform:', savedTransform);
-    console.log('📍 Using position:', displayPosition, 'scale:', displayScale);
+    console.log('📷 INACTIVE IMAGE RENDER');
+    console.log('📦 Full savedTransform:', JSON.stringify(savedTransform, null, 2));
+    console.log('📍 Extracted position:', displayPosition);
+    console.log('📍 Extracted scale:', displayScale);
+    console.log('🎨 CSS will be:', `objectPosition: ${displayPosition.x}% ${displayPosition.y}%, transform: scale(${displayScale})`);
     
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
