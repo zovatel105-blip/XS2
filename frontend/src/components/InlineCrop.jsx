@@ -346,24 +346,10 @@ const InlineCrop = ({
     );
   }
 
-  // Crop mode - complete image as uploaded with background fill - no dark areas
+  // Crop mode - complete image scaled to fill, no background
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
-      {/* Background: same image fills layout to avoid dark areas during adjustment */}
-      <div className="absolute inset-0">
-        <img
-          src={imageSrc}
-          alt="Background fill"
-          className="w-full h-full object-cover blur-sm opacity-60 scale-105"
-          style={{
-            transform: `translate(${transform.translateX * 0.1}px, ${transform.translateY * 0.1}px) scale(${1 + (transform.scale - 1) * 0.1})`,
-          }}
-          onDragStart={(e) => e.preventDefault()}
-        />
-        <div className="absolute inset-0 bg-black/10" /> {/* Very subtle overlay */}
-      </div>
-      
-      {/* Interactive image container */}
+      {/* Interactive image container - no background, only image */}
       <div
         ref={containerRef}
         className="absolute inset-0 cursor-move select-none z-10"
@@ -376,7 +362,7 @@ const InlineCrop = ({
           ref={imageRef}
           src={imageSrc}
           alt="Adjust preview"
-          className="w-full h-full object-contain" /* Shows COMPLETE image as uploaded during adjustment */
+          className="w-full h-full object-contain" /* Complete image scaled to fill entirely */
           style={{
             transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
             transformOrigin: 'center',
