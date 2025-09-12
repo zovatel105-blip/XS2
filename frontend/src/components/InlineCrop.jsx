@@ -43,7 +43,7 @@ const InlineCrop = ({
   const handleStart = (e) => {
     if (!isActive) return;
     
-    console.log('🎯 handleStart triggered');
+    console.log('🎯 handleStart triggered - isActive:', isActive, 'event type:', e.type);
     e.preventDefault();
     setIsInteracting(true);
     
