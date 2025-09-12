@@ -178,7 +178,7 @@ const InlineCrop = ({
     // No auto-save here - only save when user exits crop mode
   }, [isActive]);
 
-  // Handle mouse wheel zoom
+  // Handle mouse wheel zoom - no auto-save
   const handleWheel = (e) => {
     if (!isActive) return;
     
@@ -192,7 +192,7 @@ const InlineCrop = ({
     });
     
     setHasChanges(true);
-    scheduleAutoSave();
+    // No auto-save - only save when user exits crop mode
   };
 
   // Global event listeners
