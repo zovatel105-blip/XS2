@@ -529,6 +529,12 @@ const ContentCreationPage = () => {
     console.log('📦 Updated media object:', updatedMedia);
     updateOption(cropActiveSlot, 'media', updatedMedia);
     console.log('💾 Updated option media with transform');
+    
+    // ✅ NEW: Exit crop mode AFTER state update completes using React's callback pattern
+    setTimeout(() => {
+      console.log('🚪 Exiting crop mode after state update');
+      setCropActiveSlot(null);
+    }, 100); // Short delay to let React process the state update
   };
 
   // Add useEffect to properly verify state changes
