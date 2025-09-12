@@ -40,9 +40,13 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle double click/tap to save
-  const handleDoubleClick = useCallback(() => {
+  // Handle double click/tap to save with additional touch handling
+  const handleDoubleClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     console.log('🖱️ Double click detected - isActive:', isActive, 'hasChanges:', hasChanges);
+    console.log('🖱️ Event type:', e.type, 'Event target:', e.target);
     
     if (!isActive) {
       console.log('❌ Double click ignored - not active');
@@ -72,6 +76,13 @@ const InlineCrop = ({
       onCancel();
     }, 200);
   }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
+
+  // Alternative save method - keyboard shortcut
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      handleDoubleClick(e);
+    }
+  }, [handleDoubleClick]);
 
   // Handle start of interaction
   const handleStart = (e) => {
