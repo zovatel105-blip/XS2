@@ -31,7 +31,35 @@ const InlineCrop = ({
 
   console.log('🔍 InlineCrop render - isActive:', isActive, 'savedTransform:', savedTransform);
 
-  // Always sync with savedTransform when it changes
+  if (!isActive) {
+    // ALWAYS use savedTransform data directly, no internal state
+    const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
+    const displayScale = savedTransform?.transform?.scale || 1;
+    
+    return (
+      <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
+        <img
+          src={imageSrc}
+          alt="Preview"
+          className="w-full h-full object-cover"
+          style={{
+            objectPosition: `${displayPosition.x}% ${displayPosition.y}%`,
+            transform: `scale(${displayScale})`,
+            transformOrigin: 'center'
+          }}
+          onDragStart={(e) => e.preventDefault()}
+        />
+        
+        {/* DEBUG: Only show when NOT active */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white text-sm p-2 rounded pointer-events-none z-50">
+          <div>INACTIVE</div>
+          <div>P: {displayPosition.x},{displayPosition.y}</div>
+          <div>S: {displayScale}</div>
+          <div>ST: {savedTransform ? 'YES' : 'NO'}</div>
+        </div>
+      </div>
+    );
+  }
   useEffect(() => {
     if (savedTransform && savedTransform.transform) {
       console.log('🔄 Syncing with savedTransform:', savedTransform.transform);
