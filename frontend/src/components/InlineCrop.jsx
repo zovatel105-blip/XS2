@@ -39,6 +39,24 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
+  // Handle double click/tap to save
+  const handleDoubleClick = useCallback(() => {
+    if (!isActive || !hasChanges) return;
+    
+    console.log('💾 Double click save - position:', position, 'scale:', scale);
+    const transformData = {
+      transform: {
+        position: position,
+        scale: scale
+      },
+      originalImageSrc: imageSrc
+    };
+    
+    onSave(transformData);
+    setHasChanges(false);
+    setTimeout(() => onCancel(), 200);
+  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
+
   // Handle start of interaction
   const handleStart = (e) => {
     if (!isActive) return;
