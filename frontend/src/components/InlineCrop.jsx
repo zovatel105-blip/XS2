@@ -333,17 +333,10 @@ const InlineCrop = ({
           }}
           onDragStart={(e) => e.preventDefault()}
         />
-        
-        {/* DEBUG: Only show when ACTIVE */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-sm p-2 rounded pointer-events-none z-50">
-          <div>ACTIVE</div>
-          <div>P: {position.x},{position.y}</div>
-          <div>S: {scale}</div>
-          <div>Changes: {hasChanges ? 'YES' : 'NO'}</div>
-        </div>
       </div>
     </div>
   );
+};
 };
 
 export default InlineCrop;
