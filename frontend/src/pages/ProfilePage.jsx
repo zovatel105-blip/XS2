@@ -13,12 +13,14 @@ import StatisticsModal from '../components/StatisticsModal';
 import TikTokProfileGrid from '../components/TikTokProfileGrid';
 import TikTokScrollView from '../components/TikTokScrollView';
 import AvatarUpload from '../components/AvatarUpload';
+import StoryViewer from '../components/StoryViewer';
 import { 
   Settings, Users, Vote, Trophy, Heart, Share, ArrowLeft, AtSign, Bookmark, LayoutDashboard, Check, 
   Share2, UserPlus, UserCheck, Menu, ChevronDown, Plus, BarChart3, Mail, MessageCircle, Send, Hash, Bell, BellOff, UserCircle 
 } from 'lucide-react';
 import pollService from '../services/pollService';
 import userService from '../services/userService';
+import storyService from '../services/storyService';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useFollow } from '../contexts/FollowContext';
