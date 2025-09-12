@@ -522,9 +522,7 @@ const ContentCreationPage = () => {
 
   // Add useEffect to properly verify state changes
   useEffect(() => {
-    console.log('📦 Options state updated:', options);
-    console.log('📦 Options[0] media transform:', options[0]?.media?.transform);
-    console.log('📦 cropActiveSlot:', cropActiveSlot);
+    // Optional: Can be used for debugging if needed
   }, [options, cropActiveSlot]);
 
   // Handle inline crop cancel
