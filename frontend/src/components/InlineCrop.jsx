@@ -281,7 +281,15 @@ const InlineCrop = ({
         
         {/* Subtle background for object-contain state */}
         {!hasBeenAdjusted && (
-          <div className="absolute inset-0 bg-gray-900 -z-10" />
+          <>
+            <div className="absolute inset-0 bg-gray-900 -z-10" />
+            {/* Hint for first-time users */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-75 pointer-events-none">
+              <div className="bg-black/70 text-white text-xs px-3 py-1 rounded-full">
+                👆 Toca para ajustar al layout
+              </div>
+            </div>
+          </>
         )}
       </div>
     );
