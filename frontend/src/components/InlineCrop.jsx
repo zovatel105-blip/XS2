@@ -36,7 +36,7 @@ const InlineCrop = ({
   const imageRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
 
-  // Calculate smart initial transform for complete image + layout adaptation
+  // Calculate smart initial positioning for best image display in layout
   const calculateSmartTransform = useCallback(() => {
     if (!containerRef.current || imageSize.width <= 1 || imageSize.height <= 1) {
       return { scale: 1, translateX: 0, translateY: 0 };
@@ -46,29 +46,29 @@ const InlineCrop = ({
     const containerAspect = container.width / container.height;
     const imageAspect = imageSize.width / imageSize.height;
 
+    // For object-cover, we want optimal positioning, not scaling
+    // object-cover automatically handles the scaling to fill completely
+    
+    let translateX = 0;
+    let translateY = 0;
     let scale = 1;
-    
-    // Calculate scale to show complete image while filling layout
-    if (imageAspect > containerAspect) {
-      // Image is wider - scale based on height to show complete image
-      scale = container.height / imageSize.height;
-    } else {
-      // Image is taller - scale based on width to show complete image  
-      scale = container.width / imageSize.width;
-    }
 
-    // Ensure minimum scale to fill the container (no empty areas)
-    const minScaleX = container.width / imageSize.width;
-    const minScaleY = container.height / imageSize.height;
-    const minScale = Math.max(minScaleX, minScaleY);
-    
-    // Use the scale that shows complete image but fills the space
-    scale = Math.max(scale, minScale);
+    // Smart positioning based on aspect ratio differences
+    if (Math.abs(containerAspect - imageAspect) > 0.1) {
+      // Significant aspect ratio difference - use smart positioning
+      if (imageAspect > containerAspect) {
+        // Image is wider than container - center horizontally
+        translateX = 0;
+      } else {
+        // Image is taller than container - center vertically  
+        translateY = 0;
+      }
+    }
 
     return {
       scale: scale,
-      translateX: 0,
-      translateY: 0
+      translateX: translateX,
+      translateY: translateY
     };
   }, [imageSize]);
 
