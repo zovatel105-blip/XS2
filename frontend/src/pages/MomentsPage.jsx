@@ -3,64 +3,53 @@ import { Clock, ArrowLeft, Play, Eye, Heart, MessageCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
+import storyService from '../services/storyService';
+import StoryViewer from '../components/StoryViewer';
+import { AnimatePresence } from 'framer-motion';
 
 const MomentsPage = () => {
-  const [moments, setMoments] = useState([]);
+  const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMoment, setSelectedMoment] = useState(null);
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState(null);
+  const [showStoryViewer, setShowStoryViewer] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
-    loadMoments();
-  }, []);
+    loadStories();
+  }, [isAuthenticated]);
 
-  const loadMoments = async () => {
+  const loadStories = async () => {
     setIsLoading(true);
     try {
-      // Simular carga de momentos - aquí se integraría con el backend
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (!isAuthenticated) {
+        toast({
+          title: "⚠️ Inicia sesión",
+          description: "Necesitas iniciar sesión para ver las historias",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Cargar historias reales desde el backend
+      const storiesData = await storyService.getStories(50);
+      setStories(storiesData || []);
       
-      // Momentos mock para demostración
-      const mockMoments = [
-        {
-          id: 1,
-          user: { username: 'usuario_ejemplo', avatar: '/api/placeholder/40/40', isVerified: true },
-          thumbnail: '/api/placeholder/300/400',
-          duration: '15s',
-          views: 1240,
-          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 horas atrás
-          isViewed: false,
-        },
-        {
-          id: 2,
-          user: { username: 'mi_amigo', avatar: '/api/placeholder/40/40', isVerified: false },
-          thumbnail: '/api/placeholder/300/400',
-          duration: '8s',
-          views: 856,
-          createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 horas atrás
-          isViewed: true,
-        },
-        {
-          id: 3,
-          user: { username: 'influencer_top', avatar: '/api/placeholder/40/40', isVerified: true },
-          thumbnail: '/api/placeholder/300/400',
-          duration: '20s',
-          views: 5420,
-          createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 horas atrás
-          isViewed: false,
-        },
-      ];
-      
-      setMoments(mockMoments);
-      
-      toast({
-        title: "📸 Momentos cargados",
-        description: `${mockMoments.length} historias disponibles`,
-      });
+      if (storiesData && storiesData.length > 0) {
+        toast({
+          title: "📸 Momentos cargados",
+          description: `${storiesData.length} historias disponibles`,
+        });
+      } else {
+        toast({
+          title: "📭 Sin historias",
+          description: "No hay historias disponibles en este momento",
+        });
+      }
     } catch (error) {
-      console.error('Error loading moments:', error);
+      console.error('Error loading stories:', error);
       toast({
         title: "Error al cargar momentos",
         description: "No se pudieron cargar las historias. Intenta de nuevo.",
@@ -71,7 +60,8 @@ const MomentsPage = () => {
     }
   };
 
-  const formatTimeAgo = (date) => {
+  const formatTimeAgo = (dateString) => {
+    const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
     
@@ -80,16 +70,19 @@ const MomentsPage = () => {
     return 'hace más de 24h';
   };
 
-  const handleMomentClick = (moment) => {
-    setSelectedMoment(moment);
-    toast({
-      title: `Viendo momento de @${moment.user.username}`,
-      description: "Funcionalidad de reproducción próximamente disponible",
-    });
+  const handleStoryClick = (storyIndex) => {
+    setSelectedStoryIndex(storyIndex);
+    setShowStoryViewer(true);
   };
 
-  const handleCloseMoment = () => {
-    setSelectedMoment(null);
+  const handleCloseStory = () => {
+    setShowStoryViewer(false);
+    setSelectedStoryIndex(null);
+  };
+
+  const handleStoryEnd = () => {
+    setShowStoryViewer(false);
+    setSelectedStoryIndex(null);
   };
 
   if (isLoading) {
