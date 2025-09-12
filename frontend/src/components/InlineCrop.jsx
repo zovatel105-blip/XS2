@@ -337,6 +337,5 @@ const InlineCrop = ({
     </div>
   );
 };
-};
 
 export default InlineCrop;
