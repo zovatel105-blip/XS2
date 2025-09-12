@@ -370,6 +370,13 @@ const InlineCrop = ({
         />
       </div>
       
+      {/* Temporary debug indicator for hasChanges */}
+      {hasChanges && (
+        <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded z-50">
+          CAMBIOS: ✓
+        </div>
+      )}
+      
       {/* Instructions overlay */}
       <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white text-sm p-3 rounded-lg z-40">
         <div className="text-center">
