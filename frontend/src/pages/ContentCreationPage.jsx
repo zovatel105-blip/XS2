@@ -248,6 +248,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       </div>
                     ) : (
                       <InlineCrop
+                        key={`${slotIndex}-${option.media.url}`} // Force re-render with fresh props
                         isActive={cropActiveSlot === slotIndex}
                         imageSrc={option.media.url}
                         savedTransform={option.media.transform || null}
