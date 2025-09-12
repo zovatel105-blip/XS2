@@ -35,10 +35,12 @@ const InlineCrop = ({
   const canvasRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
 
-  // Reset transform when becoming active
+  // Reset transform when becoming active, or load saved transform
   useEffect(() => {
     if (isActive) {
-      setTransform({ scale: 1, translateX: 0, translateY: 0 });
+      // Load saved transform if available, otherwise reset
+      const initialTransform = savedTransform || { scale: 1, translateX: 0, translateY: 0 };
+      setTransform(initialTransform);
       setIsInteracting(false);
       setHasChanges(false);
       
@@ -48,7 +50,7 @@ const InlineCrop = ({
         autoSaveTimeoutRef.current = null;
       }
     }
-  }, [isActive]);
+  }, [isActive, savedTransform]);
 
   // Generate cropped image - moved up to avoid initialization error
   const generateCrop = useCallback(async () => {
