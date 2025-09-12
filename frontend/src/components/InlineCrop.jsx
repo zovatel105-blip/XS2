@@ -1,8 +1,8 @@
 /**
- * InlineCrop - TikTok-style crop functionality directly in the preview area
- * - Mobile-first touch gestures with desktop support
- * - Complete image without cropping, scaled to fill layout
- * - Constrained movement to prevent empty areas
+ * InlineCrop - Simple crop functionality without black areas
+ * - Uses object-cover + object-position (safer than transforms)
+ * - Prevents black areas by design
+ * - Mobile-first touch gestures
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
@@ -10,126 +10,59 @@ import { X } from 'lucide-react';
 const InlineCrop = ({
   isActive = false,
   imageSrc = '',
-  savedTransform = null, // Saved transform parameters
+  savedTransform = null,
   onSave = () => {},
   onCancel = () => {},
   className = ''
 }) => {
-  // Transform state for the image
-  const [transform, setTransform] = useState({
-    scale: 1,
-    translateX: 0,
-    translateY: 0
-  });
-
+  // Simple position state (for object-position)
+  const [position, setPosition] = useState({ x: 50, y: 50 }); // Percentage for object-position
+  const [hasChanges, setHasChanges] = useState(false);
+  
   // Touch interaction state
   const [isDragging, setIsDragging] = useState(false);
   const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
-  const [lastDistance, setLastDistance] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
-  const [imageSize, setImageSize] = useState({ width: 1, height: 1 });
-  const [containerSize, setContainerSize] = useState({ width: 1, height: 1 });
 
   const containerRef = useRef(null);
-  const imageRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
 
-  // Calculate optimal initial transform for object-cover
-  const calculateSmartTransform = useCallback(() => {
-    // For object-cover, start with optimal positioning
-    return {
-      scale: 1,
-      translateX: 0,
-      translateY: 0
-    };
-  }, [imageSize]);
-
-  // Convert transform to object-position (safer than CSS transforms)
-  const getObjectPosition = useCallback((transform) => {
-    // Convert translateX/Y to CSS object-position percentages
-    const centerX = 50 + (transform.translateX / 10); // Convert to percentage
-    const centerY = 50 + (transform.translateY / 10); // Convert to percentage
-    
-    // Clamp to safe range
-    const x = Math.max(0, Math.min(100, centerX));
-    const y = Math.max(0, Math.min(100, centerY));
-    
-    return `${x}% ${y}%`;
-  }, []);
-
-  // Reset transform when becoming active, or load saved transform
+  // Reset position when becoming active
   useEffect(() => {
     if (isActive) {
-      // Load saved transform if available, otherwise calculate smart transform
-      if (savedTransform) {
-        setTransform(savedTransform);
+      if (savedTransform && savedTransform.position) {
+        setPosition(savedTransform.position);
       } else {
-        const smartTransform = calculateSmartTransform();
-        setTransform(smartTransform);
+        setPosition({ x: 50, y: 50 }); // Default center
       }
-      setIsInteracting(false);
       setHasChanges(false);
+      setIsInteracting(false);
       
-      // Clear any pending auto-save
       if (autoSaveTimeoutRef.current) {
         clearTimeout(autoSaveTimeoutRef.current);
         autoSaveTimeoutRef.current = null;
       }
     }
-  }, [isActive, savedTransform, calculateSmartTransform]);
+  }, [isActive, savedTransform]);
 
-  // Handle image load to get dimensions
-  const handleImageLoad = useCallback((e) => {
-    const img = e.target;
-    setImageSize({
-      width: img.naturalWidth,
-      height: img.naturalHeight
-    });
-  }, []);
-
-  // Update container size on mount and resize
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const updateContainerSize = () => {
-      const rect = containerRef.current.getBoundingClientRect();
-      setContainerSize({ width: rect.width, height: rect.height });
-    };
-
-    updateContainerSize();
-    
-    const resizeObserver = new ResizeObserver(updateContainerSize);
-    resizeObserver.observe(containerRef.current);
-
-    return () => resizeObserver.disconnect();
-  }, [isActive]);
-
-  // Auto-save after interaction ends - marks image as adjusted for layout adaptation
+  // Auto-save after interaction
   const scheduleAutoSave = useCallback(() => {
-    // Clear previous timeout
     if (autoSaveTimeoutRef.current) {
       clearTimeout(autoSaveTimeoutRef.current);
     }
     
-    // Schedule auto-save after 800ms of inactivity
     autoSaveTimeoutRef.current = setTimeout(() => {
       if (hasChanges) {
-        // Save transform parameters - marks as adjusted for layout adaptation
         onSave({
-          transform: {
-            scale: transform.scale,
-            translateX: transform.translateX,
-            translateY: transform.translateY
-          },
+          position: position,
           originalImageSrc: imageSrc
         });
-        setHasChanges(false); // Reset changes after save
+        setHasChanges(false);
       }
     }, 800);
-  }, [hasChanges, transform, imageSrc, onSave]);
+  }, [hasChanges, position, imageSrc, onSave]);
 
-  // Cleanup timeout on unmount
+  // Cleanup
   useEffect(() => {
     return () => {
       if (autoSaveTimeoutRef.current) {
@@ -138,14 +71,7 @@ const InlineCrop = ({
     };
   }, []);
 
-  // Get distance between two touches (pinch gesture detection)
-  const getDistance = (touches) => {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-
-  // Handle start of touch/mouse interaction
+  // Handle start of interaction
   const handleStart = (e) => {
     if (!isActive) return;
     
@@ -153,148 +79,61 @@ const InlineCrop = ({
     setIsInteracting(true);
     
     if (e.touches) {
-      // Touch event
-      const touches = e.touches;
-      
-      if (touches.length === 1) {
-        // Single finger - drag
-        setIsDragging(true);
-        setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-      } else if (touches.length === 2) {
-        // Two fingers - pinch zoom
-        setIsDragging(false);
-        setLastDistance(getDistance(touches));
-        
-        // Center point between fingers for zoom origin
-        const centerX = (touches[0].clientX + touches[1].clientX) / 2;
-        const centerY = (touches[0].clientY + touches[1].clientY) / 2;
-        setLastTouch({ x: centerX, y: centerY });
-      }
-    } else {
-      // Mouse event
+      const touch = e.touches[0];
       setIsDragging(true);
+      setLastTouch({ x: touch.clientX, y: touch.clientY });
+    } else {
+      setIsDragging(true);  
       setLastTouch({ x: e.clientX, y: e.clientY });
     }
   };
 
-  // Handle movement during interaction - wrapped in useCallback
+  // Handle movement
   const handleMove = useCallback((e) => {
-    if (!isActive || !isInteracting) return;
+    if (!isActive || !isInteracting || !isDragging) return;
     
     e.preventDefault();
     e.stopPropagation();
     
+    let clientX, clientY;
     if (e.touches) {
-      // Touch event
-      const touches = e.touches;
-      
-      if (touches.length === 1 && isDragging) {
-        // Single finger drag - move image with constraints
-        const touch = touches[0];
-        const deltaX = touch.clientX - lastTouch.x;
-        const deltaY = touch.clientY - lastTouch.y;
-        
-        setTransform(prev => {
-          const newTransform = {
-            ...prev,
-            translateX: prev.translateX + deltaX,
-            translateY: prev.translateY + deltaY
-          };
-          return constrainTransform(newTransform);
-        });
-        
-        setLastTouch({ x: touch.clientX, y: touch.clientY });
-        setHasChanges(true);
-        
-      } else if (touches.length === 2) {
-        // Two finger pinch - zoom with limits and bounce
-        const distance = getDistance(touches);
-        const scaleFactor = distance / lastDistance;
-        
-        if (scaleFactor > 0.5 && scaleFactor < 2) { // Prevent extreme scaling
-          setTransform(prev => {
-            let newScale = prev.scale * scaleFactor;
-            
-            // Apply limits with smooth bounce effect
-            if (newScale < 0.5) {
-              newScale = 0.5 + (0.5 - newScale) * 0.1; // Bounce back from minimum
-            } else if (newScale > 3) {
-              newScale = 3 + (newScale - 3) * 0.1; // Bounce back from maximum
-            }
-            
-            const newTransform = {
-              ...prev,
-              scale: newScale
-            };
-            return constrainTransform(newTransform);
-          });
-          
-          setLastDistance(distance);
-          setHasChanges(true);
-        }
-      }
-    } else if (isDragging) {
-      // Mouse drag with constraints
-      const deltaX = e.clientX - lastTouch.x;
-      const deltaY = e.clientY - lastTouch.y;
-      
-      setTransform(prev => {
-        const newTransform = {
-          ...prev,
-          translateX: prev.translateX + deltaX,
-          translateY: prev.translateY + deltaY
-        };
-        return constrainTransform(newTransform);
-      });
-      
-      setLastTouch({ x: e.clientX, y: e.clientY });
-      setHasChanges(true);
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
     }
-  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance, constrainTransform]);
+    
+    const deltaX = clientX - lastTouch.x;
+    const deltaY = clientY - lastTouch.y;
+    
+    // Convert movement to object-position percentage change (very conservative)
+    const sensitivity = 0.1; // Very low sensitivity
+    const deltaPercentX = deltaX * sensitivity;
+    const deltaPercentY = deltaY * sensitivity;
+    
+    setPosition(prev => ({
+      x: Math.max(0, Math.min(100, prev.x + deltaPercentX)),
+      y: Math.max(0, Math.min(100, prev.y + deltaPercentY))
+    }));
+    
+    setLastTouch({ x: clientX, y: clientY });
+    setHasChanges(true);
+  }, [isActive, isInteracting, isDragging, lastTouch]);
 
-  // Handle end of interaction - wrapped in useCallback
-  const handleEnd = useCallback((e) => {
+  // Handle end of interaction
+  const handleEnd = useCallback(() => {
     if (!isActive) return;
     
     setIsDragging(false);
     setIsInteracting(false);
     
-    // Apply scale limits and bounce back if exceeded
-    setTransform(prev => {
-      const constrainedTransform = {
-        ...prev,
-        scale: Math.max(0.5, Math.min(3, prev.scale))
-      };
-      return constrainTransform(constrainedTransform);
-    });
-    
-    // Schedule auto-save after interaction ends
     if (hasChanges) {
       scheduleAutoSave();
     }
-  }, [isActive, hasChanges, scheduleAutoSave, constrainTransform]);
+  }, [isActive, hasChanges, scheduleAutoSave]);
 
-  // Handle mouse wheel for desktop zoom
-  const handleWheel = (e) => {
-    if (!isActive) return;
-    
-    e.preventDefault();
-    
-    const scaleDelta = e.deltaY > 0 ? 0.9 : 1.1;
-    
-    setTransform(prev => {
-      const newTransform = {
-        ...prev,
-        scale: Math.max(0.5, Math.min(3, prev.scale * scaleDelta))
-      };
-      return constrainTransform(newTransform);
-    });
-    
-    setHasChanges(true);
-    scheduleAutoSave();
-  };
-
-  // Global event listeners for smooth gesture handling - FIXED dependencies
+  // Global event listeners
   useEffect(() => {
     if (!isActive) return;
 
@@ -304,13 +143,12 @@ const InlineCrop = ({
       }
     };
 
-    const handleGlobalEnd = (e) => {
+    const handleGlobalEnd = () => {
       if (isInteracting) {
-        handleEnd(e);
+        handleEnd();
       }
     };
 
-    // Add global listeners for smooth gesture tracking
     document.addEventListener('touchmove', handleGlobalMove, { passive: false });
     document.addEventListener('touchend', handleGlobalEnd);
     document.addEventListener('mousemove', handleGlobalMove);
@@ -325,56 +163,47 @@ const InlineCrop = ({
   }, [isActive, isInteracting, handleMove, handleEnd]);
 
   if (!isActive) {
-    // Complete image (no cropping) scaled to fill layout entirely
-    const displayTransform = savedTransform || calculateSmartTransform();
+    // Normal display with object-position
+    const displayPosition = savedTransform?.position || { x: 50, y: 50 };
     
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
-        {/* Image fills layout completely - object-cover prevents black areas */}
         <img
           src={imageSrc}
           alt="Preview"
-          className="w-full h-full object-cover" /* Fills completely, prevents black areas */
+          className="w-full h-full object-cover"
           style={{
-            transform: `translate(${displayTransform.translateX}px, ${displayTransform.translateY}px) scale(${displayTransform.scale})`,
-            transformOrigin: 'center',
-            transition: 'transform 0.2s ease-out'
+            objectPosition: `${displayPosition.x}% ${displayPosition.y}%`
           }}
-          onLoad={handleImageLoad}
           onDragStart={(e) => e.preventDefault()}
         />
       </div>
     );
   }
 
-  // Crop mode - complete image (no cropping) scaled to fill layout
+  // Crop mode - same as display but interactive
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
-      {/* Interactive image container - complete image, no cropping */}
+      {/* Interactive image */}
       <div
         ref={containerRef}
         className="absolute inset-0 cursor-move select-none z-10"
         onTouchStart={handleStart}
         onMouseDown={handleStart}
-        onWheel={handleWheel}
         style={{ touchAction: 'none', pointerEvents: 'auto' }}
       >
         <img
-          ref={imageRef}
           src={imageSrc}
           alt="Adjust preview"
-          className="w-full h-full object-cover" /* Fills completely, prevents black areas */
+          className="w-full h-full object-cover"
           style={{
-            transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
-            transformOrigin: 'center',
-            transition: isInteracting ? 'none' : 'transform 0.2s ease-out'
+            objectPosition: `${position.x}% ${position.y}%`
           }}
-          onLoad={handleImageLoad}
           onDragStart={(e) => e.preventDefault()}
         />
       </div>
 
-      {/* Floating control - only cancel button - NO borders or frames */}
+      {/* Cancel button */}
       <div className="absolute top-4 right-4 pointer-events-auto z-30">
         <button
           onClick={onCancel}
@@ -384,14 +213,14 @@ const InlineCrop = ({
         </button>
       </div>
 
-      {/* Auto-save indicator - bottom center */}
+      {/* Status indicator */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 pointer-events-none z-30">
         <div className="bg-black/70 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full shadow-lg">
           {isInteracting 
-            ? (isDragging ? '👆 Ajustando posición...' : '🤏 Ajustando zoom...') 
+            ? '👆 Ajustando posición...' 
             : hasChanges 
               ? '💾 Guardando ajustes...'
-              : '👆 Arrastra • 🤏 Pellizca para ajustar'
+              : '👆 Arrastra para ajustar'
           }
         </div>
       </div>
