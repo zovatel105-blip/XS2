@@ -12,89 +12,89 @@ import UploadWidget from '../components/UploadWidget';
 import InlineCrop from '../components/InlineCrop';
 import config from '../config/config';
 
-// Layout Icon Components
+// Layout Icon Components - Mejorados con estilo más moderno
 const LayoutIcon = ({ type }) => {
   const iconProps = {
-    className: "w-8 h-8 text-white",
+    className: "w-6 h-6 text-white",
     strokeWidth: 1.5
   };
 
   switch (type) {
     case 'off':
       return (
-        <div className="w-8 h-8 border-2 border-white rounded bg-gray-600 flex items-center justify-center">
-          <div className="w-4 h-4 bg-white rounded"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center shadow-sm">
+          <div className="w-3 h-3 bg-white rounded-sm"></div>
         </div>
       );
     case 'vertical': // Lado a lado
       return (
-        <div className="w-8 h-8 border-2 border-white rounded flex">
-          <div className="w-1/2 bg-white"></div>
-          <div className="w-px bg-gray-400"></div>
-          <div className="w-1/2 bg-gray-600"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md flex shadow-sm overflow-hidden">
+          <div className="w-1/2 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+          <div className="w-px bg-white/40"></div>
+          <div className="w-1/2 bg-gradient-to-br from-purple-400 to-purple-600"></div>
         </div>
       );
     case 'horizontal': // Arriba y abajo
       return (
-        <div className="w-8 h-8 border-2 border-white rounded flex flex-col">
-          <div className="h-1/2 bg-white"></div>
-          <div className="h-px bg-gray-400"></div>
-          <div className="h-1/2 bg-gray-600"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md flex flex-col shadow-sm overflow-hidden">
+          <div className="h-1/2 bg-gradient-to-r from-green-400 to-green-600"></div>
+          <div className="h-px bg-white/40"></div>
+          <div className="h-1/2 bg-gradient-to-r from-teal-400 to-teal-600"></div>
         </div>
       );
     case 'triptych-vertical': // 3 lado a lado
       return (
-        <div className="w-8 h-8 border-2 border-white rounded flex">
-          <div className="w-1/3 bg-white"></div>
-          <div className="w-px bg-gray-400"></div>
-          <div className="w-1/3 bg-gray-600"></div>
-          <div className="w-px bg-gray-400"></div>
-          <div className="w-1/3 bg-white"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md flex shadow-sm overflow-hidden">
+          <div className="w-1/3 bg-gradient-to-br from-red-400 to-red-600"></div>
+          <div className="w-px bg-white/40"></div>
+          <div className="w-1/3 bg-gradient-to-br from-orange-400 to-orange-600"></div>
+          <div className="w-px bg-white/40"></div>
+          <div className="w-1/3 bg-gradient-to-br from-yellow-400 to-yellow-600"></div>
         </div>
       );
     case 'triptych-horizontal': // 3 arriba y abajo
       return (
-        <div className="w-8 h-8 border-2 border-white rounded flex flex-col">
-          <div className="h-1/3 bg-white"></div>
-          <div className="h-px bg-gray-400"></div>
-          <div className="h-1/3 bg-gray-600"></div>
-          <div className="h-px bg-gray-400"></div>
-          <div className="h-1/3 bg-white"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md flex flex-col shadow-sm overflow-hidden">
+          <div className="h-1/3 bg-gradient-to-r from-pink-400 to-pink-600"></div>
+          <div className="h-px bg-white/40"></div>
+          <div className="h-1/3 bg-gradient-to-r from-rose-400 to-rose-600"></div>
+          <div className="h-px bg-white/40"></div>
+          <div className="h-1/3 bg-gradient-to-r from-red-400 to-red-600"></div>
         </div>
       );
     case 'grid-2x2': // 2x2 grid
       return (
-        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-2 grid-rows-2 gap-px">
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-white"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md grid grid-cols-2 grid-rows-2 gap-px shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-br from-indigo-400 to-indigo-600"></div>
+          <div className="bg-gradient-to-br from-purple-400 to-purple-600"></div>
+          <div className="bg-gradient-to-br from-blue-400 to-blue-600"></div>
+          <div className="bg-gradient-to-br from-cyan-400 to-cyan-600"></div>
         </div>
       );
     case 'grid-3x2': // 3x2 grid
       return (
-        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-3 grid-rows-2 gap-px">
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md grid grid-cols-3 grid-rows-2 gap-px shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-br from-emerald-400 to-emerald-600"></div>
+          <div className="bg-gradient-to-br from-teal-400 to-teal-600"></div>
+          <div className="bg-gradient-to-br from-cyan-400 to-cyan-600"></div>
+          <div className="bg-gradient-to-br from-blue-400 to-blue-600"></div>
+          <div className="bg-gradient-to-br from-indigo-400 to-indigo-600"></div>
+          <div className="bg-gradient-to-br from-purple-400 to-purple-600"></div>
         </div>
       );
     case 'horizontal-3x2': // 2x3 grid
       return (
-        <div className="w-8 h-8 border-2 border-white rounded grid grid-cols-2 grid-rows-3 gap-px">
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-gray-600"></div>
-          <div className="bg-white"></div>
-          <div className="bg-white"></div>
-          <div className="bg-gray-600"></div>
+        <div className="w-6 h-6 border-2 border-white rounded-md grid grid-cols-2 grid-rows-3 gap-px shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-br from-amber-400 to-amber-600"></div>
+          <div className="bg-gradient-to-br from-orange-400 to-orange-600"></div>
+          <div className="bg-gradient-to-br from-red-400 to-red-600"></div>
+          <div className="bg-gradient-to-br from-pink-400 to-pink-600"></div>
+          <div className="bg-gradient-to-br from-rose-400 to-rose-600"></div>
+          <div className="bg-gradient-to-br from-purple-400 to-purple-600"></div>
         </div>
       );
     default:
-      return <div className="w-8 h-8 border-2 border-white rounded bg-gray-600"></div>;
+      return <div className="w-6 h-6 border-2 border-white rounded-md bg-gradient-to-br from-gray-500 to-gray-700 shadow-sm"></div>;
   }
 };
 
