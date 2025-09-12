@@ -1571,6 +1571,18 @@ const ProfilePage = () => {
         onClose={closeShareModal}
         content={shareModal.content}
       />
+
+      {/* Statistics Modal */}
+      {isOwnProfile && (
+        <StatisticsModal
+          isOpen={statisticsModalOpen}
+          onClose={() => setStatisticsModalOpen(false)}
+          user={user}
+          polls={polls}
+          followersCount={followersCount}
+          followingCount={followingCount}
+        />
+      )}
         </div>
       )}
     </>
