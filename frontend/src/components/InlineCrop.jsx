@@ -342,9 +342,6 @@ const InlineCrop = ({
           }
         </div>
       </div>
-
-      {/* Hidden canvas for crop generation */}
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
     </div>
   );
 };
