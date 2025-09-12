@@ -1143,7 +1143,7 @@ const ProfilePage = () => {
         )}
 
         {/* BOTONES DE ACCIÓN EXPANDIDOS - USO COMPLETO DEL ANCHO */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mx-0">
+        <div className={`grid grid-cols-1 sm:grid-cols-${isOwnProfile ? '2' : '2'} gap-2 mx-0`}>
           {isOwnProfile ? (
             // Botones para perfil propio
             <>
@@ -1160,12 +1160,6 @@ const ProfilePage = () => {
                 onClick={() => navigate('/statistics')}
               >
                 Statistics
-              </Button>
-              <Button 
-                className="w-full rounded-full py-3 sm:py-3 text-sm sm:text-base font-semibold bg-blue-600 hover:bg-blue-700 min-h-[48px] active:scale-95 transition-transform"
-                onClick={() => navigate('/contact')}
-              >
-                Contact
               </Button>
             </>
           ) : (
