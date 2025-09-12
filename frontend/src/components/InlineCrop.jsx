@@ -80,10 +80,15 @@ const InlineCrop = ({
         originalImageSrc: imageSrc
       });
       setHasChanges(false);
+      
+      // Exit crop mode after successful save
+      setTimeout(() => {
+        onCancel();
+      }, 100);
     }
     
     prevActiveRef.current = isActive;
-  }, [isActive]); // ONLY depend on isActive to avoid constant saves
+  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]); // Added dependencies back
 
   // Cleanup
   useEffect(() => {
