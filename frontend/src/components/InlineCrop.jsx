@@ -93,18 +93,28 @@ const InlineCrop = ({
         const deltaX = touch.clientX - lastTouch.x;
         const deltaY = touch.clientY - lastTouch.y;
         
+        console.log('👆 Single finger drag - deltaX:', deltaX, 'deltaY:', deltaY, 'lastTouch:', lastTouch);
+        
         // Better sensitivity for drag - INVERTED for intuitive movement
         const sensitivity = 0.3;
         const deltaPercentX = -deltaX * sensitivity; // NEGATIVE for correct direction
         const deltaPercentY = -deltaY * sensitivity; // NEGATIVE for correct direction
         
-        setPosition(prev => ({
-          x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
-          y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
-        }));
+        console.log('📊 Calculated deltas - deltaPercentX:', deltaPercentX, 'deltaPercentY:', deltaPercentY);
+        console.log('📍 Previous position:', position);
+        
+        setPosition(prev => {
+          const newPos = {
+            x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
+            y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
+          };
+          console.log('🎯 New position calculated:', newPos);
+          return newPos;
+        });
         
         setLastTouch({ x: touch.clientX, y: touch.clientY });
         setHasChanges(true);
+        console.log('✅ hasChanges set to true');
         
       } else if (touches.length === 2) {
         // Pinch zoom
