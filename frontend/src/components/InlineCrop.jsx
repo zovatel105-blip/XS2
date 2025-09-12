@@ -72,23 +72,28 @@ const InlineCrop = ({
   useEffect(() => {
     if (prevActiveRef.current === true && isActive === false && hasChanges) {
       console.log('💾 Saving on exit - position:', position, 'scale:', scale);
-      onSave({
+      
+      const transformData = {
         transform: {
           position: position,  
           scale: scale
         },
         originalImageSrc: imageSrc
-      });
+      };
+      
+      console.log('📤 Sending transform data:', transformData);
+      onSave(transformData);
       setHasChanges(false);
       
-      // Exit crop mode after successful save
+      // Exit crop mode after successful save - increased delay
       setTimeout(() => {
-        onCancel();
-      }, 100);
+        console.log('🚪 Calling onCancel to exit crop mode');
+        onCancel();  
+      }, 200);
     }
     
     prevActiveRef.current = isActive;
-  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]); // Added dependencies back
+  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
 
   // Cleanup
   useEffect(() => {
