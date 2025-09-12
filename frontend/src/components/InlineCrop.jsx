@@ -45,17 +45,17 @@ const InlineCrop = ({
     };
   }, [imageSize]);
 
-  // Very conservative movement limits to prevent any black areas
-  const constrainTransform = useCallback((newTransform) => {
-    // Limit movement to very small amounts to prevent black areas
-    const maxMove = 50; // Very conservative limit
+  // Convert transform to object-position (safer than CSS transforms)
+  const getObjectPosition = useCallback((transform) => {
+    // Convert translateX/Y to CSS object-position percentages
+    const centerX = 50 + (transform.translateX / 10); // Convert to percentage
+    const centerY = 50 + (transform.translateY / 10); // Convert to percentage
     
-    return {
-      ...newTransform,
-      translateX: Math.max(-maxMove, Math.min(maxMove, newTransform.translateX)),
-      translateY: Math.max(-maxMove, Math.min(maxMove, newTransform.translateY)),
-      scale: Math.max(1, Math.min(2, newTransform.scale)) // Scale only up, never down
-    };
+    // Clamp to safe range
+    const x = Math.max(0, Math.min(100, centerX));
+    const y = Math.max(0, Math.min(100, centerY));
+    
+    return `${x}% ${y}%`;
   }, []);
 
   // Reset transform when becoming active, or load saved transform
