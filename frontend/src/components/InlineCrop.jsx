@@ -161,6 +161,7 @@ const InlineCrop = ({
           });
           
           setLastDistance(distance);
+          setHasChanges(true); // Mark as changed
         }
       }
     } else if (isDragging) {
