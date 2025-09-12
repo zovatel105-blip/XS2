@@ -349,21 +349,11 @@ const InlineCrop = ({
     );
   }
 
-  // Crop mode - shows complete image during adjustment, then saves for layout adaptation
-  const hasBeenAdjusted = savedTransform !== null;
-  
+  // Crop mode - smart fitted image with interactive adjustment
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
-      {/* Background for complete image view during adjustment */}
-      <div className="absolute inset-0">
-        <img
-          src={imageSrc}
-          alt="Background blur"
-          className="w-full h-full object-cover blur-lg opacity-30 scale-110"
-          onDragStart={(e) => e.preventDefault()}
-        />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      {/* Dark overlay for better contrast during adjustment */}
+      <div className="absolute inset-0 bg-black/40 z-5" />
       
       {/* Interactive image container */}
       <div
@@ -378,12 +368,13 @@ const InlineCrop = ({
           ref={imageRef}
           src={imageSrc}
           alt="Adjust preview"
-          className="w-full h-full object-contain" /* Shows complete image during adjustment */
+          className="w-full h-full object-cover" /* Smart fitted image during adjustment */
           style={{
             transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
             transformOrigin: 'center',
             transition: isInteracting ? 'none' : 'transform 0.2s ease-out'
           }}
+          onLoad={handleImageLoad}
           onDragStart={(e) => e.preventDefault()}
         />
       </div>
