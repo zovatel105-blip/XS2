@@ -246,8 +246,8 @@ const InlineCrop = ({
 
   if (!isActive) {
     // Normal display with object-position and scale
-    const displayPosition = savedTransform?.position || { x: 50, y: 50 };
-    const displayScale = savedTransform?.scale || 1;
+    const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
+    const displayScale = savedTransform?.transform?.scale || 1;
     
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
