@@ -272,15 +272,8 @@ const InlineCrop = ({
         />
       </div>
 
-      {/* Control buttons - Save and Cancel */}
-      <div className="absolute top-4 right-4 flex flex-col gap-3 pointer-events-auto z-30">
-        <button
-          onClick={onCancel}
-          className="w-12 h-12 bg-black/70 hover:bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
-        >
-          <X className="w-6 h-6" />
-        </button>
-        
+      {/* Only Save button */}
+      <div className="absolute top-4 right-4 pointer-events-auto z-30">
         <button
           onClick={() => {
             scheduleAutoSave(); // Save changes when user clicks save
