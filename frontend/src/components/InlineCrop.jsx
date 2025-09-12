@@ -349,11 +349,11 @@ const InlineCrop = ({
     );
   }
 
-  // Crop mode - smart fitted image with interactive adjustment
+  // Crop mode - pure layout adapted image with interactive adjustment
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
-      {/* Dark overlay for better contrast during adjustment */}
-      <div className="absolute inset-0 bg-black/40 z-5" />
+      {/* Minimal dark overlay for crop mode contrast only */}
+      <div className="absolute inset-0 bg-black/20 z-5" />
       
       {/* Interactive image container */}
       <div
@@ -368,7 +368,7 @@ const InlineCrop = ({
           ref={imageRef}
           src={imageSrc}
           alt="Adjust preview"
-          className="w-full h-full object-cover" /* Smart fitted image during adjustment */
+          className="w-full h-full object-cover" /* Pure layout adaptation - fills completely */
           style={{
             transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
             transformOrigin: 'center',
