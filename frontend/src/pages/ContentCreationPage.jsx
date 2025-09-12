@@ -941,12 +941,8 @@ const ContentCreationPage = () => {
                         selectedLayout.id === layout.id ? 'bg-gray-600 text-white' : 'text-gray-300'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center">
                         <LayoutIcon type={layout.id} />
-                        <div>
-                          <div className="font-medium text-sm sm:text-base">{layout.name}</div>
-                          <div className="text-xs sm:text-sm text-gray-400">{layout.description}</div>
-                        </div>
                       </div>
                     </button>
                   ))}
