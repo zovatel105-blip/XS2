@@ -3576,7 +3576,7 @@ async def create_poll(
         title=poll_data.title,
         author_id=current_user.id,
         description=poll_data.description,
-        options=[opt.dict() for opt in options],  # Store as dict in MongoDB
+        options=[opt.model_dump() for opt in options],  # Store as dict in MongoDB - Pydantic v2
         music_id=poll_data.music_id,
         tags=poll_data.tags,
         category=poll_data.category,
