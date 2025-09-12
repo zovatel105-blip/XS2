@@ -1624,6 +1624,16 @@ const ProfilePage = () => {
           followingCount={followingCount}
         />
       )}
+
+      {/* Story Viewer */}
+      {showStoryViewer && userStories.length > 0 && (
+        <StoryViewer
+          stories={userStories}
+          initialIndex={0}
+          onClose={() => setShowStoryViewer(false)}
+          onStoryEnd={() => setShowStoryViewer(false)}
+        />
+      )}
         </div>
       )}
     </>
