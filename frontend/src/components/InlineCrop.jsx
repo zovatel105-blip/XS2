@@ -69,29 +69,36 @@ const InlineCrop = ({
     };
   }, [imageSize]);
 
-  // Calculate movement bounds so image always covers container completely
+  // Simple bounds for object-cover - prevents black areas naturally
   const constrainTransform = useCallback((newTransform) => {
     if (!containerRef.current || !imageRef.current) {
       return newTransform;
     }
 
     const container = containerRef.current.getBoundingClientRect();
+    const containerAspect = container.width / container.height;
+    const imageAspect = imageSize.width / imageSize.height;
     
-    // Calculate actual displayed image size with current scale
-    const scaledWidth = container.width; // object-contain width
-    const scaledHeight = container.height; // object-contain height
+    // For object-cover, calculate how much the image extends beyond container
+    let maxMoveX = 0;
+    let maxMoveY = 0;
     
-    // For object-contain with our calculated scale, the image should always cover
-    // Limit movement to prevent showing empty areas
-    const maxMoveX = Math.max(0, (scaledWidth * newTransform.scale - container.width) / 2);
-    const maxMoveY = Math.max(0, (scaledHeight * newTransform.scale - container.height) / 2);
+    if (imageAspect > containerAspect) {
+      // Image is wider - it extends horizontally
+      const imageWidth = container.height * imageAspect * newTransform.scale;
+      maxMoveX = Math.max(0, (imageWidth - container.width) / 2);
+    } else {
+      // Image is taller - it extends vertically  
+      const imageHeight = container.width / imageAspect * newTransform.scale;
+      maxMoveY = Math.max(0, (imageHeight - container.height) / 2);
+    }
     
     return {
       ...newTransform,
       translateX: Math.max(-maxMoveX, Math.min(maxMoveX, newTransform.translateX)),
       translateY: Math.max(-maxMoveY, Math.min(maxMoveY, newTransform.translateY))
     };
-  }, []);
+  }, [imageSize]);
 
   // Reset transform when becoming active, or load saved transform
   useEffect(() => {
