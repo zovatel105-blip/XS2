@@ -497,28 +497,21 @@ const ContentCreationPage = () => {
     setCropActiveSlot(slotIndex);
   };
 
-  // Handle inline crop save
-  const handleInlineCropSave = (cropResult) => {
+  // Handle inline crop save - now saves transform data only
+  const handleInlineCropSave = (transformResult) => {
     if (cropActiveSlot === null) return;
     
-    // Convert blob to file
-    const croppedFile = new File([cropResult.blob], 'cropped-image.jpg', {
-      type: 'image/jpeg'
+    // Update the option media with transform data (no actual cropping)
+    updateOption(cropActiveSlot, 'media', {
+      ...options[cropActiveSlot].media,
+      transform: transformResult.transform // Save position and scale
     });
     
-    // Update the option with cropped image
-    const mediaData = {
-      url: cropResult.base64,
-      type: 'image',
-      file: croppedFile
-    };
-
-    updateOption(cropActiveSlot, 'media', mediaData);
     setCropActiveSlot(null); // Exit crop mode
 
     toast({
       title: "Imagen ajustada",
-      description: "La imagen se ha recortado exitosamente",
+      description: "La posición y zoom se guardaron correctamente"
     });
   };
 
