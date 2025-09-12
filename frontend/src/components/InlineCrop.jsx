@@ -32,7 +32,6 @@ const InlineCrop = ({
 
   const containerRef = useRef(null);
   const imageRef = useRef(null);
-  const canvasRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
 
   // Reset transform when becoming active, or load saved transform
