@@ -172,7 +172,7 @@ const InlineCrop = ({
     }));
   };
 
-  // Global event listeners for smooth gesture handling
+  // Global event listeners for smooth gesture handling - FIXED dependencies
   useEffect(() => {
     if (!isActive) return;
 
@@ -200,7 +200,7 @@ const InlineCrop = ({
       document.removeEventListener('mousemove', handleGlobalMove);
       document.removeEventListener('mouseup', handleGlobalEnd);
     };
-  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance]);
+  }, [isActive, isInteracting, handleMove, handleEnd]); // FIXED: Added missing dependencies
 
   // Generate cropped image
   const generateCrop = useCallback(async () => {
