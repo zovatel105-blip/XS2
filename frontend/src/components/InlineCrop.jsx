@@ -49,23 +49,24 @@ const InlineCrop = ({
     }
   }, [isActive, savedTransform]);
 
-  // Auto-save after interaction ends
-  const scheduleAutoSave = useCallback(() => {
-    if (autoSaveTimeoutRef.current) {
-      clearTimeout(autoSaveTimeoutRef.current);
+  // Save only when exiting crop mode
+  const saveOnExit = useCallback(() => {
+    if (hasChanges) {
+      onSave({
+        position: position,
+        scale: scale,
+        originalImageSrc: imageSrc
+      });
+      setHasChanges(false);
     }
-    
-    autoSaveTimeoutRef.current = setTimeout(() => {
-      if (hasChanges) {
-        onSave({
-          position: position,
-          scale: scale,
-          originalImageSrc: imageSrc
-        });
-        setHasChanges(false);
-      }
-    }, 800);
   }, [hasChanges, position, scale, imageSrc, onSave]);
+
+  // Save when component becomes inactive (user exits crop mode)
+  useEffect(() => {
+    if (!isActive && hasChanges) {
+      saveOnExit();
+    }
+  }, [isActive, hasChanges, saveOnExit]);
 
   // Cleanup
   useEffect(() => {
