@@ -512,17 +512,7 @@ const ContentCreationPage = () => {
 
   // Handle inline crop save - now saves transform data only
   const handleInlineCropSave = (transformResult) => {
-    console.log('📥 handleInlineCropSave called with:', transformResult);
-    console.log('📍 Current cropActiveSlot:', cropActiveSlot);
-    
-    if (cropActiveSlot === null) {
-      console.log('❌ cropActiveSlot is null, cannot save');
-      return;
-    }
-    
-    console.log('📥 Received transform data:', transformResult);
-    console.log('📍 Current slot:', cropActiveSlot);
-    console.log('📦 Current options[slot].media before update:', options[cropActiveSlot]?.media);
+    if (cropActiveSlot === null) return;
     
     // Update the option media with transform data (no actual cropping)
     const updatedMedia = {
@@ -530,15 +520,12 @@ const ContentCreationPage = () => {
       transform: transformResult.transform // Save position and scale
     };
     
-    console.log('📦 Updated media object:', updatedMedia);
     updateOption(cropActiveSlot, 'media', updatedMedia);
-    console.log('💾 Updated option media with transform');
     
-    // ✅ NEW: Exit crop mode AFTER state update completes using React's callback pattern
+    // ✅ Exit crop mode AFTER state update completes
     setTimeout(() => {
-      console.log('🚪 Exiting crop mode after state update');
       setCropActiveSlot(null);
-    }, 100); // Short delay to let React process the state update
+    }, 100);
   };
 
   // Add useEffect to properly verify state changes
