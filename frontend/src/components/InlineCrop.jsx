@@ -15,13 +15,15 @@ const InlineCrop = ({
   onCancel = () => {},
   className = ''
 }) => {
-  // Simple position state (for object-position)
+  // Enhanced position and scale state
   const [position, setPosition] = useState({ x: 50, y: 50 }); // Percentage for object-position
+  const [scale, setScale] = useState(1); // Scale for zoom
   const [hasChanges, setHasChanges] = useState(false);
   
   // Touch interaction state
   const [isDragging, setIsDragging] = useState(false);
   const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
+  const [lastDistance, setLastDistance] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
 
   const containerRef = useRef(null);
