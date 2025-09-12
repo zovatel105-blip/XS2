@@ -262,6 +262,7 @@ const InlineCrop = ({
         className="absolute inset-0 cursor-move select-none z-10"
         onTouchStart={handleStart}
         onMouseDown={handleStart}
+        onWheel={handleWheel}
         style={{ touchAction: 'none', pointerEvents: 'auto' }}
       >
         <img
