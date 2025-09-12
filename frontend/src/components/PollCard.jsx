@@ -90,11 +90,20 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         src={media.url} 
         alt="Poll option"
         className="w-full h-full object-cover transition-transform duration-300"
-        style={media.transform ? {
-          objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
-          transform: `scale(${media.transform.scale || 1})`,
-          transformOrigin: 'center center'
-        } : {}}
+        style={(() => {
+          if (media.transform) {
+            const styles = {
+              objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
+              transform: `scale(${media.transform.scale || 1})`,
+              transformOrigin: 'center center'
+            };
+            console.log('🎨 PollCard applying transform styles:', styles);
+            console.log('🎨 Raw media.transform:', media.transform);
+            return styles;
+          }
+          console.log('🎨 PollCard - no transform data');
+          return {};
+        })()}
       />
       
       {/* Progress Bar Background - Fills vertically from bottom */}
