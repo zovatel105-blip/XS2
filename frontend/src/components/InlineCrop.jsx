@@ -141,14 +141,41 @@ const InlineCrop = ({
     }, 800);
   }, [hasChanges, transform, imageSrc, onSave]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
+  // Calculate movement bounds to prevent showing empty areas
+  const calculateBounds = useCallback((currentTransform) => {
+    if (!containerRef.current || !imageRef.current) {
+      return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
+    }
+
+    const container = containerRef.current.getBoundingClientRect();
+    const img = imageRef.current;
+    
+    // Calculate actual displayed image size with current scale
+    const scaledWidth = img.naturalWidth * currentTransform.scale;
+    const scaledHeight = img.naturalHeight * currentTransform.scale;
+    
+    // Calculate how much the image extends beyond container
+    const excessWidth = Math.max(0, (scaledWidth - container.width) / 2);
+    const excessHeight = Math.max(0, (scaledHeight - container.height) / 2);
+    
+    return {
+      minX: -excessWidth,
+      maxX: excessWidth,
+      minY: -excessHeight,
+      maxY: excessHeight
     };
   }, []);
+
+  // Constrain transform to bounds
+  const constrainTransform = useCallback((newTransform) => {
+    const bounds = calculateBounds(newTransform);
+    
+    return {
+      ...newTransform,
+      translateX: Math.max(bounds.minX, Math.min(bounds.maxX, newTransform.translateX)),
+      translateY: Math.max(bounds.minY, Math.min(bounds.maxY, newTransform.translateY))
+    };
+  }, [calculateBounds]);
 
   // Get distance between two touches (pinch gesture detection)
   const getDistance = (touches) => {
