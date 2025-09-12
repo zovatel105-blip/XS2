@@ -5,7 +5,7 @@
  * - Mobile-first touch gestures
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 
 const InlineCrop = ({
   isActive = false,
