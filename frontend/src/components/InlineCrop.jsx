@@ -270,12 +270,6 @@ const InlineCrop = ({
     const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
     const displayScale = savedTransform?.transform?.scale || 1;
     
-    console.log('📷 INACTIVE IMAGE RENDER');
-    console.log('📦 Full savedTransform:', JSON.stringify(savedTransform, null, 2));
-    console.log('📍 Extracted position:', displayPosition);
-    console.log('📍 Extracted scale:', displayScale);
-    console.log('🎨 CSS will be:', `objectPosition: ${displayPosition.x}% ${displayPosition.y}%, transform: scale(${displayScale})`);
-    
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
         <img
@@ -289,6 +283,13 @@ const InlineCrop = ({
           }}
           onDragStart={(e) => e.preventDefault()}
         />
+        
+        {/* DEBUG VISUAL - Remove after testing */}
+        <div className="absolute top-2 left-2 bg-red-500 text-white text-xs p-1 rounded pointer-events-none">
+          P: {displayPosition.x},{displayPosition.y} S: {displayScale}
+          <br />
+          ST: {savedTransform ? 'YES' : 'NO'}
+        </div>
       </div>
     );
   }
