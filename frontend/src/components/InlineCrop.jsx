@@ -16,7 +16,8 @@ const InlineCrop = ({
   className = ''
 }) => {
   console.log('🔍 InlineCrop render - isActive:', isActive, 'savedTransform:', savedTransform);
-  console.log('🔍 Current state - position:', { x: 50, y: 50 }, 'scale:', 1, 'hasChanges:', false);
+  console.log('🔍 savedTransform details:', JSON.stringify(savedTransform, null, 2));
+  console.log('🔍 Current state - position will be initialized based on savedTransform or defaults');
 
   // Enhanced position and scale state
   const [position, setPosition] = useState({ x: 50, y: 50 }); // Percentage for object-position
