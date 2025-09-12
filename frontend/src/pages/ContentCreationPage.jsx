@@ -461,11 +461,19 @@ const ContentCreationPage = () => {
   };
 
   const updateOption = (index, field, value) => {
+    console.log('🔄 updateOption called - index:', index, 'field:', field, 'value:', value);
+    console.log('📦 Current options length:', options.length);
+    console.log('📦 Current options[index] before update:', options[index]);
+    
     const newOptions = [...options];
     while (newOptions.length <= index) {
       newOptions.push({ text: '', media: null, mentionedUsers: [] });
     }
     newOptions[index] = { ...newOptions[index], [field]: value };
+    
+    console.log('📦 New options[index] after update:', newOptions[index]);
+    console.log('🔄 Setting new options array');
+    
     setOptions(newOptions);
   };
 
