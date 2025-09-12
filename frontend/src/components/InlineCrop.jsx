@@ -381,7 +381,7 @@ const InlineCrop = ({
           ref={imageRef}
           src={imageSrc}
           alt="Adjust preview"
-          className="w-full h-full object-contain" /* Complete image, no cropping */
+          className="w-full h-full object-cover" /* Fills completely, prevents black areas */
           style={{
             transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
             transformOrigin: 'center',
