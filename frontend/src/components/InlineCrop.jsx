@@ -1,12 +1,11 @@
 /**
  * InlineCrop - TikTok-style crop functionality directly in the preview area
  * - Mobile-first touch gestures with desktop support
- * - Minimalist TikTok-inspired UI
- * - Smooth pinch-to-zoom with bounce limits
- * - Drag to reposition without going outside bounds
+ * - Complete image without cropping, scaled to fill layout
+ * - Constrained movement to prevent empty areas
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Check, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const InlineCrop = ({
   isActive = false,
@@ -70,6 +69,30 @@ const InlineCrop = ({
     };
   }, [imageSize]);
 
+  // Calculate movement bounds so image always covers container completely
+  const constrainTransform = useCallback((newTransform) => {
+    if (!containerRef.current || !imageRef.current) {
+      return newTransform;
+    }
+
+    const container = containerRef.current.getBoundingClientRect();
+    
+    // Calculate actual displayed image size with current scale
+    const scaledWidth = container.width; // object-contain width
+    const scaledHeight = container.height; // object-contain height
+    
+    // For object-contain with our calculated scale, the image should always cover
+    // Limit movement to prevent showing empty areas
+    const maxMoveX = Math.max(0, (scaledWidth * newTransform.scale - container.width) / 2);
+    const maxMoveY = Math.max(0, (scaledHeight * newTransform.scale - container.height) / 2);
+    
+    return {
+      ...newTransform,
+      translateX: Math.max(-maxMoveX, Math.min(maxMoveX, newTransform.translateX)),
+      translateY: Math.max(-maxMoveY, Math.min(maxMoveY, newTransform.translateY))
+    };
+  }, []);
+
   // Reset transform when becoming active, or load saved transform
   useEffect(() => {
     if (isActive) {
@@ -115,14 +138,7 @@ const InlineCrop = ({
     resizeObserver.observe(containerRef.current);
 
     return () => resizeObserver.disconnect();
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, []);
+  }, [isActive]);
 
   // Auto-save after interaction ends - marks image as adjusted for layout adaptation
   const scheduleAutoSave = useCallback(() => {
@@ -148,41 +164,14 @@ const InlineCrop = ({
     }, 800);
   }, [hasChanges, transform, imageSrc, onSave]);
 
-  // Calculate movement bounds to prevent showing empty areas
-  const calculateBounds = useCallback((currentTransform) => {
-    if (!containerRef.current || !imageRef.current) {
-      return { minX: 0, maxX: 0, minY: 0, maxY: 0 };
-    }
-
-    const container = containerRef.current.getBoundingClientRect();
-    const img = imageRef.current;
-    
-    // Calculate actual displayed image size with current scale
-    const scaledWidth = img.naturalWidth * currentTransform.scale;
-    const scaledHeight = img.naturalHeight * currentTransform.scale;
-    
-    // Calculate how much the image extends beyond container
-    const excessWidth = Math.max(0, (scaledWidth - container.width) / 2);
-    const excessHeight = Math.max(0, (scaledHeight - container.height) / 2);
-    
-    return {
-      minX: -excessWidth,
-      maxX: excessWidth,
-      minY: -excessHeight,
-      maxY: excessHeight
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
     };
   }, []);
-
-  // Constrain transform to bounds
-  const constrainTransform = useCallback((newTransform) => {
-    const bounds = calculateBounds(newTransform);
-    
-    return {
-      ...newTransform,
-      translateX: Math.max(bounds.minX, Math.min(bounds.maxX, newTransform.translateX)),
-      translateY: Math.max(bounds.minY, Math.min(bounds.maxY, newTransform.translateY))
-    };
-  }, [calculateBounds]);
 
   // Get distance between two touches (pinch gesture detection)
   const getDistance = (touches) => {
@@ -235,7 +224,7 @@ const InlineCrop = ({
       const touches = e.touches;
       
       if (touches.length === 1 && isDragging) {
-        // Single finger drag - move image smoothly
+        // Single finger drag - move image with constraints
         const touch = touches[0];
         const deltaX = touch.clientX - lastTouch.x;
         const deltaY = touch.clientY - lastTouch.y;
@@ -246,13 +235,11 @@ const InlineCrop = ({
             translateX: prev.translateX + deltaX,
             translateY: prev.translateY + deltaY
           };
-          
-          // Constrain movement so image always covers the container completely
           return constrainTransform(newTransform);
         });
         
         setLastTouch({ x: touch.clientX, y: touch.clientY });
-        setHasChanges(true); // Mark as changed
+        setHasChanges(true);
         
       } else if (touches.length === 2) {
         // Two finger pinch - zoom with limits and bounce
@@ -270,36 +257,35 @@ const InlineCrop = ({
               newScale = 3 + (newScale - 3) * 0.1; // Bounce back from maximum
             }
             
-            return {
+            const newTransform = {
               ...prev,
               scale: newScale
             };
+            return constrainTransform(newTransform);
           });
           
           setLastDistance(distance);
-          setHasChanges(true); // Mark as changed
+          setHasChanges(true);
         }
       }
     } else if (isDragging) {
-      // Mouse drag
+      // Mouse drag with constraints
       const deltaX = e.clientX - lastTouch.x;
       const deltaY = e.clientY - lastTouch.y;
       
-        setTransform(prev => {
-          const newTransform = {
-            ...prev,
-            translateX: prev.translateX + deltaX,
-            translateY: prev.translateY + deltaY
-          };
-          
-          // Constrain movement so image always covers the container completely
-          return constrainTransform(newTransform);
-        });
-        
-        setLastTouch({ x: e.clientX, y: e.clientY });
-        setHasChanges(true); // Mark as changed
+      setTransform(prev => {
+        const newTransform = {
+          ...prev,
+          translateX: prev.translateX + deltaX,
+          translateY: prev.translateY + deltaY
+        };
+        return constrainTransform(newTransform);
+      });
+      
+      setLastTouch({ x: e.clientX, y: e.clientY });
+      setHasChanges(true);
     }
-  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance]);
+  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance, constrainTransform]);
 
   // Handle end of interaction - wrapped in useCallback
   const handleEnd = useCallback((e) => {
@@ -309,16 +295,19 @@ const InlineCrop = ({
     setIsInteracting(false);
     
     // Apply scale limits and bounce back if exceeded
-    setTransform(prev => ({
-      ...prev,
-      scale: Math.max(0.5, Math.min(3, prev.scale))
-    }));
+    setTransform(prev => {
+      const constrainedTransform = {
+        ...prev,
+        scale: Math.max(0.5, Math.min(3, prev.scale))
+      };
+      return constrainTransform(constrainedTransform);
+    });
     
     // Schedule auto-save after interaction ends
     if (hasChanges) {
       scheduleAutoSave();
     }
-  }, [isActive, hasChanges, scheduleAutoSave]);
+  }, [isActive, hasChanges, scheduleAutoSave, constrainTransform]);
 
   // Handle mouse wheel for desktop zoom
   const handleWheel = (e) => {
@@ -328,13 +317,16 @@ const InlineCrop = ({
     
     const scaleDelta = e.deltaY > 0 ? 0.9 : 1.1;
     
-    setTransform(prev => ({
-      ...prev,
-      scale: Math.max(0.5, Math.min(3, prev.scale * scaleDelta))
-    }));
+    setTransform(prev => {
+      const newTransform = {
+        ...prev,
+        scale: Math.max(0.5, Math.min(3, prev.scale * scaleDelta))
+      };
+      return constrainTransform(newTransform);
+    });
     
-    setHasChanges(true); // Mark as changed
-    scheduleAutoSave(); // Auto-save after wheel zoom
+    setHasChanges(true);
+    scheduleAutoSave();
   };
 
   // Global event listeners for smooth gesture handling - FIXED dependencies
@@ -365,8 +357,7 @@ const InlineCrop = ({
       document.removeEventListener('mousemove', handleGlobalMove);
       document.removeEventListener('mouseup', handleGlobalEnd);
     };
-  }, [isActive, isInteracting, handleMove, handleEnd]); // FIXED: Added missing dependencies
-
+  }, [isActive, isInteracting, handleMove, handleEnd]);
 
   if (!isActive) {
     // Complete image (no cropping) scaled to fill layout entirely
