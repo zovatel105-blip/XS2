@@ -745,7 +745,7 @@ const ContentCreationPage = () => {
           allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
         }
         
-        const optionData = {
+        return {
           text: opt.text.trim() || '', // Use provided text or empty string
           media_type: opt.media.type, // Use the actual media type (image or video)
           media_url: opt.media.url,
@@ -753,15 +753,6 @@ const ContentCreationPage = () => {
           media_transform: opt.media.transform || null, // ✅ Include crop transform data
           mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
         };
-        
-        // ✅ DEBUG: Log what transform data is being sent
-        if (opt.media.transform) {
-          console.log('🔍 FRONTEND SENDING media_transform:', opt.media.transform);
-        } else {
-          console.log('🔍 FRONTEND: No media_transform data to send');
-        }
-        
-        return optionData;
       });
 
       const pollData = {
