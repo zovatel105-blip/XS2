@@ -251,7 +251,11 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                         key={slotIndex} // ✅ FIXED: Use stable key to prevent re-mounts when media object changes
                         isActive={cropActiveSlot === slotIndex}
                         imageSrc={option.media.url}
-                        savedTransform={option.media.transform || null}
+                        savedTransform={(() => {
+                          const transform = option.media.transform || null;
+                          console.log(`🔍 PASSING savedTransform to slot ${slotIndex}:`, transform);
+                          return transform;
+                        })()}
                         onSave={onInlineCropSave}
                         onCancel={onInlineCropCancel}
                         className="w-full h-full object-cover"
