@@ -931,7 +931,7 @@ const ContentCreationPage = () => {
 
             {/* Layout Menu */}
             {showLayoutMenu && (
-              <div className="absolute right-full top-0 mr-2 sm:mr-3 w-56 sm:w-64 bg-gray-900 rounded-lg shadow-xl overflow-hidden z-50 border border-white/10">
+              <div className="absolute right-full top-0 mr-2 sm:mr-3 w-16 sm:w-20 bg-gray-900 rounded-lg shadow-xl overflow-hidden z-50 border border-white/10">
                 <div className="py-2">
                   {LAYOUT_OPTIONS.map((layout) => (
                     <button
