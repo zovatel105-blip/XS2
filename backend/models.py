@@ -206,6 +206,84 @@ class FollowersList(BaseModel):
     followers: List[UserResponse]
     total: int
 
+# =============  STORY MODELS =============
+
+class StoryType(str, Enum):
+    IMAGE = "image"
+    VIDEO = "video"
+    TEXT = "text"
+
+class StoryPrivacy(str, Enum):
+    PUBLIC = "public"
+    FOLLOWERS = "followers"
+    CLOSE_FRIENDS = "close_friends"
+
+class Story(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    content_url: Optional[str] = None  # URL to image/video
+    text_content: Optional[str] = None  # For text-only stories
+    story_type: StoryType
+    privacy: StoryPrivacy = StoryPrivacy.PUBLIC
+    background_color: Optional[str] = "#000000"  # For text stories
+    text_color: Optional[str] = "#FFFFFF"  # For text stories
+    font_style: Optional[str] = "default"
+    duration: int = 15  # Duration in seconds (default 15)
+    views_count: int = 0
+    likes_count: int = 0
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: datetime = Field(default_factory=lambda: datetime.utcnow() + timedelta(hours=24))
+    is_active: bool = True
+
+class StoryCreate(BaseModel):
+    content_url: Optional[str] = None
+    text_content: Optional[str] = None
+    story_type: StoryType
+    privacy: StoryPrivacy = StoryPrivacy.PUBLIC
+    background_color: Optional[str] = "#000000"
+    text_color: Optional[str] = "#FFFFFF"
+    font_style: Optional[str] = "default"
+    duration: Optional[int] = 15
+
+class StoryResponse(BaseModel):
+    id: str
+    user_id: str
+    username: str
+    display_name: str
+    avatar_url: Optional[str]
+    content_url: Optional[str]
+    text_content: Optional[str]
+    story_type: StoryType
+    privacy: StoryPrivacy
+    background_color: Optional[str]
+    text_color: Optional[str]
+    font_style: Optional[str]
+    duration: int
+    views_count: int
+    likes_count: int
+    created_at: datetime
+    expires_at: datetime
+    is_viewed: bool = False  # Whether current user has viewed this story
+    is_liked: bool = False   # Whether current user has liked this story
+
+class StoryView(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    story_id: str
+    user_id: str
+    viewed_at: datetime = Field(default_factory=datetime.utcnow)
+
+class StoryLike(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    story_id: str
+    user_id: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class StoryViewCreate(BaseModel):
+    story_id: str
+
+class StoryLikeCreate(BaseModel):
+    story_id: str
+
 # =============  COMMENT MODELS =============
 
 class Comment(BaseModel):
