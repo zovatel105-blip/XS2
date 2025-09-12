@@ -5,7 +5,7 @@
  * - Mobile-first touch gestures
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { X, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 const InlineCrop = ({
   isActive = false,
@@ -15,6 +15,8 @@ const InlineCrop = ({
   onCancel = () => {},
   className = ''
 }) => {
+  console.log('🔍 InlineCrop render - isActive:', isActive, 'savedTransform:', savedTransform);
+
   // Enhanced position and scale state
   const [position, setPosition] = useState({ x: 50, y: 50 }); // Percentage for object-position
   const [scale, setScale] = useState(1); // Scale for zoom
@@ -28,221 +30,7 @@ const InlineCrop = ({
 
   const containerRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
-
-  console.log('🔍 InlineCrop render - isActive:', isActive, 'savedTransform:', savedTransform);
-
-  // ALL HOOKS MUST BE AT THE TOP - before any returns
-  
-  // Always sync with savedTransform when it changes
-  useEffect(() => {
-    if (savedTransform && savedTransform.transform) {
-      console.log('🔄 Syncing with savedTransform:', savedTransform.transform);
-      setPosition(savedTransform.transform.position);
-      setScale(savedTransform.transform.scale || 1);
-    }
-  }, [savedTransform]);
-
-  // Reset position when becoming active
-  useEffect(() => {
-    if (isActive) {
-      if (savedTransform && savedTransform.transform) {
-        // Load from nested structure that we save
-        setPosition(savedTransform.transform.position);
-        setScale(savedTransform.transform.scale || 1);
-        console.log('🔄 Loading saved transform for active mode:', savedTransform.transform);
-      } else {
-        setPosition({ x: 50, y: 50 }); // Default center
-        setScale(1);
-        console.log('🔄 Loading default transform for active mode');
-      }
-      setHasChanges(false);
-      setIsInteracting(false);
-      
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-        autoSaveTimeoutRef.current = null;
-      }
-    }
-  }, [isActive]); // Remove savedTransform dependency to avoid double updates
-
-  // Save ONLY when isActive changes from true to false (user exits crop mode)
-  useEffect(() => {
-    if (prevActiveRef.current === true && isActive === false && hasChanges) {
-      console.log('💾 Saving on exit - position:', position, 'scale:', scale);
-      
-      const transformData = {
-        transform: {
-          position: position,  
-          scale: scale
-        },
-        originalImageSrc: imageSrc
-      };
-      
-      console.log('📤 Sending transform data:', transformData);
-      onSave(transformData);
-      setHasChanges(false);
-      
-      // Exit crop mode after successful save - increased delay
-      setTimeout(() => {
-        console.log('🚪 Calling onCancel to exit crop mode');
-        onCancel();  
-      }, 200);
-    }
-    
-    prevActiveRef.current = isActive;
-  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Global event listeners for smooth gesture handling - FIXED dependencies
-  useEffect(() => {
-    if (!isActive) return;
-
-    const handleGlobalMove = (e) => {
-      if (isInteracting) {
-        handleMove(e);
-      }
-    };
-
-    const handleGlobalEnd = (e) => {
-      if (isInteracting) {
-        handleEnd(e);
-      }
-    };
-
-    // Add global listeners for smooth gesture tracking
-    document.addEventListener('touchmove', handleGlobalMove, { passive: false });
-    document.addEventListener('touchend', handleGlobalEnd);
-    document.addEventListener('mousemove', handleGlobalMove);
-    document.addEventListener('mouseup', handleGlobalEnd);
-
-    return () => {
-      document.removeEventListener('touchmove', handleGlobalMove);
-      document.removeEventListener('touchend', handleGlobalEnd);
-      document.removeEventListener('mousemove', handleGlobalMove);
-      document.removeEventListener('mouseup', handleGlobalEnd);
-    };
-  }, [isActive, isInteracting, handleMove, handleEnd]);
-
-  // NOW SAFE TO HAVE CONDITIONAL RETURNS
-  if (!isActive) {
-    // ALWAYS use savedTransform data directly, no internal state
-    const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
-    const displayScale = savedTransform?.transform?.scale || 1;
-    
-    return (
-      <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
-        <img
-          src={imageSrc}
-          alt="Preview"
-          className="w-full h-full object-cover"
-          style={{
-            objectPosition: `${displayPosition.x}% ${displayPosition.y}%`,
-            transform: `scale(${displayScale})`,
-            transformOrigin: 'center'
-          }}
-          onDragStart={(e) => e.preventDefault()}
-        />
-        
-        {/* DEBUG: Only show when NOT active */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white text-sm p-2 rounded pointer-events-none z-50">
-          <div>INACTIVE</div>
-          <div>P: {displayPosition.x},{displayPosition.y}</div>
-          <div>S: {displayScale}</div>
-          <div>ST: {savedTransform ? 'YES' : 'NO'}</div>
-        </div>
-      </div>
-    );
-  }
-  useEffect(() => {
-    if (savedTransform && savedTransform.transform) {
-      console.log('🔄 Syncing with savedTransform:', savedTransform.transform);
-      setPosition(savedTransform.transform.position);
-      setScale(savedTransform.transform.scale || 1);
-    }
-  }, [savedTransform]);
-
-  // Reset position when becoming active
-  useEffect(() => {
-    if (isActive) {
-      if (savedTransform && savedTransform.transform) {
-        // Load from nested structure that we save
-        setPosition(savedTransform.transform.position);
-        setScale(savedTransform.transform.scale || 1);
-        console.log('🔄 Loading saved transform for active mode:', savedTransform.transform);
-      } else {
-        setPosition({ x: 50, y: 50 }); // Default center
-        setScale(1);
-        console.log('🔄 Loading default transform for active mode');
-      }
-      setHasChanges(false);
-      setIsInteracting(false);
-      
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-        autoSaveTimeoutRef.current = null;
-      }
-    }
-  }, [isActive]); // Remove savedTransform dependency to avoid double updates
-
-  // Save only when exiting crop mode
-  const saveOnExit = useCallback(() => {
-    if (hasChanges) {
-      onSave({
-        transform: {
-          position: position,
-          scale: scale
-        },
-        originalImageSrc: imageSrc
-      });
-      setHasChanges(false);
-    }
-  }, [hasChanges, position, scale, imageSrc, onSave]);
-
   const prevActiveRef = useRef(isActive);
-
-  // Save ONLY when isActive changes from true to false (user exits crop mode)
-  useEffect(() => {
-    if (prevActiveRef.current === true && isActive === false && hasChanges) {
-      console.log('💾 Saving on exit - position:', position, 'scale:', scale);
-      
-      const transformData = {
-        transform: {
-          position: position,  
-          scale: scale
-        },
-        originalImageSrc: imageSrc
-      };
-      
-      console.log('📤 Sending transform data:', transformData);
-      onSave(transformData);
-      setHasChanges(false);
-      
-      // Exit crop mode after successful save - increased delay
-      setTimeout(() => {
-        console.log('🚪 Calling onCancel to exit crop mode');
-        onCancel();  
-      }, 200);
-    }
-    
-    prevActiveRef.current = isActive;
-  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
-
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Get distance between touches for pinch gesture
   const getDistance = (touches) => {
@@ -365,7 +153,73 @@ const InlineCrop = ({
     setHasChanges(true);
   };
 
-  // Global event listeners
+  // Always sync with savedTransform when it changes
+  useEffect(() => {
+    if (savedTransform && savedTransform.transform) {
+      console.log('🔄 Syncing with savedTransform:', savedTransform.transform);
+      setPosition(savedTransform.transform.position);
+      setScale(savedTransform.transform.scale || 1);
+    }
+  }, [savedTransform]);
+
+  // Reset position when becoming active
+  useEffect(() => {
+    if (isActive) {
+      if (savedTransform && savedTransform.transform) {
+        setPosition(savedTransform.transform.position);
+        setScale(savedTransform.transform.scale || 1);
+        console.log('🔄 Loading saved transform for active mode:', savedTransform.transform);
+      } else {
+        setPosition({ x: 50, y: 50 });
+        setScale(1);
+        console.log('🔄 Loading default transform for active mode');
+      }
+      setHasChanges(false);
+      setIsInteracting(false);
+      
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+        autoSaveTimeoutRef.current = null;
+      }
+    }
+  }, [isActive]);
+
+  // Save when isActive changes from true to false
+  useEffect(() => {
+    if (prevActiveRef.current === true && isActive === false && hasChanges) {
+      console.log('💾 Saving on exit - position:', position, 'scale:', scale);
+      
+      const transformData = {
+        transform: {
+          position: position,  
+          scale: scale
+        },
+        originalImageSrc: imageSrc
+      };
+      
+      console.log('📤 Sending transform data:', transformData);
+      onSave(transformData);
+      setHasChanges(false);
+      
+      setTimeout(() => {
+        console.log('🚪 Calling onCancel to exit crop mode');
+        onCancel();  
+      }, 200);
+    }
+    
+    prevActiveRef.current = isActive;
+  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Global event listeners for smooth gesture handling
   useEffect(() => {
     if (!isActive) return;
 
@@ -375,9 +229,9 @@ const InlineCrop = ({
       }
     };
 
-    const handleGlobalEnd = () => {
+    const handleGlobalEnd = (e) => {
       if (isInteracting) {
-        handleEnd();
+        handleEnd(e);
       }
     };
 
@@ -394,8 +248,8 @@ const InlineCrop = ({
     };
   }, [isActive, isInteracting, handleMove, handleEnd]);
 
+  // CONDITIONAL RENDERS AFTER ALL HOOKS
   if (!isActive) {
-    // ALWAYS use savedTransform data directly, no internal state
     const displayPosition = savedTransform?.transform?.position || { x: 50, y: 50 };
     const displayScale = savedTransform?.transform?.scale || 1;
     
@@ -413,8 +267,9 @@ const InlineCrop = ({
           onDragStart={(e) => e.preventDefault()}
         />
         
-        {/* DEBUG VISUAL - Remove after testing */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-sm p-2 rounded pointer-events-none z-50">
+        {/* DEBUG: Only show when NOT active */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white text-sm p-2 rounded pointer-events-none z-50">
+          <div>INACTIVE</div>
           <div>P: {displayPosition.x},{displayPosition.y}</div>
           <div>S: {displayScale}</div>
           <div>ST: {savedTransform ? 'YES' : 'NO'}</div>
@@ -423,10 +278,9 @@ const InlineCrop = ({
     );
   }
 
-  // Crop mode - same as display but interactive
+  // Crop mode - active image with gestures
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`} style={{ pointerEvents: 'auto' }}>
-      {/* Interactive image */}
       <div
         ref={containerRef}
         className="absolute inset-0 cursor-move select-none z-10"
@@ -456,7 +310,6 @@ const InlineCrop = ({
           <div>Changes: {hasChanges ? 'YES' : 'NO'}</div>
         </div>
       </div>
-
     </div>
   );
 };
