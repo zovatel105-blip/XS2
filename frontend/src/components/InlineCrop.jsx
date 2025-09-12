@@ -43,6 +43,7 @@ const InlineCrop = ({
   const handleStart = (e) => {
     if (!isActive) return;
     
+    console.log('🎯 handleStart triggered');
     e.preventDefault();
     setIsInteracting(true);
     
@@ -50,10 +51,12 @@ const InlineCrop = ({
       const touches = e.touches;
       if (touches.length === 1) {
         // Single touch - drag
+        console.log('👆 Single touch drag mode');
         setIsDragging(true);
         setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
       } else if (touches.length === 2) {
         // Two finger pinch
+        console.log('🤏 Two finger pinch mode');
         setIsDragging(false);
         setLastDistance(getDistance(touches));
         const centerX = (touches[0].clientX + touches[1].clientX) / 2;
@@ -61,6 +64,7 @@ const InlineCrop = ({
         setLastTouch({ x: centerX, y: centerY });
       }
     } else {
+      console.log('🖱️ Mouse drag mode');
       setIsDragging(true);  
       setLastTouch({ x: e.clientX, y: e.clientY });
     }
