@@ -51,7 +51,67 @@ const InlineCrop = ({
         autoSaveTimeoutRef.current = null;
       }
     }
-  }, [isActive, savedTransform]);
+  // Calculate smart initial transform for complete image + layout adaptation
+  const calculateSmartTransform = useCallback(() => {
+    if (!containerRef.current || imageSize.width <= 1 || imageSize.height <= 1) {
+      return { scale: 1, translateX: 0, translateY: 0 };
+    }
+
+    const container = containerRef.current.getBoundingClientRect();
+    const containerAspect = container.width / container.height;
+    const imageAspect = imageSize.width / imageSize.height;
+
+    let scale = 1;
+    
+    // Calculate scale to show complete image while filling layout
+    if (imageAspect > containerAspect) {
+      // Image is wider - scale based on height to show complete image
+      scale = container.height / imageSize.height;
+    } else {
+      // Image is taller - scale based on width to show complete image  
+      scale = container.width / imageSize.width;
+    }
+
+    // Ensure minimum scale to fill the container (no empty areas)
+    const minScaleX = container.width / imageSize.width;
+    const minScaleY = container.height / imageSize.height;
+    const minScale = Math.max(minScaleX, minScaleY);
+    
+    // Use the scale that shows complete image but fills the space
+    scale = Math.max(scale, minScale);
+
+    return {
+      scale: scale,
+      translateX: 0,
+      translateY: 0
+    };
+  }, [imageSize]);
+
+  // Handle image load to get dimensions
+  const handleImageLoad = useCallback((e) => {
+    const img = e.target;
+    setImageSize({
+      width: img.naturalWidth,
+      height: img.naturalHeight
+    });
+  }, []);
+
+  // Update container size on mount and resize
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateContainerSize = () => {
+      const rect = containerRef.current.getBoundingClientRect();
+      setContainerSize({ width: rect.width, height: rect.height });
+    };
+
+    updateContainerSize();
+    
+    const resizeObserver = new ResizeObserver(updateContainerSize);
+    resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, [isActive]);
 
   // Auto-save after interaction ends - marks image as adjusted for layout adaptation
   const scheduleAutoSave = useCallback(() => {
