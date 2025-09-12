@@ -56,7 +56,7 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle double click/tap to save with additional touch handling
+  // Handle double click/tap to save with proper timing
   const handleDoubleClick = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,11 +87,10 @@ const InlineCrop = ({
     onSave(transformData);
     setHasChanges(false);
     
-    setTimeout(() => {
-      console.log('🚪 Calling onCancel after save');
-      onCancel();
-    }, 200);
-  }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
+    // ❌ REMOVED: setTimeout(() => onCancel(), 200) - This was causing race condition
+    // Let parent component handle the timing after state update completes
+    console.log('✅ Save completed - parent will handle crop exit timing');
+  }, [isActive, hasChanges, position, scale, imageSrc, onSave]);
 
   // Alternative save method - keyboard shortcut
   const handleKeyDown = useCallback((e) => {
