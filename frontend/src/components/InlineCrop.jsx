@@ -240,11 +240,16 @@ const InlineCrop = ({
         const deltaX = touch.clientX - lastTouch.x;
         const deltaY = touch.clientY - lastTouch.y;
         
-        setTransform(prev => ({
-          ...prev,
-          translateX: prev.translateX + deltaX,
-          translateY: prev.translateY + deltaY
-        }));
+        setTransform(prev => {
+          const newTransform = {
+            ...prev,
+            translateX: prev.translateX + deltaX,
+            translateY: prev.translateY + deltaY
+          };
+          
+          // Constrain movement so image always covers the container completely
+          return constrainTransform(newTransform);
+        });
         
         setLastTouch({ x: touch.clientX, y: touch.clientY });
         setHasChanges(true); // Mark as changed
