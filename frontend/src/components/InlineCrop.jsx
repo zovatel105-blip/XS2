@@ -348,11 +348,11 @@ const InlineCrop = ({
     
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
-        {/* Complete image, no cropping, scaled to fill entire layout */}
+        {/* Image fills layout completely - object-cover prevents black areas */}
         <img
           src={imageSrc}
           alt="Preview"
-          className="w-full h-full object-contain" /* Complete image, no cropping */
+          className="w-full h-full object-cover" /* Fills completely, prevents black areas */
           style={{
             transform: `translate(${displayTransform.translateX}px, ${displayTransform.translateY}px) scale(${displayTransform.scale})`,
             transformOrigin: 'center',
