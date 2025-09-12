@@ -85,6 +85,24 @@ const MomentsPage = () => {
     setSelectedStoryIndex(null);
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center px-6">
+          <Clock size={64} className="text-white/30 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">Inicia sesión</h3>
+          <p className="text-white/70 mb-6">Necesitas iniciar sesión para ver las historias</p>
+          <button 
+            onClick={() => navigate('/auth')}
+            className="px-6 py-3 bg-purple-500 text-white rounded-full font-medium hover:bg-purple-600 transition-colors"
+          >
+            Ir a Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -118,9 +136,9 @@ const MomentsPage = () => {
         </div>
       </div>
 
-      {/* Momentos Grid */}
+      {/* Stories Grid */}
       <div className="max-w-4xl mx-auto px-4 py-6">
-        {moments.length === 0 ? (
+        {stories.length === 0 ? (
           <div className="text-center py-16">
             <Clock size={64} className="text-white/30 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-white mb-2">No hay momentos disponibles</h3>
@@ -128,18 +146,36 @@ const MomentsPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {moments.map((moment) => (
+            {stories.map((story, index) => (
               <div
-                key={moment.id}
-                onClick={() => handleMomentClick(moment)}
+                key={story.id}
+                onClick={() => handleStoryClick(index)}
                 className="relative aspect-[9/16] bg-gray-800 rounded-lg overflow-hidden cursor-pointer group"
               >
-                {/* Thumbnail */}
-                <img
-                  src={moment.thumbnail}
-                  alt={`Momento de ${moment.user.username}`}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                />
+                {/* Thumbnail or Content Preview */}
+                {story.story_type === 'image' && story.content_url ? (
+                  <img
+                    src={story.content_url}
+                    alt={`Historia de ${story.username}`}
+                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                  />
+                ) : story.story_type === 'text' ? (
+                  <div
+                    className="w-full h-full flex items-center justify-center p-4"
+                    style={{ backgroundColor: story.background_color }}
+                  >
+                    <p
+                      className="text-center text-sm font-bold line-clamp-4"
+                      style={{ color: story.text_color }}
+                    >
+                      {story.text_content}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <Play size={32} className="text-white" />
+                  </div>
+                )}
                 
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
@@ -154,11 +190,11 @@ const MomentsPage = () => {
                 {/* User info */}
                 <div className="absolute top-3 left-3 flex items-center gap-2">
                   <div className={`w-8 h-8 rounded-full border-2 overflow-hidden ${
-                    moment.isViewed ? 'border-gray-400' : 'border-purple-500'
+                    story.is_viewed ? 'border-gray-400' : 'border-purple-500'
                   }`}>
                     <img
-                      src={moment.user.avatar}
-                      alt={moment.user.username}
+                      src={story.avatar_url || '/default-avatar.png'}
+                      alt={story.username}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -169,20 +205,20 @@ const MomentsPage = () => {
                   <div className="flex items-center justify-between text-white text-xs">
                     <div className="flex items-center gap-2">
                       <Eye size={12} />
-                      <span>{moment.views}</span>
+                      <span>{story.views_count || 0}</span>
                     </div>
-                    <span>{moment.duration}</span>
+                    <span>{story.duration || 15}s</span>
                   </div>
                   <p className="text-white text-xs mt-1 truncate">
-                    @{moment.user.username}
+                    @{story.username}
                   </p>
                   <p className="text-white/70 text-xs">
-                    {formatTimeAgo(moment.createdAt)}
+                    {formatTimeAgo(story.created_at)}
                   </p>
                 </div>
 
                 {/* Indicator de no visto */}
-                {!moment.isViewed && (
+                {!story.is_viewed && (
                   <div className="absolute top-2 right-2 w-3 h-3 bg-purple-500 rounded-full border-2 border-black" />
                 )}
               </div>
@@ -191,57 +227,17 @@ const MomentsPage = () => {
         )}
       </div>
 
-      {/* Modal de momento seleccionado */}
-      {selectedMoment && (
-        <div className="fixed inset-0 bg-black z-[9999] flex items-center justify-center">
-          <button
-            onClick={handleCloseMoment}
-            className="absolute top-4 right-4 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors z-10"
-          >
-            <ArrowLeft size={20} className="text-white" />
-          </button>
-          
-          <div className="w-full max-w-sm aspect-[9/16] bg-gray-800 rounded-lg overflow-hidden relative">
-            <img
-              src={selectedMoment.thumbnail}
-              alt={`Momento de ${selectedMoment.user.username}`}
-              className="w-full h-full object-cover"
-            />
-            
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-            
-            <div className="absolute bottom-4 left-4 right-4 text-white">
-              <div className="flex items-center gap-3 mb-4">
-                <img
-                  src={selectedMoment.user.avatar}
-                  alt={selectedMoment.user.username}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold">@{selectedMoment.user.username}</p>
-                  <p className="text-sm text-white/70">{formatTimeAgo(selectedMoment.createdAt)}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button className="flex items-center gap-1 hover:scale-110 transition-transform">
-                    <Heart size={20} />
-                    <span className="text-sm">Like</span>
-                  </button>
-                  <button className="flex items-center gap-1 hover:scale-110 transition-transform">
-                    <MessageCircle size={20} />
-                    <span className="text-sm">Comentar</span>
-                  </button>
-                </div>
-                <div className="text-sm text-white/70">
-                  {selectedMoment.views} vistas
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Story Viewer */}
+      <AnimatePresence>
+        {showStoryViewer && selectedStoryIndex !== null && (
+          <StoryViewer
+            stories={stories}
+            initialIndex={selectedStoryIndex}
+            onClose={handleCloseStory}
+            onStoryEnd={handleStoryEnd}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
