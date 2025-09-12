@@ -370,29 +370,24 @@ const InlineCrop = ({
         <div className="absolute inset-0 border-2 border-white/80 rounded-sm shadow-lg" />
       </div>
 
-      {/* Floating control buttons - minimal TikTok style */}
-      <div className="absolute top-4 right-4 flex flex-col gap-3 pointer-events-auto">
+      {/* Floating control - only cancel button */}
+      <div className="absolute top-4 right-4 pointer-events-auto">
         <button
           onClick={onCancel}
           className="w-12 h-12 bg-black/70 hover:bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
         >
           <X className="w-6 h-6" />
         </button>
-        
-        <button
-          onClick={handleSave}
-          className="w-12 h-12 bg-red-500/90 hover:bg-red-500 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
-        >
-          <Check className="w-6 h-6" />
-        </button>
       </div>
 
-      {/* Subtle interaction hint - bottom center */}
+      {/* Auto-save indicator - bottom center */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 pointer-events-none">
         <div className="bg-black/60 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full">
           {isInteracting 
             ? (isDragging ? '👆 Moviendo...' : '🤏 Zoom...') 
-            : '👆 Arrastra • 🤏 Pellizca para zoom'
+            : hasChanges 
+              ? '💾 Guardando automáticamente...'
+              : '👆 Arrastra • 🤏 Pellizca para zoom'
           }
         </div>
       </div>
