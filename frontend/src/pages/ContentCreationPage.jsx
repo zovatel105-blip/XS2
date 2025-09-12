@@ -500,10 +500,17 @@ const ContentCreationPage = () => {
 
   // Handle inline crop save - now saves transform data only
   const handleInlineCropSave = (transformResult) => {
-    if (cropActiveSlot === null) return;
+    console.log('📥 handleInlineCropSave called with:', transformResult);
+    console.log('📍 Current cropActiveSlot:', cropActiveSlot);
+    
+    if (cropActiveSlot === null) {
+      console.log('❌ cropActiveSlot is null, cannot save');
+      return;
+    }
     
     console.log('📥 Received transform data:', transformResult);
     console.log('📍 Current slot:', cropActiveSlot);
+    console.log('📦 Current options[slot].media before update:', options[cropActiveSlot]?.media);
     
     // Update the option media with transform data (no actual cropping)
     const updatedMedia = {
@@ -511,6 +518,7 @@ const ContentCreationPage = () => {
       transform: transformResult.transform // Save position and scale
     };
     
+    console.log('📦 Updated media object:', updatedMedia);
     updateOption(cropActiveSlot, 'media', updatedMedia);
     console.log('💾 Updated option media with transform');
   };
