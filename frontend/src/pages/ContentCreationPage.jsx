@@ -502,17 +502,23 @@ const ContentCreationPage = () => {
     if (cropActiveSlot === null) return;
     
     console.log('📥 Received transform data:', transformResult);
+    console.log('📍 Current slot:', cropActiveSlot);
+    console.log('📦 Current option before update:', options[cropActiveSlot]);
     
     // Update the option media with transform data (no actual cropping)
-    updateOption(cropActiveSlot, 'media', {
+    const updatedMedia = {
       ...options[cropActiveSlot].media,
       transform: transformResult.transform // Save position and scale
-    });
+    };
     
-    console.log('💾 Updated option media with transform:', transformResult.transform);
+    console.log('📦 Updated media data:', updatedMedia);
     
-    // Don't exit crop mode immediately - let the component handle it
-    // setCropActiveSlot(null); // Removed this
+    updateOption(cropActiveSlot, 'media', updatedMedia);
+    
+    // Verify the update worked
+    setTimeout(() => {
+      console.log('✅ Option after update:', options[cropActiveSlot]);
+    }, 100);
   };
 
   // Handle inline crop cancel
