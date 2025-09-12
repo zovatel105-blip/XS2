@@ -315,14 +315,23 @@ const InlineCrop = ({
 
 
   if (!isActive) {
-    // Normal image display when not cropping
+    // Normal image display with applied transform if saved
+    const displayTransform = savedTransform || { scale: 1, translateX: 0, translateY: 0 };
+    
     return (
-      <img
-        src={imageSrc}
-        alt="Preview"
-        className={`w-full h-full object-cover ${className}`}
-        onDragStart={(e) => e.preventDefault()}
-      />
+      <div className={`relative w-full h-full overflow-hidden ${className}`}>
+        <img
+          src={imageSrc}
+          alt="Preview"
+          className="w-full h-full object-cover"
+          style={{
+            transform: `translate(${displayTransform.translateX}px, ${displayTransform.translateY}px) scale(${displayTransform.scale})`,
+            transformOrigin: 'center',
+            transition: 'transform 0.2s ease-out'
+          }}
+          onDragStart={(e) => e.preventDefault()}
+        />
+      </div>
     );
   }
 
