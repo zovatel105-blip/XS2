@@ -39,7 +39,9 @@ from models import (
     # User Audio Models
     UserAudio, UserAudioCreate, UserAudioUpdate, UserAudioResponse, UserAudioUse, AudioPrivacy,
     # Audio Favorites Models
-    AudioFavorite, AudioFavoriteCreate, AudioFavoriteResponse
+    AudioFavorite, AudioFavoriteCreate, AudioFavoriteResponse,
+    # Story Models
+    Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy
 )
 from auth import (
     verify_password, get_password_hash, create_access_token, 
