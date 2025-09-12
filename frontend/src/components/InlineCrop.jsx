@@ -327,16 +327,16 @@ const InlineCrop = ({
 
 
   if (!isActive) {
-    // Smart display: complete image perfectly fitted to layout with no empty areas
+    // Pure layout adaptation: image fills completely, no empty areas, shows as uploaded
     const displayTransform = savedTransform || calculateSmartTransform();
     
     return (
       <div className={`relative w-full h-full overflow-hidden ${className}`} ref={containerRef}>
-        {/* Image perfectly fitted: complete + no empty areas + adapted to layout */}
+        {/* Image fills layout completely - pure adaptation as uploaded */}
         <img
           src={imageSrc}
           alt="Preview"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover" /* Fills layout completely, no empty areas */
           style={{
             transform: `translate(${displayTransform.translateX}px, ${displayTransform.translateY}px) scale(${displayTransform.scale})`,
             transformOrigin: 'center',
