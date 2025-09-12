@@ -172,6 +172,36 @@ const InlineCrop = ({
     }));
   };
 
+  // Global event listeners for smooth gesture handling
+  useEffect(() => {
+    if (!isActive) return;
+
+    const handleGlobalMove = (e) => {
+      if (isInteracting) {
+        handleMove(e);
+      }
+    };
+
+    const handleGlobalEnd = (e) => {
+      if (isInteracting) {
+        handleEnd(e);
+      }
+    };
+
+    // Add global listeners for smooth gesture tracking
+    document.addEventListener('touchmove', handleGlobalMove, { passive: false });
+    document.addEventListener('touchend', handleGlobalEnd);
+    document.addEventListener('mousemove', handleGlobalMove);
+    document.addEventListener('mouseup', handleGlobalEnd);
+
+    return () => {
+      document.removeEventListener('touchmove', handleGlobalMove);
+      document.removeEventListener('touchend', handleGlobalEnd);
+      document.removeEventListener('mousemove', handleGlobalMove);
+      document.removeEventListener('mouseup', handleGlobalEnd);
+    };
+  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance]);
+
   // Generate cropped image
   const generateCrop = useCallback(async () => {
     if (!imageRef.current || !containerRef.current || !canvasRef.current) {
@@ -254,19 +284,23 @@ const InlineCrop = ({
     );
   }
 
-  // Crop mode - interactive overlay
+  // Crop mode - TikTok-style interface
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
-      {/* Interactive image - fills entire container */}
+      {/* Dark semi-transparent overlay outside visible area */}
+      <div className="absolute inset-0 bg-black/40" />
+      
+      {/* Interactive image container */}
       <div
         ref={containerRef}
         className="absolute inset-0 cursor-move select-none"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleTouchStart}
-        onMouseMove={handleTouchMove}
-        onMouseUp={handleTouchEnd}
+        onTouchStart={handleStart}
+        onTouchMove={handleMove}
+        onTouchEnd={handleEnd}
+        onMouseDown={handleStart}
+        onMouseMove={handleMove}
+        onMouseUp={handleEnd}
+        onWheel={handleWheel}
         style={{ touchAction: 'none' }}
       >
         <img
@@ -276,44 +310,51 @@ const InlineCrop = ({
           className="w-full h-full object-cover"
           style={{
             transform: `translate(${transform.translateX}px, ${transform.translateY}px) scale(${transform.scale})`,
-            transformOrigin: 'center'
+            transformOrigin: 'center',
+            transition: isInteracting ? 'none' : 'transform 0.2s ease-out'
           }}
           onDragStart={(e) => e.preventDefault()}
         />
       </div>
 
-      {/* Minimal overlay - only essential controls */}
+      {/* Crop frame with clean, soft lines */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Simple grid overlay */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-30">
+        {/* Rule of thirds grid - minimal and clean */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-20">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="border border-white/50" />
+            <div key={i} className="border border-white/60" />
           ))}
         </div>
+        
+        {/* Crop frame border - soft and clear */}
+        <div className="absolute inset-0 border-2 border-white/80 rounded-sm shadow-lg" />
       </div>
 
-      {/* Floating control buttons - minimal */}
-      <div className="absolute top-4 right-4 flex gap-2 pointer-events-auto">
+      {/* Floating control buttons - minimal TikTok style */}
+      <div className="absolute top-4 right-4 flex flex-col gap-3 pointer-events-auto">
         <button
           onClick={onCancel}
-          className="w-10 h-10 bg-black/80 hover:bg-black/90 rounded-full flex items-center justify-center text-white shadow-lg"
+          className="w-12 h-12 bg-black/70 hover:bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6" />
         </button>
         
         <button
           onClick={handleSave}
-          className="w-10 h-10 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg"
+          className="w-12 h-12 bg-red-500/90 hover:bg-red-500 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
         >
-          <Check className="w-5 h-5" />
+          <Check className="w-6 h-6" />
         </button>
       </div>
 
-      {/* Debug info - bottom left */}
-      <div className="absolute bottom-4 left-4 bg-black/80 text-white text-xs px-3 py-2 rounded-lg pointer-events-none">
-        <div>🔍 {transform.scale.toFixed(2)}x</div>
-        <div>📍 {transform.translateX.toFixed(0)}, {transform.translateY.toFixed(0)}</div>
-        <div>{isDragging ? '👆 Moviendo' : '✋ Toca para mover'}</div>
+      {/* Subtle interaction hint - bottom center */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 pointer-events-none">
+        <div className="bg-black/60 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full">
+          {isInteracting 
+            ? (isDragging ? '👆 Moviendo...' : '🤏 Zoom...') 
+            : '👆 Arrastra • 🤏 Pellizca para zoom'
+          }
+        </div>
       </div>
 
       {/* Hidden canvas for crop generation */}
