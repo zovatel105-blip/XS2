@@ -1,11 +1,12 @@
 /**
- * InlineCrop - Crop functionality directly in the preview area
- * - No modal, works directly over the existing image
- * - Overlay controls on the preview
- * - Touch gestures for repositioning and zoom
+ * InlineCrop - TikTok-style crop functionality directly in the preview area
+ * - Mobile-first touch gestures with desktop support
+ * - Minimalist TikTok-inspired UI
+ * - Smooth pinch-to-zoom with bounce limits
+ * - Drag to reposition without going outside bounds
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Check, X, RotateCcw, Move } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 const InlineCrop = ({
   isActive = false,
@@ -25,6 +26,7 @@ const InlineCrop = ({
   const [isDragging, setIsDragging] = useState(false);
   const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
   const [lastDistance, setLastDistance] = useState(0);
+  const [isInteracting, setIsInteracting] = useState(false);
 
   const containerRef = useRef(null);
   const imageRef = useRef(null);
@@ -34,80 +36,66 @@ const InlineCrop = ({
   useEffect(() => {
     if (isActive) {
       setTransform({ scale: 1, translateX: 0, translateY: 0 });
+      setIsInteracting(false);
     }
   }, [isActive]);
 
-  // Add global event listeners for better touch support
-  useEffect(() => {
-    if (!isActive) return;
-
-    const handleGlobalTouchMove = (e) => {
-      if (isDragging) {
-        handleTouchMove(e);
-      }
-    };
-
-    const handleGlobalTouchEnd = (e) => {
-      if (isDragging) {
-        handleTouchEnd(e);
-      }
-    };
-
-    // Add global listeners
-    document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
-    document.addEventListener('touchend', handleGlobalTouchEnd);
-    document.addEventListener('mousemove', handleGlobalTouchMove);
-    document.addEventListener('mouseup', handleGlobalTouchEnd);
-
-    return () => {
-      document.removeEventListener('touchmove', handleGlobalTouchMove);
-      document.removeEventListener('touchend', handleGlobalTouchEnd);
-      document.removeEventListener('mousemove', handleGlobalTouchMove);
-      document.removeEventListener('mouseup', handleGlobalTouchEnd);
-    };
-  }, [isActive, isDragging]);
-
-  // Get distance between two touches
+  // Get distance between two touches (pinch gesture detection)
   const getDistance = (touches) => {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle touch start - simplified for mobile
-  const handleTouchStart = (e) => {
+  // Handle start of touch/mouse interaction
+  const handleStart = (e) => {
     if (!isActive) return;
     
-    const touches = e.touches || [e]; // Support both touch and mouse
-    console.log(`🎯 Touch start: ${touches.length} fingers`);
+    e.preventDefault();
+    setIsInteracting(true);
     
-    if (touches.length === 1) {
+    if (e.touches) {
+      // Touch event
+      const touches = e.touches;
+      
+      if (touches.length === 1) {
+        // Single finger - drag
+        setIsDragging(true);
+        setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
+      } else if (touches.length === 2) {
+        // Two fingers - pinch zoom
+        setIsDragging(false);
+        setLastDistance(getDistance(touches));
+        
+        // Center point between fingers for zoom origin
+        const centerX = (touches[0].clientX + touches[1].clientX) / 2;
+        const centerY = (touches[0].clientY + touches[1].clientY) / 2;
+        setLastTouch({ x: centerX, y: centerY });
+      }
+    } else {
+      // Mouse event
       setIsDragging(true);
-      setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
-      console.log('🖐️ Single touch - drag mode');
-    } else if (touches.length === 2) {
-      setIsDragging(false);
-      setLastDistance(getDistance(touches));
-      console.log('🤏 Two fingers - pinch mode');
+      setLastTouch({ x: e.clientX, y: e.clientY });
     }
   };
 
-  // Handle touch move - simplified for mobile
-  const handleTouchMove = (e) => {
-    if (!isActive) return;
+  // Handle movement during interaction
+  const handleMove = (e) => {
+    if (!isActive || !isInteracting) return;
     
-    e.preventDefault(); // Critical for mobile
+    e.preventDefault();
     e.stopPropagation();
     
-    const touches = e.touches || [e]; // Support both touch and mouse
-    
-    if (touches.length === 1 && isDragging) {
-      // Single finger drag - move image
-      const touch = touches[0];
-      const deltaX = touch.clientX - lastTouch.x;
-      const deltaY = touch.clientY - lastTouch.y;
+    if (e.touches) {
+      // Touch event
+      const touches = e.touches;
       
-      if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) { // Avoid micro movements
+      if (touches.length === 1 && isDragging) {
+        // Single finger drag - move image smoothly
+        const touch = touches[0];
+        const deltaX = touch.clientX - lastTouch.x;
+        const deltaY = touch.clientY - lastTouch.y;
+        
         setTransform(prev => ({
           ...prev,
           translateX: prev.translateX + deltaX,
@@ -115,32 +103,73 @@ const InlineCrop = ({
         }));
         
         setLastTouch({ x: touch.clientX, y: touch.clientY });
-        console.log(`🔄 Moved: ${deltaX.toFixed(1)}, ${deltaY.toFixed(1)}`);
-      }
-      
-    } else if (touches.length === 2) {
-      // Two finger pinch - zoom image
-      const distance = getDistance(touches);
-      const scaleFactor = distance / lastDistance;
-      
-      if (scaleFactor > 0.5 && scaleFactor < 2) { // Reasonable scale bounds
-        setTransform(prev => ({
-          ...prev,
-          scale: Math.max(0.3, Math.min(4, prev.scale * scaleFactor))
-        }));
         
-        setLastDistance(distance);
-        console.log(`🔍 Zoom: ${(transform.scale * scaleFactor).toFixed(2)}x`);
+      } else if (touches.length === 2) {
+        // Two finger pinch - zoom with limits and bounce
+        const distance = getDistance(touches);
+        const scaleFactor = distance / lastDistance;
+        
+        if (scaleFactor > 0.5 && scaleFactor < 2) { // Prevent extreme scaling
+          setTransform(prev => {
+            let newScale = prev.scale * scaleFactor;
+            
+            // Apply limits with smooth bounce effect
+            if (newScale < 0.5) {
+              newScale = 0.5 + (0.5 - newScale) * 0.1; // Bounce back from minimum
+            } else if (newScale > 3) {
+              newScale = 3 + (newScale - 3) * 0.1; // Bounce back from maximum
+            }
+            
+            return {
+              ...prev,
+              scale: newScale
+            };
+          });
+          
+          setLastDistance(distance);
+        }
       }
+    } else if (isDragging) {
+      // Mouse drag
+      const deltaX = e.clientX - lastTouch.x;
+      const deltaY = e.clientY - lastTouch.y;
+      
+      setTransform(prev => ({
+        ...prev,
+        translateX: prev.translateX + deltaX,
+        translateY: prev.translateY + deltaY
+      }));
+      
+      setLastTouch({ x: e.clientX, y: e.clientY });
     }
   };
 
-  // Handle touch end - simplified
-  const handleTouchEnd = (e) => {
+  // Handle end of interaction
+  const handleEnd = (e) => {
     if (!isActive) return;
     
     setIsDragging(false);
-    console.log('✋ Touch ended');
+    setIsInteracting(false);
+    
+    // Apply scale limits and bounce back if exceeded
+    setTransform(prev => ({
+      ...prev,
+      scale: Math.max(0.5, Math.min(3, prev.scale))
+    }));
+  };
+
+  // Handle mouse wheel for desktop zoom
+  const handleWheel = (e) => {
+    if (!isActive) return;
+    
+    e.preventDefault();
+    
+    const scaleDelta = e.deltaY > 0 ? 0.9 : 1.1;
+    
+    setTransform(prev => ({
+      ...prev,
+      scale: Math.max(0.5, Math.min(3, prev.scale * scaleDelta))
+    }));
   };
 
   // Reset transform
