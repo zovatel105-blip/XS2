@@ -1,5 +1,5 @@
 // Test Supabase connection
-import { createClient } from '@supabase/supabase-js'
+const { createClient } = require('./frontend/node_modules/@supabase/supabase-js')
 
 const supabaseUrl = 'https://ixpxjfgnkjanltukhvvz.supabase.co'
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4cHhqZmdua2phbmx0dWtoZHZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3MDc3NTMsImV4cCI6MjA3MzI4Mzc1M30.eUYpYcIffqQIW3eabJoswnR_RGf0-UctYsB-nTsXBIY'
