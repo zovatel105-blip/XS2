@@ -269,7 +269,10 @@ const InlineCrop = ({
           alt="Adjust preview"
           className="w-full h-full object-cover"
           style={{
-            objectPosition: `${position.x}% ${position.y}%`
+            objectPosition: `${position.x}% ${position.y}%`,
+            transform: `scale(${scale})`,
+            transformOrigin: 'center',
+            transition: isInteracting ? 'none' : 'transform 0.2s ease-out'
           }}
           onDragStart={(e) => e.preventDefault()}
         />
