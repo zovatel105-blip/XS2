@@ -47,37 +47,23 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle double click/tap to save with proper timing
+  // Handle double click/tap to save
   const handleDoubleClick = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('🖱️ Double click detected - isActive:', isActive, 'hasChanges:', hasChanges);
-    
-    if (!isActive || !hasChanges) {
-      console.log('❌ Save ignored - not active or no changes');
-      return;
-    }
-    
-    console.log('💾 BEFORE SAVE - Current state:');
-    console.log('   position:', position);
-    console.log('   scale:', scale);
+    if (!isActive || !hasChanges) return;
     
     const transformData = {
       transform: {
-        position: { x: position.x, y: position.y }, // Explicit copy
+        position: { x: position.x, y: position.y },
         scale: scale
       },
       originalImageSrc: imageSrc
     };
     
-    console.log('📤 SAVING transform data:', transformData);
-    console.log('📤 Expected to see this position/scale after save:', transformData.transform);
-    
     onSave(transformData);
     setHasChanges(false);
-    
-    console.log('✅ Save completed - parent will handle crop exit timing');
   }, [isActive, hasChanges, position, scale, imageSrc, onSave]);
 
   // Alternative save method - keyboard shortcut
