@@ -49,7 +49,62 @@ const InlineCrop = ({
     }
   }, [isActive]);
 
-  // Auto-save after interaction ends
+  // Generate cropped image - moved up to avoid initialization error
+  const generateCrop = useCallback(async () => {
+    if (!imageRef.current || !containerRef.current || !canvasRef.current) {
+      return null;
+    }
+
+    const img = imageRef.current;
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) return null;
+
+    // Set canvas size to container size
+    const rect = container.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Save context
+    ctx.save();
+
+    // Apply transform to draw the image as it appears to user
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(transform.scale, transform.scale);
+    ctx.translate(
+      transform.translateX / transform.scale,
+      transform.translateY / transform.scale
+    );
+
+    // Draw image centered
+    ctx.drawImage(
+      img,
+      -img.naturalWidth / 2,
+      -img.naturalHeight / 2,
+      img.naturalWidth,
+      img.naturalHeight
+    );
+
+    ctx.restore();
+
+    // Convert to blob
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          resolve(null);
+        }
+      }, 'image/jpeg', 0.95);
+    });
+  }, [transform]);
+
+  // Auto-save after interaction ends - moved after generateCrop
   const scheduleAutoSave = useCallback(() => {
     // Clear previous timeout
     if (autoSaveTimeoutRef.current) {
