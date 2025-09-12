@@ -112,36 +112,66 @@ const InlineCrop = ({
 
   // Handle movement
   const handleMove = useCallback((e) => {
-    if (!isActive || !isInteracting || !isDragging) return;
+    if (!isActive || !isInteracting) return;
     
     e.preventDefault();
     e.stopPropagation();
     
-    let clientX, clientY;
     if (e.touches) {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
+      const touches = e.touches;
+      
+      if (touches.length === 1 && isDragging) {
+        // Single finger drag
+        const touch = touches[0];
+        const deltaX = touch.clientX - lastTouch.x;
+        const deltaY = touch.clientY - lastTouch.y;
+        
+        // Better sensitivity for drag
+        const sensitivity = 0.3;
+        const deltaPercentX = deltaX * sensitivity;
+        const deltaPercentY = deltaY * sensitivity;
+        
+        setPosition(prev => ({
+          x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
+          y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
+        }));
+        
+        setLastTouch({ x: touch.clientX, y: touch.clientY });
+        setHasChanges(true);
+        
+      } else if (touches.length === 2) {
+        // Pinch zoom
+        const distance = getDistance(touches);
+        const scaleFactor = distance / lastDistance;
+        
+        if (scaleFactor > 0.8 && scaleFactor < 1.2) {
+          setScale(prev => {
+            const newScale = prev * scaleFactor;
+            return Math.max(1, Math.min(3, newScale)); // Scale 1x to 3x
+          });
+          
+          setLastDistance(distance);
+          setHasChanges(true);
+        }
+      }
+    } else if (isDragging) {
+      // Mouse drag
+      const deltaX = e.clientX - lastTouch.x;
+      const deltaY = e.clientY - lastTouch.y;
+      
+      const sensitivity = 0.3;
+      const deltaPercentX = deltaX * sensitivity;
+      const deltaPercentY = deltaY * sensitivity;
+      
+      setPosition(prev => ({
+        x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
+        y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
+      }));
+      
+      setLastTouch({ x: e.clientX, y: e.clientY });
+      setHasChanges(true);
     }
-    
-    const deltaX = clientX - lastTouch.x;
-    const deltaY = clientY - lastTouch.y;
-    
-    // Convert movement to object-position percentage change (very conservative)
-    const sensitivity = 0.1; // Very low sensitivity
-    const deltaPercentX = deltaX * sensitivity;
-    const deltaPercentY = deltaY * sensitivity;
-    
-    setPosition(prev => ({
-      x: Math.max(0, Math.min(100, prev.x + deltaPercentX)),
-      y: Math.max(0, Math.min(100, prev.y + deltaPercentY))
-    }));
-    
-    setLastTouch({ x: clientX, y: clientY });
-    setHasChanges(true);
-  }, [isActive, isInteracting, isDragging, lastTouch]);
+  }, [isActive, isInteracting, isDragging, lastTouch, lastDistance]);
 
   // Handle end of interaction
   const handleEnd = useCallback(() => {
