@@ -290,16 +290,12 @@ const InlineCrop = ({
       {/* Dark semi-transparent overlay outside visible area */}
       <div className="absolute inset-0 bg-black/40" />
       
-      {/* Interactive image container */}
+      {/* Interactive image container - REMOVED redundant local handlers */}
       <div
         ref={containerRef}
         className="absolute inset-0 cursor-move select-none"
         onTouchStart={handleStart}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEnd}
         onMouseDown={handleStart}
-        onMouseMove={handleMove}
-        onMouseUp={handleEnd}
         onWheel={handleWheel}
         style={{ touchAction: 'none' }}
       >
