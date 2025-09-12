@@ -41,7 +41,17 @@ const InlineCrop = ({
 
   // Handle double click/tap to save
   const handleDoubleClick = useCallback(() => {
-    if (!isActive || !hasChanges) return;
+    console.log('🖱️ Double click detected - isActive:', isActive, 'hasChanges:', hasChanges);
+    
+    if (!isActive) {
+      console.log('❌ Double click ignored - not active');
+      return;
+    }
+    
+    if (!hasChanges) {
+      console.log('❌ Double click ignored - no changes to save');
+      return;
+    }
     
     console.log('💾 Double click save - position:', position, 'scale:', scale);
     const transformData = {
@@ -52,9 +62,14 @@ const InlineCrop = ({
       originalImageSrc: imageSrc
     };
     
+    console.log('📤 Sending transform data via onSave:', transformData);
     onSave(transformData);
     setHasChanges(false);
-    setTimeout(() => onCancel(), 200);
+    
+    setTimeout(() => {
+      console.log('🚪 Calling onCancel after save');
+      onCancel();
+    }, 200);
   }, [isActive, hasChanges, position, scale, imageSrc, onSave, onCancel]);
 
   // Handle start of interaction
