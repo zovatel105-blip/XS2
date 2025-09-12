@@ -250,6 +250,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       <InlineCrop
                         isActive={cropActiveSlot === slotIndex}
                         imageSrc={option.media.url}
+                        savedTransform={option.media.transform || null}
                         onSave={onInlineCropSave}
                         onCancel={onInlineCropCancel}
                         className="w-full h-full object-cover"
