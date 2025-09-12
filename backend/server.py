@@ -3609,7 +3609,8 @@ async def create_poll(
             "media": {
                 "type": option.media_type,
                 "url": option.media_url,
-                "thumbnail": option.thumbnail_url
+                "thumbnail": option.thumbnail_url,
+                "transform": option.media_transform  # ✅ Include transform data in response
             } if option.media_url else None
         }
         options_response.append(option_dict)
