@@ -968,7 +968,7 @@ const ProfilePage = () => {
                   alt="Compartir" 
                   className="w-5 h-5 sm:w-6 sm:h-6" 
                   style={{ 
-                    filter: 'brightness(0) invert(1) drop-shadow(0 0 0.5px white) drop-shadow(0 0 0.5px white)',
+                    filter: 'brightness(0) drop-shadow(0 0 0.5px black)',
                     imageRendering: 'crisp-edges'
                   }}
                 />
