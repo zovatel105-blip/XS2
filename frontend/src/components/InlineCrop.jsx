@@ -330,21 +330,21 @@ const InlineCrop = ({
         />
       </div>
 
-      {/* Crop frame with clean, soft lines */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Crop frame with clean, soft lines - positioned above blur */}
+      <div className="absolute inset-0 pointer-events-none z-20">
         {/* Rule of thirds grid - minimal and clean */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-20">
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-25">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="border border-white/60" />
+            <div key={i} className="border border-white" />
           ))}
         </div>
         
         {/* Crop frame border - soft and clear */}
-        <div className="absolute inset-0 border-2 border-white/80 rounded-sm shadow-lg" />
+        <div className="absolute inset-0 border-2 border-white/90 rounded-sm shadow-xl" />
       </div>
 
       {/* Floating control - only cancel button */}
-      <div className="absolute top-4 right-4 pointer-events-auto">
+      <div className="absolute top-4 right-4 pointer-events-auto z-30">
         <button
           onClick={onCancel}
           className="w-12 h-12 bg-black/70 hover:bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-200"
