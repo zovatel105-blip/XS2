@@ -3559,6 +3559,7 @@ async def create_poll(
             media_type=option_data.get("media_type"),
             media_url=option_data.get("media_url"),
             thumbnail_url=option_data.get("thumbnail_url"),
+            media_transform=option_data.get("media_transform"),  # ✅ Include transform data
             mentioned_users=option_data.get("mentioned_users", [])
         )
         options.append(option)
