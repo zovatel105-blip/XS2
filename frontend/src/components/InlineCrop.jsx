@@ -47,7 +47,6 @@ const InlineCrop = ({
 
   const containerRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
-  const prevActiveRef = useRef(isActive);
 
   // Get distance between touches for pinch gesture
   const getDistance = (touches) => {
