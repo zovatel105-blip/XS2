@@ -172,11 +172,6 @@ const InlineCrop = ({
     }));
   };
 
-  // Reset transform
-  const handleReset = () => {
-    setTransform({ scale: 1, translateX: 0, translateY: 0 });
-  };
-
   // Generate cropped image
   const generateCrop = useCallback(async () => {
     if (!imageRef.current || !containerRef.current || !canvasRef.current) {
