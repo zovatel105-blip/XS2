@@ -76,6 +76,13 @@ const InlineCrop = ({
     };
   }, []);
 
+  // Get distance between touches for pinch gesture
+  const getDistance = (touches) => {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
   // Handle start of interaction
   const handleStart = (e) => {
     if (!isActive) return;
@@ -84,9 +91,19 @@ const InlineCrop = ({
     setIsInteracting(true);
     
     if (e.touches) {
-      const touch = e.touches[0];
-      setIsDragging(true);
-      setLastTouch({ x: touch.clientX, y: touch.clientY });
+      const touches = e.touches;
+      if (touches.length === 1) {
+        // Single touch - drag
+        setIsDragging(true);
+        setLastTouch({ x: touches[0].clientX, y: touches[0].clientY });
+      } else if (touches.length === 2) {
+        // Two finger pinch
+        setIsDragging(false);
+        setLastDistance(getDistance(touches));
+        const centerX = (touches[0].clientX + touches[1].clientX) / 2;
+        const centerY = (touches[0].clientY + touches[1].clientY) / 2;
+        setLastTouch({ x: centerX, y: centerY });
+      }
     } else {
       setIsDragging(true);  
       setLastTouch({ x: e.clientX, y: e.clientY });
