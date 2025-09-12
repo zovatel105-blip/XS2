@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, User, Hash, Music, ArrowLeft, Loader, X } from 'lucide-react';
+import { Search, User, Hash, Music, ArrowLeft, Loader, X, TrendingUp, Star, Filter, Sparkles, Grid3X3, Users, Zap } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
+import { useAuth } from '../contexts/AuthContext';
 import searchService from '../services/searchService';
 import SearchResultItem from '../components/search/SearchResultItem';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
 import DiscoverySection from '../components/search/DiscoverySection';
 import PostsIcon from '../components/icons/PostsIcon';
+import LogoWithQuickActions from '../components/LogoWithQuickActions';
 
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,10 +21,12 @@ const SearchPage = () => {
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialize from URL params
@@ -41,11 +45,11 @@ const SearchPage = () => {
   }, []);
 
   const tabs = [
-    { id: 'all', label: 'Todo', icon: Search },
-    { id: 'users', label: 'Usuarios', icon: User },
-    { id: 'posts', label: 'Posts', icon: PostsIcon },
-    { id: 'hashtags', label: 'Hashtags', icon: Hash },
-    { id: 'sounds', label: 'Sonidos', icon: Music },
+    { id: 'all', label: 'Todo', icon: Sparkles, color: 'from-purple-500 to-pink-500', description: 'Buscar en todo' },
+    { id: 'users', label: 'Usuarios', icon: User, color: 'from-blue-500 to-cyan-500', description: 'Encuentra personas' },
+    { id: 'posts', label: 'Posts', icon: PostsIcon, color: 'from-green-500 to-emerald-500', description: 'Descubre contenido' },
+    { id: 'hashtags', label: 'Hashtags', icon: Hash, color: 'from-orange-500 to-red-500', description: 'Trending topics' },
+    { id: 'sounds', label: 'Sonidos', icon: Music, color: 'from-indigo-500 to-purple-500', description: 'Audio popular' },
   ];
 
   const updateURLParams = (query, filter) => {
