@@ -1052,6 +1052,18 @@ backend:
           comment: "✅ COMPATIBILIDAD UUID AUDIO COMPLETAMENTE IMPLEMENTADA (2025-01-27): PROBLEMA: Las publicaciones del usuario fueron creadas con music_id igual al UUID del audio (sin prefijo 'user_audio_'), pero función actualizada espera prefijo. SOLUCIÓN IMPLEMENTADA: 1) ✅ FUNCIÓN get_music_info() MEJORADA: Agregada detección automática de UUID con regex pattern, soporte para formato antiguo (UUID directo) y nuevo (user_audio_UUID), mantiene ID original para consistencia. 2) ✅ ENDPOINTS DE BÚSQUEDA MEJORADOS: Estrategia 2.5 - búsqueda con UUID sin prefijo cuando viene con prefijo, Estrategia 2.6 - búsqueda con UUID con prefijo cuando viene sin prefijo, compatibilidad bidireccional completa. 3) ✅ LOGGING DETALLADO: Mensajes específicos de compatibilidad, debugging robusto para identificar problemas futuros. RESULTADO: Sistema completamente compatible - posts antiguos (UUID directo) y nuevos (UUID con prefijo) funcionan perfectamente sin importar el formato de entrada."
 
 frontend:
+  - task: "Supabase Poll Service Testing with Authentication"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/TestSupabasePage.jsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ SUPABASE AUTHENTICATION FAILING - CRITICAL EMAIL VALIDATION ISSUE (2025-01-13): Comprehensive testing of Supabase Poll Service reveals critical authentication failure. STEP 1 ✅ SUCCESS: Supabase connection test passed successfully. STEP 2 ❌ CRITICAL FAILURE: Authentication step fails with 'Email address testuser_[timestamp]@test.com is invalid' error from Supabase auth API (400 status). This prevents all subsequent tests (Steps 3-8) from running. ROOT CAUSE: Supabase email validation is rejecting dynamically generated test emails. The test creates emails like 'testuser_1757739166341@test.com' but Supabase considers them invalid. IMPACT: Cannot test poll creation, media transform persistence, voting, or likes functionality without successful authentication. RECOMMENDATION: Fix email generation in TestSupabasePage.jsx to use valid email format or configure Supabase to accept test emails."
+
   - task: "Nueva Página de Autenticación (NewAuthPage)"
     implemented: true
     working: true
