@@ -68,11 +68,12 @@ const SettingsPage = () => {
         notifications_follows: user.notifications_follows ?? true,
         notifications_mentions: user.notifications_mentions ?? true,
         
-        // Discovery & Interaction settings
-        discoverable: user.discoverable ?? true,
-        require_follow_approval: user.require_follow_approval ?? false,
-        allow_comments: user.allow_comments ?? true,
-        allow_shares: user.allow_shares ?? true,
+        // Performance & Data settings (APK specific)
+        video_quality: user.video_quality ?? 'auto',
+        wifi_only: user.wifi_only ?? false,
+        battery_saver: user.battery_saver ?? false,
+        auto_cache: user.auto_cache ?? true,
+        background_sync: user.background_sync ?? true,
         
         // Language & Accessibility settings
         app_language: user.app_language ?? 'es',
