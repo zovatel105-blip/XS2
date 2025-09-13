@@ -386,28 +386,51 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Discovery & Interaction Settings */}
+          {/* Performance & Data Settings */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <Users className="w-5 h-5" />
-                Descubrimiento e Interacción
+                <Monitor className="w-5 h-5" />
+                Rendimiento y Datos
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <Eye className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Settings className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Perfil Sugerido</h3>
+                    <h3 className="font-medium text-gray-900">Calidad de Video</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Permitir que tu perfil aparezca en recomendaciones y búsquedas
+                      Ajusta la calidad de reproducción de videos
+                    </p>
+                  </div>
+                </div>
+                <select 
+                  value={settings.video_quality || 'auto'}
+                  onChange={(e) => handleSettingsChange('video_quality', e.target.value)}
+                  disabled={loading}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                >
+                  <option value="auto">Automática</option>
+                  <option value="high">Alta (HD)</option>
+                  <option value="medium">Media</option>
+                  <option value="low">Baja (Ahorro datos)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Globe className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Solo WiFi</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Reproducir videos solo cuando esté conectado a WiFi
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.discoverable}
-                  onCheckedChange={(value) => handleSettingsChange('discoverable', value)}
+                  checked={settings.wifi_only}
+                  onCheckedChange={(value) => handleSettingsChange('wifi_only', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
@@ -415,17 +438,17 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <Users className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Save className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Solicitudes de Seguimiento</h3>
+                    <h3 className="font-medium text-gray-900">Ahorro de Batería</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Requerir aprobación antes de que otros puedan seguirte
+                      Reducir animaciones y efectos para ahorrar batería
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.require_follow_approval}
-                  onCheckedChange={(value) => handleSettingsChange('require_follow_approval', value)}
+                  checked={settings.battery_saver}
+                  onCheckedChange={(value) => handleSettingsChange('battery_saver', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
@@ -433,17 +456,17 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <MessageCircle className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Settings className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Comentarios en Publicaciones</h3>
+                    <h3 className="font-medium text-gray-900">Cache Automático</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Permitir que otros comenten en tus publicaciones
+                      Guardar contenido en cache para acceso offline
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.allow_comments}
-                  onCheckedChange={(value) => handleSettingsChange('allow_comments', value)}
+                  checked={settings.auto_cache}
+                  onCheckedChange={(value) => handleSettingsChange('auto_cache', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
@@ -451,17 +474,17 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <Share className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Bell className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Compartir Publicaciones</h3>
+                    <h3 className="font-medium text-gray-900">Sincronización en Segundo Plano</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Permitir que otros compartan tus publicaciones
+                      Sincronizar contenido cuando la app está cerrada
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.allow_shares}
-                  onCheckedChange={(value) => handleSettingsChange('allow_shares', value)}
+                  checked={settings.background_sync}
+                  onCheckedChange={(value) => handleSettingsChange('background_sync', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
