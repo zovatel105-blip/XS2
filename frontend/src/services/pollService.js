@@ -140,8 +140,8 @@ class PollService {
     try {
       const { limit = 20, offset = 0 } = params;
       
-      // Get current user's following list first
-      const response = await fetch(`${this.baseURL}/users/following`, {
+      // Use the new backend endpoint that filters polls by followed users
+      const response = await fetch(`${this.baseURL}/polls/following?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -150,37 +150,12 @@ class PollService {
         if (response.status === 401) {
           throw new Error('No estás autenticado');
         }
-        throw new Error('Error al obtener usuarios seguidos');
+        throw new Error('Error al obtener publicaciones de usuarios seguidos');
       }
 
-      const followingData = await response.json();
+      const followingPolls = await response.json();
       
-      // If user doesn't follow anyone, return empty array
-      if (!followingData.following || followingData.following.length === 0) {
-        return [];
-      }
-
-      // Extract followed user IDs
-      const followedUserIds = followingData.following.map(user => user.id);
-      
-      // Get polls from followed users
-      const pollsResponse = await fetch(`${this.baseURL}/polls?limit=${limit}&offset=${offset}`, {
-        method: 'GET',
-        headers: this.getAuthHeaders(),
-      });
-
-      if (!pollsResponse.ok) {
-        throw new Error('Error al cargar publicaciones');
-      }
-
-      const allPolls = await pollsResponse.json();
-      
-      // Filter polls to only include those from followed users
-      const followingPolls = allPolls.filter(poll => 
-        followedUserIds.includes(poll.author_id || poll.author?.id)
-      );
-
-      // Transform and return the filtered polls
+      // Transform and return the polls (they're already filtered by the backend)
       return followingPolls.map(poll => this.transformPollData(poll));
       
     } catch (error) {
