@@ -1766,7 +1766,7 @@ async def update_settings(
     settings_data: UserSettings,
     current_user: UserResponse = Depends(get_current_user)
 ):
-    """Update user settings (privacy, notifications, content, account)"""
+    """Update user settings (privacy, notifications, discovery, language, account)"""
     update_fields = {}
     
     # Privacy settings
@@ -1791,11 +1791,23 @@ async def update_settings(
     if settings_data.notifications_mentions is not None:
         update_fields["notifications_mentions"] = settings_data.notifications_mentions
     
-    # Content settings
-    if settings_data.auto_play_videos is not None:
-        update_fields["auto_play_videos"] = settings_data.auto_play_videos
-    if settings_data.show_mature_content is not None:
-        update_fields["show_mature_content"] = settings_data.show_mature_content
+    # Discovery & Interaction settings
+    if settings_data.discoverable is not None:
+        update_fields["discoverable"] = settings_data.discoverable
+    if settings_data.require_follow_approval is not None:
+        update_fields["require_follow_approval"] = settings_data.require_follow_approval
+    if settings_data.allow_comments is not None:
+        update_fields["allow_comments"] = settings_data.allow_comments
+    if settings_data.allow_shares is not None:
+        update_fields["allow_shares"] = settings_data.allow_shares
+    
+    # Language & Accessibility settings
+    if settings_data.app_language is not None:
+        update_fields["app_language"] = settings_data.app_language
+    if settings_data.dark_mode is not None:
+        update_fields["dark_mode"] = settings_data.dark_mode
+    if settings_data.large_text is not None:
+        update_fields["large_text"] = settings_data.large_text
     
     # Account settings
     if settings_data.two_factor_enabled is not None:
