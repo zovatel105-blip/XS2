@@ -35,21 +35,49 @@ const BottomNavigation = ({ onCreatePoll }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLongPressing, setIsLongPressing] = useState(false);
+  const [currentMode, setCurrentMode] = useState('feed'); // 'feed', 'following', 'explore'
   const longPressTimer = useRef(null);
+
+  // Detectar el modo actual basado en la ruta
+  useEffect(() => {
+    if (location.pathname === '/feed') {
+      setCurrentMode('feed');
+    } else if (location.pathname === '/following') {
+      setCurrentMode('following');
+    } else if (location.pathname === '/explore') {
+      setCurrentMode('explore');
+    }
+  }, [location.pathname]);
 
   // Long press handlers for home button
   const handleTouchStart = useCallback(() => {
-    setIsLongPressing(false);
+    setIsLongPressing(true);
     longPressTimer.current = setTimeout(() => {
-      setIsLongPressing(true);
       // Vibration feedback if available
       if (navigator.vibrate) {
         navigator.vibrate(50);
       }
-      // Navigate to Following page
-      navigate('/following');
+      
+      // Ciclo: feed → following → explore → feed
+      let nextMode = 'feed';
+      let nextPath = '/feed';
+      
+      if (currentMode === 'feed') {
+        nextMode = 'following';
+        nextPath = '/following';
+      } else if (currentMode === 'following') {
+        nextMode = 'explore';
+        nextPath = '/explore';
+      } else if (currentMode === 'explore') {
+        nextMode = 'feed';
+        nextPath = '/feed';
+      }
+      
+      setCurrentMode(nextMode);
+      navigate(nextPath);
+      setIsLongPressing(false);
     }, 800); // 800ms for long press
-  }, [navigate]);
+  }, [navigate, currentMode]);
 
   const handleTouchEnd = useCallback(() => {
     if (longPressTimer.current) {
@@ -70,6 +98,35 @@ const BottomNavigation = ({ onCreatePoll }) => {
   const handleMouseLeave = useCallback(() => {
     handleTouchEnd();
   }, [handleTouchEnd]);
+
+  // Función para obtener el color y texto basado en el modo actual
+  const getModeStyles = () => {
+    switch (currentMode) {
+      case 'following':
+        return {
+          bgColor: 'bg-purple-50',
+          textColor: 'text-purple-600',
+          iconColor: 'text-purple-600',
+          label: 'Following'
+        };
+      case 'explore':
+        return {
+          bgColor: 'bg-orange-50',
+          textColor: 'text-orange-600',
+          iconColor: 'text-orange-600',
+          label: 'Explorar'
+        };
+      default:
+        return {
+          bgColor: 'bg-blue-50',
+          textColor: 'text-blue-600',
+          iconColor: 'text-blue-600',
+          label: 'Seguidos'
+        };
+    }
+  };
+
+  const modeStyles = getModeStyles();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200/50 shadow-lg z-50">
