@@ -33,9 +33,11 @@ const TestSupabasePage = () => {
       // Step 2: Test Supabase Authentication
       addResult('2', 'running', 'Testing Supabase Authentication...');
       
-      const testEmail = `testuser${Date.now()}@example.com`;
+      // Use a shorter timestamp to avoid email length issues
+      const shortTimestamp = Date.now().toString().slice(-6); // Last 6 digits
+      const testEmail = `test${shortTimestamp}@gmail.com`; // Use gmail.com which is widely accepted
       const testPassword = 'TestPass123!';
-      const testUsername = 'testuser_' + Date.now();
+      const testUsername = 'testuser_' + shortTimestamp;
       
       // Sign up test user
       const { user: signUpUser, error: signUpError } = await supabaseAuthService.signUp(
