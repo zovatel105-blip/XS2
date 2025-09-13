@@ -74,36 +74,28 @@ const SettingsPage = () => {
     setLoading(true);
     
     try {
-      const response = await apiRequest('/auth/settings', {
+      const updatedUser = await apiRequest('/api/auth/settings', {
         method: 'PUT',
         body: JSON.stringify({ [field]: value })
       });
 
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setSettings(prev => ({ ...prev, [field]: value }));
-        
-        toast({
-          title: "Configuración actualizada",
-          description: "Los cambios se han guardado exitosamente",
-          variant: "default"
-        });
-
-        // Refresh user data
-        await refreshUser();
-      } else {
-        const errorData = await response.json();
-        toast({
-          title: "Error al actualizar",
-          description: errorData.detail || "No se pudo actualizar la configuración",
-          variant: "destructive"
-        });
-      }
+      // Update local settings state
+      setSettings(prev => ({ ...prev, [field]: value }));
+      
+      // Update user context with new data
+      setUser(updatedUser);
+      
+      toast({
+        title: "Configuración actualizada",
+        description: "Los cambios se han guardado exitosamente",
+        variant: "default"
+      });
+      
     } catch (error) {
       console.error('Error updating settings:', error);
       toast({
-        title: "Error de conexión",
-        description: "No se pudo conectar con el servidor",
+        title: "Error de servidor",
+        description: error.message || "No se pudo actualizar la configuración",
         variant: "destructive"
       });
     } finally {
