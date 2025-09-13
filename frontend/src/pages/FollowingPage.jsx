@@ -534,22 +534,6 @@ const FollowingPage = () => {
           <LogoWithQuickActions size={24} />
         </div>
 
-        {/* Back button */}
-        <button
-          onClick={() => navigate('/feed')}
-          className="fixed top-4 left-4 z-[9999] w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center hover:bg-black/70 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Following indicator */}
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9998] px-4 py-2 bg-purple-500/90 backdrop-blur-md rounded-full border border-purple-400/30 shadow-lg">
-          <div className="flex items-center space-x-2">
-            <Users className="w-4 h-4 text-white" />
-            <span className="text-white text-sm font-medium">Following</span>
-          </div>
-        </div>
-
         {/* Stories overlay en la parte superior */}
         <div className="fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
           <div className="pt-safe-top">
