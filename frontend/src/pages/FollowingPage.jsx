@@ -49,16 +49,8 @@ const FollowingPage = () => {
         setIsLoading(true);
         setError(null);
         
-        // TODO: Replace with actual API call to get following polls
-        // For now, we'll use regular polls and add a filter simulation
-        const allPolls = await pollService.getPollsForFrontend({ limit: 30 });
-        
-        // Mock: Filter polls from followed users (you'll need to implement actual following logic)
-        // For demo purposes, let's show all polls but with a "Following" indicator
-        const followingPolls = allPolls.map(poll => ({
-          ...poll,
-          isFromFollowing: true // Mark all as from following for demo
-        }));
+        // Use the new getFollowingPolls method to get only polls from followed users
+        const followingPolls = await pollService.getFollowingPolls({ limit: 30 });
         
         setPolls(followingPolls);
       } catch (err) {
