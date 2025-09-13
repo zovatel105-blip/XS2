@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import supabasePollService from '../services/supabasePollService';
+import supabaseAuthService from '../services/supabaseAuthService';
 
 const TestSupabasePage = () => {
   const [testResults, setTestResults] = useState([]);
