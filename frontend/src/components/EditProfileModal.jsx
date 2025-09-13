@@ -213,24 +213,6 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
               </p>
             </div>
 
-            {/* Avatar URL */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Camera className="w-4 h-4" />
-                URL del Avatar
-              </label>
-              <Input
-                type="url"
-                value={formData.avatar_url}
-                onChange={(e) => handleChange('avatar_url', e.target.value)}
-                placeholder="https://ejemplo.com/mi-avatar.jpg"
-                className="w-full"
-              />
-              <p className="text-xs text-gray-500">
-                Ingresa la URL de tu imagen de perfil
-              </p>
-            </div>
-
             {/* Buttons */}
             <div className="flex gap-3 pt-4">
               <Button
