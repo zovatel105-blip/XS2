@@ -448,7 +448,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
       {/* Main content - Perfect full screen with safe areas */}
       <div className={cn(
           "absolute inset-0",
-          shouldUseCarousel && poll.layout === 'off' 
+          shouldUseCarousel && (poll.layout === 'off' || poll.layout == null) 
             ? "" 
             : "grid grid-cols-2 gap-0.5"
         )}
