@@ -18,8 +18,25 @@ const SettingsPage = () => {
   const { toast } = useToast();
   
   const [settings, setSettings] = useState({
+    // Privacy settings
     is_public: true,
-    allow_messages: true
+    allow_messages: true,
+    
+    // Notification settings
+    notifications_enabled: true,
+    email_notifications: true,
+    push_notifications: true,
+    notifications_likes: true,
+    notifications_comments: true,
+    notifications_follows: true,
+    notifications_mentions: true,
+    
+    // Content settings
+    auto_play_videos: true,
+    show_mature_content: false,
+    
+    // Account settings
+    two_factor_enabled: false
   });
   const [loading, setLoading] = useState(false);
   const [modalsOpen, setModalsOpen] = useState({
