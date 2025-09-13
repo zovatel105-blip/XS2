@@ -961,69 +961,74 @@ Sidebar Derecho (20px width):
 
 **OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho, RightSideNavigation correctamente oculta en creación, y título principal perfectamente centrado en la zona central superior como solicitado.
 
-**🎯 SISTEMA DE CONFIGURACIONES MEJORADO Y OPTIMIZADO (2025-09-13): Eliminada configuración de contenido y reemplazada con mejores ajustes más útiles - Backend expandido con configuraciones de Descubrimiento, Interacción, Idioma y Accesibilidad.**
+**🎯 CONFIGURACIONES OPTIMIZADAS PARA APK (2025-09-13): Eliminadas configuraciones de descubrimiento/interacción y reemplazadas con ajustes específicos para aplicaciones móviles - Implementadas configuraciones de rendimiento, datos y optimización para APK.**
 
 ✅ **PROBLEMA IDENTIFICADO:**
-- Usuario solicitó eliminar configuraciones de contenido (auto_play_videos, show_mature_content)
-- Necesidad de crear mejores y más útiles configuraciones para la aplicación social
-- Configuraciones existentes eran limitadas y no cubrían aspectos importantes de UX
+- Usuario solicitó eliminar configuraciones de "Descubrimiento e Interacción" 
+- Necesidad de configuraciones más apropiadas para aplicación móvil (APK)
+- Faltaban ajustes específicos para rendimiento móvil y uso de datos
 
 ✅ **CONFIGURACIONES ELIMINADAS:**
-- ✅ **auto_play_videos**: Removida por ser menos relevante para la aplicación
-- ✅ **show_mature_content**: Eliminada por no ser prioritaria en este contexto
+- ❌ **discoverable**: Removida por ser menos relevante para APK
+- ❌ **require_follow_approval**: Eliminada para simplificar UX móvil
+- ❌ **allow_comments**: Removida como configuración global
+- ❌ **allow_shares**: Eliminada para reducir complejidad
 
-✅ **NUEVAS CONFIGURACIONES IMPLEMENTADAS:**
+✅ **NUEVAS CONFIGURACIONES APK IMPLEMENTADAS:**
 
-**🔍 DESCUBRIMIENTO E INTERACCIÓN:**
-1. ✅ **discoverable**: Permite que el perfil aparezca en recomendaciones y búsquedas
-2. ✅ **require_follow_approval**: Requiere aprobación antes de poder seguir al usuario
-3. ✅ **allow_comments**: Permite/deshabilita comentarios en publicaciones del usuario
-4. ✅ **allow_shares**: Controla si otros pueden compartir las publicaciones del usuario
+**📱 RENDIMIENTO Y DATOS:**
+1. ✅ **video_quality**: Selector de calidad de video (Automática, Alta HD, Media, Baja/Ahorro datos)
+2. ✅ **wifi_only**: Reproducir videos solo con WiFi para ahorrar datos móviles
+3. ✅ **battery_saver**: Reducir animaciones y efectos para ahorrar batería
+4. ✅ **auto_cache**: Cache automático de contenido para acceso offline
+5. ✅ **background_sync**: Sincronización en segundo plano cuando app está cerrada
 
-**🌐 IDIOMA Y ACCESIBILIDAD:**
-1. ✅ **app_language**: Selector de idioma (Español, English, Français, Português)
-2. ✅ **dark_mode**: Modo oscuro para reducir fatiga visual
-3. ✅ **large_text**: Texto grande para mejor legibilidad y accesibilidad
+**BACKEND OPTIMIZADO PARA MÓVIL:**
+- ✅ **User Model**: Actualizado con 5 configuraciones específicas para APK
+- ✅ **UserResponse**: Incluye todas las configuraciones de rendimiento móvil  
+- ✅ **UserSettings**: Modelo actualizado para manejar configuraciones APK
+- ✅ **Validaciones**: Endpoint valida valores correctos (video_quality, app_language)
+- ✅ **Defaults Móviles**: Configuraciones por defecto optimizadas para dispositivos móviles
 
-**BACKEND ACTUALIZADO COMPLETAMENTE:**
-- ✅ **User Model**: Agregados 7 nuevos campos, removidos 2 obsoletos
-- ✅ **UserResponse**: Actualizado con todas las nuevas configuraciones
-- ✅ **UserSettings**: Modelo expandido para manejar todas las opciones
-- ✅ **Endpoint Settings**: PUT /api/auth/settings maneja todas las nuevas configuraciones
-- ✅ **Valores Defaults**: Configuraciones por defecto sensibles para nuevos usuarios
+**FRONTEND MÓVIL-FIRST:**
+1. ✅ **UI Renovada**: Sección "Rendimiento y Datos" reemplaza "Descubrimiento"
+2. ✅ **Controles Específicos**: Selector de calidad de video funcional
+3. ✅ **Switches Móviles**: Configuraciones on/off para WiFi, batería, cache
+4. ✅ **Descripciones Claras**: Textos explicativos orientados a usuarios móviles
+5. ✅ **Iconografía Optimizada**: Iconos Settings, Globe, Save para contexto móvil
 
-**FRONTEND MEJORADO SIGNIFICATIVAMENTE:**
-1. ✅ **UI Renovada**: Dos nuevas secciones reemplazan la de "Contenido"
-2. ✅ **Selector de Idioma**: Dropdown funcional con 4 idiomas disponibles
-3. ✅ **Mejores Agrupaciones**: Configuraciones organizadas lógicamente
-4. ✅ **Iconografía Actualizada**: Agregados iconos Users, Share, Globe
-5. ✅ **Descripciones Claras**: Textos explicativos para cada configuración
+**TESTING EXHAUSTIVO APK:**
+- ✅ **Registro Mobile**: Nuevos usuarios tienen defaults optimizados para móvil
+- ✅ **Calidad Video**: Selector funciona correctamente (auto, high, medium, low)
+- ✅ **Configuraciones Batch**: Múltiples ajustes de rendimiento actualizan simultáneamente
+- ✅ **Validación Backend**: Solo acepta valores válidos para video_quality
+- ✅ **Persistencia**: Todas las configuraciones APK se guardan correctamente
 
-**TESTING EXHAUSTIVO COMPLETADO:**
-- ✅ **Registro con Nuevos Defaults**: Usuarios se crean con todas las configuraciones actualizadas
-- ✅ **Actualización Múltiple**: Pueden cambiar varias configuraciones simultáneamente
-- ✅ **Selector de Idioma**: Funciona correctamente con opciones múltiples
-- ✅ **Persistencia**: Todas las configuraciones se guardan y cargan correctamente
-- ✅ **UI Responsiva**: Interfaz actualizada funciona sin errores
-
-✅ **CONFIGURACIONES FINALES DISPONIBLES:**
+✅ **CONFIGURACIONES FINALES PARA APK:**
 - 🔒 **Privacidad** (2): is_public, allow_messages
 - 🔔 **Notificaciones** (7): control maestro + 6 tipos específicos  
-- 🔍 **Descubrimiento** (4): discoverable, require_follow_approval, allow_comments, allow_shares
+- 📱 **Rendimiento & Datos** (5): video_quality, wifi_only, battery_saver, auto_cache, background_sync
 - 🌐 **Idioma & Accesibilidad** (3): app_language, dark_mode, large_text
 - 🛡️ **Seguridad** (1): two_factor_enabled
 
-**TOTAL: 17 configuraciones funcionales** (anteriormente 13)
+**TOTAL: 18 configuraciones optimizadas para APK** (anteriormente 17)
+
+✅ **BENEFICIOS ESPECÍFICOS PARA APK:**
+1. **🔋 Ahorro de Batería**: Configuraciones para reducir consumo energético
+2. **📶 Gestión de Datos**: Control granular sobre uso de datos móviles  
+3. **⚡ Rendimiento**: Optimizaciones específicas para dispositivos móviles
+4. **📱 Cache Inteligente**: Almacenamiento local para uso offline
+5. **🔄 Sincronización**: Control sobre actualizaciones en segundo plano
 
 ✅ **RESULTADO FINAL:**
-🎯 **CONFIGURACIONES OPTIMIZADAS Y MEJORADAS** - Eliminado contenido irrelevante, agregadas funcionalidades útiles:
-1. **Mejor experiencia social** con configuraciones de descubrimiento e interacción
-2. **Accesibilidad mejorada** con opciones de idioma, modo oscuro y texto grande
-3. **Control granular** sobre cómo otros interactúan con el contenido del usuario
-4. **Internacionalización** con soporte multi-idioma integrado
-5. **UX moderna** con configuraciones relevantes para aplicaciones sociales actuales
+🎯 **CONFIGURACIONES APK COMPLETAMENTE OPTIMIZADAS** - Eliminadas funciones de escritorio, agregadas configuraciones móviles:
+1. **Experiencia móvil nativa** con configuraciones relevantes para smartphones
+2. **Gestión inteligente de recursos** (batería, datos, almacenamiento)
+3. **Calidad adaptativa** con opciones de video optimizadas para conexiones móviles
+4. **UX simplificada** enfocada en configuraciones que importan en dispositivos móviles
+5. **Rendimiento optimizado** para aplicaciones APK con recursos limitados
 
-**PROBLEMA ORIGINAL RESUELTO**: Sistema de configuraciones ahora incluye opciones más útiles y relevantes, eliminando configuraciones innecesarias y agregando funcionalidades que mejoran significativamente la experiencia del usuario en la plataforma social.
+**PROBLEMA ORIGINAL RESUELTO**: Sistema de configuraciones ahora está completamente adaptado para aplicaciones APK con ajustes específicos para móviles que mejoran rendimiento, ahorro de batería y gestión de datos, eliminando configuraciones irrelevantes para el contexto móvil.
 
 ✅ **MEJORAS IMPLEMENTADAS COMPLETAMENTE:**
 
