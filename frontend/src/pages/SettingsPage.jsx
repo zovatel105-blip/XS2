@@ -255,7 +255,7 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Notifications Settings - Coming Soon */}
+          {/* Notifications Settings */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
@@ -263,14 +263,120 @@ const SettingsPage = () => {
                 Notificaciones
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Próximamente</h3>
-                <p className="text-gray-600">
-                  Las configuraciones de notificaciones estarán disponibles en una futura actualización
-                </p>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Bell className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Notificaciones Generales</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Activa o desactiva todas las notificaciones
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.notifications_enabled}
+                  onCheckedChange={(value) => handleSettingsChange('notifications_enabled', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
               </div>
+
+              {settings.notifications_enabled && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-start gap-3">
+                      <MessageCircle className="w-5 h-5 text-gray-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-medium text-gray-900">Notificaciones por Email</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Recibe notificaciones importantes por correo electrónico
+                        </p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={settings.email_notifications}
+                      onCheckedChange={(value) => handleSettingsChange('email_notifications', value)}
+                      disabled={loading}
+                      className="data-[state=checked]:bg-purple-600"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-start gap-3">
+                      <Shield className="w-5 h-5 text-gray-600 mt-0.5" />
+                      <div>
+                        <h3 className="font-medium text-gray-900">Notificaciones Push</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Recibe notificaciones push en tu dispositivo
+                        </p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={settings.push_notifications}
+                      onCheckedChange={(value) => handleSettingsChange('push_notifications', value)}
+                      disabled={loading}
+                      className="data-[state=checked]:bg-purple-600"
+                    />
+                  </div>
+
+                  <div className="space-y-4 pl-8 border-l-2 border-gray-100">
+                    <h4 className="font-medium text-gray-900 text-sm">Tipos de notificaciones:</h4>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h5 className="font-medium text-gray-800 text-sm">Me gusta</h5>
+                        <p className="text-xs text-gray-600">Cuando alguien da like a tu contenido</p>
+                      </div>
+                      <Switch
+                        checked={settings.notifications_likes}
+                        onCheckedChange={(value) => handleSettingsChange('notifications_likes', value)}
+                        disabled={loading}
+                        className="data-[state=checked]:bg-purple-600"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h5 className="font-medium text-gray-800 text-sm">Comentarios</h5>
+                        <p className="text-xs text-gray-600">Cuando alguien comenta tu contenido</p>
+                      </div>
+                      <Switch
+                        checked={settings.notifications_comments}
+                        onCheckedChange={(value) => handleSettingsChange('notifications_comments', value)}
+                        disabled={loading}
+                        className="data-[state=checked]:bg-purple-600"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h5 className="font-medium text-gray-800 text-sm">Nuevos seguidores</h5>
+                        <p className="text-xs text-gray-600">Cuando alguien te empieza a seguir</p>
+                      </div>
+                      <Switch
+                        checked={settings.notifications_follows}
+                        onCheckedChange={(value) => handleSettingsChange('notifications_follows', value)}
+                        disabled={loading}
+                        className="data-[state=checked]:bg-purple-600"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h5 className="font-medium text-gray-800 text-sm">Menciones</h5>
+                        <p className="text-xs text-gray-600">Cuando alguien te menciona en un post</p>
+                      </div>
+                      <Switch
+                        checked={settings.notifications_mentions}
+                        onCheckedChange={(value) => handleSettingsChange('notifications_mentions', value)}
+                        disabled={loading}
+                        className="data-[state=checked]:bg-purple-600"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
