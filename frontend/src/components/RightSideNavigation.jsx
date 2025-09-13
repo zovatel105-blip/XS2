@@ -87,7 +87,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
     <div className="fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-50"
          style={{ right: 'max(1rem, env(safe-area-inset-right))' }}>
       
-      {/* Home/Inicio with Long Press */}
+      {/* Home/Inicio with Long Press - Dynamic Colors */}
       <div className="relative">
         <button
           onTouchStart={handleTouchStart}
@@ -95,28 +95,36 @@ const RightSideNavigation = ({ onCreatePoll }) => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
-          onClick={() => !isLongPressing && navigate('/feed')}
+          onClick={() => !isLongPressing && navigate(currentMode === 'following' ? '/following' : '/feed')}
           className={cn(
             "rounded-full transition-all duration-300 backdrop-blur-sm border border-white/10",
-            location.pathname === '/feed' 
-              ? "bg-blue-500 hover:bg-blue-600 w-5 h-12 shadow-xl"
-              : "bg-white/80 hover:bg-white hover:scale-110 w-5 h-12 shadow-lg",
-            isLongPressing && "bg-purple-500 w-6 h-14 shadow-2xl scale-110",
+            modeStyles.bgColor,
+            modeStyles.hoverColor,
+            "w-5 h-12 shadow-xl",
+            isLongPressing && "w-6 h-14 shadow-2xl scale-110 opacity-75",
             "flex items-center justify-center"
           )}
-          title={isLongPressing ? "Following" : "Inicio"}
+          title={isLongPressing 
+            ? (currentMode === 'feed' ? 'Cambiando a Following...' : 'Cambiando a Feed...') 
+            : (currentMode === 'following' ? 'Following' : 'Inicio')
+          }
         >
           <Home className={cn(
-            "w-4 h-4 transition-all duration-300",
-            location.pathname === '/feed' ? "text-white" : "text-gray-700",
-            isLongPressing && "text-white w-5 h-5"
+            "w-4 h-4 transition-all duration-300 text-white",
+            isLongPressing && "w-5 h-5 animate-pulse"
           )} />
         </button>
         
         {/* Long press indicator */}
         {isLongPressing && (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full animate-pulse">
-            <div className="absolute inset-0 bg-purple-300 rounded-full animate-ping"></div>
+          <div className={cn(
+            "absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse",
+            currentMode === 'following' ? 'bg-blue-400' : 'bg-purple-400'
+          )}>
+            <div className={cn(
+              "absolute inset-0 rounded-full animate-ping",
+              currentMode === 'following' ? 'bg-blue-300' : 'bg-purple-300'
+            )}></div>
           </div>
         )}
       </div>
