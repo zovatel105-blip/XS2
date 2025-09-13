@@ -140,17 +140,23 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
 
         <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Avatar Preview */}
+            {/* Avatar Upload Section */}
             <div className="flex flex-col items-center gap-3">
-              <Avatar className="w-20 h-20 ring-2 ring-purple-200">
-                <AvatarImage src={formData.avatar_url} alt="Preview" />
-                <AvatarFallback className="bg-purple-100 text-purple-600 text-xl font-bold">
-                  {formData.display_name ? formData.display_name.charAt(0).toUpperCase() : 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <p className="text-sm text-gray-600 text-center">
-                Vista previa del avatar
-              </p>
+              <div className="relative">
+                <AvatarUpload
+                  currentAvatar={formData.avatar_url}
+                  onAvatarUpdate={handleAvatarUpdate}
+                  size="xl"
+                  showPreview={true}
+                  className="ring-2 ring-purple-200"
+                />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-medium text-gray-700">Foto de Perfil</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Haz click en la imagen para cambiar tu avatar
+                </p>
+              </div>
             </div>
 
             {/* Display Name */}
