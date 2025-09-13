@@ -89,8 +89,26 @@ class UserResponse(BaseModel):
     is_verified: bool
     created_at: datetime
     last_login: Optional[datetime] = None
+    
+    # Privacy settings
     is_public: bool
     allow_messages: bool
+    
+    # Notification settings
+    notifications_enabled: bool = True
+    email_notifications: bool = True
+    push_notifications: bool = True
+    notifications_likes: bool = True
+    notifications_comments: bool = True
+    notifications_follows: bool = True
+    notifications_mentions: bool = True
+    
+    # Content settings
+    auto_play_videos: bool = True
+    show_mature_content: bool = False
+    
+    # Account settings
+    two_factor_enabled: bool = False
 
 class Token(BaseModel):
     access_token: str
