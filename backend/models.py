@@ -111,11 +111,12 @@ class UserResponse(BaseModel):
     notifications_follows: bool = True
     notifications_mentions: bool = True
     
-    # Discovery & Interaction settings
-    discoverable: bool = True
-    require_follow_approval: bool = False
-    allow_comments: bool = True
-    allow_shares: bool = True
+    # Performance & Data settings (APK specific)
+    video_quality: str = 'auto'
+    wifi_only: bool = False
+    battery_saver: bool = False
+    auto_cache: bool = True
+    background_sync: bool = True
     
     # Language & Accessibility settings
     app_language: str = 'es'
