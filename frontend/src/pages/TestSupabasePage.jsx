@@ -57,11 +57,16 @@ const TestSupabasePage = () => {
       addResult('2', 'success', `Test user authenticated: ${testUsername}`, signUpUser);
 
       // Step 3: Test Authentication (simulate login)
-      addResult('3', 'running', 'Setting up test authentication...');
+      addResult('3', 'running', 'Testing authentication context...');
       
-      // We'll simulate being authenticated by setting the user context
-      // In a real scenario, this would be handled by Supabase Auth
-      addResult('3', 'success', 'Test authentication setup complete');
+      // Get current authenticated user
+      const currentUser = await supabaseAuthService.getCurrentUser();
+      if (!currentUser) {
+        addResult('3', 'error', 'No authenticated user found');
+        return;
+      }
+      
+      addResult('3', 'success', `Authentication context working: ${currentUser.email}`);
 
       // Step 4: Test Poll Creation with Media Transform
       addResult('4', 'running', 'Testing poll creation with media transform...');
@@ -99,13 +104,13 @@ const TestSupabasePage = () => {
         tags: ['test', 'supabase', 'migration']
       };
 
-      // Manually create poll to bypass authentication for testing
+      // Create poll using authenticated user
       const { data: pollData, error: pollError } = await supabase
         .from('polls')
         .insert({
           title: testPollData.title,
           description: testPollData.description,
-          author_id: testUserId,
+          author_id: currentUser.id,
           music_id: testPollData.music_id,
           layout_id: 'vertical',
           background_color: '#ffffff',
@@ -122,7 +127,7 @@ const TestSupabasePage = () => {
       // Create poll options with media_transform
       const optionsToInsert = testPollData.options.map(option => ({
         poll_id: pollData.id,
-        user_id: testUserId,
+        user_id: currentUser.id,
         text: option.text,
         media_type: option.media_type,
         media_url: option.media_url,
