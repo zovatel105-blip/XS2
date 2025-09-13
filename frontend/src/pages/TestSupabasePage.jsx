@@ -33,7 +33,7 @@ const TestSupabasePage = () => {
       // Step 2: Test Supabase Authentication
       addResult('2', 'running', 'Testing Supabase Authentication...');
       
-      const testEmail = `testuser_${Date.now()}@test.com`;
+      const testEmail = `testuser${Date.now()}@example.com`;
       const testPassword = 'TestPass123!';
       const testUsername = 'testuser_' + Date.now();
       
