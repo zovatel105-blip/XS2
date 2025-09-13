@@ -141,7 +141,7 @@ class PollService {
       const { limit = 20, offset = 0 } = params;
       
       // Use the new backend endpoint that filters polls by followed users
-      const response = await fetch(`${config.API_ENDPOINTS.POLLS.FOLLOWING}?limit=${limit}&offset=${offset}`, {
+      const response = await fetch(`${this.baseURL}/polls/following?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
