@@ -380,6 +380,81 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
+          {/* Content Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Monitor className="w-5 h-5" />
+                Configuración de Contenido
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Play className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Reproducción Automática</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Los videos se reproducen automáticamente al hacer scroll
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.auto_play_videos}
+                  onCheckedChange={(value) => handleSettingsChange('auto_play_videos', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Shield className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Contenido Sensible</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Mostrar contenido marcado como sensible o para adultos
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.show_mature_content}
+                  onCheckedChange={(value) => handleSettingsChange('show_mature_content', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Account Security Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Shield className="w-5 h-5" />
+                Seguridad de la Cuenta
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Key className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Autenticación de Dos Factores</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Agrega una capa extra de seguridad a tu cuenta
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.two_factor_enabled}
+                  onCheckedChange={(value) => handleSettingsChange('two_factor_enabled', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+            </CardContent>
+          </Card>
           {/* Account Actions */}
           <Card>
             <CardHeader>
