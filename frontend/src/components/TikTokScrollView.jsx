@@ -445,7 +445,200 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
              left: 'env(safe-area-inset-left, 0)',
              right: 'env(safe-area-inset-right, 0)'
            }}>
-        {poll.options.map((option, optionIndex) => {
+        {/* Render options as carousel or traditional layout */}
+        {shouldUseCarousel && poll.layout === 'off' ? (
+          // Carousel view for layout "off" with multiple images
+          <div 
+            className="relative w-full h-full overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Carousel slides */}
+            <div 
+              className="flex w-full h-full transition-transform duration-300 ease-in-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {poll.options.map((option, optionIndex) => {
+                const percentage = getPercentage(option.votes);
+                const isWinner = option.id === winningOption.id && poll.totalVotes > 0;
+                const isSelected = poll.userVote === option.id;
+
+                return (
+                  <div
+                    key={option.id}
+                    className="relative flex-shrink-0 w-full h-full cursor-pointer group overflow-hidden touch-manipulation"
+                    onClick={() => handleVote(option.id)}
+                    style={{ 
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation'
+                    }}
+                  >
+                    {/* Background media - Perfect coverage */}
+                    <div className="absolute inset-0 w-full h-full">
+                      {option.media?.url ? (
+                        option.media?.type === 'video' ? (
+                          <video 
+                            src={shouldPreload ? option.media.url : undefined} 
+                            className="w-full h-full object-cover object-center"
+                            style={{ 
+                              objectFit: 'cover',
+                              objectPosition: 'center'
+                            }}
+                            autoPlay={isActive && currentSlide === optionIndex}
+                            muted
+                            loop
+                            playsInline
+                            preload={shouldPreload ? "metadata" : "none"}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <img 
+                            src={shouldPreload ? option.media.url : undefined} 
+                            alt={option.text}
+                            className="w-full h-full object-cover object-center"
+                            style={{ 
+                              objectFit: 'cover',
+                              objectPosition: 'center'
+                            }}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )
+                      ) : (
+                        <div className={cn(
+                          "w-full h-full",
+                          optionIndex === 0 ? "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500" :
+                          optionIndex === 1 ? "bg-gradient-to-br from-gray-300 via-gray-500 to-gray-700" :
+                          optionIndex === 2 ? "bg-gradient-to-br from-yellow-500 via-red-500 to-pink-600" :
+                          "bg-gradient-to-br from-amber-600 via-orange-700 to-red-800"
+                        )} />
+                      )}
+                    </div>
+
+                    {/* Interactive overlay for better touch response */}
+                    <div className="absolute inset-0 bg-transparent active:bg-white/10 transition-colors duration-150"></div>
+
+                    {/* Progress overlay - Smooth animated fill from bottom */}
+                    {poll.totalVotes > 0 && (
+                      <div 
+                        className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/30 to-transparent transition-all duration-700 ease-out"
+                        style={{ 
+                          height: `${percentage}%`,
+                          backdropFilter: 'blur(2px)'
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent" />
+                      </div>
+                    )}
+
+                    {/* Selection indicator - Enhanced visual feedback */}
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-blue-500/20 backdrop-blur-[1px] border-2 border-blue-400/60">
+                        <div className="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                          ✓ Votado
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Winner indicator */}
+                    {isWinner && poll.totalVotes > 0 && (
+                      <div className="absolute top-4 right-4 bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-bold shadow-lg animate-pulse">
+                        👑 Ganador
+                      </div>
+                    )}
+
+                    {/* Option text overlay - Enhanced visibility */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6">
+                      <div className="flex justify-between items-end">
+                        <div className="flex-1">
+                          {option.text && (
+                            <p className="text-white font-bold text-xl mb-2 leading-tight drop-shadow-lg">
+                              {option.text}
+                            </p>
+                          )}
+                          
+                          {/* Mentioned users con estilo mejorado */}
+                          {option.mentionedUsers && option.mentionedUsers.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              {option.mentionedUsers.map((user, idx) => (
+                                <span key={idx} className="bg-blue-500/80 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                                  @{user.username}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Vote percentage - Large display */}
+                        {poll.totalVotes > 0 && (
+                          <div className="flex flex-col items-end ml-4">
+                            <div className="bg-white/90 backdrop-blur-sm text-black px-3 py-2 rounded-xl font-bold text-lg shadow-lg">
+                              {percentage}%
+                            </div>
+                            <div className="text-white/80 text-sm mt-1">
+                              {option.votes} voto{option.votes !== 1 ? 's' : ''}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Carousel navigation indicators */}
+            <div className="absolute top-4 left-4 flex gap-2 z-20">
+              {poll.options.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentSlide(idx);
+                  }}
+                  className={cn(
+                    "w-8 h-2 rounded-full transition-all duration-300",
+                    idx === currentSlide 
+                      ? "bg-white shadow-lg" 
+                      : "bg-white/50 hover:bg-white/70"
+                  )}
+                />
+              ))}
+            </div>
+
+            {/* Carousel navigation arrows (for larger screens) */}
+            {totalSlides > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevSlide();
+                  }}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl z-20 transition-all duration-200 hover:scale-110"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextSlide();
+                  }}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl z-20 transition-all duration-200 hover:scale-110"
+                >
+                  ›
+                </button>
+              </>
+            )}
+
+            {/* Slide counter */}
+            <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm z-20">
+              {currentSlide + 1} / {totalSlides}
+            </div>
+          </div>
+        ) : (
+          // Traditional layout for other layouts (grid, split, etc.)
+          poll.options.map((option, optionIndex) => {
           const percentage = getPercentage(option.votes);
           const isWinner = option.id === winningOption.id && poll.totalVotes > 0;
           const isSelected = poll.userVote === option.id;
