@@ -135,7 +135,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
 
   const getSlotsCount = () => {
     switch (layout.id) {
-      case 'off': return 1;
+      case 'off': return Math.max(2, options.filter(opt => opt && opt.media).length || 2); // Minimum 2 slots for fullscreen layout
       case 'vertical': return 2;
       case 'horizontal': return 2;
       case 'triptych-vertical': return 3;
