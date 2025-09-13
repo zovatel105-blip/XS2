@@ -88,21 +88,23 @@ const CreateStoryModal = ({ isOpen, onClose, onStoryCreated }) => {
         });
 
         storyData = {
-          type: 'image',
-          content: content || '',
-          media_url: base64,
-          media_type: selectedFile.type,
+          story_type: 'IMAGE',
+          text_content: content || null,
+          content_url: base64,
           background_color: backgroundColor,
-          text_align: textAlign,
-          text_style: textStyle
+          text_color: '#FFFFFF',
+          font_style: `${textAlign}-${textStyle.bold ? 'bold' : 'normal'}-${textStyle.italic ? 'italic' : 'normal'}`,
+          duration: 15
         };
       } else if (storyType === 'text') {
         storyData = {
-          type: 'text',
-          content: content,
+          story_type: 'TEXT',
+          text_content: content,
+          content_url: null,
           background_color: backgroundColor,
-          text_align: textAlign,
-          text_style: textStyle
+          text_color: '#FFFFFF',
+          font_style: `${textAlign}-${textStyle.bold ? 'bold' : 'normal'}-${textStyle.italic ? 'italic' : 'normal'}`,
+          duration: 15
         };
       }
 
