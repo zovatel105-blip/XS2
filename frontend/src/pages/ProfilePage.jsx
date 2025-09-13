@@ -91,6 +91,7 @@ const ProfilePage = () => {
   const [userHasStories, setUserHasStories] = useState(false);
   const [userStories, setUserStories] = useState([]);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
+  const [showCreateStoryModal, setShowCreateStoryModal] = useState(false);
   const { toast } = useToast();
   const { user: authUser, refreshUser } = useAuth();
   const { getUserFollowers, getUserFollowing, followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion, refreshTrigger, getUserByUsername } = useFollow();
