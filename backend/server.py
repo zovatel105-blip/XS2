@@ -3674,7 +3674,7 @@ async def get_following_polls(
             music=music_info,
             user_vote=user_votes_dict.get(poll_data["id"]),
             user_liked=poll_data["id"] in liked_poll_ids,
-            is_featured=poll_data["is_featured"],
+            is_featured=poll_data.get("is_featured", False),
             tags=poll_data.get("tags", []),
             category=poll_data.get("category"),
             mentioned_users=poll_data.get("mentioned_users", []),
