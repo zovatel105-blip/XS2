@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Swords, Plus, MessageCircle, User } from 'lucide-react';
 import { cn } from '../lib/utils';
