@@ -20,6 +20,7 @@ import AudioDetailPage from './pages/AudioDetailPage';
 import SearchPage from './pages/SearchPage';
 import MomentsPage from './pages/MomentsPage';
 import ContentCreationPage from './pages/ContentCreationPage';
+import TestSupabasePage from './pages/TestSupabasePage';
 import FollowingPage from './pages/FollowingPage';
 import InlineCropTest from './components/InlineCropTest';
 import { Toaster } from './components/ui/toaster';
