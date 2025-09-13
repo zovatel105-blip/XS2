@@ -372,28 +372,28 @@ const SettingsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Content Settings */}
+          {/* Discovery & Interaction Settings */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <Monitor className="w-5 h-5" />
-                Configuración de Contenido
+                <Users className="w-5 h-5" />
+                Descubrimiento e Interacción
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <Play className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Eye className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Reproducción Automática</h3>
+                    <h3 className="font-medium text-gray-900">Perfil Sugerido</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Los videos se reproducen automáticamente al hacer scroll
+                      Permitir que tu perfil aparezca en recomendaciones y búsquedas
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.auto_play_videos}
-                  onCheckedChange={(value) => handleSettingsChange('auto_play_videos', value)}
+                  checked={settings.discoverable}
+                  onCheckedChange={(value) => handleSettingsChange('discoverable', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
@@ -401,17 +401,123 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-start gap-3">
-                  <Shield className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Users className="w-5 h-5 text-gray-600 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-gray-900">Contenido Sensible</h3>
+                    <h3 className="font-medium text-gray-900">Solicitudes de Seguimiento</h3>
                     <p className="text-sm text-gray-600 mt-1">
-                      Mostrar contenido marcado como sensible o para adultos
+                      Requerir aprobación antes de que otros puedan seguirte
                     </p>
                   </div>
                 </div>
                 <Switch
-                  checked={settings.show_mature_content}
-                  onCheckedChange={(value) => handleSettingsChange('show_mature_content', value)}
+                  checked={settings.require_follow_approval}
+                  onCheckedChange={(value) => handleSettingsChange('require_follow_approval', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <MessageCircle className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Comentarios en Publicaciones</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Permitir que otros comenten en tus publicaciones
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.allow_comments}
+                  onCheckedChange={(value) => handleSettingsChange('allow_comments', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Share className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Compartir Publicaciones</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Permitir que otros compartan tus publicaciones
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.allow_shares}
+                  onCheckedChange={(value) => handleSettingsChange('allow_shares', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Language & Accessibility Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Globe className="w-5 h-5" />
+                Idioma y Accesibilidad
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Globe className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Idioma de la Aplicación</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Selecciona tu idioma preferido
+                    </p>
+                  </div>
+                </div>
+                <select 
+                  value={settings.app_language || 'es'}
+                  onChange={(e) => handleSettingsChange('app_language', e.target.value)}
+                  disabled={loading}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                >
+                  <option value="es">Español</option>
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                  <option value="pt">Português</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Monitor className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Modo Oscuro</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Cambiar a tema oscuro para reducir fatiga visual
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.dark_mode}
+                  onCheckedChange={(value) => handleSettingsChange('dark_mode', value)}
+                  disabled={loading}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <Eye className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-medium text-gray-900">Texto Grande</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Aumentar el tamaño del texto para mejor legibilidad
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={settings.large_text}
+                  onCheckedChange={(value) => handleSettingsChange('large_text', value)}
                   disabled={loading}
                   className="data-[state=checked]:bg-purple-600"
                 />
