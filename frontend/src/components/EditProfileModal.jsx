@@ -38,6 +38,20 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
     }));
   };
 
+  const handleAvatarUpdate = (result, avatarUrl) => {
+    // Update the form data with the new avatar URL
+    setFormData(prev => ({
+      ...prev,
+      avatar_url: avatarUrl
+    }));
+    
+    toast({
+      title: "¡Avatar actualizado!",
+      description: "Tu nueva foto de perfil ha sido guardada",
+      variant: "default"
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
