@@ -83,6 +83,56 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   const shouldUseCarousel = poll.options && poll.options.length > 1;
   const totalSlides = poll.options ? poll.options.length : 1;
 
+  // Carousel navigation functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  // Touch handlers for swipe navigation
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && shouldUseCarousel) {
+      nextSlide();
+    }
+    if (isRightSwipe && shouldUseCarousel) {
+      prevSlide();
+    }
+  };
+
+  // Reset carousel when poll changes
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [poll.id]);
+
+  // Auto-advance carousel every 5 seconds when active (only for layout "off")
+  useEffect(() => {
+    if (!isActive || !shouldUseCarousel || poll.layout !== 'off') return;
+    
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isActive, shouldUseCarousel, currentSlide, poll.layout]);
+
   // Get user ID from poll author
   const getAuthorUserId = () => {
     // Primero intentar con el objeto author si existe
