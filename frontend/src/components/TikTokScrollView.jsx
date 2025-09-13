@@ -87,7 +87,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   console.log('🎠 Carousel Debug:', {
     shouldUseCarousel,
     layout: poll.layout,
-    willUseCarousel: shouldUseCarousel && poll.layout === 'off',
+    willUseCarousel: shouldUseCarousel && (poll.layout === 'off' || poll.layout == null),
     optionsCount: poll.options?.length || 0
   });
 
