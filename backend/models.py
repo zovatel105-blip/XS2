@@ -110,9 +110,16 @@ class UserResponse(BaseModel):
     notifications_follows: bool = True
     notifications_mentions: bool = True
     
-    # Content settings
-    auto_play_videos: bool = True
-    show_mature_content: bool = False
+    # Discovery & Interaction settings
+    discoverable: bool = True
+    require_follow_approval: bool = False
+    allow_comments: bool = True
+    allow_shares: bool = True
+    
+    # Language & Accessibility settings
+    app_language: str = 'es'
+    dark_mode: bool = False
+    large_text: bool = False
     
     # Account settings
     two_factor_enabled: bool = False
