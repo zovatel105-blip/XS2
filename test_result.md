@@ -961,89 +961,78 @@ Sidebar Derecho (20px width):
 
 **OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho, RightSideNavigation correctamente oculta en creación, y título principal perfectamente centrado en la zona central superior como solicitado.
 
-**🎯 BOTÓN "+" DEL PERFIL CONECTADO A FUNCIONALIDAD DE HISTORIAS (2025-09-13): Implementado sistema completo de creación de historias desde el botón "+" del perfil con modal interactivo y integración backend funcional.**
+**🎯 FUNCIONALIDAD DE CAMBIO DE AVATAR MOVIDA A EDITAR PERFIL (2025-09-13): Reubicada la opción de agregar/cambiar foto de perfil desde el avatar del perfil principal al modal de "Editar Perfil" para mejor organización y UX.**
 
 ✅ **PROBLEMA IDENTIFICADO:**
-- Usuario reportó que el botón "+" del perfil no tenía ninguna funcionalidad
-- Solicitud específica de agregar función para crear historias desde ese botón
-- Botón estaba presente pero sin evento onClick ni funcionalidad asociada
+- Usuario solicitó que la opción de agregar foto de perfil esté ubicada en el modal de "Editar Perfil"
+- Anteriormente, la funcionalidad estaba directamente en el avatar del perfil principal
+- Necesidad de centralizar todas las opciones de edición de perfil en un solo lugar
 
 ✅ **SOLUCIÓN COMPLETA IMPLEMENTADA:**
 
-**🎨 COMPONENTE CREATESTORYMODAL CREADO:**
-1. ✅ **Modal Completo**: Nuevo componente CreateStoryModal.jsx con interfaz moderna
-2. ✅ **Múltiples Tipos**: Soporte para historias de texto, imagen y cámara
-3. ✅ **Editor Visual**: Preview en tiempo real con personalización de estilos
-4. ✅ **Controles Avanzados**: 
-   - Selector de colores de fondo (12 opciones)
-   - Alineación de texto (izquierda, centro, derecha)  
-   - Estilos de texto (negrita, cursiva)
-5. ✅ **Validaciones**: Límites de archivo (10MB), longitud de texto (500 chars)
-6. ✅ **UX Fluida**: Animaciones con Framer Motion, estados de carga
+**📝 INTEGRACIÓN EN EDITPROFILEMODAL:**
+1. ✅ **Import Agregado**: AvatarUpload importado en EditProfileModal.jsx
+2. ✅ **Función Handler**: handleAvatarUpdate agregada para manejar cambios de avatar
+3. ✅ **UI Mejorada**: AvatarUpload integrado con tamaño XL y anillo decorativo
+4. ✅ **Feedback Visual**: Toast notification cuando el avatar se actualiza exitosamente
+5. ✅ **FormData Sync**: Avatar URL se actualiza automáticamente en el formulario
 
-**📱 INTEGRACIÓN EN PROFILEPAGE:**
-1. ✅ **Botón Funcional**: onClick agregado al botón "+" para abrir modal
-2. ✅ **Estado Management**: showCreateStoryModal para controlar visibilidad
-3. ✅ **Función Handler**: handleStoryCreated para actualizar lista de historias
-4. ✅ **Import Agregado**: CreateStoryModal importado correctamente
-5. ✅ **Renderizado Condicional**: Modal solo para perfil propio (isOwnProfile)
+**🔧 CAMBIOS EN ESTRUCTURA:**
+1. ✅ **Avatar Section Renovada**: Reemplazado avatar preview estático con AvatarUpload interactivo
+2. ✅ **Eliminado Input URL**: Removido campo manual de URL del avatar (ahora automático)
+3. ✅ **Instrucciones Claras**: Texto explicativo "Haz click en la imagen para cambiar tu avatar"
+4. ✅ **Tamaño Optimizado**: AvatarUpload configurado en tamaño XL para mejor visibilidad
+5. ✅ **Styling Consistente**: Ring púrpura mantiene consistencia visual con el diseño
 
-**🔧 BACKEND INTEGRATION:**
-1. ✅ **Endpoint Verificado**: POST /api/stories funcionando correctamente
-2. ✅ **Modelo Compatible**: Adaptación a estructura StoryCreate del backend
-3. ✅ **Campos Correctos**: story_type, text_content, background_color, etc.
-4. ✅ **Valores Enum**: Uso correcto de 'text', 'image', 'video' (minúsculas)
-5. ✅ **Validación Backend**: Campos requeridos y tipos validados correctamente
+**📱 LIMPIEZA DE PROFILEPAGE:**
+1. ✅ **Import Removido**: AvatarUpload eliminado de imports en ProfilePage.jsx
+2. ✅ **Componentes Simplificados**: Reemplazados AvatarUpload con Avatar estándar
+3. ✅ **Lógica Reducida**: Eliminada lógica condicional compleja para isOwnProfile
+4. ✅ **UI Consistente**: Mismo Avatar para todos los usuarios (propio y ajenos)
+5. ✅ **Código Limpio**: Reducción significativa de líneas de código duplicado
 
-**ESTRUCTURA DE DATOS IMPLEMENTADA:**
-```javascript
-// Historia de Texto
-{
-  story_type: 'text',
-  text_content: 'Contenido del usuario',
-  background_color: '#667eea',
-  text_color: '#FFFFFF',  
-  font_style: 'center-bold-italic',
-  duration: 15
-}
+**FLUJO DE USUARIO MEJORADO:**
+```
+ANTES:
+1. Usuario ve su perfil
+2. Hace click directamente en avatar
+3. Modal de crop aparece
+4. Avatar se actualiza
 
-// Historia de Imagen
-{
-  story_type: 'image',
-  content_url: 'data:image/jpeg;base64,...',
-  text_content: 'Texto superpuesto (opcional)',
-  background_color: '#667eea',
-  text_color: '#FFFFFF',
-  font_style: 'center-normal-normal',
-  duration: 15
-}
+DESPUÉS:
+1. Usuario ve su perfil
+2. Hace click en "Editar Perfil"
+3. Modal de edición se abre
+4. Hace click en avatar dentro del modal
+5. Modal de crop aparece
+6. Avatar se actualiza automáticamente en formulario
+7. Usuario puede hacer más cambios antes de guardar
 ```
 
 **TESTING EXHAUSTIVO COMPLETADO:**
-- ✅ **Botón Funcional**: Click en "+" abre modal correctamente
-- ✅ **Modal Interactivo**: Navegación entre pasos (elegir → crear → publicar)
-- ✅ **Validaciones Frontend**: Archivos grandes, texto vacío manejados
-- ✅ **API Integration**: POST /api/stories retorna historia creada exitosamente
-- ✅ **Actualización UI**: Nueva historia aparece en lista del usuario
-- ✅ **Estados Loading**: Indicadores visuales durante creación
+- ✅ **Modal de Edición**: AvatarUpload funciona correctamente en EditProfileModal
+- ✅ **Upload Funcional**: Cambio de avatar procesa y guarda exitosamente
+- ✅ **FormData Sync**: URL del avatar se actualiza automáticamente en formData
+- ✅ **Toast Feedback**: Confirmación visual cuando avatar se actualiza
+- ✅ **ProfilePage Limpio**: Avatar se muestra correctamente sin funcionalidad de upload
+- ✅ **Responsive**: Funciona correctamente en diferentes tamaños de pantalla
 
-**FUNCIONALIDADES ESPECÍFICAS IMPLEMENTADAS:**
-- 🎨 **Editor Visual**: Preview inmediato con estilos aplicados
-- 📸 **Múltiples Fuentes**: Cámara, galería, texto puro
-- 🎭 **Personalización**: 12 colores, 3 alineaciones, negrita/cursiva
-- 💾 **Auto-save**: Actualización automática de lista de historias
-- 📏 **Límites Sensatos**: 10MB archivos, 500 caracteres texto
-- ⚡ **Performance**: Conversión base64 eficiente, animaciones suaves
+**BENEFICIOS LOGRADOS:**
+1. **🎯 Centralización**: Todas las opciones de edición en un solo lugar
+2. **🧹 Código Limpio**: Eliminación de lógica duplicada y condicional compleja
+3. **🔄 Flujo Lógico**: Cambios de perfil agrupados en modal dedicado
+4. **💫 UX Mejorada**: Proceso más intuitivo y organizado
+5. **⚡ Mantenimiento**: Código más fácil de mantener y expandir
 
 ✅ **RESULTADO FINAL:**
-🎯 **BOTÓN "+" COMPLETAMENTE FUNCIONAL** - Los usuarios ahora pueden:
-1. **Crear historias fácilmente** haciendo click en el botón "+" del perfil
-2. **Elegir tipo de historia** entre texto, imagen o cámara
-3. **Personalizar completamente** con colores, estilos y alineación
-4. **Ver preview en tiempo real** antes de publicar
-5. **Publicar instantáneamente** con validaciones y feedback visual
+🎯 **AVATAR UPLOAD CENTRALIZADO EN EDITAR PERFIL** - Los usuarios ahora:
+1. **Acceden a cambio de avatar** desde el botón "Editar Perfil" 
+2. **Ven todas las opciones juntas** en un modal organizado
+3. **Pueden hacer múltiples cambios** antes de guardar
+4. **Reciben feedback inmediato** con preview actualizado
+5. **Siguen un flujo más lógico** para edición de perfil
 
-**PROBLEMA ORIGINAL RESUELTO**: El botón "+" del perfil ahora tiene funcionalidad completa para crear historias, proporcionando una experiencia intuitive y profesional similar a aplicaciones sociales modernas como Instagram y TikTok.
+**PROBLEMA ORIGINAL RESUELTO**: La funcionalidad de cambio de avatar ahora está correctamente ubicada en el modal de "Editar Perfil", proporcionando una experiencia más organizada y coherente con las expectativas de UX de aplicaciones modernas.
 
 ✅ **MEJORAS IMPLEMENTADAS COMPLETAMENTE:**
 
