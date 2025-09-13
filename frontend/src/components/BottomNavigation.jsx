@@ -33,6 +33,43 @@ const NavigationItem = ({ to, icon: Icon, label, isActive }) => {
 
 const BottomNavigation = ({ onCreatePoll }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const longPressTimer = useRef(null);
+
+  // Long press handlers for home button
+  const handleTouchStart = useCallback(() => {
+    setIsLongPressing(false);
+    longPressTimer.current = setTimeout(() => {
+      setIsLongPressing(true);
+      // Vibration feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      // Navigate to Following page
+      navigate('/following');
+    }, 800); // 800ms for long press
+  }, [navigate]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    setIsLongPressing(false);
+  }, []);
+
+  const handleMouseDown = useCallback(() => {
+    handleTouchStart();
+  }, [handleTouchStart]);
+
+  const handleMouseUp = useCallback(() => {
+    handleTouchEnd();
+  }, [handleTouchEnd]);
+
+  const handleMouseLeave = useCallback(() => {
+    handleTouchEnd();
+  }, [handleTouchEnd]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200/50 shadow-lg z-50">
