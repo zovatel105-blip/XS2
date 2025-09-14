@@ -3454,33 +3454,26 @@ def calculate_time_ago(created_at: datetime) -> str:
     
     return "hace unos momentos"
 
-# Debug endpoint for following polls - NO AUTH REQUIRED
-@api_router.get("/debug/following")
-async def debug_following_polls():
-    """Debug following polls - no authentication required"""
+# Simple debug endpoint
+@api_router.get("/debug/simple")
+async def debug_simple():
+    """Simple debug endpoint"""
     try:
-        # Get all follow relationships
-        follows = await db.follows.find({}).to_list(100)
+        # Count collections
+        users_count = await db.users.count_documents({})
+        follows_count = await db.follows.count_documents({})
+        polls_count = await db.polls.count_documents({})
         
-        # Get all polls
-        polls = await db.polls.find({"is_active": True}).to_list(100)
-        
-        # Get all users
-        users = await db.users.find({}).to_list(100)
-        
-        debug_info = {
-            "total_follows": len(follows),
-            "total_polls": len(polls),
-            "total_users": len(users),
-            "follows_sample": follows[:5],
-            "polls_sample": [{"id": p.get("id"), "title": p.get("title"), "author_id": p.get("author_id")} for p in polls[:5]],
-            "users_sample": [{"id": u.get("id"), "username": u.get("username")} for u in users[:5]]
+        return {
+            "status": "ok",
+            "users": users_count,
+            "follows": follows_count, 
+            "polls": polls_count,
+            "message": "Backend is working"
         }
         
-        return debug_info
-        
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e), "status": "error"}
 
 # Test endpoint for carousel debugging - NO AUTH REQUIRED
 @api_router.get("/polls/test-carousel")
