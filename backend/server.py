@@ -3821,6 +3821,7 @@ async def create_poll(
         tags=poll.tags,
         category=poll.category,
         mentioned_users=poll.mentioned_users,  # Include mentioned users in poll
+        layout=poll.layout,  # ✅ FIXED: Include layout field in response
         created_at=poll.created_at,
         time_ago=calculate_time_ago(poll.created_at)
     )
