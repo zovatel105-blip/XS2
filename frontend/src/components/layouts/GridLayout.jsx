@@ -4,34 +4,24 @@ import { Trophy } from 'lucide-react';
 
 const GridLayout = ({ poll, onVote, gridType }) => {
   const getGridClasses = () => {
-    const classes = (() => {
-      switch (gridType) {
-        case 'vertical': // 2 columnas lado a lado
-          return 'grid grid-cols-2 gap-0.5';
-        case 'horizontal': // 2 filas arriba y abajo
-          return 'grid grid-cols-1 grid-rows-2 gap-0.5';
-        case 'triptych-vertical': // 3 columnas lado a lado
-          return 'grid grid-cols-3 gap-0.5';
-        case 'triptych-horizontal': // 3 filas arriba y abajo
-          return 'grid grid-cols-1 grid-rows-3 gap-0.5';
-        case 'grid-2x2': // 4 partes (cuadrícula 2x2)
-          return 'grid grid-cols-2 grid-rows-2 gap-0.5';
-        case 'grid-3x2': // 6 partes (cuadrícula 3x2)
-          return 'grid grid-cols-3 grid-rows-2 gap-0.5';
-        case 'horizontal-3x2': // 6 partes (cuadrícula 2x3)
-          return 'grid grid-cols-2 grid-rows-3 gap-0.5';
-        default:
-          return 'grid grid-cols-2 gap-0.5';
-      }
-    })();
-    
-    console.log('📐 GridLayout classes:', {
-      gridType,
-      classes,
-      pollId: poll.id
-    });
-    
-    return classes;
+    switch (gridType) {
+      case 'vertical': // 2 columnas lado a lado
+        return 'grid grid-cols-2 gap-0.5';
+      case 'horizontal': // 2 filas arriba y abajo
+        return 'grid grid-cols-1 grid-rows-2 gap-0.5';
+      case 'triptych-vertical': // 3 columnas lado a lado
+        return 'grid grid-cols-3 gap-0.5';
+      case 'triptych-horizontal': // 3 filas arriba y abajo
+        return 'grid grid-cols-1 grid-rows-3 gap-0.5';
+      case 'grid-2x2': // 4 partes (cuadrícula 2x2)
+        return 'grid grid-cols-2 grid-rows-2 gap-0.5';
+      case 'grid-3x2': // 6 partes (cuadrícula 3x2)
+        return 'grid grid-cols-3 grid-rows-2 gap-0.5';
+      case 'horizontal-3x2': // 6 partes (cuadrícula 2x3)
+        return 'grid grid-cols-2 grid-rows-3 gap-0.5';
+      default:
+        return 'grid grid-cols-2 gap-0.5';
+    }
   };
 
   const getPercentage = (votes) => {
