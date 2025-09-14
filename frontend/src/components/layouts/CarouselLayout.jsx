@@ -180,14 +180,11 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                     )}
                   </div>
                   
-                  {/* Vote percentage */}
+                  {/* Vote percentage - Subtle display for carousel */}
                   {poll.totalVotes > 0 && (
-                    <div className="flex flex-col items-end ml-4">
-                      <div className="bg-white/90 backdrop-blur-sm text-black px-3 py-2 rounded-xl font-bold text-lg shadow-lg">
+                    <div className="absolute bottom-4 left-4 z-20">
+                      <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-lg text-sm font-medium shadow-lg">
                         {percentage}%
-                      </div>
-                      <div className="text-white/80 text-sm mt-1">
-                        {option.votes} voto{option.votes !== 1 ? 's' : ''}
                       </div>
                     </div>
                   )}
