@@ -169,7 +169,13 @@ class PollService {
     return {
       id: backendPoll.id,
       title: backendPoll.title,
-      author: backendPoll.author?.display_name || backendPoll.author?.username,
+      author: {
+        id: backendPoll.author?.id,
+        username: backendPoll.author?.username,
+        display_name: backendPoll.author?.display_name,
+        avatar_url: backendPoll.author?.avatar_url,
+        is_verified: backendPoll.author?.is_verified
+      },
       authorUser: {
         id: backendPoll.author?.id,
         username: backendPoll.author?.username,
