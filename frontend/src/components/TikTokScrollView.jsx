@@ -499,12 +499,12 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                 return (
                   <div
                     key={option.id}
-                    className="relative flex-shrink-0 h-full cursor-pointer group overflow-hidden touch-manipulation"
+                    className="relative flex-shrink-0 w-full cursor-pointer group overflow-hidden touch-manipulation"
                     onClick={() => handleVote(option.id)}
                     style={{ 
                       WebkitTapHighlightColor: 'transparent',
                       touchAction: 'manipulation',
-                      width: `${100 / poll.options.length}%`  // Each slide takes equal width
+                      height: `${100 / poll.options.length}%`  // Each slide takes equal height
                     }}
                   >
                     {/* Background media - Perfect coverage */}
