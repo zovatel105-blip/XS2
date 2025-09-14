@@ -91,17 +91,17 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
       case 'vertical':
         return 'grid grid-cols-2 gap-0.5'; // 2 parts side by side
       case 'horizontal': 
-        return 'grid grid-rows-2 gap-0.5'; // 2 parts top and bottom
+        return 'grid grid-rows-2 gap-0.5 h-full'; // 2 parts top and bottom
       case 'triptych-vertical':
         return 'grid grid-cols-3 gap-0.5'; // 3 parts side by side
       case 'triptych-horizontal':
-        return 'grid grid-rows-3 gap-0.5'; // 3 parts top and bottom
+        return 'grid grid-rows-3 gap-0.5 h-full'; // 3 parts top and bottom
       case 'grid-2x2':
-        return 'grid grid-cols-2 grid-rows-2 gap-0.5'; // 4 parts (2x2)
+        return 'grid grid-cols-2 grid-rows-2 gap-0.5 h-full'; // 4 parts (2x2)
       case 'grid-3x2':
-        return 'grid grid-cols-3 grid-rows-2 gap-0.5'; // 6 parts (3x2)
+        return 'grid grid-cols-3 grid-rows-2 gap-0.5 h-full'; // 6 parts (3x2)
       case 'horizontal-3x2':
-        return 'grid grid-cols-2 grid-rows-3 gap-0.5'; // 6 parts (2x3)
+        return 'grid grid-cols-2 grid-rows-3 gap-0.5 h-full'; // 6 parts (2x3)
       default:
         return 'grid grid-cols-2 gap-0.5'; // Default fallback
     }
