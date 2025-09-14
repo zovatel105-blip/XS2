@@ -25,21 +25,33 @@ const LayoutRenderer = ({ poll, onVote, isActive }) => {
   // Obtener el layout type del poll, con fallback a 'vertical'
   const layoutType = poll.layout || 'vertical';
   
-  // Obtener el componente correspondiente del mapeo
-  const LayoutComponent = layoutComponents[layoutType];
-  
-  // Si no existe el componente, usar GridLayout con tipo vertical como fallback
-  if (!LayoutComponent) {
-    console.warn(`Layout type "${layoutType}" not found, using vertical fallback`);
-    return <GridLayout poll={poll} onVote={onVote} isActive={isActive} gridType="vertical" />;
+  // SOLO layout "off" debe usar carrusel
+  if (layoutType === 'off') {
+    return (
+      <CarouselLayout 
+        poll={poll} 
+        onVote={onVote} 
+        isActive={isActive}
+      />
+    );
   }
   
-  // Renderizar el componente con las props
+  // Todos los demás layouts usan GridLayout
+  const gridType = layoutType === 'vertical' ? 'vertical' :
+                   layoutType === 'horizontal' ? 'horizontal' :
+                   layoutType === 'triptych-vertical' ? 'triptych-vertical' :
+                   layoutType === 'triptych-horizontal' ? 'triptych-horizontal' :
+                   layoutType === 'grid-2x2' ? 'grid-2x2' :
+                   layoutType === 'grid-3x2' ? 'grid-3x2' :
+                   layoutType === 'horizontal-3x2' ? 'horizontal-3x2' :
+                   'vertical'; // fallback
+  
   return (
-    <LayoutComponent 
+    <GridLayout 
       poll={poll} 
       onVote={onVote} 
       isActive={isActive}
+      gridType={gridType}
     />
   );
 };
