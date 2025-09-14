@@ -483,12 +483,12 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Carousel slides */}
+            {/* Carousel slides - VERTICAL carousel */}
             <div 
-              className="flex w-full h-full transition-transform duration-300 ease-in-out"
+              className="flex flex-col w-full transition-transform duration-300 ease-in-out"
               style={{ 
-                transform: `translateX(-${currentSlide * 100}%)`,
-                width: `${poll.options.length * 100}%`  // Total width based on number of slides
+                transform: `translateY(-${currentSlide * 100}%)`,
+                height: `${poll.options.length * 100}%`  // Total height based on number of slides
               }}
             >
               {poll.options.map((option, optionIndex) => {
