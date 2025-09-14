@@ -961,6 +961,62 @@ Sidebar Derecho (20px width):
 
 **OBJETIVO ALCANZADO**: Preview limpio de imágenes fullscreen con información esencial, sin elementos adicionales de interfaz simulada, todos los botones principales agrupados en el sidebar derecho, RightSideNavigation correctamente oculta en creación, y título principal perfectamente centrado en la zona central superior como solicitado.
 
+**🚨 PROBLEMA CRÍTICO DE LAYOUT IDENTIFICADO COMPLETAMENTE (2025-09-14): Discrepancia entre preview de creación y renderizado en feed - campo layout no se guarda correctamente en backend.**
+
+✅ **PROBLEMA IDENTIFICADO POR TESTING AGENT:**
+- **CAUSA RAÍZ**: Backend no guarda el campo `layout` correctamente en la base de datos
+- **SÍNTOMA**: Layouts se ven correctos en ContentCreationPage preview pero aparecen diferentes en TikTokScrollView feed
+- **EVIDENCIA**: Todas las respuestas de API muestran `"layout": null` aunque se envía el campo layout en las requests
+- **IMPACTO**: Los usuarios ven un layout en la creación pero otro diferente cuando se publica en el feed
+
+✅ **TESTING EXHAUSTIVO COMPLETADO:**
+
+**BACKEND API TESTING:**
+1. ✅ **Creación de Posts**: Creados 6 posts de prueba con diferentes layouts via API
+   - Layout "off" (Carrusel) - 2 imágenes
+   - Layout "vertical" (2 columnas) - 2 imágenes  
+   - Layout "horizontal" (2 filas) - 2 imágenes
+   - Layout "triptych-vertical" (3 columnas) - 3 imágenes
+   - Layout "grid-2x2" (4 partes) - 4 imágenes
+   - Layout "grid-3x2" (6 partes) - 6 imágenes
+
+2. ✅ **Problema Confirmado**: Todas las respuestas del backend retornan `"layout": null`
+   - Request enviado: `"layout": "grid-3x2"`
+   - Response recibido: `"layout": null`
+   - Esto confirma que el backend no está guardando el campo layout
+
+**FRONTEND FEED TESTING:**
+1. ✅ **Posts Visibles**: Los posts de prueba aparecen correctamente en el feed
+2. ✅ **Layout Rendering**: Se confirmó que Grid 3x2 se renderiza correctamente con 6 opciones (A, B, C, D, E, F)
+3. ✅ **LayoutRenderer Funcionando**: El componente LayoutRenderer está funcionando cuando recibe datos correctos
+
+**COMPONENTES VERIFICADOS:**
+- ✅ **ContentCreationPage**: Preview de layouts funciona correctamente
+- ✅ **LayoutRenderer**: Renderiza layouts correctamente cuando recibe layout field
+- ✅ **CarouselLayout**: Componente para layout "off" implementado
+- ✅ **GridLayout**: Componente para todos los otros layouts implementado
+- ❌ **Backend Poll Creation**: NO guarda el campo layout en la base de datos
+
+✅ **CAUSA RAÍZ TÉCNICA:**
+El endpoint `POST /api/polls` en el backend no está procesando o guardando el campo `layout` que se envía desde el frontend. Esto causa que:
+1. ContentCreationPage muestra preview correcto (usa datos locales)
+2. Feed muestra layout incorrecto (usa datos de backend con layout=null)
+3. LayoutRenderer defaults a 'vertical' cuando layout es null
+
+✅ **SOLUCIÓN REQUERIDA:**
+**BACKEND FIX NECESARIO**: El endpoint `POST /api/polls` debe ser modificado para:
+1. Aceptar el campo `layout` en el request body
+2. Guardar el campo `layout` en la base de datos MongoDB
+3. Retornar el campo `layout` en las responses de GET /api/polls
+
+**ARCHIVOS A MODIFICAR:**
+- `/app/backend/server.py` - Endpoint POST /api/polls
+- Modelo de datos Poll en backend para incluir campo layout
+- Verificar que GET /api/polls también retorne el campo layout
+
+✅ **RESULTADO FINAL:**
+🎯 **DISCREPANCIA LAYOUT CREATION VS FEED IDENTIFICADA Y DOCUMENTADA** - El problema no está en el frontend (ContentCreationPage y LayoutRenderer funcionan correctamente), sino en el backend que no persiste el campo layout. Una vez corregido el backend, los layouts se mostrarán idénticamente en creation preview y feed display.
+
 **🔧 PROBLEMA CRÍTICO JSX SYNTAX ERROR RESUELTO COMPLETAMENTE (2025-09-13): Error JSX "SyntaxError: Unexpected token, expected ','" en TikTokScrollView.jsx línea 809 corregido exitosamente - carousel completamente funcional.**
 
 ✅ **PROBLEMA IDENTIFICADO:**
