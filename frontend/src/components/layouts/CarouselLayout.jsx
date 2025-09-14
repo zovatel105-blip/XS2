@@ -46,16 +46,16 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
     setCurrentSlide(0);
   }, [poll.id]);
 
-  // Auto-advance carousel every 5 seconds when active
+  // Auto-advance carousel every 5 seconds when active (fixed dependencies)
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive || totalSlides <= 1) return;
     
     const interval = setInterval(() => {
-      nextSlide();
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isActive, currentSlide]);
+  }, [isActive, totalSlides]); // Removed currentSlide dependency to prevent reset
 
   const getPercentage = (votes) => {
     return poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
