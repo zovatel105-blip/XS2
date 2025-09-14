@@ -144,12 +144,6 @@ const FeedPage = () => {
       // Refresh poll data to get accurate counts
       const updatedPoll = await pollService.refreshPoll(pollId);
       if (updatedPoll) {
-        console.log('🔄 Refresh poll after vote:', {
-          pollId,
-          refreshedLayout: updatedPoll.layout,
-          refreshedTitle: updatedPoll.title
-        });
-        
         setPolls(prev => prev.map(poll => 
           poll.id === pollId ? updatedPoll : poll
         ));
