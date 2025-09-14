@@ -118,27 +118,26 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
-  // Touch handlers for swipe navigation
+  // Touch handlers for VERTICAL swipe navigation
   const handleTouchStart = (e) => {
     setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    setTouchStart(e.targetTouches[0].clientY); // Changed to clientY for vertical
   };
 
   const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    setTouchEnd(e.targetTouches[0].clientY); // Changed to clientY for vertical
   };
 
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
+    const isUpSwipe = distance > 50;    // Swipe up = next slide
+    const isDownSwipe = distance < -50; // Swipe down = previous slide
 
-    if (isLeftSwipe && shouldUseCarousel) {
+    if (isUpSwipe && shouldUseCarousel) {
       nextSlide();
     }
-    if (isRightSwipe && shouldUseCarousel) {
+    if (isDownSwipe && shouldUseCarousel) {
       prevSlide();
     }
   };
