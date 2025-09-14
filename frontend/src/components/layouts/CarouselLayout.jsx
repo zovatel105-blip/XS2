@@ -91,12 +91,12 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Carousel slides - HORIZONTAL carousel */}
+      {/* Carousel slides - HORIZONTAL carousel SIMPLIFIED */}
       <div 
-        className="flex w-full h-full transition-transform duration-300 ease-in-out"
+        className="flex h-full transition-transform duration-300 ease-in-out"
         style={{ 
           transform: `translateX(-${currentSlide * 100}%)`,
-          width: `${totalSlides * 100}%`  // Total width based on number of slides
+          width: '100%'  // Fixed width
         }}
       >
         {poll.options.map((option, optionIndex) => {
@@ -112,8 +112,7 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
               style={{ 
                 WebkitTapHighlightColor: 'transparent',
                 touchAction: 'manipulation',
-                width: `${100 / totalSlides}%`,  // Each slide takes equal width
-                minWidth: `${100 / totalSlides}%` // Ensure minimum width
+                width: '100%'  // Each slide is full width
               }}
             >
               {/* Background media */}
