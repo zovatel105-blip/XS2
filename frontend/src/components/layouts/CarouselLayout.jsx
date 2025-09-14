@@ -136,12 +136,16 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                   )
                 ) : (
                   <div className={cn(
-                    "w-full h-full",
+                    "w-full h-full flex items-center justify-center",
                     optionIndex === 0 ? "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500" :
                     optionIndex === 1 ? "bg-gradient-to-br from-gray-300 via-gray-500 to-gray-700" :
                     optionIndex === 2 ? "bg-gradient-to-br from-yellow-500 via-red-500 to-pink-600" :
                     "bg-gradient-to-br from-amber-600 via-orange-700 to-red-800"
-                  )} />
+                  )}>
+                    <div className="text-white text-lg font-bold">
+                      Slide {optionIndex + 1}
+                    </div>
+                  </div>
                 )}
               </div>
 
