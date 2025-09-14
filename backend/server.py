@@ -3454,6 +3454,48 @@ def calculate_time_ago(created_at: datetime) -> str:
     
     return "hace unos momentos"
 
+# Test endpoint for carousel debugging - NO AUTH REQUIRED
+@api_router.get("/polls/test-carousel")
+async def get_test_carousel():
+    """Get test carousel posts for debugging - no authentication required"""
+    try:
+        # Find carousel posts (layout = "off")
+        carousel_posts = await db.polls.find({"layout": "off"}).to_list(10)
+        
+        if not carousel_posts:
+            return []
+        
+        # Transform to expected format
+        transformed_posts = []
+        for poll in carousel_posts:
+            transformed_post = {
+                "id": poll.get("id"),
+                "title": poll.get("title"),
+                "description": poll.get("description"),
+                "layout": poll.get("layout"),
+                "options": poll.get("options", []),
+                "author": poll.get("author", {}),
+                "authorUser": poll.get("authorUser", {}),
+                "totalVotes": poll.get("totalVotes", 0),
+                "likes": poll.get("likes", 0),
+                "comments": poll.get("comments", 0),
+                "shares": poll.get("shares", 0),
+                "userVote": None,
+                "userLiked": False,
+                "timeAgo": poll.get("timeAgo", "test"),
+                "created_at": poll.get("created_at"),
+                "music": poll.get("music"),
+                "tags": poll.get("tags", []),
+                "category": poll.get("category", "test")
+            }
+            transformed_posts.append(transformed_post)
+        
+        return transformed_posts
+        
+    except Exception as e:
+        print(f"Error getting test carousel: {e}")
+        return []
+
 @api_router.get("/polls", response_model=List[PollResponse])
 async def get_polls(
     limit: int = 20,
