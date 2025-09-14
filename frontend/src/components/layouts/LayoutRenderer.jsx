@@ -25,17 +25,8 @@ const LayoutRenderer = ({ poll, onVote, isActive }) => {
   // Obtener el layout type del poll, con fallback a 'vertical'
   const layoutType = poll.layout || 'vertical';
   
-  // Debug logging
-  console.log('🎨 LayoutRenderer:', {
-    pollId: poll.id,
-    layoutType: layoutType,
-    hasOptions: !!poll.options,
-    optionsCount: poll.options?.length || 0
-  });
-  
   // SOLO layout "off" debe usar carrusel
   if (layoutType === 'off') {
-    console.log('🎠 Using CarouselLayout');
     return (
       <CarouselLayout 
         poll={poll} 
@@ -54,8 +45,6 @@ const LayoutRenderer = ({ poll, onVote, isActive }) => {
                    layoutType === 'grid-3x2' ? 'grid-3x2' :
                    layoutType === 'horizontal-3x2' ? 'horizontal-3x2' :
                    'vertical'; // fallback
-  
-  console.log('📐 Using GridLayout with gridType:', gridType);
   
   return (
     <GridLayout 
