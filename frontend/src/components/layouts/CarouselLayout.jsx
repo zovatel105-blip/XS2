@@ -157,39 +157,6 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                   👑 Ganador
                 </div>
               )}
-
-              {/* Option text overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6">
-                <div className="flex justify-between items-end">
-                  <div className="flex-1">
-                    {option.text && (
-                      <p className="text-white font-bold text-xl mb-2 leading-tight drop-shadow-lg">
-                        {option.text}
-                      </p>
-                    )}
-                    
-                    {/* Mentioned users */}
-                    {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-2">
-                        {option.mentionedUsers.map((user, idx) => (
-                          <span key={idx} className="bg-blue-500/80 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
-                            @{user.username}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Vote percentage - Subtle display for carousel */}
-                  {poll.totalVotes > 0 && (
-                    <div className="absolute bottom-4 left-4 z-20">
-                      <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-lg text-sm font-medium shadow-lg">
-                        {percentage}%
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           );
         })}
