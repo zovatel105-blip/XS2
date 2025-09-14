@@ -3545,23 +3545,7 @@ async def get_polls(
     author_ids = list(set(poll["author_id"] for poll in polls))
     authors_cursor = db.users.find({"id": {"$in": author_ids}})
     authors_list = await authors_cursor.to_list(len(author_ids))
-    authors_dict = {}
-    for user in authors_list:
-        try:
-            user_response = UserResponse(
-                id=user["id"],
-                username=user["username"], 
-                display_name=user.get("display_name", user["username"]),
-                email=user["email"],
-                avatar_url=user.get("avatar_url"),
-                is_verified=user.get("is_verified", False),
-                bio=user.get("bio"),
-                created_at=user["created_at"]
-            )
-            authors_dict[user["id"]] = user_response
-        except Exception as e:
-            print(f"Error creating UserResponse for user {user.get('id', 'unknown')}: {e}")
-            continue
+    authors_dict = {user["id"]: UserResponse(**user) for user in authors_list}
     
     # Batch get follow status for all authors to reduce DB queries
     follow_relationships_cursor = db.follows.find({
