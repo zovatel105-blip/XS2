@@ -2893,7 +2893,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Supabase Poll Service Testing"
+    - "Layout System Functionality Testing - LayoutRenderer with CarouselLayout and GridLayout"
   stuck_tasks:
     - "Supabase Poll Service Testing"
   test_all: false
