@@ -85,10 +85,13 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   
   // Debug logging
   console.log('🎠 Carousel Debug:', {
+    pollId: poll.id,
     shouldUseCarousel,
     layout: poll.layout,
+    layoutType: typeof poll.layout,
     willUseCarousel: shouldUseCarousel && poll.layout === 'off',
-    optionsCount: poll.options?.length || 0
+    optionsCount: poll.options?.length || 0,
+    containerWillUseGrid: poll.layout !== 'off'
   });
 
   // Carousel navigation functions
