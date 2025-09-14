@@ -1019,6 +1019,52 @@ El endpoint `POST /api/polls` en el backend no está procesando o guardando el c
 
 **🔧 PROBLEMA CRÍTICO JSX SYNTAX ERROR RESUELTO COMPLETAMENTE (2025-09-13): Error JSX "SyntaxError: Unexpected token, expected ','" en TikTokScrollView.jsx línea 809 corregido exitosamente - carousel completamente funcional.**
 
+**🚨 PROBLEMA CRÍTICO LAYOUT FIELD TRANSMISSION IDENTIFICADO COMPLETAMENTE (2025-09-14): Discrepancia entre backend y frontend en transmisión de campo layout - backend funciona correctamente pero frontend recibe undefined.**
+
+✅ **TESTING EXHAUSTIVO COMPLETADO:**
+
+**BACKEND VERIFICATION - ✅ FUNCIONANDO CORRECTAMENTE:**
+1. ✅ **POST /api/polls**: Guarda layout correctamente - Response incluye `"layout": "triptych-horizontal"`
+2. ✅ **GET /api/polls**: Retorna layout correctamente - Response incluye `"layout": "triptych-horizontal"`
+3. ✅ **Database Storage**: Campo layout se persiste correctamente en MongoDB
+4. ✅ **API Endpoints**: Todos los endpoints manejan el campo layout apropiadamente
+
+**FRONTEND VERIFICATION - ❌ PROBLEMA IDENTIFICADO:**
+1. ❌ **LayoutRenderer Reception**: Recibe `receivedLayout: undefined` para TODOS los posts
+2. ❌ **Fallback Usage**: Todos los posts usan `fallbackUsed: true` y defaultean a `layoutType: vertical`
+3. ❌ **Data Pipeline**: El campo layout se pierde en algún punto del pipeline frontend
+
+**CONSOLE DEBUG EVIDENCE CAPTURED:**
+```
+🚨 LayoutRenderer DEBUG: {
+  pollId: 2e12384d-8bc3-4993-a61a-dd1b16038402, 
+  receivedLayout: undefined, 
+  layoutType: vertical, 
+  pollTitle: TEST TRIPTYCH HORIZONTAL, 
+  fallbackUsed: true
+}
+```
+
+**TEST POST CREATED:**
+- **Title**: "TEST TRIPTYCH HORIZONTAL"
+- **Layout Sent**: "triptych-horizontal" 
+- **Layout Stored**: "triptych-horizontal" (verified via API)
+- **Layout Received by Frontend**: undefined (problema crítico)
+
+✅ **CAUSA RAÍZ IDENTIFICADA:**
+- **Backend**: ✅ Completamente funcional - guarda y retorna layout correctamente
+- **Frontend Data Pipeline**: ❌ Problema crítico - campo layout se pierde entre API response y LayoutRenderer
+- **Ubicación del Problema**: Frontend data transformation/processing layer
+
+✅ **AREAS A INVESTIGAR:**
+1. **API Service Layer**: Verificar si pollService.js transforma correctamente los datos
+2. **Data Transformation**: Verificar funciones que procesan respuestas de API
+3. **Component Props**: Verificar que el campo layout se pasa correctamente a LayoutRenderer
+4. **State Management**: Verificar que el estado mantiene el campo layout
+
+✅ **RESULTADO FINAL:**
+🎯 **LAYOUT FIELD TRANSMISSION ISSUE COMPLETAMENTE DIAGNOSTICADO** - El problema NO está en el backend (que funciona perfectamente), sino en el frontend donde el campo layout se pierde durante el procesamiento de datos. La discrepancia entre creation preview (que usa datos locales) y feed display (que usa datos de API) está causada por un bug en el pipeline de datos frontend que necesita ser corregido por el main agent.
+
 ✅ **PROBLEMA IDENTIFICADO:**
 - Error de sintaxis JSX persistente después de implementar carousel funcionalidad
 - "SyntaxError: Unexpected token, expected ','" en línea 809 de TikTokScrollView.jsx
