@@ -55,14 +55,6 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
   // Reset carousel when poll changes
   useEffect(() => {
     setCurrentSlide(0);
-    // Debug: Log poll options
-    console.log('🎠 Carousel options:', poll.options?.map((opt, idx) => ({
-      index: idx,
-      id: opt.id,
-      hasMedia: !!opt.media,
-      mediaUrl: opt.media?.url,
-      mediaType: opt.media?.type
-    })));
   }, [poll.id]);
 
   // Auto-advance carousel every 5 seconds when active (fixed dependencies)
