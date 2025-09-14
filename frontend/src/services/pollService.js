@@ -209,7 +209,8 @@ class PollService {
       userLiked: backendPoll.user_liked,
       category: backendPoll.category,
       tags: backendPoll.tags || [],
-      is_featured: backendPoll.is_featured
+      is_featured: backendPoll.is_featured,
+      layout: backendPoll.layout  // ✅ CRITICAL FIX: Include layout field for LayoutRenderer
     };
   }
 
