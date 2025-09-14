@@ -473,7 +473,10 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             {/* Carousel slides */}
             <div 
               className="flex w-full h-full transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              style={{ 
+                transform: `translateX(-${currentSlide * 100}%)`,
+                width: `${poll.options.length * 100}%`  // Total width based on number of slides
+              }}
             >
               {poll.options.map((option, optionIndex) => {
                 const percentage = getPercentage(option.votes);
