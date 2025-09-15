@@ -195,18 +195,22 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
   // Normal grid mode
   return (
     <div className="w-full h-full">
-      <div className={`grid w-full h-full ${getLayoutStyle()}`} style={{ gap: '1px' }}>
-        {slots.map((slotIndex) => {
-          const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
-          return (
-            <div
-              key={slotIndex}
-              className="relative bg-black overflow-hidden group w-full h-full min-h-0"
-            >
-              {/* Letter identifier */}
-              <div className="absolute top-2 left-2 w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
-                {String.fromCharCode(65 + slotIndex)}
-              </div>
+      {layout.id === 'off' ? (
+        /* Carousel layout - Fullscreen slots with scroll */
+        <div className="w-full h-full overflow-y-auto">
+          <div className="grid grid-cols-1 gap-4 min-h-full">
+            {slots.map((slotIndex) => {
+              const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
+              return (
+                <div
+                  key={slotIndex}
+                  className="relative bg-black overflow-hidden group w-full h-screen flex-shrink-0"
+                  style={{ minHeight: '100vh' }} // Force fullscreen height for each carousel item
+                >
+                  {/* Letter identifier */}
+                  <div className="absolute top-4 left-4 w-8 h-8 bg-gray-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                    {String.fromCharCode(65 + slotIndex)}
+                  </div>
               
               {/* Fullscreen indicator for 'off' layout */}
               {layout.id === 'off' && (
