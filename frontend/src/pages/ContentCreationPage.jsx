@@ -1203,6 +1203,17 @@ const ContentCreationPage = () => {
               </svg>
             )}
           </button>
+
+          {/* Add Slot Button - Only for "off" layout and not at max capacity */}
+          {selectedLayout.id === 'off' && options.filter(opt => opt && opt.media).length < 6 && (
+            <button
+              onClick={handleAddSlot}
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/90 backdrop-blur-sm hover:bg-blue-600/90 rounded-full flex items-center justify-center text-white transition-all shadow-lg border border-white/10"
+              title="Añadir slot al carrusel"
+            >
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+            </button>
+          )}
         </div>
       )}
 
