@@ -413,7 +413,129 @@
 ✅ **RESULTADO FINAL:**
 🎯 **AUDIO COMPLETAMENTE FUNCIONAL CON MÚLTIPLES POSTS** - Los usuarios ahora pueden disfrutar de audio continuo y correcto, incluso cuando múltiples publicaciones usan la misma canción. El sistema AudioManager distingue inteligentemente entre posts individuales y reproduce audio de manera consistente sin importar cuántas publicaciones compartan la misma pista musical.
 
-**🎠 LAYOUT "OFF" CARRUSEL HORIZONTAL COMPLETAMENTE IMPLEMENTADO (2025-01-27): Implementadas todas las mejoras solicitadas - scroll horizontal, botón "+" en sidebar y límite de 6 slots máximo.**
+**🎠 LAYOUT "OFF" CARRUSEL CON PORTADA IMPLEMENTADO (2025-01-27): Implementadas todas las mejoras solicitadas - scroll horizontal, botón "+" en sidebar, límite de 6 slots y primera foto como portada en el perfil.**
+
+✅ **MEJORAS COMPLETADAS:**
+
+**1. INDICADORES DE CARRUSEL REPOSICIONADOS:**
+- ✅ **Posición mejorada**: Indicadores movidos de `bottom-6` a `bottom-16` para coincidir con altura de votos
+- ✅ **Centrado perfecto**: Mantienen posición `left-1/2 transform -translate-x-1/2` para centrado horizontal
+- ✅ **Z-index correcto**: `z-20` asegura que aparezcan sobre otros elementos
+
+**2. SCROLL HORIZONTAL IMPLEMENTADO:**
+- ✅ **Contenedor horizontal**: Cambiado de `overflow-y-auto` a `overflow-x-auto overflow-y-hidden`
+- ✅ **Layout flexbox**: Slots ahora usan `flex` horizontal en lugar de `grid` vertical
+- ✅ **Ancho dinámico**: Contenedor ajusta ancho basado en número de slots: `width: ${slots.length * 100}%`
+- ✅ **Slots iguales**: Cada slot ocupa `width: ${100 / slots.length}%` para distribución uniforme
+- ✅ **Sin espacios**: `gap-0` mantiene slots contiguos para navegación fluida
+
+**3. BOTÓN "+" EN SIDEBAR DERECHO:**
+- ✅ **Posición correcta**: Ubicado debajo del botón "Publicar" en sidebar derecho
+- ✅ **Condicional**: Solo aparece cuando `selectedLayout.id === 'off'` y no se ha alcanzado el máximo
+- ✅ **Estilo coherente**: Mismo diseño que otros botones del sidebar (`w-12 h-12`, `bg-blue-500/90`)
+- ✅ **Funcionalidad**: Función `handleAddSlot()` añade nuevo slot vacío al array de opciones
+- ✅ **Feedback**: Toast notification confirma adición de slot con letra correspondiente
+
+**4. LÍMITE MÁXIMO DE 6 SLOTS:**
+- ✅ **Función limitada**: `getSlotsCount()` usa `Math.min(totalSlots, 6)` para máximo 6 slots
+- ✅ **Botón condicional**: Botón "+" se oculta cuando se alcanza el límite de 6 slots
+- ✅ **Validación**: `handleAddSlot()` verifica que no se excedan 6 slots antes de añadir
+
+**5. PRIMERA FOTO COMO PORTADA EN PERFIL:**
+- ✅ **Detección de carrusel**: `TikTokProfileGrid` detecta `poll.layout === 'off'` para carruseles
+- ✅ **Portada única**: Muestra solo la primera imagen (`images[0]`) como portada en lugar del grid composite
+- ✅ **Indicador de carrusel**: Badge `🎠 {cantidad}` en esquina superior derecha indica contenido de carrusel
+- ✅ **Imagen completa**: Primera imagen ocupa todo el thumbnail con `object-cover` para mejor visualización
+- ✅ **Manejo de errores**: Fallback a gradiente si la imagen de portada falla en cargar
+
+**6. DISEÑO CARRUSEL HORIZONTAL OPTIMIZADO:**
+- ✅ **Slots compactos**: Removido botón "+" central de slots vacíos para mejor UX
+- ✅ **Iconos apropiados**: Slots vacíos usan `ImageIcon` en lugar de `Plus` 
+- ✅ **Menciones optimizadas**: Mostrar máximo 2 usuarios mencionados + contador para ahorrar espacio
+- ✅ **Texto compacto**: Placeholders más cortos para mejor visualización horizontal
+
+**7. CONTROLES FUNCIONALES:**
+- ✅ **Navegación horizontal**: Scroll fluido entre slots con mouse/touch
+- ✅ **Crop y edición**: Sistema `InlineCrop` funciona correctamente en layout horizontal
+- ✅ **Upload de media**: Funcionalidad completa de subida de imágenes/videos por slot
+- ✅ **Controles de texto**: Descripción y menciones por slot individuales
+
+**ESTRUCTURA FINAL DEL CARRUSEL HORIZONTAL:**
+```
+Layout "off" - Carrusel Horizontal:
+┌─────────────────────────────────────────────────────────────────┐
+│ [X]         [🎵 Add sound]                      [👁️]          │ ← Header
+│ [Describe tu publicación...]                                   │ ← Input título
+├─────────────────────────────────────────────────────────────────┤
+│                                                           │ 📐 │ ← Sidebar
+│ [A] [🎠]    [B] [🎠]    [C] [🎠]    [D] [🎠]    [E] [🎠] │ 📤 │   con 
+│ IMG/VIDEO   IMG/VIDEO   IMG/VIDEO   IMG/VIDEO   IMG/VIDEO │ ➕ │ ← botones
+│ [Desc A...] [Desc B...] [Desc C...] [Desc D...] [Desc E...] │   │
+│ [@users]    [@users]    [@users]    [@users]    [@users]  │   │
+│                                                           │   │
+│ ← ← ← ← ← ← ← ← ← SCROLL HORIZONTAL → → → → → → → → → → │   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**VISTA EN PERFIL - CARRUSEL COMO PORTADA:**
+```
+Grid de Perfil:
+┌─────────────┬─────────────┬─────────────┐
+│ 📸 Normal   │ 🎠 3        │ 📸 Normal   │ ← Carrusel muestra solo 
+│ Grid 2x2    │ [IMG A]     │ Single      │   primera imagen + badge
+│             │             │             │   con cantidad de fotos
+├─────────────┼─────────────┼─────────────┤
+│ 📸 Normal   │ 🎠 5        │ 📸 Normal   │
+│ Triptych    │ [IMG A]     │ Grid 3x2    │
+│             │             │             │
+└─────────────┴─────────────┴─────────────┘
+```
+
+**FUNCIONALIDADES CLAVE IMPLEMENTADAS:**
+
+**📱 Carrusel Horizontal Completo:**
+- Navegación fluida con scroll horizontal
+- Slots de igual ancho distribuidos uniformemente
+- Máximo 6 slots para evitar overcrowding
+- Indicadores visuales "🎠 Carrusel" en cada slot
+
+**🖼️ Portada en Perfil:**
+- Primera imagen del carrusel como thumbnail único
+- Badge indicador "🎠 {cantidad}" para identificar carruseles
+- Imagen fullscreen en thumbnail para mejor impacto visual
+- Se distingue claramente de otros tipos de layout
+
+**➕ Botón Dinámico:**
+- Aparece solo en layout "off" 
+- Se oculta al alcanzar máximo de 6 slots
+- Ubicado estratégicamente en sidebar derecho
+- Añade slots instantáneamente con feedback
+
+**🎯 UX Optimizada:**
+- Sin botón "+" central molesto en slots vacíos
+- Descripción y menciones compactas por espacio horizontal
+- Controles de edición funcionales en cada slot
+- Sistema de crop integrado
+
+**RESULTADO FINAL:**
+🎯 **CARRUSEL HORIZONTAL CON PORTADA COMPLETAMENTE FUNCIONAL** - El layout "off" ahora ofrece:
+- **Navegación horizontal fluida** entre hasta 6 slots
+- **Primera imagen como portada** en perfil con indicador de carrusel
+- **Botón "+" estratégico** en sidebar para añadir slots dinámicamente
+- **Límite inteligente** de 6 slots máximo para UX óptima
+- **Interfaz limpia** sin elementos molestos en el área de contenido
+- **Identificación visual clara** en grid de perfil
+- **Funcionalidad completa** con crop, uploads, menciones y descripciones
+
+**TECHNICAL IMPLEMENTATION:**
+- **Horizontal Scroll**: `overflow-x-auto overflow-y-hidden` con `flex` layout
+- **Dynamic Width**: Container width ajusta según `slots.length * 100%`
+- **Equal Distribution**: Cada slot `width: 100/slots.length%`
+- **Carousel Cover**: `poll.layout === 'off'` → muestra solo `images[0]`
+- **Visual Indicator**: Badge `🎠 {images.length}` en thumbnail
+- **Conditional Button**: `selectedLayout.id === 'off' && slots < 6`
+- **Add Functionality**: `handleAddSlot()` con validación y feedback
+- **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
 ✅ **MEJORAS COMPLETADAS:**
 
