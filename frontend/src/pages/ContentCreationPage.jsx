@@ -211,6 +211,375 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                   <div className="absolute top-4 left-4 w-8 h-8 bg-gray-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
                     {String.fromCharCode(65 + slotIndex)}
                   </div>
+                  
+                  {/* Fullscreen indicator for 'off' layout */}
+                  <div className="absolute top-4 right-4 bg-blue-600/80 text-white px-3 py-1 rounded-lg text-xs font-medium z-10 flex items-center gap-1">
+                    <span>🎠</span>
+                    <span>Carrusel</span>
+                  </div>
+                  
+                  {/* Fullscreen carousel content */}
+                  <div 
+                    className={`w-full h-full relative overflow-hidden ${
+                      cropActiveSlot === slotIndex ? '' : 'cursor-pointer'
+                    }`}
+                    onClick={(e) => {
+                      if (cropActiveSlot === slotIndex) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                      }
+                      
+                      if (option.media && option.media.type === 'image') {
+                        onCropFromPreview(slotIndex);
+                      } else {
+                        onImageUpload(slotIndex);
+                      }
+                    }}
+                    style={{
+                      pointerEvents: cropActiveSlot === slotIndex ? 'none' : 'auto'
+                    }}
+                  >
+                    {option.media ? (
+                      <>
+                        {/* Background Media - Fullscreen style */}
+                        {option.media.type === 'video' ? (
+                          <div className="relative w-full h-full">
+                            <img 
+                              src={option.media.thumbnail || option.media.url} 
+                              alt={`Video Opción ${slotIndex + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                            {/* Video play overlay */}
+                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                                <Video className="w-8 h-8 text-gray-900 ml-1" />
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <InlineCrop
+                            key={slotIndex}
+                            isActive={cropActiveSlot === slotIndex}
+                            imageSrc={option.media.url}
+                            savedTransform={(() => {
+                              const transform = option.media.transform || null;
+                              return transform ? { transform } : null;
+                            })()}
+                            onSave={onInlineCropSave}
+                            onCancel={onInlineCropCancel}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                        
+                        {/* Minimalist edit controls - top corner */}
+                        <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity z-30">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const textInput = document.querySelector(`input[data-option-index="${slotIndex}"]`);
+                                if (textInput) textInput.focus();
+                              }}
+                              className="w-8 h-8 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                              title="Editar descripción"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onImageRemove(slotIndex);
+                              }}
+                              className="w-8 h-8 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                              title="Cambiar imagen/video"
+                            >
+                              <Upload className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      /* Upload Area - Carousel style */
+                      <div className="w-full h-full flex items-center justify-center relative">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
+                        
+                        <div className="text-center z-10">
+                          <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300">
+                            <Plus className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                          </div>
+                          
+                          <h3 className="text-white text-2xl sm:text-3xl font-bold mb-2">
+                            {slotIndex < options.filter(opt => opt && opt.media).length 
+                              ? `Opción ${String.fromCharCode(65 + slotIndex)}`
+                              : 'Añadir al carrusel'
+                            }
+                          </h3>
+                          <p className="text-gray-300 text-sm sm:text-base">
+                            {slotIndex < options.filter(opt => opt && opt.media).length 
+                              ? 'Toca para subir imagen o video'
+                              : 'Añade más contenido al carrusel'
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Option text input for carousel */}
+                  <div className="absolute bottom-4 left-4 right-4 z-20">
+                    <input
+                      data-option-index={slotIndex}
+                      type="text"
+                      placeholder={`Descripción para ${String.fromCharCode(65 + slotIndex)}...`}
+                      value={option.text || ''}
+                      onChange={(e) => onOptionTextChange(slotIndex, e.target.value)}
+                      className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-400 text-sm"
+                    />
+                    
+                    {/* User mentions for this option */}
+                    <div className="mt-2">
+                      <UserMentionInput 
+                        onUserSelect={(user) => onMentionSelect(slotIndex, user)}
+                        placeholder={`Mencionar usuarios en ${String.fromCharCode(65 + slotIndex)}...`}
+                        size="sm"
+                      />
+                    </div>
+
+                    {/* Display mentioned users */}
+                    {option.mentionedUsers && option.mentionedUsers.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {option.mentionedUsers.slice(0, 4).map((user, idx) => (
+                          <span key={user.id} className="inline-flex items-center gap-1 bg-blue-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                            @{user.username}
+                          </span>
+                        ))}
+                        {option.mentionedUsers.length > 4 && (
+                          <span className="inline-flex items-center bg-gray-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                            +{option.mentionedUsers.length - 4} más
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        /* Regular grid layout */
+        <div className={`grid w-full h-full ${getLayoutStyle()}`} style={{ gap: '1px' }}>
+          {slots.map((slotIndex) => {
+            const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
+            return (
+              <div
+                key={slotIndex}
+                className="relative bg-black overflow-hidden group w-full h-full min-h-0"
+              >
+                {/* Letter identifier */}
+                <div className="absolute top-2 left-2 w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                  {String.fromCharCode(65 + slotIndex)}
+                </div>
+                
+                {/* Fullscreen indicator for 'off' layout */}
+                {layout.id === 'off' && (
+                  <div className="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 rounded-lg text-xs font-medium z-10 flex items-center gap-1">
+                    <span>📱</span>
+                    <span>Pantalla Completa</span>
+                  </div>
+                )}
+                
+                {/* Fullscreen Feed-style Preview */}
+                <div 
+                  className={`w-full h-full relative overflow-hidden ${
+                    cropActiveSlot === slotIndex ? '' : 'cursor-pointer'
+                  }`}
+                  onClick={(e) => {
+                    // FIXED: Don't intercept events when in crop mode
+                    if (cropActiveSlot === slotIndex) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    
+                    // If image exists, open crop directly. If not, upload new image.
+                    if (option.media && option.media.type === 'image') {
+                      onCropFromPreview(slotIndex);
+                    } else {
+                      onImageUpload(slotIndex);
+                    }
+                  }}
+                  style={{
+                    // FIXED: Disable pointer events on parent when crop is active
+                    pointerEvents: cropActiveSlot === slotIndex ? 'none' : 'auto'
+                  }}
+                >
+                  {option.media ? (
+                    <>
+                      {/* Background Media - Fullscreen style */}
+                      {option.media.type === 'video' ? (
+                        <div className="relative w-full h-full">
+                          <img 
+                            src={option.media.thumbnail || option.media.url} 
+                            alt={`Video Opción ${slotIndex + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Video play overlay */}
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                              <Video className="w-8 h-8 text-gray-900 ml-1" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <InlineCrop
+                          key={slotIndex} // ✅ FIXED: Use stable key to prevent re-mounts when media object changes
+                          isActive={cropActiveSlot === slotIndex}
+                          imageSrc={option.media.url}
+                          savedTransform={(() => {
+                            const transform = option.media.transform || null;
+                            // ✅ FIX: InlineCrop expects { transform: {...} } structure, not raw transform
+                            return transform ? { transform } : null;
+                          })()}
+                          onSave={onInlineCropSave}
+                          onCancel={onInlineCropCancel}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      
+                      {/* Clean Image Preview - NO decorative elements */}
+                      <div className="absolute inset-0">
+                        {/* Only show the image, no overlays or decorative elements */}
+                      </div>
+
+                      {/* Minimalist edit controls - top corner */}
+                      <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity z-30">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const textInput = document.querySelector(`input[data-option-index="${slotIndex}"]`);
+                              if (textInput) textInput.focus();
+                            }}
+                            className="w-8 h-8 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                            title="Editar descripción"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onImageRemove(slotIndex);
+                            }}
+                            className="w-8 h-8 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                            title="Cambiar imagen/video"
+                          >
+                            <Upload className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    /* Upload Area - Different style for 'off' layout */
+                    <div className="w-full h-full flex items-center justify-center relative">
+                      {layout.id === 'off' ? (
+                        /* Fullscreen carousel-style slot */
+                        <>
+                          {/* Dark background for carousel */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
+                          
+                          {/* Large + button for adding carousel item */}
+                          <div className="text-center z-10">
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300">
+                              <Plus className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                            </div>
+                            
+                            <h3 className="text-white text-2xl sm:text-3xl font-bold mb-2">
+                              {slotIndex < options.filter(opt => opt && opt.media).length 
+                                ? `Opción ${String.fromCharCode(65 + slotIndex)}`
+                                : 'Añadir al carrusel'
+                              }
+                            </h3>
+                            <p className="text-gray-300 text-sm sm:text-base">
+                              {slotIndex < options.filter(opt => opt && opt.media).length 
+                                ? 'Toca para subir imagen o video'
+                                : 'Añade más contenido al carrusel'
+                              }
+                            </p>
+                          </div>
+
+                          {/* Carousel indicator for empty slots */}
+                          <div className="absolute top-4 right-4 bg-purple-600/80 text-white px-3 py-1 rounded-full text-xs font-medium z-10 flex items-center gap-1">
+                            <span>🎠</span>
+                            <span>Carrusel</span>
+                          </div>
+                        </>
+                      ) : (
+                        /* Grid layout style */
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
+                          
+                          <div className="text-center z-10 px-4">
+                            <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4 sm:mb-6 lg:mb-8 mx-auto shadow-2xl">
+                              <Plus className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+                            </div>
+                            
+                            <h3 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 lg:mb-4">Opción {String.fromCharCode(65 + slotIndex)}</h3>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Letter identifier - top left */}
+                      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 lg:top-6 lg:left-6 w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base lg:text-lg z-20">
+                        {String.fromCharCode(65 + slotIndex)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Edit controls */}
+                {option.media && (
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                    <input
+                      data-option-index={slotIndex}
+                      type="text"
+                      placeholder={`Descripción para ${String.fromCharCode(65 + slotIndex)}...`}
+                      value={option.text || ''}
+                      onChange={(e) => onOptionTextChange(slotIndex, e.target.value)}
+                      className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-400 text-sm mb-2"
+                    />
+                    
+                    {/* User mentions for this option */}
+                    <UserMentionInput 
+                      onUserSelect={(user) => onMentionSelect(slotIndex, user)}
+                      placeholder={`Mencionar usuarios en ${String.fromCharCode(65 + slotIndex)}...`}
+                      size="sm"
+                    />
+
+                    {/* Display mentioned users */}
+                    {option.mentionedUsers && option.mentionedUsers.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {option.mentionedUsers.slice(0, 4).map((user, idx) => (
+                          <span key={user.id} className="inline-flex items-center gap-1 bg-blue-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                            @{user.username}
+                          </span>
+                        ))}
+                        {option.mentionedUsers.length > 4 && (
+                          <span className="inline-flex items-center bg-gray-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+                            +{option.mentionedUsers.length - 4} más
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
               
               {/* Fullscreen indicator for 'off' layout */}
               {layout.id === 'off' && (
