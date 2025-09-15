@@ -758,9 +758,10 @@ const ContentCreationPage = () => {
   const getSlotsCount = () => {
     switch (selectedLayout.id) {
       case 'off': 
-        // For carousel layout, show current options + 1 empty slot for adding more
+        // For carousel layout, show current options + 1 empty slot for adding more (max 6 total)
         const filledSlotsCount = options.filter(opt => opt && opt.media).length;
-        return Math.max(2, filledSlotsCount + 1); // Always show at least 2 slots + 1 empty slot for adding
+        const totalSlots = Math.max(2, filledSlotsCount + 1);
+        return Math.min(totalSlots, 6); // Limit to maximum 6 slots
       case 'vertical': return 2;
       case 'horizontal': return 2;
       case 'triptych-vertical': return 3;
