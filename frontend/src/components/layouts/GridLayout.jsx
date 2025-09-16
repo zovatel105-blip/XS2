@@ -24,14 +24,8 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
     }
   };
 
-  const getPercentage = (votes, hasVotedAny) => {
-    if (hasVotedAny && poll.totalVotes > 0) {
-      // After voting any poll: show real percentages
-      return Math.round((votes / poll.totalVotes) * 100);
-    } else {
-      // Before voting any poll: show balanced percentages
-      return Math.round(100 / poll.options.length);
-    }
+  const getPercentage = (votes) => {
+    return poll.userVote && poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
   };
 
   const winningOption = hasVotedAny ? (poll.options?.reduce((prev, current) => 
