@@ -1648,6 +1648,36 @@ const handleTouchEnd = () => {
 **2. OCULTACIÓN DE TEXTOS POR DEFECTO:**
 - ✅ **Ocupación**: Eliminado texto "Sin profesión" en perfiles ajenos - ahora aparece vacío hasta que el usuario agregue datos
 - ✅ **Biografía**: Eliminado texto "Este usuario no ha agregado una biografía" - campo queda en blanco en perfiles ajenos
+
+## ✅ **CORRECCIONES DE OVERLAYS DE PERFIL**
+
+**PROBLEMA IDENTIFICADO**: Los overlays de progreso y indicadores de ganador aparecían incorrectamente en las publicaciones del perfil.
+
+**CORRECCIONES IMPLEMENTADAS:**
+
+### 1. **Overlays de Progreso**
+- **Problema**: Barras de progreso de votación se mostraban en el grid del perfil
+- **Solución**: Condicionado con `isActive` - solo aparecen durante votación activa, no en perfil
+
+### 2. **Overlays de Ganador**
+- **Problema**: Anillo verde de opción ganadora aparecía en publicaciones del perfil
+- **Solución**: Condicionado con `isActive` - solo aparece durante votación activa
+
+### 3. **Indicadores de Selección**
+- **Problema**: Anillo azul de opción seleccionada aparecía en publicaciones del perfil
+- **Solución**: Condicionado con `isActive` - solo aparece durante votación activa
+
+### 4. **Error de Registro JSON**
+- **Problema**: Error "Unexpected token '<', "<!DOCTYPE "..." durante registro
+- **Solución**: Mejorado manejo de errores HTTP y configuración de backend URL
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/layouts/GridLayout.jsx`
+- `/app/frontend/src/components/layouts/CarouselLayout.jsx`
+- `/app/frontend/src/contexts/AuthContext.js`
+- `/app/frontend/.env`
+
+**RESULTADO**: Las publicaciones en el perfil ahora se muestran limpias sin overlays de votación, mientras mantienen toda la funcionalidad durante la votación activa.
 - ✅ **Lógica Condicional**: Solo perfiles propios muestran textos de placeholder ("Agregar profesión", "Agregar biografía...")
 
 **3. SIMPLIFICACIÓN DE TABS:**
