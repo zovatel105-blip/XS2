@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [hasVotedAny, setHasVotedAny] = useState(false); // Track if user has voted in any poll
 
   // Load auth state from localStorage and verify token
   useEffect(() => {
