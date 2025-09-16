@@ -1785,6 +1785,31 @@ const handleTouchEnd = () => {
 - **Icons Agregados**: Bell, BellOff importados de lucide-react
 - **Estado Agregado**: `notificationsEnabled` para manejar el toggle de campana
 - **Botón Seguir Mejorado**: Estructura de botón con campana interactiva y stopPropagation para evitar conflictos
+## ✅ **CORRECCIÓN DE BARRAS DE PROGRESO EN CARRUSEL**
+
+**PROBLEMA IDENTIFICADO**: En las publicaciones con carrusel, las barras de porcentaje solo se mostraban en una imagen en lugar de todas.
+
+**ANÁLISIS DEL PROBLEMA:**
+- Las barras de progreso se estaban renderizando correctamente para todas las opciones
+- El problema era la altura mínima muy pequeña (5%) que hacía las barras casi invisibles
+- En carruseles con opciones que tienen pocos votos, las barras eran demasiado sutiles
+
+**CORRECCIÓN IMPLEMENTADA:**
+
+### **Altura Mínima Aumentada:**
+- **Antes**: `Math.max(percentage, 5)%` - Altura mínima 5%
+- **Ahora**: `Math.max(percentage, 15)%` - Altura mínima 15%
+- **Aplicado en**: GridLayout y CarouselLayout para consistencia
+
+### **Resultado:**
+- Las barras de progreso ahora son más visibles en todas las opciones del carrusel
+- Mejor visibilidad incluso para opciones con pocos votos
+- Consistencia visual entre grid y carrusel
+
+**EXPERIENCIA MEJORADA:**
+- **Después de votar**: Todas las imágenes del carrusel muestran barras de progreso claramente visibles
+- **Navegación**: Al deslizar entre imágenes del carrusel, todas mantienen sus barras de progreso
+- **Visibilidad**: Altura mínima aumentada hace las barras más notorias
 - **Condicionales isOwnProfile**: Aplicados a ocupación, biografía, tabs y contenidos
 - **Grid Dinámico**: `grid-cols-${isOwnProfile ? '4' : '2'}` para layout responsive
 
