@@ -1765,9 +1765,9 @@ const handleTouchEnd = () => {
 **CORRECCIÓN IMPLEMENTADA:**
 
 ### **Indicador de Opción Ganadora Restaurado:**
-- **Ícono de trofeo**: 🏆 (Trophy de Lucide React) en fondo amarillo
-- **Posición**: Esquina superior derecha de la opción ganadora
-- **Estilo**: Fondo amarillo circular con sombra, ícono blanco
+- **Ícono de trofeo**: 🏆 (Trophy de Lucide React) 
+- **Posición**: Integrado en la barra de progreso (parte superior, centrado)
+- **Color**: Verde claro (`text-green-300`) con sombra
 - **Condición**: Solo aparece cuando `isActive && isWinner && poll.userVote`
 
 ### **Archivos Modificados:**
