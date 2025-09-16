@@ -493,7 +493,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                             <h3 className="text-white text-2xl sm:text-3xl font-bold mb-2">
                               {slotIndex < options.filter(opt => opt && opt.media).length 
                                 ? `Opción ${String.fromCharCode(65 + slotIndex)}`
-                                : 'Añadir al carrusel'
+                                : '🎠 Añadir al carrusel'
                               }
                             </h3>
                             <p className="text-gray-300 text-sm sm:text-base">
