@@ -1677,6 +1677,27 @@ const handleTouchEnd = () => {
 - `/app/frontend/src/contexts/AuthContext.js`
 - `/app/frontend/.env`
 
+### 5. **Controles de Carrusel en Perfil**
+- **Problema**: Indicadores de navegación (puntos), flechas (< >) y contador ("1 / 2") aparecían en perfil
+- **Solución**: Condicionados con `isActive` - solo aparecen durante votación activa
+
+### 6. **Títulos de Publicaciones en Perfil**  
+- **Problema**: Títulos como "First" aparecían como overlay en las publicaciones del perfil
+- **Solución**: Eliminado overlay de título del componente `TikTokProfileGrid.jsx`
+
+**ARCHIVOS ADICIONALES MODIFICADOS:**
+- `/app/frontend/src/components/TikTokProfileGrid.jsx`
+
+**ELEMENTOS ESPECÍFICOS CORREGIDOS:**
+- ❌ Overlays de progreso (barras de color)
+- ❌ Anillos de ganador (verde)  
+- ❌ Anillos de selección (azul)
+- ❌ Indicadores de carrusel (puntos blancos)
+- ❌ Flechas de navegación (< >)
+- ❌ Contador de slides ("1 / 2")
+- ❌ Títulos de publicaciones ("First", etc.)
+
+**ESTADO FINAL**: El perfil ahora muestra las publicaciones completamente limpias, sin ningún overlay ni control de votación visible. Todos los controles e indicadores funcionan normalmente durante la votación activa en el feed.
 **RESULTADO**: Las publicaciones en el perfil ahora se muestran limpias sin overlays de votación, mientras mantienen toda la funcionalidad durante la votación activa.
 - ✅ **Lógica Condicional**: Solo perfiles propios muestran textos de placeholder ("Agregar profesión", "Agregar biografía...")
 
