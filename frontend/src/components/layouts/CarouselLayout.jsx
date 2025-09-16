@@ -140,8 +140,8 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
               {/* Interactive overlay */}
               <div className="absolute inset-0 bg-transparent active:bg-white/10 transition-colors duration-150"></div>
 
-              {/* Progress overlay - Only show when active (not in profile grid) */}
-              {isActive && poll.totalVotes > 0 && (
+              {/* Progress overlay - Only show when active and user has voted */}
+              {isActive && poll.userVote && (
                 <div 
                   className={cn(
                     "absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out",
