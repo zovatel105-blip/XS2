@@ -3,6 +3,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 
 const CarouselLayout = ({ poll, onVote, isActive }) => {
+  const { hasVotedAny } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
