@@ -223,8 +223,6 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   const handleVote = (optionId) => {
     if (!poll.userVote) {
       onVote(poll.id, optionId);
-      // Mark that user has voted in any poll to unlock percentage view
-      setHasVotedAny(true);
     }
   };
 
