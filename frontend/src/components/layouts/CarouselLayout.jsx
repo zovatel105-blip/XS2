@@ -194,8 +194,8 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
         </div>
       )}
 
-      {/* Navigation arrows - HORIZONTAL */}
-      {totalSlides > 1 && (
+      {/* Navigation arrows - Only show when active (not in profile grid) */}
+      {isActive && totalSlides > 1 && (
         <>
           <button
             onClick={(e) => {
