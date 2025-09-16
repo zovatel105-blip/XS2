@@ -98,7 +98,14 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
                   transform: `translateY(${100 - Math.max(percentage, 5)}%)`,
                   transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
-              />
+              >
+                {/* Trophy icon in progress bar for winner */}
+                {isWinner && (
+                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
+                    <Trophy className="w-4 h-4 text-green-300 drop-shadow-lg" />
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Selection indicator - Only show when active (not in profile grid) */}
