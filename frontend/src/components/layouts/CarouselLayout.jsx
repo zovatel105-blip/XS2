@@ -167,12 +167,7 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
 
               {/* Winner indicator - Only show when active and user has voted */}
               {isActive && isWinner && poll.userVote && (
-                <>
-                  <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
-                  <div className="absolute top-2 right-2 bg-yellow-500 rounded-full p-1 shadow-lg">
-                    <Trophy className="w-4 h-4 text-white" />
-                  </div>
-                </>
+                <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
               )}
             </div>
           );
