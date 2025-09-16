@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '../../lib/utils';
-import { useAuth } from '../../contexts/AuthContext';
 
 const CarouselLayout = ({ poll, onVote, isActive }) => {
   const { hasVotedAny } = useAuth();
