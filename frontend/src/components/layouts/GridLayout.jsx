@@ -28,7 +28,7 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
     return poll.userVote && poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
   };
 
-  const winningOption = hasVotedAny ? (poll.options?.reduce((prev, current) => 
+  const winningOption = poll.userVote ? (poll.options?.reduce((prev, current) => 
     (prev.votes > current.votes) ? prev : current
   ) || {}) : {};
 
