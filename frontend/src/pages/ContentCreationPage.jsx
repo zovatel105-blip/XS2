@@ -215,7 +215,6 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                   
                   {/* Fullscreen indicator for 'off' layout */}
                   <div className="absolute top-4 right-4 bg-blue-600/80 text-white px-3 py-1 rounded-lg text-xs font-medium z-10 flex items-center gap-1">
-                    <span>🎠</span>
                     <span>Carrusel</span>
                   </div>
                   
