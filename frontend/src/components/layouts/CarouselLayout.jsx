@@ -69,7 +69,7 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
   }, [isActive, totalSlides]); // Removed currentSlide dependency to prevent reset
 
   const getPercentage = (votes) => {
-    return poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
+    return poll.userVote && poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
   };
 
   const winningOption = poll.options?.reduce((prev, current) => 
