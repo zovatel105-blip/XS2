@@ -96,11 +96,6 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
           const percentage = getPercentage(option.votes);
           const isWinner = option.id === winningOption.id && poll.userVote;
           const isSelected = poll.userVote === option.id;
-          
-          // Debug log
-          if (poll.userVote) {
-            console.log(`Option ${optionIndex}: votes=${option.votes}, percentage=${percentage}, isSelected=${isSelected}, isWinner=${isWinner}`);
-          }
 
           return (
             <div
