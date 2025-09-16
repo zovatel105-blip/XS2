@@ -117,12 +117,25 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Login failed:', errorData);
-        throw new Error(errorData.detail || 'Login failed');
+        let errorMessage = 'Login failed';
+        try {
+          const errorData = await response.json();
+          console.error('Login failed:', errorData);
+          errorMessage = errorData.detail || errorMessage;
+        } catch (parseError) {
+          // If response is not JSON (e.g., HTML error page), use status text
+          console.error('Login failed - non-JSON response:', response.status, response.statusText);
+          errorMessage = response.statusText || `HTTP ${response.status}`;
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        throw new Error('El servidor devolvió una respuesta inválida. Verifica la conexión.');
+      }
       console.log('Login successful:', { user: data.user?.email, hasToken: !!data.access_token });
       
       // Save auth data
