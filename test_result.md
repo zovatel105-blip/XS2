@@ -1758,6 +1758,30 @@ const handleTouchEnd = () => {
 - ✅ **Contenido Condicional**: TabsContent de "liked" y "saved" envueltos en condicionales isOwnProfile
 
 **CAMBIOS TÉCNICOS ESPECÍFICOS:**
+## ✅ **RESTAURACIÓN DEL ÍCONO DE TROFEO 🏆**
+
+**PROBLEMA IDENTIFICADO**: El ícono de trofeo en la opción ganadora se había perdido durante las modificaciones anteriores.
+
+**CORRECCIÓN IMPLEMENTADA:**
+
+### **Indicador de Opción Ganadora Restaurado:**
+- **Ícono de trofeo**: 🏆 (Trophy de Lucide React) en fondo amarillo
+- **Posición**: Esquina superior derecha de la opción ganadora
+- **Estilo**: Fondo amarillo circular con sombra, ícono blanco
+- **Condición**: Solo aparece cuando `isActive && isWinner && poll.userVote`
+
+### **Archivos Modificados:**
+- `GridLayout.jsx`: Agregado indicador de trofeo para opción ganadora
+- `CarouselLayout.jsx`: Agregado indicador de trofeo para opción ganadora
+
+### **Experiencia Visual:**
+- **Antes de votar**: Sin indicadores visuales
+- **Después de votar**: La opción ganadora muestra:
+  - Anillo verde alrededor de la imagen
+  - Trofeo 🏆 en la esquina superior derecha
+  - Barra de progreso verde
+
+**RESULTADO**: El indicador visual de trofeo ahora aparece correctamente en la opción ganadora después de votar, restaurando la funcionalidad original.
 - **Icons Agregados**: Bell, BellOff importados de lucide-react
 - **Estado Agregado**: `notificationsEnabled` para manejar el toggle de campana
 - **Botón Seguir Mejorado**: Estructura de botón con campana interactiva y stopPropagation para evitar conflictos
