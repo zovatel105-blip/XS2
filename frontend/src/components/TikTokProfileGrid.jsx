@@ -72,12 +72,7 @@ const TikTokProfileGrid = ({ polls, onPollClick }) => {
               </div>
             )}
 
-            {/* Poll title overlay - bottom center/right */}
-            {poll.title && (
-              <div className="absolute bottom-2 right-2 max-w-[60%] bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg text-white text-xs font-medium truncate pointer-events-none">
-                {poll.title}
-              </div>
-            )}
+            {/* Poll title overlay removed from profile grid */}
           </motion.div>
         );
       })}
