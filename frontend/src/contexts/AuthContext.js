@@ -295,8 +295,6 @@ export const AuthProvider = ({ children }) => {
     user,
     token,
     loading,
-    hasVotedAny,
-    setHasVotedAny,
     login,
     register,
     logout,
