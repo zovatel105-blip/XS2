@@ -108,8 +108,8 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               </div>
             )}
 
-            {/* Selection indicator - Only show when active (not in profile grid) */}
-            {isActive && isSelected && (
+            {/* Selection indicator - Only show when active and user has voted */}
+            {isActive && isSelected && poll.userVote && (
               <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>
             )}
 
