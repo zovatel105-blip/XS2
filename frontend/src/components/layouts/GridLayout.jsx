@@ -25,7 +25,13 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
   };
 
   const getPercentage = (votes) => {
-    return poll.userVote && poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
+    if (poll.userVote && poll.totalVotes > 0) {
+      // After voting: show real percentages
+      return Math.round((votes / poll.totalVotes) * 100);
+    } else {
+      // Before voting: show balanced percentages
+      return Math.round(100 / poll.options.length);
+    }
   };
 
   const winningOption = poll.userVote ? (poll.options?.reduce((prev, current) => 
