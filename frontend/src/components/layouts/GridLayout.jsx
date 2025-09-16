@@ -88,8 +88,8 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
             {/* Interactive overlay */}
             <div className="absolute inset-0 bg-transparent active:bg-white/10 transition-colors duration-150"></div>
 
-            {/* Progress overlay - Only show when active and user has voted */}
-            {isActive && poll.userVote && (
+            {/* Progress overlay - Always show when active */}
+            {isActive && (
               <div 
                 className={cn(
                   "absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out",
