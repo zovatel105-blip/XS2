@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
   const getGridClasses = () => {
