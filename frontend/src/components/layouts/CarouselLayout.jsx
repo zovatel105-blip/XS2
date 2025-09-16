@@ -159,8 +159,8 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                 />
               )}
 
-              {/* Selection indicator */}
-              {isSelected && (
+              {/* Selection indicator - Only show when active (not in profile grid) */}
+              {isActive && isSelected && (
                 <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>
               )}
 
