@@ -9,11 +9,13 @@ const CustomLogo = ({ size = 24, className = "" }) => {
       height={size}
       className={`${className} object-cover`}
       style={{ 
-        width: `${size}px`, 
-        height: `${size}px`,
+        width: `${size * 1.4}px`, 
+        height: `${size * 1.4}px`,
         objectFit: 'cover',
-        clipPath: 'circle(50% at 50% 50%)',
-        borderRadius: '50%'
+        clipPath: 'circle(35% at 50% 50%)',
+        borderRadius: '50%',
+        transform: 'scale(1)',
+        margin: `${-size * 0.2}px`
       }}
     />
   );
