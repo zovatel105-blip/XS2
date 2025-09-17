@@ -1051,6 +1051,10 @@ const TikTokScrollView = ({
             showLogo={showLogo}
             shouldPreload={poll.shouldPreload}
             isVisible={poll.isVisible}
+            onUpdatePoll={onUpdatePoll}
+            onDeletePoll={onDeletePoll}
+            isOwnProfile={isOwnProfile}
+            currentUser={currentUser}
           />
         ))}
       </div>
