@@ -15,10 +15,10 @@ def test_auth_and_get_token():
     """Test authentication and get a valid token"""
     print("🔐 Testing authentication...")
     
-    # Try login with demo credentials
+    # Try login with test credentials
     login_data = {
-        "email": "demo@example.com",
-        "password": "demo123"
+        "email": "test_feed@example.com",
+        "password": "testpass123"
     }
     
     try:
