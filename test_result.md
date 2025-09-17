@@ -1948,6 +1948,16 @@ isWinner ? verde : isSelected ? azul : negro
 4. **Ganadora**: Barra verde con trofeo (si tiene votos)
 5. **Seleccionada**: Barra azul (si tiene votos y no es ganadora)
 
+### **Técnicas de Edición Digital Aplicadas:**
+
+1. **Fondo de reemplazo**: Degradado gris oscuro en lugar del fondo original
+2. **Mix-blend-mode multiply**: Técnica CSS que hace transparente el blanco
+3. **Filtros avanzados**: Alto contraste y saturación para resaltar colores
+4. **Overlay gradual**: Capa que elimina restos blancos en los bordes
+5. **Escalado sutil**: 110% para eliminar cualquier borde residual
+6. **Alta definición**: Mantiene máxima calidad de imagen
+
+**RESULTADO ESPERADO**: Logo con marca verde y estrella azul ocupando todo el círculo sin bordes blancos visibles.
 **EXPERIENCIA IGUAL A YOUTUBE:**
 - Barras solo para opciones con votos
 - Altura proporcional al porcentaje real
