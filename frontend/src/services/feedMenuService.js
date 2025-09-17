@@ -34,23 +34,20 @@ class FeedMenuService {
   }
 
   async markNotInterested(pollId) {
-    return this.makeRequest('/api/feed/not-interested', {
-      method: 'POST',
-      body: JSON.stringify({ poll_id: pollId })
+    return this.makeRequest(`/api/feed/not-interested?poll_id=${encodeURIComponent(pollId)}`, {
+      method: 'POST'
     });
   }
 
   async hideUser(authorId) {
-    return this.makeRequest('/api/feed/hide-user', {
-      method: 'POST',
-      body: JSON.stringify({ author_id: authorId })
+    return this.makeRequest(`/api/feed/hide-user?author_id=${encodeURIComponent(authorId)}`, {
+      method: 'POST'
     });
   }
 
   async toggleNotifications(authorId) {
-    return this.makeRequest('/api/feed/toggle-notifications', {
-      method: 'POST',
-      body: JSON.stringify({ author_id: authorId })
+    return this.makeRequest(`/api/feed/toggle-notifications?author_id=${encodeURIComponent(authorId)}`, {
+      method: 'POST'
     });
   }
 
