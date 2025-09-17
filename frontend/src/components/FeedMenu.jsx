@@ -267,25 +267,24 @@ const FeedMenu = ({
               <div>
                 <h3 className="text-white font-medium mb-4">¿Cuál es el problema?</h3>
                 <div className="space-y-2">
-                  {REPORT_CATEGORIES.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setSelectedReportCategory(category.id)}
-                      className={`w-full p-3 rounded-lg border transition-all duration-200 text-left ${
-                        selectedReportCategory === category.id
-                          ? 'border-red-500 bg-red-500/10 text-white'
-                          : 'border-gray-600/50 bg-gray-800/50 text-gray-300 hover:border-gray-500 hover:bg-gray-700/50'
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="text-lg">{category.icon}</span>
-                        <div>
-                          <div className="font-medium">{category.label}</div>
-                          <div className="text-sm text-gray-400 mt-1">{category.description}</div>
+                    {REPORT_CATEGORIES.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => setSelectedReportCategory(category.id)}
+                        className={`w-full p-3 rounded-lg border transition-all duration-200 text-left ${
+                          selectedReportCategory === category.id
+                            ? 'border-red-500 bg-red-500/10 text-white'
+                            : 'border-gray-600/50 bg-gray-800/50 text-gray-300 hover:border-gray-500 hover:bg-gray-700/50'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div>
+                            <div className="font-medium">{category.label}</div>
+                            <div className="text-sm text-gray-400 mt-1">{category.description}</div>
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
                 </div>
               </div>
 
