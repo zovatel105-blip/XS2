@@ -31,7 +31,7 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/use-toast';
 
-const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
+const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfile }) => {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [editTitle, setEditTitle] = useState(poll.title || '');
