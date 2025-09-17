@@ -5845,6 +5845,272 @@ async def delete_poll(
     except Exception as e:
         logger.error(f"Error deleting poll: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+# =============  FEED MENU ENDPOINTS =============
+
+@api_router.post("/feed/not-interested")
+async def mark_not_interested(
+    poll_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Mark a poll as 'not interested' - removes it from user's feed"""
+    try:
+        # Check if poll exists
+        poll = await db.polls.find_one({"id": poll_id})
+        if not poll:
+            raise HTTPException(status_code=404, detail="Poll not found")
+        
+        # Check if preference already exists
+        existing_preference = await db.user_preferences.find_one({
+            "user_id": current_user.id,
+            "poll_id": poll_id,
+            "preference_type": "not_interested"
+        })
+        
+        if existing_preference:
+            return {"success": True, "message": "Already marked as not interested"}
+        
+        # Create new preference
+        from models import UserPreference
+        preference = UserPreference(
+            user_id=current_user.id,
+            poll_id=poll_id,
+            preference_type="not_interested"
+        )
+        
+        await db.user_preferences.insert_one(preference.dict())
+        
+        return {"success": True, "message": "Content marked as not interested"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error marking poll as not interested: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.post("/feed/hide-user")
+async def hide_user_content(
+    author_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Hide all content from a specific user"""
+    try:
+        # Check if user exists
+        author = await db.users.find_one({"id": author_id})
+        if not author:
+            # Try finding by username if not found by ID
+            author = await db.users.find_one({"username": author_id})
+            if not author:
+                raise HTTPException(status_code=404, detail="User not found")
+            author_id = author["id"]  # Use the actual ID
+        
+        # Check if preference already exists
+        existing_preference = await db.user_preferences.find_one({
+            "user_id": current_user.id,
+            "author_id": author_id,
+            "preference_type": "hidden_user"
+        })
+        
+        if existing_preference:
+            return {"success": True, "message": "User already hidden"}
+        
+        # Create new preference
+        from models import UserPreference
+        preference = UserPreference(
+            user_id=current_user.id,
+            author_id=author_id,
+            preference_type="hidden_user"
+        )
+        
+        await db.user_preferences.insert_one(preference.dict())
+        
+        return {"success": True, "message": "User content hidden"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error hiding user content: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.post("/feed/toggle-notifications")
+async def toggle_user_notifications(
+    author_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Toggle notifications for a specific user's content"""
+    try:
+        # Check if user exists
+        author = await db.users.find_one({"id": author_id})
+        if not author:
+            # Try finding by username if not found by ID
+            author = await db.users.find_one({"username": author_id})
+            if not author:
+                raise HTTPException(status_code=404, detail="User not found")
+            author_id = author["id"]  # Use the actual ID
+        
+        # Find existing notification preference
+        existing_preference = await db.user_notification_preferences.find_one({
+            "user_id": current_user.id,
+            "author_id": author_id
+        })
+        
+        if existing_preference:
+            # Toggle existing preference
+            new_status = not existing_preference["is_enabled"]
+            await db.user_notification_preferences.update_one(
+                {"id": existing_preference["id"]},
+                {
+                    "$set": {
+                        "is_enabled": new_status,
+                        "updated_at": datetime.utcnow()
+                    }
+                }
+            )
+            message = "Notifications enabled" if new_status else "Notifications disabled"
+        else:
+            # Create new preference (enabled by default)
+            from models import UserNotificationPreference
+            preference = UserNotificationPreference(
+                user_id=current_user.id,
+                author_id=author_id,
+                is_enabled=True
+            )
+            
+            await db.user_notification_preferences.insert_one(preference.dict())
+            message = "Notifications enabled"
+            new_status = True
+        
+        return {
+            "success": True, 
+            "message": message,
+            "notifications_enabled": new_status
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error toggling notifications: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.post("/feed/report")
+async def report_content(
+    report_data: dict,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Report inappropriate content"""
+    try:
+        poll_id = report_data.get("poll_id")
+        category = report_data.get("category")
+        comment = report_data.get("comment", "").strip()
+        
+        if not poll_id or not category:
+            raise HTTPException(status_code=400, detail="Poll ID and category are required")
+        
+        # Check if poll exists
+        poll = await db.polls.find_one({"id": poll_id})
+        if not poll:
+            raise HTTPException(status_code=404, detail="Poll not found")
+        
+        # Check if user already reported this poll
+        existing_report = await db.content_reports.find_one({
+            "poll_id": poll_id,
+            "reported_by": current_user.id
+        })
+        
+        if existing_report:
+            return {"success": True, "message": "You have already reported this content"}
+        
+        # Create new report
+        from models import ContentReport
+        report = ContentReport(
+            poll_id=poll_id,
+            reported_by=current_user.id,
+            category=category,
+            comment=comment if comment else None
+        )
+        
+        await db.content_reports.insert_one(report.dict())
+        
+        # Optionally, you could add automatic content moderation here
+        # For example, if a post gets X reports, automatically hide it
+        
+        return {"success": True, "message": "Report submitted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error reporting content: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/feed/user-preferences")
+async def get_user_feed_preferences(
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get user's feed preferences (hidden users, not interested polls, etc.)"""
+    try:
+        # Get all user preferences
+        preferences = await db.user_preferences.find({
+            "user_id": current_user.id
+        }).to_list(1000)
+        
+        # Get notification preferences
+        notification_prefs = await db.user_notification_preferences.find({
+            "user_id": current_user.id
+        }).to_list(1000)
+        
+        # Organize preferences by type
+        result = {
+            "hidden_users": [p["author_id"] for p in preferences if p["preference_type"] == "hidden_user"],
+            "not_interested_polls": [p["poll_id"] for p in preferences if p["preference_type"] == "not_interested"],
+            "notification_preferences": {
+                pref["author_id"]: pref["is_enabled"] 
+                for pref in notification_prefs
+            }
+        }
+        
+        return {"success": True, "data": result}
+        
+    except Exception as e:
+        logger.error(f"Error getting user preferences: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+# Utility function to filter polls based on user preferences
+async def filter_polls_by_preferences(polls: List[dict], user_id: str) -> List[dict]:
+    """Filter polls based on user's feed preferences"""
+    try:
+        # Get user preferences
+        preferences = await db.user_preferences.find({
+            "user_id": user_id
+        }).to_list(1000)
+        
+        # Create sets for faster lookup
+        hidden_users = set()
+        not_interested_polls = set()
+        
+        for pref in preferences:
+            if pref["preference_type"] == "hidden_user" and pref.get("author_id"):
+                hidden_users.add(pref["author_id"])
+            elif pref["preference_type"] == "not_interested" and pref.get("poll_id"):
+                not_interested_polls.add(pref["poll_id"])
+        
+        # Filter polls
+        filtered_polls = []
+        for poll in polls:
+            # Skip polls from hidden users
+            if poll.get("author_id") in hidden_users:
+                continue
+            
+            # Skip polls marked as not interested
+            if poll.get("id") in not_interested_polls:
+                continue
+            
+            filtered_polls.append(poll)
+        
+        return filtered_polls
+        
+    except Exception as e:
+        logger.error(f"Error filtering polls by preferences: {str(e)}")
+        return polls  # Return original polls if filtering fails
+
 # Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
