@@ -21,6 +21,7 @@ import { useToast } from '../hooks/use-toast';
 import audioManager from '../services/AudioManager';
 import realMusicService from '../services/realMusicService';
 import LayoutRenderer from './layouts/LayoutRenderer';
+import feedMenuService from '../services/feedMenuService';
 
 // Componente UserButton clickeable
 const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserClick, optionIndex }) => (
