@@ -6,13 +6,13 @@ import { useAuth } from '../contexts/AuthContext';
 import AppConfig from '../config/config';
 
 const REPORT_CATEGORIES = [
-  { id: 'spam', label: 'Spam', icon: '🚫', description: 'Contenido no deseado o repetitivo' },
-  { id: 'harassment', label: 'Acoso', icon: '⚠️', description: 'Comportamiento abusivo o intimidatorio' },
-  { id: 'hate', label: 'Discurso de odio', icon: '💢', description: 'Contenido que promueve odio o discriminación' },
-  { id: 'violence', label: 'Violencia', icon: '⚔️', description: 'Contenido violento o que incita a la violencia' },
-  { id: 'nudity', label: 'Desnudez/Sexual', icon: '🔞', description: 'Contenido sexual explícito o desnudez' },
-  { id: 'misinformation', label: 'Información falsa', icon: '❌', description: 'Información incorrecta o engañosa' },
-  { id: 'other', label: 'Otro', icon: '📝', description: 'Otro tipo de contenido inapropiado' }
+  { id: 'spam', label: 'Spam', icon: '', description: 'Contenido no deseado o repetitivo' },
+  { id: 'harassment', label: 'Acoso', icon: '', description: 'Comportamiento abusivo o intimidatorio' },
+  { id: 'hate', label: 'Discurso de odio', icon: '', description: 'Contenido que promueve odio o discriminación' },
+  { id: 'violence', label: 'Violencia', icon: '', description: 'Contenido violento o que incita a la violencia' },
+  { id: 'nudity', label: 'Desnudez/Sexual', icon: '', description: 'Contenido sexual explícito o desnudez' },
+  { id: 'misinformation', label: 'Información falsa', icon: '', description: 'Información incorrecta o engañosa' },
+  { id: 'other', label: 'Otro', icon: '', description: 'Otro tipo de contenido inapropiado' }
 ];
 
 const FeedMenu = ({ 
