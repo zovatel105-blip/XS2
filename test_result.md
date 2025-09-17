@@ -1922,12 +1922,12 @@ isWinner ? verde : isSelected ? azul : negro
 - **Imagen nueva**: Logo con marca de verificación verde y estrella azul en fondo oscuro
 - **URL**: `https://customer-assets.emergentagent.com/job_grind-reflection/artifacts/yvqdxdup_descarga%20%282%29.png`
 
-### **Corrección Final - Clip-Path Circular:**
-- **Clip-path**: `circle(50% at 50% 50%)` para cortar forma circular perfecta
-- **Object-fit**: `cover` para llenar completamente el área
-- **Sin bordes blancos**: El clip-path elimina cualquier fondo blanco exterior
-- **Forma perfecta**: Círculo exacto sin importar el fondo original del logo
-- **Tamaño completo**: 100% del espacio asignado
+### **Corrección Final - Zoom al Centro:**
+- **Clip-path reducido**: `circle(35% at 50% 50%)` para eliminar bordes blancos
+- **Imagen más grande**: 140% del tamaño para hacer "zoom" al centro
+- **Margin negativo**: Para centrar la imagen ampliada
+- **Solo contenido central**: Muestra únicamente la marca verde y estrella azul
+- **Sin fondo blanco**: Elimina completamente el borde blanco original
 ### **Ajustes para Círculo Perfecto:**
 - **Sin espacios blancos**: Logo ocupa completamente el área circular
 - **Object-fit cover**: Rellena todo el círculo sin distorsión
