@@ -360,7 +360,7 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={24} />
+          <LogoWithQuickActions size={32} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -388,7 +388,7 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={24} />
+          <LogoWithQuickActions size={32} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -434,7 +434,7 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={24} />
+          <LogoWithQuickActions size={32} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -479,7 +479,7 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={24} />
+          <LogoWithQuickActions size={32} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -523,7 +523,7 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={24} />
+          <LogoWithQuickActions size={32} />
         </div>
 
         {/* Stories overlay en la parte superior */}
