@@ -4,7 +4,7 @@ import QuickActionsMenu from './QuickActionsMenu';
 import useLongPress from '../hooks/useLongPress';
 import { useToast } from '../hooks/use-toast';
 
-const LogoWithQuickActions = ({ size = 24, className = "" }) => {
+const LogoWithQuickActions = ({ size = 32, className = "" }) => {
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const { toast } = useToast();
