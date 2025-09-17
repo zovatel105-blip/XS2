@@ -207,7 +207,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
             disabled={isLoading}
             className="post-management-item px-4 py-3 text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
           >
-            <Pin className="w-5 h-5 mr-3" />
+            <Pin className="post-management-item-icon w-5 h-5 mr-3" />
             {poll.is_pinned ? 'Desanclar del perfil' : 'Fijar en perfil'}
           </DropdownMenuItem>
           
