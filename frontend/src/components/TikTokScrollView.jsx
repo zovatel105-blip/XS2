@@ -378,21 +378,10 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
 
         </div>
         
-        <div className="mt-3 relative">
-          <h2 className="text-white font-bold text-xl leading-tight text-left pr-16">
+        <div className="mt-3">
+          <h2 className="text-white font-bold text-xl leading-tight text-left">
             {poll.title}
           </h2>
-          
-          {/* Post Management Menu - only for own posts */}
-          {isOwnProfile && onUpdatePoll && onDeletePoll && authUser && (
-            <PostManagementMenu
-              poll={poll}
-              onUpdate={onUpdatePoll}
-              onDelete={onDeletePoll}
-              currentUser={authUser}
-              isOwnProfile={isOwnProfile}
-            />
-          )}
         </div>
 
 
