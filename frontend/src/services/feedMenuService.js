@@ -2,7 +2,7 @@ import AppConfig from '../config/config';
 
 class FeedMenuService {
   constructor() {
-    this.baseURL = AppConfig.API_BASE_URL || import.meta.env.REACT_APP_BACKEND_URL;
+    this.baseURL = AppConfig.BACKEND_URL;
   }
 
   async makeRequest(endpoint, options = {}) {
