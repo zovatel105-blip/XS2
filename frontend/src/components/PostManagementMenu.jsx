@@ -198,7 +198,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
             Editar título/descripción
           </DropdownMenuItem>
           
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="my-2 bg-gray-200" />
           
           {/* Organización */}
           <DropdownMenuItem 
@@ -219,7 +219,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
             {poll.is_archived ? 'Desarchivar publicación' : 'Archivar publicación'}
           </DropdownMenuItem>
           
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="my-2 bg-gray-200" />
           
           {/* Privacidad */}
           <DropdownMenuItem 
@@ -240,7 +240,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
             )}
           </DropdownMenuItem>
           
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="my-2 bg-gray-200" />
           
           {/* Eliminar */}
           <DropdownMenuItem 
