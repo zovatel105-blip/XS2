@@ -1054,7 +1054,7 @@ const TikTokScrollView = ({
             onUpdatePoll={onUpdatePoll}
             onDeletePoll={onDeletePoll}
             isOwnProfile={isOwnProfile}
-            currentUser={authUser}
+            currentUser={currentUser}
           />
         ))}
       </div>
