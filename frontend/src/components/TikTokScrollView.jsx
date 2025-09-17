@@ -7,6 +7,7 @@ import CustomLogo from './CustomLogo';
 import CreatePollModal from './CreatePollModal';
 import CommentsModal from './CommentsModal';
 import ShareModal from './ShareModal';
+import PostManagementMenu from './PostManagementMenu';
 import { useFollow } from '../contexts/FollowContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useShare } from '../hooks/useShare';
