@@ -39,8 +39,14 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  // Only show menu for post owner
-  if (!currentUser || poll.user_id !== currentUser.id) {
+  // Debug logging
+  console.log('PostManagementMenu - currentUser:', currentUser?.id);
+  console.log('PostManagementMenu - poll.user_id:', poll.user_id);
+  console.log('PostManagementMenu - poll.author_id:', poll.author_id);
+  console.log('PostManagementMenu - isOwnProfile:', currentUser && (poll.user_id === currentUser.id || poll.author_id === currentUser.id));
+
+  // Only show menu for post owner - check both user_id and author_id
+  if (!currentUser || (poll.user_id !== currentUser.id && poll.author_id !== currentUser.id)) {
     return null;
   }
 
