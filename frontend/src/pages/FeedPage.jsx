@@ -553,7 +553,7 @@ const FeedPage = () => {
           zIndex: 9999,
         }}
       >
-        <LogoWithQuickActions size={24} />
+        <LogoWithQuickActions size={32} />
       </div>
       
       <div className="min-h-screen bg-gray-50 pt-6 relative">
