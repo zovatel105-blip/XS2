@@ -2166,6 +2166,33 @@ backend:
 - **Comparación IDs**: Muestra user ID vs poll ID
 - **Validación de props**: Verifica que se pasen correctamente
 
+## ✅ **PROBLEMA IDENTIFICADO Y CORREGIDO**
+
+**PROBLEMA ENCONTRADO**: La etiqueta debug mostró que `poll.user_id` y `poll.author_id` están undefined o no coinciden con `currentUser.id`, por eso el menú no aparecía.
+
+**DIAGNÓSTICO:**
+- ✅ **isOwnProfile**: Funciona correctamente (etiqueta verde aparece)
+- ❌ **poll IDs**: `poll.user_id` y `poll.author_id` no coinciden o están undefined
+- ✅ **currentUser**: Existe y tiene ID válido
+
+**SOLUCIÓN IMPLEMENTADA:**
+
+### **🔧 Lógica Corregida:**
+- **Antes**: Verificaba `poll.user_id === currentUser.id`
+- **Ahora**: Usa `isOwnProfile` como verificación principal
+- **Más confiable**: `isOwnProfile` se calcula correctamente en ProfilePage
+
+### **🎯 Cambios Realizados:**
+1. **PostManagementMenu**: Ahora usa `isOwnProfile` en lugar de comparar IDs
+2. **TikTokProfileGrid**: Pasa `isOwnProfile` como prop
+3. **Debug mejorado**: Muestra todos los IDs para identificar el campo correcto
+
+### **📱 Resultado Esperado:**
+- **En tu perfil**: Botón de menú blanco visible en esquina superior derecha
+- **En otros perfiles**: Sin botón de menú
+- **Funcionalidad completa**: Editar, archivar, fijar, hacer privada/pública, eliminar
+
+**NOTA**: Esta solución es más robusta porque no depende de la consistencia de los campos de ID del backend, sino de la lógica ya establecida de `isOwnProfile`.
 **PRÓXIMOS PASOS**: Si el indicador verde no aparece, el problema está en la lógica de propiedad de posts. Si aparece pero no el menú, hay conflicto de CSS o renderizado.
     implemented: true
     working: true
