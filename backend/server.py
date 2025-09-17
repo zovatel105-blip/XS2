@@ -5853,11 +5853,15 @@ async def mark_not_interested(
     current_user: UserResponse = Depends(get_current_user)
 ):
     """Mark a poll as 'not interested' - removes it from user's feed"""
+    logger.info(f"🚫 Feed Menu: mark_not_interested called for poll_id={poll_id}, user_id={current_user.id}")
     try:
         # Check if poll exists
         poll = await db.polls.find_one({"id": poll_id})
         if not poll:
+            logger.warning(f"❌ Poll not found: {poll_id}")
             raise HTTPException(status_code=404, detail="Poll not found")
+        
+        logger.info(f"✅ Poll found: {poll_id}")
         
         # Check if preference already exists
         existing_preference = await db.user_preferences.find_one({
@@ -5867,6 +5871,7 @@ async def mark_not_interested(
         })
         
         if existing_preference:
+            logger.info(f"ℹ️ Already marked as not interested: {poll_id}")
             return {"success": True, "message": "Already marked as not interested"}
         
         # Create new preference
@@ -5878,13 +5883,14 @@ async def mark_not_interested(
         )
         
         await db.user_preferences.insert_one(preference.dict())
+        logger.info(f"✅ Successfully marked poll as not interested: {poll_id}")
         
         return {"success": True, "message": "Content marked as not interested"}
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error marking poll as not interested: {str(e)}")
+        logger.error(f"❌ Error marking poll as not interested: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.post("/feed/hide-user")
