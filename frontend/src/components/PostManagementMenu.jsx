@@ -188,7 +188,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
           </Button>
         </DropdownMenuTrigger>
         
-        <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuContent align="end" className="w-64 z-50 bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl rounded-xl p-2">
           {/* Edición */}
           <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
             <Edit className="w-4 h-4 mr-2" />
