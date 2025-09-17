@@ -9,6 +9,7 @@ import {
   Trash2, 
   X 
 } from 'lucide-react';
+import '../styles/PostManagement.css';
 import { Button } from './ui/button';
 import { 
   DropdownMenu,
