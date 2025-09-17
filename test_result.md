@@ -1922,11 +1922,12 @@ isWinner ? verde : isSelected ? azul : negro
 - **Imagen nueva**: Logo con marca de verificación verde y estrella azul en fondo oscuro
 - **URL**: `https://customer-assets.emergentagent.com/job_grind-reflection/artifacts/yvqdxdup_descarga%20%282%29.png`
 
-### **Propiedades Mantenidas:**
-- **Tamaño**: Configurable (por defecto 24px)
-- **Formato**: Object-fit contain para mantener proporciones
-- **Bordes**: Redondeados
-- **Responsivo**: Se ajusta al tamaño especificado
+### **Ajustes para Círculo Perfecto:**
+- **Contenedor**: Div circular con fondo blanco y sombra sutil
+- **Tamaño del logo**: 75% del tamaño del contenedor para mejor proporción
+- **Centrado**: Perfect centering con flexbox
+- **Fondo**: Blanco circular para contraste
+- **Proporciones**: Mantiene aspect ratio del logo original
 
 ### **Ubicaciones donde aparece:**
 - Logo principal en la aplicación
