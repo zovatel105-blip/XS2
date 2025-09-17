@@ -1451,6 +1451,10 @@ const ProfilePage = () => {
                     <TikTokProfileGrid 
                       polls={savedPolls} 
                       onPollClick={handlePollClick}
+                      onUpdatePoll={handleUpdatePoll}
+                      onDeletePoll={handleDeletePoll}
+                      currentUser={authUser}
+                      isOwnProfile={false}
                     />
                   </div>
                 </div>
