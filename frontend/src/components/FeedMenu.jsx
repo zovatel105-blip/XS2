@@ -34,7 +34,16 @@ const FeedMenu = ({
 
   const handleNotInterested = async () => {
     try {
-      await onNotInterested?.(poll.id);
+      console.log('🚫 FeedMenu: handleNotInterested called for poll:', poll.id);
+      console.log('🚫 FeedMenu: onNotInterested function:', typeof onNotInterested);
+      
+      if (!onNotInterested) {
+        throw new Error('onNotInterested handler not provided');
+      }
+      
+      await onNotInterested(poll.id);
+      console.log('✅ FeedMenu: Successfully marked as not interested');
+      
       toast({
         title: "Contenido ocultado",
         description: "Este tipo de contenido aparecerá menos en tu feed",
@@ -42,9 +51,10 @@ const FeedMenu = ({
       });
       setIsOpen(false);
     } catch (error) {
+      console.error('❌ FeedMenu: Error in handleNotInterested:', error);
       toast({
         title: "Error",
-        description: "No se pudo ocultar el contenido",
+        description: error.message || "No se pudo ocultar el contenido",
         variant: "destructive",
         duration: AppConfig.TOAST_DURATION,
       });
@@ -53,8 +63,23 @@ const FeedMenu = ({
 
   const handleHideUser = async () => {
     try {
+      console.log('👤 FeedMenu: handleHideUser called');
+      console.log('👤 FeedMenu: poll.author:', poll.author);
+      console.log('👤 FeedMenu: poll.authorUser:', poll.authorUser);
+      
       const authorUsername = poll.author?.username || poll.authorUser?.username || 'usuario';
-      await onHideUser?.(poll.author?.id || poll.authorUser?.id || poll.author?.username);
+      const authorId = poll.author?.id || poll.authorUser?.id || poll.author?.username;
+      
+      console.log('👤 FeedMenu: authorId:', authorId);
+      console.log('👤 FeedMenu: onHideUser function:', typeof onHideUser);
+      
+      if (!onHideUser) {
+        throw new Error('onHideUser handler not provided');
+      }
+      
+      await onHideUser(authorId);
+      console.log('✅ FeedMenu: Successfully hidden user');
+      
       toast({
         title: "Usuario ocultado",
         description: `Ya no verás contenido de @${authorUsername}`,
@@ -62,9 +87,10 @@ const FeedMenu = ({
       });
       setIsOpen(false);
     } catch (error) {
+      console.error('❌ FeedMenu: Error in handleHideUser:', error);
       toast({
         title: "Error", 
-        description: "No se pudo ocultar al usuario",
+        description: error.message || "No se pudo ocultar al usuario",
         variant: "destructive",
         duration: AppConfig.TOAST_DURATION,
       });
