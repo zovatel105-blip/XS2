@@ -651,5 +651,48 @@ class AudioFavoriteResponse(BaseModel):
     # Información completa del audio cuando esté disponible
     audio_details: Optional[Dict[str, Any]] = None
 
+# =============  FEED MENU MODELS =============
+
+class UserPreference(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # User who set the preference
+    poll_id: Optional[str] = None  # Specific poll hidden (for "no me interesa")
+    author_id: Optional[str] = None  # Author blocked (for "ocultar usuario")
+    preference_type: str  # "not_interested", "hidden_user", "notifications_enabled"
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ContentReport(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    poll_id: str  # Poll being reported
+    reported_by: str  # User who reported
+    category: str  # Report category (spam, harassment, etc.)
+    comment: Optional[str] = None  # Additional comment
+    status: str = "pending"  # pending, reviewed, resolved, dismissed
+    reviewed_by: Optional[str] = None  # Admin who reviewed
+    reviewed_at: Optional[datetime] = None
+    resolution: Optional[str] = None  # Resolution details
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserNotificationPreference(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str  # User receiving notifications
+    author_id: str  # Author to get notifications from
+    is_enabled: bool = True  # Whether notifications are enabled for this author
+    notification_types: List[str] = ["new_polls"]  # Types of notifications
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+# Request/Response models
+class FeedMenuActionCreate(BaseModel):
+    poll_id: str
+    action_type: str  # "not_interested", "hide_user", "toggle_notifications", "report"
+    data: Optional[Dict[str, Any]] = None  # Additional data (e.g., report category/comment)
+
+class FeedMenuResponse(BaseModel):
+    success: bool
+    message: str
+    data: Optional[Dict[str, Any]] = None
+
 # Necesario para resolver referencia circular
 CommentResponse.model_rebuild()
