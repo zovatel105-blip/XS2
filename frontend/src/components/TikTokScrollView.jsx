@@ -65,7 +65,7 @@ const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserCli
   </div>
 );
 
-const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCreatePoll, isActive, index, total, showLogo = true, shouldPreload = true, isVisible = true }) => {
+const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCreatePoll, isActive, index, total, showLogo = true, shouldPreload = true, isVisible = true, onUpdatePoll, onDeletePoll, isOwnProfile, currentUser }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [audioContextActivated, setAudioContextActivated] = useState(false);
