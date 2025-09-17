@@ -177,7 +177,7 @@ const FeedMenu = ({
               >
                 <EyeOff className="w-5 h-5 text-gray-400" />
                 <div>
-                  <div className="text-white text-sm font-medium">🚫 No me interesa</div>
+                  <div className="text-white text-sm font-medium">No me interesa</div>
                   <div className="text-gray-400 text-xs">Este contenido aparecerá menos</div>
                 </div>
               </button>
@@ -189,7 +189,7 @@ const FeedMenu = ({
               >
                 <UserX className="w-5 h-5 text-gray-400" />
                 <div>
-                  <div className="text-white text-sm font-medium">👤 Ocultar usuario</div>
+                  <div className="text-white text-sm font-medium">Ocultar usuario</div>
                   <div className="text-gray-400 text-xs">No mostrar contenido de este usuario</div>
                 </div>
               </button>
@@ -206,7 +206,7 @@ const FeedMenu = ({
                 )}
                 <div>
                   <div className="text-white text-sm font-medium">
-                    🔔 {isNotificationEnabled ? 'Desactivar notificaciones' : 'Activar notificaciones'}
+                    {isNotificationEnabled ? 'Desactivar notificaciones' : 'Activar notificaciones'}
                   </div>
                   <div className="text-gray-400 text-xs">
                     {isNotificationEnabled 
@@ -230,7 +230,7 @@ const FeedMenu = ({
               >
                 <Flag className="w-5 h-5 text-red-400" />
                 <div>
-                  <div className="text-red-400 text-sm font-medium">🚩 Reportar</div>
+                  <div className="text-red-400 text-sm font-medium">Reportar</div>
                   <div className="text-gray-400 text-xs">Contenido inapropiado o spam</div>
                 </div>
               </button>
