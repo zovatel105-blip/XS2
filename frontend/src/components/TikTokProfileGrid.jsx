@@ -86,7 +86,9 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
             {/* Debug indicator - TEMPORARY */}
             {isOwnProfile && currentUser && (
               <div className="absolute top-1 left-1 bg-green-500 text-white text-xs px-2 py-1 rounded z-10">
-                OWN POST - User: {currentUser?.id} | Poll: {poll.user_id || poll.author_id}
+                User: {currentUser?.id.slice(-8)} | 
+                author_id: {poll.author_id?.slice(-8)} | 
+                user_id: {poll.user_id?.slice(-8)}
               </div>
             )}
 
