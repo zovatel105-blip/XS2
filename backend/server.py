@@ -5760,6 +5760,91 @@ async def check_user_has_stories(
         logger.error(f"Error checking user stories: {str(e)}")
         return {"has_stories": False, "story_count": 0}
 
+@api_router.put("/polls/{poll_id}")
+async def update_poll(
+    poll_id: str,
+    poll_data: Dict,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Update a poll (only by owner)"""
+    try:
+        # Get the poll to check ownership
+        poll = await db.polls.find_one({"id": poll_id})
+        if not poll:
+            raise HTTPException(status_code=404, detail="Poll not found")
+        
+        # Check if user is the owner
+        if poll.get("author_id") != current_user.id:
+            raise HTTPException(status_code=403, detail="You can only edit your own polls")
+        
+        # Prepare update data
+        update_data = {}
+        if "title" in poll_data:
+            update_data["title"] = poll_data["title"]
+        if "description" in poll_data:
+            update_data["description"] = poll_data["description"]
+        if "is_pinned" in poll_data:
+            update_data["is_pinned"] = poll_data["is_pinned"]
+        if "is_archived" in poll_data:
+            update_data["is_archived"] = poll_data["is_archived"]
+        if "is_private" in poll_data:
+            update_data["is_private"] = poll_data["is_private"]
+        
+        update_data["updated_at"] = datetime.utcnow()
+        
+        # Update the poll
+        result = await db.polls.update_one(
+            {"id": poll_id},
+            {"$set": update_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=400, detail="No changes made")
+        
+        # Return updated poll
+        updated_poll = await db.polls.find_one({"id": poll_id})
+        return updated_poll
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating poll: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.delete("/polls/{poll_id}")
+async def delete_poll(
+    poll_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Delete a poll (only by owner)"""
+    try:
+        # Get the poll to check ownership
+        poll = await db.polls.find_one({"id": poll_id})
+        if not poll:
+            raise HTTPException(status_code=404, detail="Poll not found")
+        
+        # Check if user is the owner
+        if poll.get("author_id") != current_user.id:
+            raise HTTPException(status_code=403, detail="You can only delete your own polls")
+        
+        # Delete associated data
+        await db.votes.delete_many({"poll_id": poll_id})
+        await db.poll_likes.delete_many({"poll_id": poll_id})
+        await db.comments.delete_many({"poll_id": poll_id})
+        
+        # Delete the poll
+        result = await db.polls.delete_one({"id": poll_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=400, detail="Failed to delete poll")
+        
+        return {"message": "Poll deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting poll: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 # Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
