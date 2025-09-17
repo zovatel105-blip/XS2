@@ -182,9 +182,9 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser }) => {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 p-0"
+            className="absolute top-2 right-2 z-50 bg-black/70 hover:bg-black/80 active:bg-black/90 text-white rounded-full w-10 h-10 p-0 shadow-lg border border-white/20 backdrop-blur-sm transition-all duration-200"
           >
-            <MoreVertical className="w-4 h-4" />
+            <MoreVertical className="w-5 h-5" />
           </Button>
         </DropdownMenuTrigger>
         
