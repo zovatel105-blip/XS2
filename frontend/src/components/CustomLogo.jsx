@@ -7,11 +7,13 @@ const CustomLogo = ({ size = 24, className = "" }) => {
       alt="Quick Actions Logo"
       width={size}
       height={size}
-      className={`${className} object-cover rounded-full`}
+      className={`${className} object-cover`}
       style={{ 
         width: `${size}px`, 
         height: `${size}px`,
-        objectFit: 'cover'
+        objectFit: 'cover',
+        clipPath: 'circle(50% at 50% 50%)',
+        borderRadius: '50%'
       }}
     />
   );
