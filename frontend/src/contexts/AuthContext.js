@@ -260,7 +260,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const userData = await apiRequest('/api/auth/me');
       setUser(userData);
-      localStorage.setItem('authUser', JSON.stringify(userData));
+      localStorage.setItem('user', JSON.stringify(userData));
     } catch (error) {
       console.error('Error refreshing user data:', error);
     }
