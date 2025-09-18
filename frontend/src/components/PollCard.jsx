@@ -39,16 +39,16 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
       >
-        {/* Background Progress Bar - Horizontal fill from left */}
+        {/* Background Progress Bar - Horizontal fill from left - Always show after any vote */}
         {totalVotes > 0 && (
           <motion.div 
             className={cn(
               "absolute inset-y-0 left-0 transition-all duration-700 ease-out",
               isSelected 
-                ? "bg-gradient-to-r from-blue-400/30 to-blue-500/30"
+                ? "bg-gradient-to-r from-blue-500/40 to-blue-600/40"
                 : isWinner 
-                  ? "bg-gradient-to-r from-green-400/30 to-green-500/30"
-                  : "bg-gradient-to-r from-gray-400/20 to-gray-500/20"
+                  ? "bg-gradient-to-r from-green-500/40 to-green-600/40"
+                  : "bg-gradient-to-r from-gray-400/30 to-gray-500/30"
             )}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
@@ -70,38 +70,6 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
           )}>
             {option.text}
           </p>
-          
-          {/* Stats Row */}
-          {totalVotes > 0 && (
-            <div className="mt-2 flex items-center gap-3">
-              {/* Percentage */}
-              <motion.span 
-                className={cn(
-                  "text-xs font-bold px-2 py-1 rounded-full",
-                  isSelected 
-                    ? "bg-blue-600 text-white"
-                    : isWinner 
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-600 text-white"
-                )}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
-              >
-                {percentage}%
-              </motion.span>
-              
-              {/* Vote Count */}
-              <motion.span 
-                className="text-xs text-gray-600 font-medium"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-              >
-                {option.votes} {option.votes === 1 ? 'voto' : 'votos'}
-              </motion.span>
-            </div>
-          )}
         </div>
         
         {/* Winner Badge */}
