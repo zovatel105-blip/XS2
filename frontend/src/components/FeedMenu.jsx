@@ -36,13 +36,14 @@ const FeedMenu = ({
     try {
       console.log('🚫 FeedMenu: handleNotInterested called for poll:', poll.id);
       console.log('🚫 FeedMenu: onNotInterested function:', typeof onNotInterested);
+      console.log('🚫 FeedMenu: localStorage token exists:', !!localStorage.getItem('token'));
       
       if (!onNotInterested) {
         throw new Error('onNotInterested handler not provided');
       }
       
-      await onNotInterested(poll.id);
-      console.log('✅ FeedMenu: Successfully marked as not interested');
+      const result = await onNotInterested(poll.id);
+      console.log('✅ FeedMenu: Successfully marked as not interested, result:', result);
       
       toast({
         title: "Contenido ocultado",
@@ -52,6 +53,7 @@ const FeedMenu = ({
       setIsOpen(false);
     } catch (error) {
       console.error('❌ FeedMenu: Error in handleNotInterested:', error);
+      console.error('❌ FeedMenu: Error stack:', error.stack);
       toast({
         title: "Error",
         description: error.message || "No se pudo ocultar el contenido",
