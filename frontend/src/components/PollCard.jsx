@@ -152,54 +152,24 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
           } : {}}
         />
         
-        {/* Enhanced Progress Bar with Percentage Display */}
-        {totalVotes > 0 && (
-          <>
-            {/* Progress Bar Background - Fills vertically from bottom */}
-            <motion.div 
-              className={cn(
-                "absolute inset-x-0 bottom-0 transition-all duration-700 ease-out",
-                isSelected 
-                  ? "bg-gradient-to-t from-blue-500/70 to-blue-600/70"
-                  : isWinner 
-                    ? "bg-gradient-to-t from-green-500/70 to-green-600/70"
-                    : "bg-gradient-to-t from-gray-400/50 to-gray-500/50"
-              )}
-              initial={{ height: 0 }}
-              animate={{ height: `${percentage}%` }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              style={{ 
-                transformOrigin: 'bottom'
-              }}
-            />
-            
-            {/* Percentage Badge - Shows in corner */}
-            <motion.div 
-              className={cn(
-                "absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm",
-                isSelected 
-                  ? "bg-blue-600/90 text-white"
-                  : isWinner 
-                    ? "bg-green-600/90 text-white"
-                    : "bg-gray-700/90 text-white"
-              )}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
-            >
-              {`${percentage}%`}
-            </motion.div>
-            
-            {/* Vote Count Badge - Shows at bottom */}
-            <motion.div 
-              className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.4, ease: "easeOut" }}
-            >
-              {option.votes} {option.votes === 1 ? 'voto' : 'votos'}
-            </motion.div>
-          </>
+        {/* Enhanced Progress Bar - Always show after any vote cast */}
+        {poll.totalVotes > 0 && (
+          <motion.div 
+            className={cn(
+              "absolute inset-x-0 bottom-0 transition-all duration-700 ease-out",
+              isSelected 
+                ? "bg-gradient-to-t from-blue-500/70 to-blue-600/70"
+                : isWinner 
+                  ? "bg-gradient-to-t from-green-500/70 to-green-600/70"
+                  : "bg-gradient-to-t from-gray-400/50 to-gray-500/50"
+            )}
+            initial={{ height: 0 }}
+            animate={{ height: `${percentage}%` }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            style={{ 
+              transformOrigin: 'bottom'
+            }}
+          />
         )}
 
         {/* Selection Ring with pulse */}
