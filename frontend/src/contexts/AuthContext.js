@@ -40,9 +40,9 @@ export const AuthProvider = ({ children }) => {
           if (response.ok) {
             const data = await response.json();
             
-            // Save auth data
-            localStorage.setItem('authToken', data.access_token);
-            localStorage.setItem('authUser', JSON.stringify(data.user));
+            // Save auth data with consistent key names
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('user', JSON.stringify(data.user));
             
             setToken(data.access_token);
             setUser(data.user);
