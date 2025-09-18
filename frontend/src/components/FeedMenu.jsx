@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MoreHorizontal, EyeOff, UserX, Bell, BellOff, Flag, X } from 'lucide-react';
-import { Button } from './ui/button';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import AppConfig from '../config/config';
