@@ -8,6 +8,7 @@ import CreatePollModal from '../components/CreatePollModal';
 import CustomLogo from '../components/CustomLogo';
 import LogoWithQuickActions from '../components/LogoWithQuickActions';
 import StoriesContainer from '../components/StoriesContainer';
+import pollService from '../services/pollService';
 import savedPollsService from '../services/savedPollsService';
 import { useToast } from '../hooks/use-toast';
 import { useAddiction } from '../contexts/AddictionContext';
