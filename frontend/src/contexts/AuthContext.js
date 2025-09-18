@@ -281,7 +281,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       setUser(updatedUser);
-      localStorage.setItem('authUser', JSON.stringify(updatedUser));
+      localStorage.setItem('user', JSON.stringify(updatedUser));
       
       return updatedUser;
     } catch (error) {
