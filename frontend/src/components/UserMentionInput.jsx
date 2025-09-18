@@ -70,7 +70,13 @@ const UserMentionInput = ({
     const newValue = e.target.value;
     const cursorPos = e.target.selectionStart;
     
-    onChange(newValue);
+    // Ensure onChange is a function before calling it
+    if (typeof onChange === 'function') {
+      onChange(newValue);
+    } else {
+      console.error('UserMentionInput: onChange prop is not a function:', typeof onChange);
+    }
+    
     setCursorPosition(cursorPos);
 
     // Check if user is typing a mention
