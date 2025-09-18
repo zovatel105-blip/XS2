@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Clock, X, Plus, User, Settings, Heart } from 'lucide-react';
+import { Search, Clock, X, Plus, User, Settings, Radio } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 
