@@ -201,33 +201,52 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
         {actions.map((action, index) => {
           const Icon = action.icon;
           const isSelected = selectedAction === action.id;
+          const isLiveAction = action.id === 'live';
           
           return (
-            <button
+            <div
               key={action.id}
-              onClick={() => handleActionClick(action.id)}
-              className={`
-                group absolute w-10 h-10 rounded-full shadow-lg transition-all duration-500 transform
-                ${action.color} ${action.borderColor} ${action.shadowColor}
-                ${isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110 active:scale-95'}
-                flex items-center justify-center border-2
-              `}
+              className="absolute"
               style={{
                 left: `${action.position.x}px`,
                 top: `${action.position.y}px`,
                 transform: isVisible 
-                  ? `translate(${action.position.x}px, ${action.position.y}px) scale(${isSelected ? 1.25 : 1})` 
+                  ? `translate(${action.position.x}px, ${action.position.y}px) scale(1)` 
                   : 'translate(0px, 0px) scale(0)',
                 transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
               }}
             >
-              <Icon 
-                size={16} 
-                className={`text-white transition-all duration-200 ${
-                  isSelected ? 'scale-125' : 'group-hover:scale-110'
-                }`} 
-              />
-            </button>
+              <button
+                onClick={() => handleActionClick(action.id)}
+                className={`
+                  group w-10 h-10 rounded-full shadow-lg transition-all duration-500 transform
+                  ${action.color} ${action.borderColor} ${action.shadowColor}
+                  ${isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110 active:scale-95'}
+                  flex items-center justify-center border-2
+                `}
+              >
+                <Icon 
+                  size={16} 
+                  className={`text-white transition-all duration-200 ${
+                    isSelected ? 'scale-125' : 'group-hover:scale-110'
+                  }`} 
+                />
+              </button>
+              
+              {/* Solo mostrar texto para LIVE */}
+              {isLiveAction && (
+                <span 
+                  className="absolute top-12 left-1/2 transform -translate-x-1/2 text-xs font-bold text-white/90 whitespace-nowrap transition-all duration-500"
+                  style={{
+                    textShadow: '0 1px 2px rgba(0,0,0,0.7)',
+                    transitionDelay: isVisible ? `${index * 100 + 200}ms` : '0ms',
+                    opacity: isVisible ? 1 : 0,
+                  }}
+                >
+                  LIVE
+                </span>
+              )}
+            </div>
           );
         })}
 
