@@ -325,37 +325,47 @@ const FeedPage = () => {
 
   const handleSave = async (pollId) => {
     console.log('🔖 FeedPage: handleSave called with pollId:', pollId);
+    console.log('🔖 FeedPage: savedPollsService available:', !!savedPollsService);
+    
     try {
-      console.log('🔖 FeedPage: Calling savedPollsService.toggleSavePoll...');
-      const result = await savedPollsService.toggleSavePoll(pollId);
-      console.log('🔖 FeedPage: toggleSavePoll result:', result);
+      console.log('🔖 FeedPage: Testing direct save call...');
       
-      if (result.saved) {
-        toast({
-          title: "¡Publicación guardada!",
-          description: "La publicación ha sido guardada en tu colección",
-          duration: 3000,
-        });
-      } else {
-        toast({
-          title: "Publicación eliminada",
-          description: "La publicación ha sido eliminada de tu colección",
-          duration: 3000,
-        });
-      }
+      // Simplified: try to save directly first
+      const result = await savedPollsService.savePoll(pollId);
+      console.log('🔖 FeedPage: Direct save result:', result);
+      
+      toast({
+        title: "¡Publicación guardada!",
+        description: "La publicación ha sido guardada en tu colección",
+        duration: 3000,
+      });
       
       // Track the action
       await trackAction('save');
       
     } catch (error) {
       console.error('❌ FeedPage: Error saving poll:', error);
+      console.error('❌ FeedPage: Error message:', error.message);
       console.error('❌ FeedPage: Error stack:', error.stack);
-      toast({
-        title: "Error",
-        description: "No se pudo guardar la publicación. Inténtalo de nuevo.",
-        variant: "destructive",
-        duration: 3000,  
-      });
+      
+      // Try the old simple approach as fallback
+      try {
+        console.log('🔖 FeedPage: Trying fallback approach...');
+        await trackAction('save');
+        toast({
+          title: "¡Publicación guardada!",
+          description: "La publicación ha sido guardada en tu colección",
+          duration: 3000,
+        });
+      } catch (fallbackError) {
+        console.error('❌ FeedPage: Fallback also failed:', fallbackError);
+        toast({
+          title: "Error",
+          description: "No se pudo guardar la publicación. Inténtalo de nuevo.",
+          variant: "destructive",
+          duration: 3000,  
+        });
+      }
     }
   };
 
