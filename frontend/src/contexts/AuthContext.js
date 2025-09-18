@@ -93,8 +93,8 @@ export const AuthProvider = ({ children }) => {
             // Keep the token and user data for now
           } else {
             // Clear invalid tokens for other errors
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('authUser');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
             localStorage.removeItem('userId');
           }
         }
