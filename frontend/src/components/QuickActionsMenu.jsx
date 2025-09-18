@@ -171,7 +171,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
     {
       id: 'live',
       icon: Video,
-      label: 'Live',
+      label: 'LIVE',
       color: 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
       borderColor: 'border-red-300',
       shadowColor: 'shadow-red-500/50',
