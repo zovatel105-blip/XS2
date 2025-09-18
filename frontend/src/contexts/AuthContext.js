@@ -210,8 +210,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authUser');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('userId'); // Clear old userId from addiction system
     
     setToken(null);
