@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Frontend Feed Menu</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: white; }
+        .debug-section { background: #2a2a2a; padding: 20px; margin: 10px 0; border-radius: 10px; }
+        .log { background: #333; padding: 10px; margin: 5px 0; border-radius: 5px; font-family: monospace; }
+        .success { border-left: 4px solid #00ff00; }
+        .error { border-left: 4px solid #ff0000; }
+        button { background: #FF0050; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Frontend FeedMenu</h1>
+    
+    <div class="debug-section">
+        <h2>1. Configuration Check</h2>
+        <div id="configCheck" class="log"></div>
+        <button onclick="checkConfig()">Check Configuration</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. Authentication Test</h2>
+        <div id="authResult" class="log"></div>
+        <button onclick="testAuth()">Test Login</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>3. Direct Feed Menu API Test</h2>
+        <div id="apiResult" class="log"></div>
+        <button onclick="testFeedMenuAPI()">Test Feed Menu API</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>4. Polls Structure Test</h2>
+        <div id="pollsResult" class="log"></div>
+        <button onclick="testPollsStructure()">Check Polls Structure</button>
+    </div>
+
+    <script>
+        let token = '';
+        let currentUser = null;
+        
+        function log(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = isError ? 'error' : 'success';
+            element.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        }
+
+        async function checkConfig() {
+            try {
+                // Simulate how the frontend gets the backend URL
+                const backendURL = 'http://localhost:8001'; // This is what should be in .env
+                log('configCheck', `Backend URL: ${backendURL}`, false);
+                
+                // Test if backend is reachable
+                const response = await fetch(`${backendURL}/api/`, { method: 'HEAD' });
+                log('configCheck', `Backend reachable: ${response.ok ? 'YES' : 'NO'}`, !response.ok);
+            } catch (error) {
+                log('configCheck', `Configuration error: ${error.message}`, true);
+            }
+        }
+
+        async function testAuth() {
+            try {
+                const response = await fetch('http://localhost:8001/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'test_feed@example.com',
+                        password: 'testpass123'
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    token = data.access_token;
+                    currentUser = data.user;
+                    log('authResult', `Login SUCCESS - User: ${currentUser.username} (ID: ${currentUser.id})`, false);
+                } else {
+                    log('authResult', `Login FAILED: ${data.detail}`, true);
+                }
+            } catch (error) {
+                log('authResult', `Auth error: ${error.message}`, true);
+            }
+        }
+
+        async function testFeedMenuAPI() {
+            if (!token) {
+                log('apiResult', 'Please login first', true);
+                return;
+            }
+            
+            try {
+                // Test with the poll we created earlier
+                const pollId = '8cba8f75-5d64-4240-936a-d4c35e1c217b';
+                
+                log('apiResult', `Testing with poll ID: ${pollId}`, false);
+                
+                const response = await fetch(`http://localhost:8001/api/feed/not-interested?poll_id=${pollId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    log('apiResult', `API SUCCESS: ${data.message}`, false);
+                } else {
+                    log('apiResult', `API FAILED: ${data.detail}`, true);
+                }
+            } catch (error) {
+                log('apiResult', `API error: ${error.message}`, true);
+            }
+        }
+
+        async function testPollsStructure() {
+            if (!token) {
+                log('pollsResult', 'Please login first', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:8001/api/polls', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const polls = await response.json();
+                if (response.ok && polls.length > 0) {
+                    const poll = polls[0];
+                    log('pollsResult', `Poll structure for ${poll.title}:`, false);
+                    log('pollsResult', `- Poll ID: ${poll.id}`, false);
+                    log('pollsResult', `- Author: ${JSON.stringify(poll.author)}`, false);
+                    log('pollsResult', `- AuthorUser: ${poll.authorUser || 'N/A'}`, false);
+                    log('pollsResult', `- Current User ID: ${currentUser?.id}`, false);
+                    
+                    const isOwnPost = poll.author?.id === currentUser?.id;
+                    log('pollsResult', `- Is own post? ${isOwnPost ? 'YES (menu should NOT show)' : 'NO (menu SHOULD show)'}`, isOwnPost);
+                } else {
+                    log('pollsResult', 'No polls found or error', true);
+                }
+            } catch (error) {
+                log('pollsResult', `Error: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>
