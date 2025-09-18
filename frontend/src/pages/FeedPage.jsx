@@ -324,8 +324,11 @@ const FeedPage = () => {
   };
 
   const handleSave = async (pollId) => {
+    console.log('🔖 FeedPage: handleSave called with pollId:', pollId);
     try {
+      console.log('🔖 FeedPage: Calling savedPollsService.toggleSavePoll...');
       const result = await savedPollsService.toggleSavePoll(pollId);
+      console.log('🔖 FeedPage: toggleSavePoll result:', result);
       
       if (result.saved) {
         toast({
@@ -345,7 +348,8 @@ const FeedPage = () => {
       await trackAction('save');
       
     } catch (error) {
-      console.error('Error saving poll:', error);
+      console.error('❌ FeedPage: Error saving poll:', error);
+      console.error('❌ FeedPage: Error stack:', error.stack);
       toast({
         title: "Error",
         description: "No se pudo guardar la publicación. Inténtalo de nuevo.",
