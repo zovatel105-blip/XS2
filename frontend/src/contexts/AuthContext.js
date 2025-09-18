@@ -138,9 +138,9 @@ export const AuthProvider = ({ children }) => {
       }
       console.log('Login successful:', { user: data.user?.email, hasToken: !!data.access_token });
       
-      // Save auth data
-      localStorage.setItem('authToken', data.access_token);
-      localStorage.setItem('authUser', JSON.stringify(data.user));
+      // Save auth data with consistent key names
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       
       setToken(data.access_token);
       setUser(data.user);
