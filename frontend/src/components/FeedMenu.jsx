@@ -167,9 +167,7 @@ const FeedMenu = ({
   return (
     <div className="relative">
       {/* Menu Trigger Button */}
-      <Button
-        variant="ghost"
-        size="sm"
+      <button
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
@@ -177,7 +175,7 @@ const FeedMenu = ({
         className={`flex items-center justify-center text-white hover:text-gray-300 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm ${className}`}
       >
         <MoreHorizontal className="w-5 h-5" />
-      </Button>
+      </button>
 
       {/* Menu Dropdown */}
       {isOpen && (
