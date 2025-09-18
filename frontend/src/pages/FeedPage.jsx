@@ -325,14 +325,35 @@ const FeedPage = () => {
 
   const handleSave = async (pollId) => {
     console.log('🔖 FeedPage: handleSave called with pollId:', pollId);
-    console.log('🔖 FeedPage: savedPollsService available:', !!savedPollsService);
     
     try {
-      console.log('🔖 FeedPage: Testing direct save call...');
+      // Test with raw fetch first
+      const token = localStorage.getItem('token');
+      console.log('🔖 FeedPage: Token exists:', !!token);
+      console.log('🔖 FeedPage: Token length:', token ? token.length : 0);
       
-      // Simplified: try to save directly first
-      const result = await savedPollsService.savePoll(pollId);
-      console.log('🔖 FeedPage: Direct save result:', result);
+      const url = `http://localhost:8001/api/polls/${pollId}/save`;
+      console.log('🔖 FeedPage: Making request to:', url);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      console.log('🔖 FeedPage: Response status:', response.status);
+      console.log('🔖 FeedPage: Response ok:', response.ok);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('🔖 FeedPage: Error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('🔖 FeedPage: Success result:', result);
       
       toast({
         title: "¡Publicación guardada!",
@@ -340,32 +361,16 @@ const FeedPage = () => {
         duration: 3000,
       });
       
-      // Track the action
       await trackAction('save');
       
     } catch (error) {
-      console.error('❌ FeedPage: Error saving poll:', error);
-      console.error('❌ FeedPage: Error message:', error.message);
-      console.error('❌ FeedPage: Error stack:', error.stack);
-      
-      // Try the old simple approach as fallback
-      try {
-        console.log('🔖 FeedPage: Trying fallback approach...');
-        await trackAction('save');
-        toast({
-          title: "¡Publicación guardada!",
-          description: "La publicación ha sido guardada en tu colección",
-          duration: 3000,
-        });
-      } catch (fallbackError) {
-        console.error('❌ FeedPage: Fallback also failed:', fallbackError);
-        toast({
-          title: "Error",
-          description: "No se pudo guardar la publicación. Inténtalo de nuevo.",
-          variant: "destructive",
-          duration: 3000,  
-        });
-      }
+      console.error('❌ FeedPage: Complete error:', error);
+      toast({
+        title: "Error",
+        description: `No se pudo guardar: ${error.message}`,
+        variant: "destructive",
+        duration: 3000,  
+      });
     }
   };
 
