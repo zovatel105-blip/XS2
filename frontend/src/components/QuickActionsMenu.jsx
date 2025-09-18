@@ -133,17 +133,17 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
     }
   };
 
-  const handleFavorites = () => {
+  const handleLive = () => {
     toast({
-      title: "❤️ Mis favoritos...",
-      description: "Viendo contenido guardado",
+      title: "🔴 En vivo",
+      description: "Explorando contenido en vivo",
     });
     
-    // Navegar a favoritos o usar hash para filtrar
-    navigate('/profile#favorites');
+    // Navegar a live o usar hash para filtrar
+    navigate('/live');
     
     if (onActionSelect) {
-      onActionSelect('favorites');
+      onActionSelect('live');
     }
   };
 
