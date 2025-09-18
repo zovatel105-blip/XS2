@@ -328,6 +328,12 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
     return Math.round((votes / poll.totalVotes) * 100);
   };
 
+  const getPercentageDisplay = (votes) => {
+    if (poll.totalVotes === 0) return "0%";
+    const percentage = (votes / poll.totalVotes) * 100;
+    return `${percentage.toFixed(1)}%`;
+  };
+
   const getWinningOption = () => {
     if (!poll.options || poll.options.length === 0) {
       return null;
