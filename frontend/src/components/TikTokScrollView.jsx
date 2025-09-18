@@ -551,7 +551,10 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
             )}
 
             {/* Feed Menu - Only shown for other users' posts */}
-            {currentUser && poll.author?.id !== currentUser.id && poll.authorUser?.id !== currentUser.id && (
+            {currentUser && (
+              (poll.author?.id && poll.author.id !== currentUser.id) ||
+              (poll.authorUser?.id && poll.authorUser.id !== currentUser.id)
+            ) && (
               <FeedMenu
                 poll={poll}
                 onNotInterested={handleNotInterested}
