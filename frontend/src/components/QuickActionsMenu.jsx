@@ -169,12 +169,12 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
       position: { x: -35, y: -13 }, // SUBIDO: 8px más arriba
     },
     {
-      id: 'favorites',
-      icon: Heart,
-      label: 'Favoritos',
-      color: 'bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
-      borderColor: 'border-pink-300',
-      shadowColor: 'shadow-pink-500/50',
+      id: 'live',
+      icon: Radio,
+      label: 'Live',
+      color: 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+      borderColor: 'border-red-300',
+      shadowColor: 'shadow-red-500/50',
       position: { x: -8, y: 16 }, // AJUSTADO: manteniendo distancia proporcional
     }
   ];
