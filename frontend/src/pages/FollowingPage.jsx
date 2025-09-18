@@ -304,12 +304,35 @@ const FollowingPage = () => {
   };
 
   const handleSave = async (pollId) => {
-    // Aquí podrías implementar la lógica para guardar en localStorage, backend, etc.
-    await trackAction('share'); // Usar share como acción similar
-    toast({
-      title: "¡Votación guardada!",
-      description: "La votación ha sido guardada en tu colección",
-    });
+    try {
+      const result = await savedPollsService.toggleSavePoll(pollId);
+      
+      if (result.saved) {
+        toast({
+          title: "¡Publicación guardada!",
+          description: "La publicación ha sido guardada en tu colección",
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Publicación eliminada",
+          description: "La publicación ha sido eliminada de tu colección",
+          duration: 3000,
+        });
+      }
+      
+      // Track the action
+      await trackAction('save');
+      
+    } catch (error) {
+      console.error('Error saving poll:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar la publicación. Inténtalo de nuevo.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleExitTikTok = () => {
