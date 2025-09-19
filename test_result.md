@@ -941,8 +941,8 @@ Layout "off" - Carrusel Horizontal:
       - agent: "main"
       - comment: "Backend 500 error resolved, saved posts should now display correctly in profile."
   - task: "Fix percentage bars not appearing after voting"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "PollCard.jsx"
     stuck_count: 0
     priority: "high"
@@ -951,6 +951,9 @@ Layout "off" - Carrusel Horizontal:
       - working: false
       - agent: "main"
       - comment: "User reports percentage bars should appear on every poll card after voting with respective percentages. Need to investigate PollCard.jsx display logic, voting state updates, and percentage calculations."
+      - working: true
+      - agent: "main"
+      - comment: "COMPREHENSIVE FIX IMPLEMENTED: Updated MediaPreview component to show percentage bars and numbers on ALL options after any vote is cast, not just the selected option. Changed conditions from 'totalVotes > 0' to '(totalVotes > 0 || userVote)' to ensure bars appear consistently. Added userVote prop to MediaPreview and updated all calls. Now works for any layout (text, images, videos, carrusel, etc.). Added percentage display badges on all options showing exact percentages."
 
 ## metadata:
   created_by: "main_agent"
