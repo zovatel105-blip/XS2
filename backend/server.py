@@ -6196,22 +6196,32 @@ async def get_saved_polls(
     limit: int = Query(20, ge=1, le=100)
 ):
     """Get user's saved polls"""
+    logger.info(f"📚 Getting saved polls for user {user_id}, current_user: {current_user.id}")
     try:
         # Only allow users to see their own saved polls or make it public if needed
         if user_id != current_user.id:
+            logger.warning(f"❌ Access denied: user {current_user.id} trying to access {user_id}'s saved polls")
             raise HTTPException(status_code=403, detail="Cannot access other user's saved polls")
+        
+        logger.info(f"📚 Querying saved_polls collection for user_id: {user_id}")
         
         # Get saved poll IDs
         saved_records = await db.saved_polls.find({
             "user_id": user_id
         }).sort("saved_at", -1).skip(skip).limit(limit).to_list(limit)
         
+        logger.info(f"📚 Found {len(saved_records)} saved records")
+        
         if not saved_records:
+            logger.info(f"📚 No saved polls found for user {user_id}")
             return {"saved_polls": [], "total": 0}
         
         # Get the actual polls
         poll_ids = [record["poll_id"] for record in saved_records]
+        logger.info(f"📚 Looking up polls with IDs: {poll_ids}")
+        
         polls = await db.polls.find({"id": {"$in": poll_ids}}).to_list(len(poll_ids))
+        logger.info(f"📚 Found {len(polls)} actual polls")
         
         # Create a mapping for easier lookup
         polls_dict = {poll["id"]: poll for poll in polls}
@@ -6224,6 +6234,8 @@ async def get_saved_polls(
                 poll["saved_at"] = record["saved_at"]
                 ordered_polls.append(poll)
         
+        logger.info(f"📚 Returning {len(ordered_polls)} ordered polls")
+        
         # Get total count
         total = await db.saved_polls.count_documents({"user_id": user_id})
         
@@ -6232,8 +6244,10 @@ async def get_saved_polls(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error getting saved polls: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.error(f"❌ Error getting saved polls: {str(e)}")
+        logger.error(f"❌ Error type: {type(e).__name__}")
+        logger.error(f"❌ Error details: {repr(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.get("/polls/{poll_id}/save-status")
 async def get_poll_save_status(
