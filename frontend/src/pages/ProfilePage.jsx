@@ -1312,12 +1312,12 @@ const ProfilePage = () => {
 
           </div>
 
-          {/* Contenido de tabs con diseño limpio - ocupando todo el ancho */}
+          {/* Contenido de tabs con diseño limpio - ocupando casi todo el ancho */}
           <div className="pb-24">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               
-              {/* Navegación de tabs minimalista con padding lateral */}
-              <div className="px-3 sm:px-6 mb-6">
+              {/* Navegación de tabs minimalista con padding lateral mínimo */}
+              <div className="px-1 sm:px-2 mb-6">
                 <TabsList className="grid w-full grid-cols-4 bg-gray-50 rounded-2xl p-1 h-auto">
                   <TabsTrigger 
                     value="polls" 
@@ -1350,11 +1350,11 @@ const ProfilePage = () => {
                 </TabsList>
               </div>
 
-              {/* Contenido de tabs - Sin padding lateral para ocupar todo el ancho */}
+              {/* Contenido de tabs - Con padding lateral mínimo */}
               <div className="mt-6">
                 <TabsContent value="polls" className="space-y-6">
                   {userPolls.length === 0 ? (
-                    <div className="text-center py-16 space-y-6 px-3 sm:px-6">
+                    <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
                         <LayoutDashboard className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
                       </div>
@@ -1380,7 +1380,7 @@ const ProfilePage = () => {
                 {isOwnProfile && (
                   <TabsContent value="liked" className="space-y-6">
                     {likedPolls.length === 0 ? (
-                      <div className="text-center py-16 space-y-6 px-3 sm:px-6">
+                      <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
                           <Heart className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
                         </div>
@@ -1406,7 +1406,7 @@ const ProfilePage = () => {
 
                 <TabsContent value="mentions" className="space-y-6">
                   {mentionedPolls.length === 0 ? (
-                    <div className="text-center py-16 space-y-6 px-3 sm:px-6">
+                    <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
                         <AtSign className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
                       </div>
@@ -1418,7 +1418,7 @@ const ProfilePage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-4 px-3 sm:px-6">
+                    <div className="space-y-4 px-1 sm:px-2">
                       {mentionedPolls.map((poll) => (
                         <PollCard
                           key={poll.id}
@@ -1441,7 +1441,7 @@ const ProfilePage = () => {
                 {isOwnProfile && (
                   <TabsContent value="saved" className="space-y-6">
                     {savedPolls.length === 0 ? (
-                      <div className="text-center py-16 space-y-6 px-3 sm:px-6">
+                      <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
                           <Bookmark className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
                         </div>
