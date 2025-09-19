@@ -868,7 +868,6 @@ const ProfilePage = () => {
       // Remove poll from all relevant arrays
       setPolls(prev => prev.filter(poll => poll.id !== pollId));
       setTikTokPolls(prev => prev.filter(poll => poll.id !== pollId));
-      setLikedPolls(prev => prev.filter(poll => poll.id !== pollId));
       setSavedPolls(prev => prev.filter(poll => poll.id !== pollId));
       
     } catch (error) {
