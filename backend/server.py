@@ -5801,8 +5801,11 @@ async def update_poll(
         if result.modified_count == 0:
             raise HTTPException(status_code=400, detail="No changes made")
         
-        # Return updated poll
+        # Return updated poll (remove MongoDB ObjectId fields)
         updated_poll = await db.polls.find_one({"id": poll_id})
+        if updated_poll:
+            # Remove MongoDB ObjectId field to avoid serialization issues
+            updated_poll.pop('_id', None)
         return updated_poll
         
     except HTTPException:
