@@ -347,5 +347,3 @@ const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followi
 };
 
 export default StatisticsModal;
-
-export default StatisticsModal;
