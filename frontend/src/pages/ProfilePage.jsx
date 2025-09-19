@@ -1073,11 +1073,11 @@ const ProfilePage = () => {
             
             {/* Avatar con métricas alrededor en diseño 3x3 */}
             <div className="relative">
-              <div className="grid grid-cols-3 gap-6 items-center">
+              <div className="grid grid-cols-3 gap-2 items-center">
                 
                 {/* Votos - Esquina superior izquierda */}
                 <div className="text-center">
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
                       <Vote className="w-6 h-6 text-blue-600" strokeWidth={1.5} />
                     </div>
@@ -1093,7 +1093,7 @@ const ProfilePage = () => {
                 
                 {/* Me gusta - Esquina superior derecha */}
                 <div className="text-center">
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center">
                       <Heart className="w-6 h-6 text-pink-600" strokeWidth={1.5} />
                     </div>
@@ -1156,10 +1156,10 @@ const ProfilePage = () => {
 
                 {/* Seguidores - Esquina inferior izquierda */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
+                  className="text-center hover:bg-gray-50 rounded-xl p-2 transition-colors"
                   onClick={handleFollowersClick}
                 >
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
                       <Users className="w-6 h-6 text-green-600" strokeWidth={1.5} />
                     </div>
@@ -1175,10 +1175,10 @@ const ProfilePage = () => {
                 
                 {/* Seguidos - Esquina inferior derecha */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
+                  className="text-center hover:bg-gray-50 rounded-xl p-2 transition-colors"
                   onClick={handleFollowingClick}
                 >
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
                       <UserPlus className="w-6 h-6 text-purple-600" strokeWidth={1.5} />
                     </div>
