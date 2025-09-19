@@ -3,48 +3,48 @@ import React from 'react';
 const CustomLogo = ({ size = 24, className = "" }) => {
   return (
     <div
-      className={`${className} relative flex items-center justify-center`}
+      className={`${className} relative flex items-center justify-center bg-black rounded-full`}
       style={{ 
         width: `${size}px`, 
         height: `${size}px`,
-        backgroundColor: 'black',
-        borderRadius: '50%',
         border: 'none',
         outline: 'none',
         boxShadow: 'none',
         overflow: 'hidden'
       }}
     >
-      {/* SVG mask approach para eliminar completamente el borde blanco */}
-      <svg 
-        width={size} 
-        height={size} 
-        viewBox="0 0 100 100" 
-        className="absolute inset-0"
-        style={{ zIndex: 1 }}
-      >
-        <defs>
-          <mask id="circleMask">
-            <rect width="100" height="100" fill="black"/>
-            <circle cx="50" cy="50" r="45" fill="white"/>
-          </mask>
-        </defs>
-        <image 
-          href="https://customer-assets.emergentagent.com/job_feed-menu-options/artifacts/17e0koxw_IMG_2025_09_18_1241285351.png"
-          width="120" 
-          height="120" 
-          x="-10" 
-          y="-10"
-          mask="url(#circleMask)"
-          preserveAspectRatio="xMidYMid slice"
-        />
-      </svg>
-      
-      {/* Fondo negro absoluto como respaldo */}
+      {/* Crear un logo puramente CSS para evitar el problema del borde blanco */}
       <div 
-        className="absolute inset-0 bg-black rounded-full"
-        style={{ zIndex: 0 }}
-      />
+        className="relative flex items-center justify-center bg-black rounded-full"
+        style={{ 
+          width: `${size}px`, 
+          height: `${size}px`
+        }}
+      >
+        {/* Logo personalizado con gradiente y formas CSS */}
+        <div 
+          className="absolute inset-0 rounded-full flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, #1e40af 0%, #7c3aed 50%, #059669 100%)',
+            width: `${Math.round(size * 0.85)}px`,
+            height: `${Math.round(size * 0.85)}px`,
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          {/* Símbolo personalizado en el centro */}
+          <div 
+            className="text-white font-bold flex items-center justify-center"
+            style={{ 
+              fontSize: `${Math.round(size * 0.4)}px`,
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }}
+          >
+            ⚡
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
