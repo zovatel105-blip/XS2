@@ -32,7 +32,7 @@ const SettingsPage = () => {
     notifications_follows: true,
     notifications_mentions: true,
     
-    // Performance & Data settings (APK specific)
+    // Performance & Data settings
     video_quality: 'auto',
     wifi_only: false,
     battery_saver: false,
@@ -69,7 +69,7 @@ const SettingsPage = () => {
         notifications_follows: user.notifications_follows ?? true,
         notifications_mentions: user.notifications_mentions ?? true,
         
-        // Performance & Data settings (APK specific)
+        // Performance & Data settings
         video_quality: user.video_quality ?? 'auto',
         wifi_only: user.wifi_only ?? false,
         battery_saver: user.battery_saver ?? false,
@@ -130,8 +130,6 @@ const SettingsPage = () => {
   };
 
   const handleProfileUpdate = async (updatedUser) => {
-    // The EditProfileModal already updates the user state via updateUser()
-    // This function can be used for any additional UI updates if needed
     console.log('Profile updated successfully from settings:', updatedUser);
   };
 
@@ -143,507 +141,347 @@ const SettingsPage = () => {
     setModalsOpen(prev => ({ ...prev, [modalName]: false }));
   };
 
+  // Componente para elementos de configuración con flecha
+  const SettingsItem = ({ icon: Icon, title, description, onClick, rightElement, showChevron = false }) => (
+    <div 
+      className={`flex items-center justify-between p-4 hover:bg-gray-50 transition-colors duration-200 ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
+      <div className="flex items-center space-x-3">
+        <div className="flex-shrink-0">
+          <Icon className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-gray-900">{title}</p>
+          {description && (
+            <p className="text-sm text-gray-500 mt-0.5">{description}</p>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        {rightElement}
+        {showChevron && (
+          <ChevronRight className="w-4 h-4 text-gray-400" strokeWidth={1.5} />
+        )}
+      </div>
+    </div>
+  );
+
+  // Componente para separadores de sección
+  const SectionSeparator = () => (
+    <div className="border-t border-gray-200 my-1" />
+  );
+
+  // Componente para títulos de sección
+  const SectionTitle = ({ children }) => (
+    <div className="px-4 py-3 bg-gray-50">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        {children}
+      </h3>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 pb-20">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => navigate(-1)}
-                className="hover:bg-gray-100"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Settings className="w-6 h-6" />
-                Configuraciones
-              </h1>
-            </div>
-          </div>
+    <div className="min-h-screen bg-white">
+      {/* Header moderno y limpio */}
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+        <div className="flex items-center h-14 px-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="mr-3 p-2 hover:bg-gray-100 rounded-full"
+          >
+            <ArrowLeft className="w-5 h-5" strokeWidth={1.5} />
+          </Button>
+          <h1 className="text-lg font-semibold text-gray-900">
+            Configuración
+          </h1>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
-          
-          {/* Profile Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <User className="w-5 h-5" />
-                Perfil
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <h3 className="font-medium text-gray-900">Editar Perfil</h3>
-                  <p className="text-sm text-gray-600">
-                    Cambia tu nombre, biografía y foto de perfil
-                  </p>
-                </div>
-                <Button
-                  onClick={() => openModal('editProfile')}
-                  variant="outline"
-                  size="sm"
-                  className="hover:bg-purple-50 hover:border-purple-300"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  Editar
-                </Button>
+      {/* Lista vertical limpia */}
+      <div className="max-w-md mx-auto bg-white">
+        
+        {/* Sección: Cuenta */}
+        <SectionTitle>Cuenta</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={User}
+            title="Editar perfil"
+            description="Nombre, foto, biografía"
+            onClick={() => openModal('editProfile')}
+            showChevron
+          />
+          <SettingsItem
+            icon={Key}
+            title="Cambiar contraseña"
+            description="Actualizar contraseña"
+            onClick={() => openModal('changePassword')}
+            showChevron
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Privacidad */}
+        <SectionTitle>Privacidad</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Globe}
+            title="Perfil público"
+            description="Permitir que otros vean tu perfil"
+            rightElement={
+              <Switch
+                checked={settings.is_public}
+                onCheckedChange={(value) => handleSettingsChange('is_public', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+          <SettingsItem
+            icon={MessageCircle}
+            title="Permitir mensajes"
+            description="Recibir mensajes directos"
+            rightElement={
+              <Switch
+                checked={settings.allow_messages}
+                onCheckedChange={(value) => handleSettingsChange('allow_messages', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Notificaciones */}
+        <SectionTitle>Notificaciones</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Bell}
+            title="Notificaciones"
+            description="Activar todas las notificaciones"
+            rightElement={
+              <Switch
+                checked={settings.notifications_enabled}
+                onCheckedChange={(value) => handleSettingsChange('notifications_enabled', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+          {settings.notifications_enabled && (
+            <>
+              <SettingsItem
+                icon={Mail}
+                title="Notificaciones por email"
+                description="Recibir por correo electrónico"
+                rightElement={
+                  <Switch
+                    checked={settings.email_notifications}
+                    onCheckedChange={(value) => handleSettingsChange('email_notifications', value)}
+                    disabled={loading}
+                    className="data-[state=checked]:bg-blue-600"
+                  />
+                }
+              />
+              <SettingsItem
+                icon={Smartphone}
+                title="Notificaciones push"
+                description="Recibir en el dispositivo"
+                rightElement={
+                  <Switch
+                    checked={settings.push_notifications}
+                    onCheckedChange={(value) => handleSettingsChange('push_notifications', value)}
+                    disabled={loading}
+                    className="data-[state=checked]:bg-blue-600"
+                  />
+                }
+              />
+            </>
+          )}
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Rendimiento */}
+        <SectionTitle>Rendimiento</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Monitor}
+            title="Calidad de video"
+            description="Ajustar calidad de reproducción"
+            rightElement={
+              <select 
+                value={settings.video_quality}
+                onChange={(e) => handleSettingsChange('video_quality', e.target.value)}
+                disabled={loading}
+                className="text-sm text-gray-600 bg-transparent border-none focus:outline-none"
+              >
+                <option value="auto">Auto</option>
+                <option value="high">Alta</option>
+                <option value="medium">Media</option>
+                <option value="low">Baja</option>
+              </select>
+            }
+          />
+          <SettingsItem
+            icon={Wifi}
+            title="Solo WiFi"
+            description="Reproducir solo con WiFi"
+            rightElement={
+              <Switch
+                checked={settings.wifi_only}
+                onCheckedChange={(value) => handleSettingsChange('wifi_only', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+          <SettingsItem
+            icon={BatteryLow}
+            title="Ahorro de batería"
+            description="Reducir animaciones"
+            rightElement={
+              <Switch
+                checked={settings.battery_saver}
+                onCheckedChange={(value) => handleSettingsChange('battery_saver', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Apariencia */}
+        <SectionTitle>Apariencia</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Languages}
+            title="Idioma"
+            description="Español"
+            rightElement={
+              <select 
+                value={settings.app_language}
+                onChange={(e) => handleSettingsChange('app_language', e.target.value)}
+                disabled={loading}
+                className="text-sm text-gray-600 bg-transparent border-none focus:outline-none"
+              >
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="pt">Português</option>
+              </select>
+            }
+          />
+          <SettingsItem
+            icon={settings.dark_mode ? Moon : Sun}
+            title="Modo oscuro"
+            description="Tema oscuro para la interfaz"
+            rightElement={
+              <Switch
+                checked={settings.dark_mode}
+                onCheckedChange={(value) => handleSettingsChange('dark_mode', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+          <SettingsItem
+            icon={Type}
+            title="Texto grande"
+            description="Aumentar tamaño del texto"
+            rightElement={
+              <Switch
+                checked={settings.large_text}
+                onCheckedChange={(value) => handleSettingsChange('large_text', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Seguridad */}
+        <SectionTitle>Seguridad</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Shield}
+            title="Autenticación de dos factores"
+            description="Seguridad adicional"
+            rightElement={
+              <Switch
+                checked={settings.two_factor_enabled}
+                onCheckedChange={(value) => handleSettingsChange('two_factor_enabled', value)}
+                disabled={loading}
+                className="data-[state=checked]:bg-blue-600"
+              />
+            }
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Soporte */}
+        <SectionTitle>Soporte</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={HelpCircle}
+            title="Centro de ayuda"
+            description="Preguntas frecuentes y soporte"
+            showChevron
+          />
+          <SettingsItem
+            icon={Info}
+            title="Acerca de"
+            description="Versión de la aplicación"
+            showChevron
+          />
+        </div>
+
+        <SectionSeparator />
+
+        {/* Sección: Cuenta (Acciones críticas) */}
+        <div className="bg-white mt-8">
+          <div 
+            className="flex items-center justify-between p-4 hover:bg-red-50 transition-colors duration-200 cursor-pointer"
+            onClick={handleLogout}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="flex-shrink-0">
+                <LogOut className="w-5 h-5 text-red-600" strokeWidth={1.5} />
               </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <h3 className="font-medium text-gray-900">Cambiar Contraseña</h3>
-                  <p className="text-sm text-gray-600">
-                    Actualiza tu contraseña para mantener tu cuenta segura
-                  </p>
-                </div>
-                <Button
-                  onClick={() => openModal('changePassword')}
-                  variant="outline"
-                  size="sm"
-                  className="hover:bg-purple-50 hover:border-purple-300"
-                >
-                  <Lock className="w-4 h-4 mr-2" />
-                  Cambiar
-                </Button>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-red-600">Cerrar sesión</p>
+                <p className="text-sm text-red-500 mt-0.5">Salir de tu cuenta</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+        </div>
 
-          {/* Privacy Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Shield className="w-5 h-5" />
-                Privacidad
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Eye className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Perfil Público</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Permite que otros usuarios vean tu perfil y estadísticas
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.is_public}
-                  onCheckedChange={(value) => handleSettingsChange('is_public', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <MessageCircle className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Permitir Mensajes</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Permite que otros usuarios te envíen mensajes directos
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.allow_messages}
-                  onCheckedChange={(value) => handleSettingsChange('allow_messages', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notifications Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Bell className="w-5 h-5" />
-                Notificaciones
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Bell className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Notificaciones Generales</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Activa o desactiva todas las notificaciones
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.notifications_enabled}
-                  onCheckedChange={(value) => handleSettingsChange('notifications_enabled', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              {settings.notifications_enabled && (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-start gap-3">
-                      <MessageCircle className="w-5 h-5 text-gray-600 mt-0.5" />
-                      <div>
-                        <h3 className="font-medium text-gray-900">Notificaciones por Email</h3>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Recibe notificaciones importantes por correo electrónico
-                        </p>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={settings.email_notifications}
-                      onCheckedChange={(value) => handleSettingsChange('email_notifications', value)}
-                      disabled={loading}
-                      className="data-[state=checked]:bg-purple-600"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-gray-600 mt-0.5" />
-                      <div>
-                        <h3 className="font-medium text-gray-900">Notificaciones Push</h3>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Recibe notificaciones push en tu dispositivo
-                        </p>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={settings.push_notifications}
-                      onCheckedChange={(value) => handleSettingsChange('push_notifications', value)}
-                      disabled={loading}
-                      className="data-[state=checked]:bg-purple-600"
-                    />
-                  </div>
-
-                  <div className="space-y-4 pl-8 border-l-2 border-gray-100">
-                    <h4 className="font-medium text-gray-900 text-sm">Tipos de notificaciones:</h4>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h5 className="font-medium text-gray-800 text-sm">Me gusta</h5>
-                        <p className="text-xs text-gray-600">Cuando alguien da like a tu contenido</p>
-                      </div>
-                      <Switch
-                        checked={settings.notifications_likes}
-                        onCheckedChange={(value) => handleSettingsChange('notifications_likes', value)}
-                        disabled={loading}
-                        className="data-[state=checked]:bg-purple-600"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h5 className="font-medium text-gray-800 text-sm">Comentarios</h5>
-                        <p className="text-xs text-gray-600">Cuando alguien comenta tu contenido</p>
-                      </div>
-                      <Switch
-                        checked={settings.notifications_comments}
-                        onCheckedChange={(value) => handleSettingsChange('notifications_comments', value)}
-                        disabled={loading}
-                        className="data-[state=checked]:bg-purple-600"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h5 className="font-medium text-gray-800 text-sm">Nuevos seguidores</h5>
-                        <p className="text-xs text-gray-600">Cuando alguien te empieza a seguir</p>
-                      </div>
-                      <Switch
-                        checked={settings.notifications_follows}
-                        onCheckedChange={(value) => handleSettingsChange('notifications_follows', value)}
-                        disabled={loading}
-                        className="data-[state=checked]:bg-purple-600"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h5 className="font-medium text-gray-800 text-sm">Menciones</h5>
-                        <p className="text-xs text-gray-600">Cuando alguien te menciona en un post</p>
-                      </div>
-                      <Switch
-                        checked={settings.notifications_mentions}
-                        onCheckedChange={(value) => handleSettingsChange('notifications_mentions', value)}
-                        disabled={loading}
-                        className="data-[state=checked]:bg-purple-600"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Performance & Data Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Monitor className="w-5 h-5" />
-                Rendimiento y Datos
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Settings className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Calidad de Video</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Ajusta la calidad de reproducción de videos
-                    </p>
-                  </div>
-                </div>
-                <select 
-                  value={settings.video_quality || 'auto'}
-                  onChange={(e) => handleSettingsChange('video_quality', e.target.value)}
-                  disabled={loading}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                >
-                  <option value="auto">Automática</option>
-                  <option value="high">Alta (HD)</option>
-                  <option value="medium">Media</option>
-                  <option value="low">Baja (Ahorro datos)</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Globe className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Solo WiFi</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Reproducir videos solo cuando esté conectado a WiFi
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.wifi_only}
-                  onCheckedChange={(value) => handleSettingsChange('wifi_only', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Save className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Ahorro de Batería</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Reducir animaciones y efectos para ahorrar batería
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.battery_saver}
-                  onCheckedChange={(value) => handleSettingsChange('battery_saver', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Settings className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Cache Automático</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Guardar contenido en cache para acceso offline
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.auto_cache}
-                  onCheckedChange={(value) => handleSettingsChange('auto_cache', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Bell className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Sincronización en Segundo Plano</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Sincronizar contenido cuando la app está cerrada
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.background_sync}
-                  onCheckedChange={(value) => handleSettingsChange('background_sync', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Language & Accessibility Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Globe className="w-5 h-5" />
-                Idioma y Accesibilidad
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Globe className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Idioma de la Aplicación</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Selecciona tu idioma preferido
-                    </p>
-                  </div>
-                </div>
-                <select 
-                  value={settings.app_language || 'es'}
-                  onChange={(e) => handleSettingsChange('app_language', e.target.value)}
-                  disabled={loading}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                >
-                  <option value="es">Español</option>
-                  <option value="en">English</option>
-                  <option value="fr">Français</option>
-                  <option value="pt">Português</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Monitor className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Modo Oscuro</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Cambiar a tema oscuro para reducir fatiga visual
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.dark_mode}
-                  onCheckedChange={(value) => handleSettingsChange('dark_mode', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Eye className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Texto Grande</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Aumentar el tamaño del texto para mejor legibilidad
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.large_text}
-                  onCheckedChange={(value) => handleSettingsChange('large_text', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Account Security Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Shield className="w-5 h-5" />
-                Seguridad de la Cuenta
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Key className="w-5 h-5 text-gray-600 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Autenticación de Dos Factores</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Agrega una capa extra de seguridad a tu cuenta
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={settings.two_factor_enabled}
-                  onCheckedChange={(value) => handleSettingsChange('two_factor_enabled', value)}
-                  disabled={loading}
-                  className="data-[state=checked]:bg-purple-600"
-                />
-              </div>
-            </CardContent>
-          </Card>
-          {/* Account Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <User className="w-5 h-5" />
-                Cuenta
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
-                  <div>
-                    <h3 className="font-medium text-red-900">Cerrar Sesión</h3>
-                    <p className="text-sm text-red-700">
-                      Sal de tu cuenta en este dispositivo
-                    </p>
-                  </div>
-                  <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    size="sm"
-                    className="border-red-300 text-red-700 hover:bg-red-100 hover:border-red-400"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Salir
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Account Info */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center text-sm text-gray-500 space-y-2">
-                <p>Usuario: <span className="font-medium">@{user?.username}</span></p>
-                <p>Email: <span className="font-medium">{user?.email}</span></p>
-                <p className="text-xs">
-                  Miembro desde {user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { 
-                    year: 'numeric', 
-                    month: 'long',
-                    day: 'numeric'
-                  }) : 'N/A'}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Información de la cuenta */}
+        <div className="px-4 py-6 text-center border-t border-gray-100 mt-8">
+          <div className="space-y-1 text-xs text-gray-500">
+            <p>@{user?.username}</p>
+            <p>{user?.email}</p>
+            <p>
+              Miembro desde {user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { 
+                year: 'numeric', 
+                month: 'long'
+              }) : 'N/A'}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Modales */}
       <EditProfileModal
         isOpen={modalsOpen.editProfile}
         onClose={() => closeModal('editProfile')}
