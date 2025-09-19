@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Share2, BarChart3, Activity, Calendar, Clock, Target, Zap } from 'lucide-react';
 
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Share2, BarChart3, Activity, Target, Zap, Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Share2, BarChart3, Activity, Target, Zap } from 'lucide-react';
 
 const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followingCount }) => {
   const [activeTab, setActiveTab] = useState('contenido');
