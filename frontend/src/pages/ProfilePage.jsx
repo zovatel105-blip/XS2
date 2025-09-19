@@ -1644,7 +1644,7 @@ const ProfilePage = () => {
         <EditProfileModal
           isOpen={editProfileModalOpen}
           onClose={() => setEditProfileModalOpen(false)}
-          onUpdate={handleProfileUpdate}
+          onProfileUpdate={handleProfileUpdate}
         />
       )}
 
