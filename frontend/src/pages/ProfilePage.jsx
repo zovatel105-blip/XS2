@@ -1018,7 +1018,7 @@ const ProfilePage = () => {
           
           {/* Header minimalista */}
           <header className="bg-white border-b border-gray-100/50 sticky top-0 z-40">
-            <div className="px-6 py-4">
+            <div className="px-3 sm:px-6 py-4">
               <div className="flex items-center justify-between">
                 {/* Botón atrás o menú (izquierda) */}
                 {isOwnProfile ? (
@@ -1069,21 +1069,21 @@ const ProfilePage = () => {
           </header>
 
           {/* Contenido principal con jerarquía silenciosa */}
-          <div className="px-6 py-8 space-y-8">
+          <div className="px-3 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
             
-            {/* Avatar con métricas alrededor en diseño 3x3 */}
-            <div className="relative">
-              <div className="grid grid-cols-3 gap-2 items-center">
+            {/* Avatar con métricas alrededor optimizado para móvil */}
+            <div className="relative max-w-sm mx-auto w-full">
+              <div className="grid grid-cols-3 gap-1 sm:gap-2 items-center">
                 
                 {/* Votos - Esquina superior izquierda */}
                 <div className="text-center">
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Vote className="w-6 h-6 text-blue-600" strokeWidth={1.5} />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Vote className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
-                      <p className="text-sm text-gray-600 mt-1">Votos</p>
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Votos</p>
                     </div>
                   </div>
                 </div>
@@ -1094,12 +1094,12 @@ const ProfilePage = () => {
                 {/* Me gusta - Esquina superior derecha */}
                 <div className="text-center">
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center">
-                      <Heart className="w-6 h-6 text-pink-600" strokeWidth={1.5} />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-50 flex items-center justify-center">
+                      <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
-                      <p className="text-sm text-gray-600 mt-1">Me gusta</p>
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Me gusta</p>
                     </div>
                   </div>
                 </div>
@@ -1109,7 +1109,7 @@ const ProfilePage = () => {
                 
                 {/* Avatar - Centro */}
                 <div className="flex justify-center">
-                  <div className="relative w-24 h-24">
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24">
                     {displayUser?.hasStory ? (
                       <button
                         onClick={() => {
@@ -1122,7 +1122,7 @@ const ProfilePage = () => {
                         <div className="w-full h-full bg-white rounded-full overflow-hidden">
                           <Avatar className="w-full h-full rounded-full">
                             <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
-                            <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-xl font-medium">
+                            <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-lg sm:text-xl font-medium">
                               {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
                             </AvatarFallback>
                           </Avatar>
@@ -1132,7 +1132,7 @@ const ProfilePage = () => {
                       <div className="w-full h-full bg-white rounded-full overflow-hidden border-4 border-gray-100">
                         <Avatar className="w-full h-full rounded-full">
                           <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
-                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-xl font-medium">
+                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-lg sm:text-xl font-medium">
                             {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
                           </AvatarFallback>
                         </Avatar>
@@ -1143,9 +1143,9 @@ const ProfilePage = () => {
                     {isOwnProfile && (
                       <button 
                         onClick={() => setShowCreateStoryModal(true)}
-                        className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+                        className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
                       >
-                        <Plus className="w-3 h-3 text-white" strokeWidth={2} />
+                        <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" strokeWidth={2} />
                       </button>
                     )}
                   </div>
@@ -1156,16 +1156,16 @@ const ProfilePage = () => {
 
                 {/* Seguidores - Esquina inferior izquierda */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-2 transition-colors"
+                  className="text-center hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
                   onClick={handleFollowersClick}
                 >
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
-                      <Users className="w-6 h-6 text-green-600" strokeWidth={1.5} />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-50 flex items-center justify-center">
+                      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
-                      <p className="text-sm text-gray-600 mt-1">Seguidores</p>
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Seguidores</p>
                     </div>
                   </div>
                 </button>
@@ -1175,16 +1175,16 @@ const ProfilePage = () => {
                 
                 {/* Seguidos - Esquina inferior derecha */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-2 transition-colors"
+                  className="text-center hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
                   onClick={handleFollowingClick}
                 >
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
-                      <UserPlus className="w-6 h-6 text-purple-600" strokeWidth={1.5} />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-50 flex items-center justify-center">
+                      <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
-                      <p className="text-sm text-gray-600 mt-1">Seguidos</p>
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Seguidos</p>
                     </div>
                   </div>
                 </button>
