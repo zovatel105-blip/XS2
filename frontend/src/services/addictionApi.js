@@ -180,7 +180,7 @@ export class BehaviorTracker {
 
   async sendBehaviorData() {
     const currentUserId = localStorage.getItem('authUser');
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
     
     // Don't send behavior data if user is not authenticated
     if (!currentUserId || !token) {
