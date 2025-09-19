@@ -8463,6 +8463,262 @@ def test_layout_functionality(base_url):
     
     return success_count >= 3
 
+def test_session_expiration_post_creation(base_url):
+    """🚨 CRITICAL TEST: Session expiration during post creation"""
+    print("\n🚨 === CRITICAL SESSION EXPIRATION TEST ===")
+    print("CONTEXT: User reports 'Error al crear publicacion tú sesión a expirado inicia sesión nuevamente'")
+    
+    success_count = 0
+    total_tests = 0
+    
+    # Step 1: Create test user and login
+    print("\n1️⃣ CREATING TEST USER AND LOGIN")
+    total_tests += 1
+    
+    timestamp = int(time.time())
+    test_user_data = {
+        "email": f"session.test.{timestamp}@example.com",
+        "username": f"session_test_{timestamp}",
+        "display_name": "Session Test User",
+        "password": "sessiontest123"
+    }
+    
+    try:
+        # Register user
+        response = requests.post(f"{base_url}/auth/register", json=test_user_data, timeout=10)
+        print(f"Registration Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            register_data = response.json()
+            test_token = register_data['access_token']
+            test_user = register_data['user']
+            print(f"✅ User registered successfully: {test_user['username']}")
+            print(f"🔑 Token expires in: {register_data['expires_in']} seconds ({register_data['expires_in']/60:.1f} minutes)")
+            success_count += 1
+        else:
+            print(f"❌ Registration failed: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Registration error: {e}")
+        return False
+    
+    # Step 2: Test token validity with /api/auth/me
+    print("\n2️⃣ TESTING TOKEN VALIDITY WITH /api/auth/me")
+    total_tests += 1
+    
+    headers = {"Authorization": f"Bearer {test_token}"}
+    
+    try:
+        response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+        print(f"Auth/me Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            user_data = response.json()
+            print(f"✅ Token valid - User: {user_data['username']}")
+            print(f"📧 Email: {user_data['email']}")
+            print(f"🆔 User ID: {user_data['id']}")
+            success_count += 1
+        else:
+            print(f"❌ Token validation failed: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Token validation error: {e}")
+        return False
+    
+    # Step 3: Test post creation with same token
+    print("\n3️⃣ TESTING POST CREATION WITH SAME TOKEN")
+    total_tests += 1
+    
+    poll_data = {
+        "title": "Test Poll - Session Expiration Check",
+        "description": "Testing if session expires during post creation",
+        "options": [
+            {
+                "text": "Option A - Session works",
+                "media_type": None,
+                "media_url": None,
+                "mentioned_users": []
+            },
+            {
+                "text": "Option B - Session expired",
+                "media_type": None,
+                "media_url": None,
+                "mentioned_users": []
+            }
+        ],
+        "music_id": None,
+        "tags": ["test", "session"],
+        "category": "test",
+        "mentioned_users": [],
+        "video_playback_settings": {},
+        "layout": "default"
+    }
+    
+    try:
+        response = requests.post(f"{base_url}/polls", json=poll_data, headers=headers, timeout=10)
+        print(f"Create Poll Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            poll_response = response.json()
+            print(f"✅ Poll created successfully!")
+            print(f"📝 Poll ID: {poll_response['id']}")
+            print(f"📋 Title: {poll_response['title']}")
+            print(f"👤 Author: {poll_response['author']['username']}")
+            success_count += 1
+        elif response.status_code == 401:
+            print(f"❌ CRITICAL: Session expired during post creation!")
+            print(f"🚨 This matches the user's reported error")
+            print(f"📄 Response: {response.text}")
+            
+            # Try to decode the error message
+            try:
+                error_data = response.json()
+                print(f"🔍 Error detail: {error_data.get('detail', 'No detail provided')}")
+            except:
+                print(f"🔍 Raw error: {response.text}")
+                
+        else:
+            print(f"❌ Post creation failed with status {response.status_code}: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Post creation error: {e}")
+    
+    # Step 4: Verify token is still valid after post creation attempt
+    print("\n4️⃣ RE-TESTING TOKEN VALIDITY AFTER POST CREATION")
+    total_tests += 1
+    
+    try:
+        response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+        print(f"Auth/me (after post) Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            user_data = response.json()
+            print(f"✅ Token still valid after post creation attempt")
+            print(f"👤 User: {user_data['username']}")
+            success_count += 1
+        elif response.status_code == 401:
+            print(f"❌ Token became invalid after post creation attempt")
+            print(f"🚨 This indicates a token invalidation issue")
+        else:
+            print(f"❌ Unexpected status: {response.status_code}")
+            
+    except Exception as e:
+        print(f"❌ Token re-validation error: {e}")
+    
+    # Step 5: Test token expiration settings
+    print("\n5️⃣ ANALYZING TOKEN EXPIRATION SETTINGS")
+    total_tests += 1
+    
+    try:
+        # Try to get server configuration or make educated analysis
+        print(f"📊 TOKEN ANALYSIS:")
+        print(f"   - Configured expiration: 1440 minutes (24 hours)")
+        print(f"   - Actual expiration from response: {register_data['expires_in']} seconds")
+        print(f"   - Expected expiration: {1440 * 60} seconds")
+        
+        if register_data['expires_in'] == 1440 * 60:
+            print(f"✅ Token expiration settings are correct")
+            success_count += 1
+        else:
+            print(f"❌ Token expiration mismatch!")
+            print(f"   Expected: {1440 * 60} seconds")
+            print(f"   Actual: {register_data['expires_in']} seconds")
+            
+    except Exception as e:
+        print(f"❌ Token analysis error: {e}")
+    
+    # Step 6: Test with fresh login and immediate post creation
+    print("\n6️⃣ TESTING FRESH LOGIN + IMMEDIATE POST CREATION")
+    total_tests += 1
+    
+    try:
+        # Fresh login
+        login_data = {
+            "email": test_user_data["email"],
+            "password": test_user_data["password"]
+        }
+        
+        response = requests.post(f"{base_url}/auth/login", json=login_data, timeout=10)
+        print(f"Fresh Login Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            fresh_login_data = response.json()
+            fresh_token = fresh_login_data['access_token']
+            fresh_headers = {"Authorization": f"Bearer {fresh_token}"}
+            
+            print(f"✅ Fresh login successful")
+            
+            # Immediate post creation
+            fresh_poll_data = {
+                "title": "Fresh Login Test Poll",
+                "description": "Testing post creation immediately after fresh login",
+                "options": [
+                    {"text": "Fresh login works", "media_type": None, "media_url": None, "mentioned_users": []},
+                    {"text": "Fresh login fails", "media_type": None, "media_url": None, "mentioned_users": []}
+                ],
+                "music_id": None,
+                "tags": ["fresh", "login"],
+                "category": "test",
+                "mentioned_users": [],
+                "video_playback_settings": {},
+                "layout": "default"
+            }
+            
+            response = requests.post(f"{base_url}/polls", json=fresh_poll_data, headers=fresh_headers, timeout=10)
+            print(f"Fresh Login Post Creation Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                print(f"✅ Post creation works with fresh login")
+                success_count += 1
+            else:
+                print(f"❌ Post creation failed even with fresh login: {response.text}")
+        else:
+            print(f"❌ Fresh login failed: {response.text}")
+            
+    except Exception as e:
+        print(f"❌ Fresh login test error: {e}")
+    
+    # Step 7: Test token persistence across requests
+    print("\n7️⃣ TESTING TOKEN PERSISTENCE ACROSS MULTIPLE REQUESTS")
+    total_tests += 1
+    
+    try:
+        # Make multiple requests to test token stability
+        for i in range(3):
+            response = requests.get(f"{base_url}/auth/me", headers=fresh_headers, timeout=10)
+            print(f"Request {i+1} Status Code: {response.status_code}")
+            
+            if response.status_code != 200:
+                print(f"❌ Token failed on request {i+1}")
+                break
+        else:
+            print(f"✅ Token persisted across multiple requests")
+            success_count += 1
+            
+    except Exception as e:
+        print(f"❌ Token persistence test error: {e}")
+    
+    # Summary
+    print(f"\n📊 SESSION EXPIRATION TEST SUMMARY")
+    print(f"=" * 50)
+    print(f"Tests passed: {success_count}/{total_tests}")
+    print(f"Success rate: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 5:
+        print(f"✅ CONCLUSION: Session management appears to be working correctly")
+        print(f"   - Tokens are generated with correct expiration")
+        print(f"   - Authentication works for protected endpoints")
+        print(f"   - Post creation endpoint accepts valid tokens")
+    else:
+        print(f"❌ CONCLUSION: Session management issues detected")
+        print(f"   - Token validation may be failing")
+        print(f"   - Post creation endpoint may have authentication issues")
+        print(f"   - Frontend token handling may need investigation")
+    
+    return success_count >= 5
+
 def main():
     """Main test execution function"""
     print("🚀 Starting Backend API Testing...")
