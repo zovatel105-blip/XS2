@@ -1322,8 +1322,7 @@ const ProfilePage = () => {
                   value="polls" 
                   className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
                 >
-                  <LayoutDashboard className="w-4 h-4 mr-2" strokeWidth={1.5} />
-                  Posts
+                  <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
                 </TabsTrigger>
                 {isOwnProfile && (
                   <TabsTrigger 
