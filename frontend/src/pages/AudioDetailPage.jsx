@@ -1042,7 +1042,7 @@ const AudioDetailPage = () => {
   const handlePollShare = async (pollId) => {
     console.log('📤 Share poll:', pollId);
     
-    if (!localStorage.getItem('authToken')) {
+    if (!localStorage.getItem('token')) {
       toast({
         title: "Inicia sesión",
         description: "Necesitas iniciar sesión para compartir",
