@@ -710,6 +710,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                       percentage={percentage}
                       option={option}
                       totalVotes={poll.totalVotes}
+                      userVote={poll.userVote}
                     />
                     
                     {/* Option Text */}
