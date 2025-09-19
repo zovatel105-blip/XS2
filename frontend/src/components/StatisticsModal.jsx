@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, TrendingUp, Users, Vote, Heart, Share2, Calendar, Trophy, BarChart3, Eye, Zap, Target, Sparkles, Award, Flame, Star, ChevronUp, ChevronDown } from 'lucide-react';
+import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Share2, BarChart3, Activity, Calendar, Clock, Target, Zap } from 'lucide-react';
 
 const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followingCount }) => {
   const [activeTab, setActiveTab] = useState('overview');
