@@ -1741,8 +1741,6 @@ const ProfilePage = () => {
           onStoryCreated={handleStoryCreated}
         />
       )}
-        </div>
-      )}
     </>
   );
 };
