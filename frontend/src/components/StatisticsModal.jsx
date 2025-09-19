@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Share2, BarChart3, Activity, Target, Zap } from 'lucide-react';
+import { ArrowLeft, TrendingUp, TrendingDown, Users, Heart, Eye, MessageCircle, Vote, BarChart3, Activity, Target, Zap } from 'lucide-react';
 
 const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followingCount }) => {
   const [activeTab, setActiveTab] = useState('contenido');
