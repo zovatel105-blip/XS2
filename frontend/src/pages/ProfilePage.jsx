@@ -1071,113 +1071,124 @@ const ProfilePage = () => {
           {/* Contenido principal con jerarquía silenciosa */}
           <div className="px-6 py-8 space-y-8">
             
-            {/* Foto redonda prominente como punto de partida */}
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                {/* Avatar prominente */}
-                <div className="relative w-28 h-28">
-                  {displayUser?.hasStory ? (
-                    <button
-                      onClick={() => {
-                        if (userStories.length > 0) {
-                          setShowStoryViewer(true);
-                        }
-                      }}
-                      className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-1 hover:scale-105 transition-transform duration-200"
-                    >
-                      <div className="w-full h-full bg-white rounded-full overflow-hidden">
+            {/* Avatar con métricas alrededor en diseño 3x3 */}
+            <div className="relative">
+              <div className="grid grid-cols-3 gap-6 items-center">
+                
+                {/* Votos - Esquina superior izquierda */}
+                <div className="text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Vote className="w-6 h-6 text-blue-600" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
+                      <p className="text-sm text-gray-600 mt-1">Votos</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Espacio vacío superior centro */}
+                <div></div>
+                
+                {/* Me gusta - Esquina superior derecha */}
+                <div className="text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center">
+                      <Heart className="w-6 h-6 text-pink-600" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
+                      <p className="text-sm text-gray-600 mt-1">Me gusta</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Espacio vacío centro izquierda */}
+                <div></div>
+                
+                {/* Avatar - Centro */}
+                <div className="flex justify-center">
+                  <div className="relative w-24 h-24">
+                    {displayUser?.hasStory ? (
+                      <button
+                        onClick={() => {
+                          if (userStories.length > 0) {
+                            setShowStoryViewer(true);
+                          }
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full p-1 hover:scale-105 transition-transform duration-200"
+                      >
+                        <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                          <Avatar className="w-full h-full rounded-full">
+                            <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
+                            <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-xl font-medium">
+                              {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                      </button>
+                    ) : (
+                      <div className="w-full h-full bg-white rounded-full overflow-hidden border-4 border-gray-100">
                         <Avatar className="w-full h-full rounded-full">
                           <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
-                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-2xl font-medium">
+                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-xl font-medium">
                             {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
                           </AvatarFallback>
                         </Avatar>
                       </div>
-                    </button>
-                  ) : (
-                    <div className="w-full h-full bg-white rounded-full overflow-hidden border-4 border-gray-100">
-                      <Avatar className="w-full h-full rounded-full">
-                        <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-2xl font-medium">
-                          {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
-                        </AvatarFallback>
-                      </Avatar>
+                    )}
+                    
+                    {/* Botón sutil de editar - solo perfil propio */}
+                    {isOwnProfile && (
+                      <button 
+                        onClick={() => setShowCreateStoryModal(true)}
+                        className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+                      >
+                        <Plus className="w-3 h-3 text-white" strokeWidth={2} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Espacio vacío centro derecha */}
+                <div></div>
+
+                {/* Seguidores - Esquina inferior izquierda */}
+                <button 
+                  className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
+                  onClick={handleFollowersClick}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
+                      <Users className="w-6 h-6 text-green-600" strokeWidth={1.5} />
                     </div>
-                  )}
-                  
-                  {/* Botón sutil de editar - solo perfil propio */}
-                  {isOwnProfile && (
-                    <button 
-                      onClick={() => setShowCreateStoryModal(true)}
-                      className="absolute -bottom-1 -right-1 w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
-                    >
-                      <Plus className="w-4 h-4 text-white" strokeWidth={2} />
-                    </button>
-                  )}
-                </div>
+                    <div>
+                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
+                      <p className="text-sm text-gray-600 mt-1">Seguidores</p>
+                    </div>
+                  </div>
+                </button>
+                
+                {/* Espacio vacío inferior centro */}
+                <div></div>
+                
+                {/* Seguidos - Esquina inferior derecha */}
+                <button 
+                  className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
+                  onClick={handleFollowingClick}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
+                      <UserPlus className="w-6 h-6 text-purple-600" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
+                      <p className="text-sm text-gray-600 mt-1">Seguidos</p>
+                    </div>
+                  </div>
+                </button>
               </div>
-            </div>
-
-            {/* Métricas clave en diseño 2x2 como en la imagen */}
-            <div className="grid grid-cols-2 gap-6">
-              
-              {/* Votos - Esquina superior izquierda */}
-              <div className="text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                    <Vote className="w-6 h-6 text-blue-600" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
-                    <p className="text-sm text-gray-600 mt-1">Votos</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Me gusta - Esquina superior derecha */}
-              <div className="text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-pink-600" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
-                    <p className="text-sm text-gray-600 mt-1">Me gusta</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Seguidores - Esquina inferior izquierda */}
-              <button 
-                className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
-                onClick={handleFollowersClick}
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
-                    <Users className="w-6 h-6 text-green-600" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
-                    <p className="text-sm text-gray-600 mt-1">Seguidores</p>
-                  </div>
-                </div>
-              </button>
-              
-              {/* Seguidos - Esquina inferior derecha */}
-              <button 
-                className="text-center hover:bg-gray-50 rounded-xl p-4 transition-colors"
-                onClick={handleFollowingClick}
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
-                    <UserPlus className="w-6 h-6 text-purple-600" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
-                    <p className="text-sm text-gray-600 mt-1">Seguidos</p>
-                  </div>
-                </div>
-              </button>
             </div>
 
             {/* Nombre en negrita con línea fina */}
