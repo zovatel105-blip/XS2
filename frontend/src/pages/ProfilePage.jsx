@@ -1191,6 +1191,29 @@ const ProfilePage = () => {
               </div>
             </div>
 
+            {/* Nombre, profesión y biografía */}
+            <div className="text-center space-y-3 max-w-sm mx-auto">
+              <div className="w-16 h-px bg-gray-200 mx-auto"></div>
+              
+              <div className="space-y-2">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  {displayUser?.displayName || displayUser?.username || 'Usuario'}
+                </h2>
+                
+                {displayUser?.occupation && (
+                  <p className="text-sm text-gray-600 font-medium">
+                    {displayUser.occupation}
+                  </p>
+                )}
+                
+                {displayUser?.bio && (
+                  <p className="text-sm text-gray-600 leading-relaxed px-2">
+                    {displayUser.bio}
+                  </p>
+                )}
+              </div>
+            </div>
+
             {/* Botones de acción con iconografía integrada */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-sm mx-auto">
               {isOwnProfile ? (
