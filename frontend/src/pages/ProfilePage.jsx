@@ -395,6 +395,9 @@ const ProfilePage = () => {
     }
   }, [userId, navigate, toast]);
 
+  // Define isOwnProfile early - needed by useEffect hooks
+  const isOwnProfile = !userId || (authUser && (userId === authUser?.username || userId === authUser?.id));
+
   // Load saved polls on component mount
   useEffect(() => {
     const loadSavedPolls = async () => {
