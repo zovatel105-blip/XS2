@@ -395,12 +395,25 @@ const ProfilePage = () => {
     }
   }, [userId, navigate, toast]);
 
-  // Initialize saved polls - Start with empty array, only user can save posts manually
+  // Load saved polls on component mount
   useEffect(() => {
-    // In real app, this would be fetched from backend
-    // For now, start with empty array - posts are only saved when user clicks save button
-    setSavedPolls([]);
-  }, []);
+    const loadSavedPolls = async () => {
+      if (!authUser || !isOwnProfile) {
+        setSavedPolls([]);
+        return;
+      }
+
+      try {
+        const savedData = await pollService.getSavedPolls();
+        setSavedPolls(savedData || []);
+      } catch (error) {
+        console.error('Error loading saved polls:', error);
+        setSavedPolls([]);
+      }
+    };
+
+    loadSavedPolls();
+  }, [authUser, isOwnProfile]);
 
   // Load user stories status
   useEffect(() => {
