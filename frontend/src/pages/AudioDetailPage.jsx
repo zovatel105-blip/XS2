@@ -768,7 +768,7 @@ const AudioDetailPage = () => {
 
   const handleLike = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       const audioType = audio.is_system_music ? 'system' : 'user';
       
       if (isLiked) {
