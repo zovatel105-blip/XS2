@@ -187,7 +187,7 @@ const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followi
                 <h3 className="text-lg font-semibold text-gray-900">Participación</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <MetricCard
-                    icon={Share2}
+                    icon={Vote}
                     title="Votos"
                     value={totalVotes}
                     subtitle="Personas que votaron"
