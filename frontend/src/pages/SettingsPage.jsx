@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Switch } from '../components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { 
   ArrowLeft, ChevronRight, User, Shield, Bell, Eye, MessageCircle, 
   Lock, LogOut, Save, Monitor, Key, Globe, Moon, Sun, Volume2, Smartphone,
