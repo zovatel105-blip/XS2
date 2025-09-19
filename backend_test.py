@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
     # Use external URL as configured in frontend/.env
-    return "https://config-post-error.preview.emergentagent.com/api"
+    return "https://app-revive-project.preview.emergentagent.com/api"
 
 def get_mobile_headers():
     """Get headers that simulate mobile device requests"""
@@ -25,8 +25,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://config-post-error.preview.emergentagent.com',
-        'Referer': 'https://config-post-error.preview.emergentagent.com/',
+        'Origin': 'https://app-revive-project.preview.emergentagent.com',
+        'Referer': 'https://app-revive-project.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
@@ -134,7 +134,7 @@ def test_mobile_registration_critical(base_url):
             'User-Agent': 'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
-            'Origin': 'https://config-post-error.preview.emergentagent.com'
+            'Origin': 'https://app-revive-project.preview.emergentagent.com'
         }
         response = requests.post(f"{base_url}/auth/register", json=test_data, headers=android_headers, timeout=10)
         print(f"   Status Code: {response.status_code}")
@@ -176,7 +176,7 @@ def test_mobile_registration_critical(base_url):
         endpoints_to_test = [
             f"{base_url}/auth/register",
             f"{base_url.replace('/api', '')}/api/auth/register",
-            f"https://config-post-error.preview.emergentagent.com/auth/register"
+            f"https://app-revive-project.preview.emergentagent.com/auth/register"
         ]
         
         for endpoint in endpoints_to_test:
