@@ -790,7 +790,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                   onClick={handleShare}
                   className="flex items-center gap-2 text-gray-600 hover:text-green-600 hover:scale-105 transition-transform"
                 >
-                  <Share className="w-5 h-5" />
+                  <Share2 className="w-5 h-5" />
                   <span className="font-medium">{formatNumber(poll.shares)}</span>
                 </Button>
               </motion.div>
