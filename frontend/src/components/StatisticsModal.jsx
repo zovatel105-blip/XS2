@@ -153,11 +153,11 @@ const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followi
           {/* Vista de Contenido */}
           {activeTab === 'contenido' && (
             <>
-              {/* Resumen de creación */}
+              {/* Resumen de creación con datos reales */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-gray-900">Tu contenido</h2>
-                  <span className="text-sm text-gray-500">últimos 7 días</span>
+                  <span className="text-sm text-gray-500">total acumulado</span>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -166,67 +166,115 @@ const StatisticsModal = ({ isOpen, onClose, user, polls, followersCount, followi
                     title="Publicaciones"
                     value={totalPolls}
                     subtitle="Posts creados"
-                    trend={generateTrend()}
-                    growth={generateGrowth()}
+                    trend={getTrend(totalPolls, 0)}
+                    growth={calculateGrowth(totalPolls)}
                     color="blue"
                   />
                   <MetricCard
                     icon={Eye}
-                    title="Alcance"
+                    title="Alcance total"
                     value={totalInteractions}
-                    subtitle="Personas alcanzadas"
-                    trend={generateTrend()}
-                    growth={generateGrowth()}
+                    subtitle="Interacciones recibidas"
+                    trend={getTrend(totalInteractions, totalPolls * 5)}
+                    growth={calculateGrowth(totalInteractions, 0.05)}
                     color="purple"
                   />
                 </div>
               </div>
 
-              {/* Métricas de interacción */}
+              {/* Métricas de participación con datos reales */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Interacciones</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Participación</h3>
                 <div className="grid grid-cols-2 gap-4">
+                  <MetricCard
+                    icon={Share2}
+                    title="Votos"
+                    value={totalVotes}
+                    subtitle="Personas que votaron"
+                    trend={getTrend(totalVotes, totalPolls * 3)}
+                    growth={calculateGrowth(totalVotes, 0.08)}
+                    color="green"
+                  />
                   <MetricCard
                     icon={Heart}
                     title="Me gusta"
                     value={totalLikes}
                     subtitle="Corazones recibidos"
-                    trend={generateTrend()}
-                    growth={generateGrowth()}
+                    trend={getTrend(totalLikes, totalPolls * 2)}
+                    growth={calculateGrowth(totalLikes, 0.12)}
                     color="pink"
                   />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
                   <MetricCard
                     icon={MessageCircle}
                     title="Comentarios"
                     value={totalComments}
                     subtitle="Conversaciones iniciadas"
-                    trend={generateTrend()}
-                    growth={generateGrowth()}
+                    trend={getTrend(totalComments, totalPolls)}
+                    growth={calculateGrowth(totalComments, 0.15)}
                     color="green"
+                  />
+                  <MetricCard
+                    icon={Target}
+                    title="Promedio/Post"
+                    value={avgInteractionsPerPost}
+                    subtitle="Interacciones por publicación"
+                    color="purple"
                   />
                 </div>
               </div>
 
-              {/* Momento del día más activo */}
+              {/* Rendimiento real */}
               <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100/80">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-11 h-11 rounded-2xl bg-orange-50 flex items-center justify-center">
                     <Target className="w-5 h-5 text-orange-600" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Tu mejor momento</h3>
-                    <p className="text-sm text-gray-500">Cuando tu audiencia está más activa</p>
+                    <h3 className="text-lg font-semibold text-gray-900">Tu mejor rendimiento</h3>
+                    <p className="text-sm text-gray-500">Basado en tus datos reales</p>
                   </div>
                 </div>
                 
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-2xl font-bold text-orange-900">9:00 PM</p>
-                      <p className="text-sm text-orange-700">Horario ideal para publicar</p>
+                <div className="space-y-4">
+                  {totalPolls > 0 ? (
+                    <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-lg font-bold text-orange-900">
+                            {avgVotesPerPost} votos promedio
+                          </p>
+                          <p className="text-sm text-orange-700">Por cada publicación</p>
+                        </div>
+                        <div className="text-3xl">📊</div>
+                      </div>
                     </div>
-                    <div className="text-4xl">🌟</div>
-                  </div>
+                  ) : (
+                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-lg font-bold text-gray-700">¡Crea tu primera publicación!</p>
+                          <p className="text-sm text-gray-600">Empieza a construir tu impacto</p>
+                        </div>
+                        <div className="text-3xl">🚀</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {topPost && (
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-blue-900 mb-1">Tu publicación más exitosa:</p>
+                          <p className="text-sm text-blue-800 truncate">{topPost.title}</p>
+                          <p className="text-xs text-blue-700 mt-1">{topPostScore} interacciones totales</p>
+                        </div>
+                        <div className="text-3xl">🏆</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </>
