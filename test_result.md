@@ -943,7 +943,7 @@ Layout "off" - Carrusel Horizontal:
 
 ## test_plan:
   current_focus:
-    - "Test saved posts display functionality"
+    - "Session expiration during post creation - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
