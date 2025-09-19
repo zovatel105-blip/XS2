@@ -197,8 +197,8 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         } : {}}
       />
       
-      {/* Progress Bar Background - Fills vertically from bottom */}
-      {totalVotes > 0 && (
+      {/* Progress Bar Background - Fills vertically from bottom - Show in ALL options after any vote */}
+      {(totalVotes > 0 || poll?.userVote) && (
         <motion.div 
           className={cn(
             "absolute inset-x-0 bottom-0 transition-all duration-700 ease-out",
@@ -209,9 +209,24 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
                 : "bg-gradient-to-t from-gray-400/40 to-gray-500/40"
           )}
           initial={{ height: 0 }}
-          animate={{ height: `${percentage}%` }}
+          animate={{ height: `${Math.max(percentage || 0, 0)}%` }}
           transition={{ duration: 1, ease: "easeOut" }}
+          style={{ 
+            transformOrigin: 'bottom'
+          }}
         />
+      )}
+      
+      {/* Percentage Display - Show percentage number on all options after voting */}
+      {(totalVotes > 0 || poll?.userVote) && (
+        <motion.div 
+          className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-bold z-10"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.3 }}
+        >
+          {Math.round(percentage || 0)}%
+        </motion.div>
       )}
 
       {/* Winner Badge - Moved to progress bar area */}
