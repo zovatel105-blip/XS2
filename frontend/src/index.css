@@ -49,6 +49,34 @@ code {
   user-select: none;
 }
 
+/* Eliminate all white outlines and rings on all elements */
+*:focus,
+*:active,
+*:hover,
+button:focus,
+button:active,
+button:hover,
+div:focus,
+div:active,
+div:hover {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Specifically target logo elements to ensure no white rings */
+[title*="Mantén presionado"]:focus,
+[title*="Mantén presionado"]:active,
+[title*="Mantén presionado"]:hover,
+[title*="Quick Actions"]:focus,
+[title*="Quick Actions"]:active,
+[title*="Quick Actions"]:hover {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 
 
 @layer base {
