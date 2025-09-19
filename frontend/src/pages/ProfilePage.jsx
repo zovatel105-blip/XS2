@@ -1312,41 +1312,43 @@ const ProfilePage = () => {
 
           </div>
 
-          {/* Contenido de tabs con diseño limpio */}
-          <div className="px-3 sm:px-6 pb-24">
+          {/* Contenido de tabs con diseño limpio - ocupando todo el ancho */}
+          <div className="pb-24">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               
-              {/* Navegación de tabs minimalista */}
-              <TabsList className="grid w-full grid-cols-4 bg-gray-50 rounded-2xl p-1 h-auto">
-                <TabsTrigger 
-                  value="polls" 
-                  className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
-                >
-                  <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
-                </TabsTrigger>
-                {isOwnProfile && (
+              {/* Navegación de tabs minimalista con padding lateral */}
+              <div className="px-3 sm:px-6 mb-6">
+                <TabsList className="grid w-full grid-cols-4 bg-gray-50 rounded-2xl p-1 h-auto">
                   <TabsTrigger 
-                    value="liked" 
+                    value="polls" 
                     className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
                   >
-                    <Heart className="w-4 h-4" strokeWidth={1.5} />
+                    <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
                   </TabsTrigger>
-                )}
-                <TabsTrigger 
-                  value="mentions" 
-                  className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
-                >
-                  <AtSign className="w-4 h-4" strokeWidth={1.5} />
-                </TabsTrigger>
-                {isOwnProfile && (
+                  {isOwnProfile && (
+                    <TabsTrigger 
+                      value="liked" 
+                      className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    >
+                      <Heart className="w-4 h-4" strokeWidth={1.5} />
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger 
-                    value="saved" 
+                    value="mentions" 
                     className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
                   >
-                    <Bookmark className="w-4 h-4" strokeWidth={1.5} />
+                    <AtSign className="w-4 h-4" strokeWidth={1.5} />
                   </TabsTrigger>
-                )}
-              </TabsList>
+                  {isOwnProfile && (
+                    <TabsTrigger 
+                      value="saved" 
+                      className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    >
+                      <Bookmark className="w-4 h-4" strokeWidth={1.5} />
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+              </div>
 
               {/* Contenido de tabs */}
               <div className="mt-6">
