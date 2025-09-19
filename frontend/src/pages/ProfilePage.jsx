@@ -1191,36 +1191,13 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Nombre en negrita con línea fina */}
-            <div className="text-center space-y-4">
-              <div className="w-16 h-px bg-gray-200 mx-auto"></div>
-              
-              <div className="space-y-2">
-                <h2 className="text-xl font-bold text-gray-900">
-                  {displayUser?.displayName || displayUser?.username || 'Usuario'}
-                </h2>
-                
-                {displayUser?.occupation && (
-                  <p className="text-sm text-gray-600 font-medium">
-                    {displayUser.occupation}
-                  </p>
-                )}
-                
-                {displayUser?.bio && (
-                  <p className="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
-                    {displayUser.bio}
-                  </p>
-                )}
-              </div>
-            </div>
-
             {/* Botones de acción con iconografía integrada */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-sm mx-auto">
               {isOwnProfile ? (
                 <>
                   <Button 
                     variant="outline" 
-                    className="h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium"
+                    className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => setEditProfileModalOpen(true)}
                   >
                     <Settings className="w-4 h-4 mr-2" strokeWidth={1.5} />
@@ -1228,7 +1205,7 @@ const ProfilePage = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium"
+                    className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => setStatisticsModalOpen(true)}
                   >
                     <BarChart3 className="w-4 h-4 mr-2" strokeWidth={1.5} />
@@ -1238,7 +1215,7 @@ const ProfilePage = () => {
               ) : (
                 <>
                   <Button 
-                    className={`h-12 rounded-2xl font-medium transition-all ${
+                    className={`h-11 sm:h-12 rounded-2xl font-medium text-sm transition-all ${
                       isFollowing(viewedUser?.id || userId) 
                         ? 'bg-gray-100 text-gray-900 hover:bg-gray-200' 
                         : 'bg-blue-500 text-white hover:bg-blue-600'
@@ -1284,7 +1261,7 @@ const ProfilePage = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium"
+                    className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => navigate(`/messages?user=${viewedUser?.username || userId}`)}
                   >
                     <MessageCircle className="w-4 h-4 mr-2" strokeWidth={1.5} />
@@ -1295,12 +1272,12 @@ const ProfilePage = () => {
             </div>
 
             {/* Línea separadora sutil */}
-            <div className="w-full h-px bg-gray-100"></div>
+            <div className="w-full h-px bg-gray-100 max-w-sm mx-auto"></div>
 
           </div>
 
           {/* Contenido de tabs con diseño limpio */}
-          <div className="px-6 pb-24">
+          <div className="px-3 sm:px-6 pb-24">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               
               {/* Navegación de tabs minimalista */}
