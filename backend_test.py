@@ -9345,125 +9345,55 @@ def test_session_expiration_post_creation(base_url):
     return success_count >= 5
 
 def main():
-    """Main test execution function"""
-    print("🚀 Starting Backend API Testing...")
-    print("=" * 60)
+    """Main testing function - CRITICAL MOBILE REGISTRATION TESTING"""
+    print("🚨 TESTING CRÍTICO: HTTP 404 EN ENDPOINT DE REGISTRO - DISPOSITIVOS MÓVILES")
+    print("=" * 80)
     
-    # Get backend URL
     base_url = get_backend_url()
-    if not base_url:
-        print("❌ Could not determine backend URL from frontend .env file")
-        sys.exit(1)
-    
     print(f"🌐 Backend URL: {base_url}")
-    print("=" * 60)
     
-    # Track test results
-    test_results = {}
+    # Ejecutar test crítico de registro móvil
+    print("\n🔥 EJECUTANDO TEST CRÍTICO DE REGISTRO MÓVIL...")
+    mobile_registration_success = test_mobile_registration_critical(base_url)
     
-    # Run essential tests for authentication first
-    essential_tests = [
-        ("Health Check", test_health_check),
-        ("User Registration", test_user_registration),
-        ("User Login", test_user_login),
-    ]
-    
-    print("\n🔧 Running essential setup tests...")
-    for test_name, test_func in essential_tests:
-        print(f"\n{'='*20} {test_name} {'='*20}")
-        try:
-            result = test_func(base_url)
-            test_results[test_name] = result
-            status = "✅ PASSED" if result else "❌ FAILED"
-            print(f"\n{status}: {test_name}")
+    # Si el test crítico pasa, ejecutar tests adicionales
+    if mobile_registration_success:
+        print("\n✅ Test crítico móvil exitoso - ejecutando tests adicionales...")
+        
+        # Test de salud del servidor
+        health_success = test_health_check(base_url)
+        
+        # Test de registro estándar
+        registration_success = test_user_registration(base_url)
+        
+        # Test de login si hay usuarios registrados
+        if test_users:
+            login_success = test_user_login(base_url)
             
-            if not result and test_name in ["User Registration", "User Login"]:
-                print(f"❌ Critical test failed: {test_name}")
-                print("Cannot proceed with backend verification without authentication")
-                sys.exit(1)
-        except Exception as e:
-            print(f"\n❌ ERROR in {test_name}: {str(e)}")
-            test_results[test_name] = False
-            if test_name in ["User Registration", "User Login"]:
-                sys.exit(1)
-    
-    # 🎯 MAIN TEST: Media Transform Functionality (as requested in review)
-    print("🎯 Running MAIN TEST: Media Transform Functionality...")
-    print(f"\n{'='*20} Media Transform Functionality Test {'='*20}")
-    try:
-        result = test_media_transform_functionality(base_url)
-        test_results["Media Transform Functionality"] = result
-        status = "✅ PASSED" if result else "❌ FAILED"
-        print(f"\n{status}: Media Transform Functionality Test")
-    except Exception as e:
-        print(f"\n❌ ERROR in Media Transform Functionality Test: {str(e)}")
-        test_results["Media Transform Functionality"] = False
-    
-    # Run additional verification tests
-    additional_tests = [
-        ("Get Current User", test_get_current_user),
-        ("JWT Validation", test_jwt_validation),
-    ]
-    
-    print("\n🔧 Running additional verification tests...")
-    for test_name, test_func in additional_tests:
-        print(f"\n{'='*20} {test_name} {'='*20}")
-        try:
-            result = test_func(base_url)
-            test_results[test_name] = result
-            status = "✅ PASSED" if result else "❌ FAILED"
-            print(f"\n{status}: {test_name}")
-        except Exception as e:
-            print(f"\n❌ ERROR in {test_name}: {str(e)}")
-            test_results[test_name] = False
-    
-    # Print final summary
-    print("\n" + "="*60)
-    print("📊 FINAL TEST SUMMARY")
-    print("="*60)
-    
-    passed_tests = sum(1 for result in test_results.values() if result)
-    total_tests = len(test_results)
-    
-    for test_name, result in test_results.items():
-        status = "✅ PASSED" if result else "❌ FAILED"
-        print(f"{status}: {test_name}")
-    
-    print(f"\n📈 Overall Results: {passed_tests}/{total_tests} tests passed")
-    print(f"🎯 Success Rate: {(passed_tests/total_tests)*100:.1f}%")
-    
-    # Special focus on media_transform result
-    media_transform_passed = test_results.get("Media Transform Functionality", False)
-    
-    if media_transform_passed:
-        print("\n🎯 MEDIA_TRANSFORM TEST: ✅ PASSED - Functionality working correctly")
-        print("✅ El campo media_transform se guarda y recupera correctamente")
-        print("✅ Estructura de datos es consistente")
-        print("✅ Serialización/deserialización funciona")
-        print("✅ Endpoints POST /api/polls y GET /api/polls operacionales")
+            # Test de usuario actual si hay tokens
+            if auth_tokens:
+                current_user_success = test_get_current_user(base_url)
+        
+        print(f"\n📊 RESUMEN FINAL:")
+        print(f"   ✅ Test crítico móvil: {'EXITOSO' if mobile_registration_success else 'FALLIDO'}")
+        print(f"   ✅ Health check: {'EXITOSO' if health_success else 'FALLIDO'}")
+        print(f"   ✅ Registro estándar: {'EXITOSO' if registration_success else 'FALLIDO'}")
+        
     else:
-        print("\n🎯 MEDIA_TRANSFORM TEST: ❌ FAILED - Issues detected with media_transform")
-        print("❌ Problemas detectados con el campo media_transform")
-        print("❌ Revisar implementación en backend")
-        print("❌ Verificar modelo PollOption y endpoints de polls")
+        print("\n❌ TEST CRÍTICO MÓVIL FALLIDO - PROBLEMA CONFIRMADO")
+        print("🔍 DIAGNÓSTICO: El endpoint POST /api/auth/register tiene problemas críticos")
+        print("💡 RECOMENDACIONES:")
+        print("   1. Verificar que el servidor FastAPI esté corriendo")
+        print("   2. Comprobar configuración de routing en server.py")
+        print("   3. Revisar configuración CORS para dispositivos móviles")
+        print("   4. Verificar configuración de proxy/ingress Kubernetes")
+        print("   5. Comprobar logs del servidor para errores específicos")
     
-    # Overall assessment
-    if passed_tests >= 4:  # At least 4 out of 5 tests should pass
-        print("\n🎉 BACKEND VERIFICATION SUCCESSFUL!")
-        print("✅ Backend está estable y funcionando correctamente")
-        if media_transform_passed:
-            print("✅ Media transform functionality confirmed working")
-        print("🚀 Listo para proceder con testing del frontend")
-        sys.exit(0)
-    else:
-        print("\n⚠️ BACKEND VERIFICATION ISSUES DETECTED")
-        if not media_transform_passed:
-            print("❌ Media transform functionality needs attention")
-        print("❌ Revisar problemas antes de proceder con frontend testing")
-        sys.exit(1)
+    return mobile_registration_success
 
 if __name__ == "__main__":
-    sys.exit(main())
+    success = main()
+    sys.exit(0 if success else 1)
 def test_saved_polls_critical_debug(base_url):
     """🚨 CRITICAL DEBUG: Test saved-polls endpoint 500 error"""
     print("\n🚨 === CRITICAL DEBUG: SAVED-POLLS ENDPOINT 500 ERROR ===")
