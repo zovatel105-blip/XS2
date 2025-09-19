@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from './ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
-import { Heart, MessageCircle, Send, MoreHorizontal, Play, CheckCircle, Bookmark, Trophy, Share2 } from 'lucide-react';
+import { Heart, MessageCircle, Send, MoreHorizontal, Play, CheckCircle, Bookmark, Trophy, Share2, Share } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion } from 'framer-motion';
 import { useAddiction } from '../contexts/AddictionContext';
