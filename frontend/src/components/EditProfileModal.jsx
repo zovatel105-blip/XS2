@@ -121,54 +121,72 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-      <div className="w-full max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 bg-white z-50 flex flex-col">
+      
+      {/* Header móvil con botón volver */}
+      <div className="flex items-center justify-between px-4 py-4 bg-white border-b border-gray-100 safe-area-top">
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-700" />
+        </button>
         
-        {/* Header minimalista */}
-        <div className="relative px-6 pt-8 pb-6 text-center">
-          <button
-            onClick={onClose}
-            className="absolute top-6 right-6 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200"
-          >
-            <X className="w-4 h-4 text-gray-600" />
-          </button>
-          <h2 className="text-xl font-medium text-gray-900">Tu perfil</h2>
-          <p className="text-sm text-gray-500 mt-1">Cuenta tu historia</p>
+        <div className="text-center">
+          <h1 className="text-lg font-semibold text-gray-900">Editar perfil</h1>
         </div>
+        
+        <button
+          type="submit"
+          form="edit-profile-form"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-full transition-all duration-200 disabled:opacity-50"
+        >
+          {loading ? 'Guardando...' : 'Guardar'}
+        </button>
+      </div>
 
-        <form onSubmit={handleSubmit} className="px-6 pb-6">
+      {/* Contenido scrolleable */}
+      <div className="flex-1 overflow-y-auto">
+        <form id="edit-profile-form" onSubmit={handleSubmit} className="min-h-full">
           
-          {/* Foto de perfil prominente */}
-          <div className="flex flex-col items-center mb-10">
-            <div className="relative group">
-              <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 ring-4 ring-gray-50 shadow-lg transition-all duration-300 group-hover:shadow-xl">
-                {formData.avatar_url ? (
-                  <img
-                    src={formData.avatar_url}
-                    alt="Foto de perfil"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                    <User className="w-12 h-12 text-gray-400" />
-                  </div>
-                )}
+          {/* Foto de perfil hero section */}
+          <div className="bg-gradient-to-b from-blue-50 to-white px-6 py-12">
+            <div className="flex flex-col items-center">
+              <div className="relative group mb-6">
+                <div className="w-36 h-36 rounded-full overflow-hidden bg-white ring-4 ring-white shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                  {formData.avatar_url ? (
+                    <img
+                      src={formData.avatar_url}
+                      alt="Foto de perfil"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                      <User className="w-16 h-16 text-gray-400" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Botón circular flotante más grande */}
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('avatar-upload-input')?.click()}
+                  className="absolute -bottom-3 -right-3 w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
+                >
+                  <Camera className="w-6 h-6 text-white" />
+                </button>
               </div>
               
-              {/* Botón circular flotante */}
-              <button
-                type="button"
-                onClick={() => document.getElementById('avatar-upload-input')?.click()}
-                className="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                <Camera className="w-5 h-5 text-white" />
-              </button>
+              {/* Texto inspiracional más grande */}
+              <div className="text-center">
+                <h2 className="text-xl font-medium text-gray-900 mb-2">Tu historia visual</h2>
+                <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
+                  Una gran foto de perfil es tu primera oportunidad de causar una impresión memorable
+                </p>
+              </div>
             </div>
-            
-            {/* Texto sutil */}
-            <p className="text-xs text-gray-400 mt-4 text-center leading-relaxed">
-              Tu primera impresión.<br />Hazla memorable.
-            </p>
           </div>
 
           {/* Input oculto para avatar */}
@@ -179,7 +197,6 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
             onChange={(e) => {
               const file = e.target.files[0];
               if (file) {
-                // Aquí iría la lógica de upload
                 const reader = new FileReader();
                 reader.onload = (e) => {
                   setFormData(prev => ({
@@ -193,95 +210,106 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
             className="hidden"
           />
 
-          {/* Nombre - Minimalista */}
-          <div className="mb-8">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              ¿Cómo te llamas?
-            </label>
-            <input
-              type="text"
-              value={formData.display_name}
-              onChange={(e) => handleChange('display_name', e.target.value)}
-              placeholder="Tu nombre aquí"
-              maxLength={50}
-              className="w-full text-lg font-medium text-gray-900 placeholder-gray-400 bg-transparent border-0 border-b-2 border-gray-100 focus:border-blue-500 focus:outline-none transition-colors duration-200 pb-3"
-            />
-            <div className="flex justify-between items-center mt-2">
-              <p className="text-xs text-gray-400">Como apareces para otros</p>
-              <p className="text-xs text-gray-400">{formData.display_name.length}/50</p>
-            </div>
-          </div>
-
-          {/* Biografía - Espacio amplio */}
-          <div className="mb-8">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Cuéntanos sobre ti
-            </label>
-            <div className="relative">
-              <textarea
-                value={formData.bio}
-                onChange={(e) => handleChange('bio', e.target.value)}
-                placeholder="Comparte lo que te apasiona, lo que haces, o simplemente algo interesante sobre ti..."
-                maxLength={160}
-                rows={4}
-                className="w-full text-gray-900 placeholder-gray-400 bg-gray-50 hover:bg-gray-100 focus:bg-white border-0 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none"
+          {/* Formulario principal */}
+          <div className="px-6 py-8 space-y-10">
+            
+            {/* Nombre */}
+            <div>
+              <label className="block text-base font-medium text-gray-900 mb-4">
+                ¿Cómo te llamas?
+              </label>
+              <input
+                type="text"
+                value={formData.display_name}
+                onChange={(e) => handleChange('display_name', e.target.value)}
+                placeholder="Tu nombre completo"
+                maxLength={50}
+                className="w-full text-xl font-medium text-gray-900 placeholder-gray-400 bg-transparent border-0 border-b-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors duration-200 pb-4"
               />
-              <div className="absolute bottom-3 right-4 text-xs text-gray-400">
-                {formData.bio.length}/160
+              <div className="flex justify-between items-center mt-3">
+                <p className="text-sm text-gray-500">Así te verán otros usuarios</p>
+                <p className="text-sm text-gray-400">{formData.display_name.length}/50</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">Exprésate sin límites</p>
-          </div>
 
-          {/* Ocupación - Simple */}
-          <div className="mb-12">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              ¿A qué te dedicas?
-            </label>
-            <input
-              type="text"
-              value={formData.occupation}
-              onChange={(e) => handleChange('occupation', e.target.value)}
-              placeholder="Estudiante, Artista, Emprendedor..."
-              maxLength={100}
-              className="w-full text-lg text-gray-900 placeholder-gray-400 bg-transparent border-0 border-b-2 border-gray-100 focus:border-blue-500 focus:outline-none transition-colors duration-200 pb-3"
-            />
-            <div className="flex justify-between items-center mt-2">
-              <p className="text-xs text-gray-400">Opcional</p>
-              <p className="text-xs text-gray-400">{formData.occupation.length}/100</p>
-            </div>
-          </div>
-
-          {/* Línea separadora sutil */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
-
-          {/* Botones de acción fijos - Tamaño generoso */}
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 h-14 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-all duration-200 hover:scale-[0.98] active:scale-95"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 h-14 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200 hover:scale-[0.98] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  Guardando...
+            {/* Biografía */}
+            <div>
+              <label className="block text-base font-medium text-gray-900 mb-4">
+                Cuéntanos tu historia
+              </label>
+              <div className="relative">
+                <textarea
+                  value={formData.bio}
+                  onChange={(e) => handleChange('bio', e.target.value)}
+                  placeholder="¿Qué te apasiona? ¿Qué haces? ¿Qué te hace único? Comparte lo que quieras que otros sepan sobre ti..."
+                  maxLength={160}
+                  rows={5}
+                  className="w-full text-gray-900 placeholder-gray-400 bg-gray-50 hover:bg-gray-100 focus:bg-white border-0 rounded-3xl p-6 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none text-base leading-relaxed"
+                />
+                <div className="absolute bottom-4 right-5 text-sm text-gray-400 bg-white/80 px-2 py-1 rounded-full">
+                  {formData.bio.length}/160
                 </div>
-              ) : (
-                'Guardar cambios'
-              )}
-            </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-3">
+                Sé auténtico. La mejor biografía es la que realmente te representa.
+              </p>
+            </div>
+
+            {/* Ocupación */}
+            <div>
+              <label className="block text-base font-medium text-gray-900 mb-4">
+                ¿A qué te dedicas?
+              </label>
+              <input
+                type="text"
+                value={formData.occupation}
+                onChange={(e) => handleChange('occupation', e.target.value)}
+                placeholder="Estudiante, Diseñador, Músico, Chef..."
+                maxLength={100}
+                className="w-full text-xl font-medium text-gray-900 placeholder-gray-400 bg-transparent border-0 border-b-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors duration-200 pb-4"
+              />
+              <div className="flex justify-between items-center mt-3">
+                <p className="text-sm text-gray-500">Campo opcional</p>
+                <p className="text-sm text-gray-400">{formData.occupation.length}/100</p>
+              </div>
+            </div>
+
           </div>
+
+          {/* Espaciador para botones fijos */}
+          <div className="h-24"></div>
           
         </form>
       </div>
+
+      {/* Botones de acción fijos en la parte inferior */}
+      <div className="bg-white border-t border-gray-100 px-6 py-4 safe-area-bottom">
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 h-14 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-all duration-200 active:scale-95"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            form="edit-profile-form"
+            disabled={loading}
+            className="flex-2 h-14 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25 min-w-[140px]"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                Guardando...
+              </div>
+            ) : (
+              'Guardar cambios'
+            )}
+          </button>
+        </div>
+      </div>
+      
     </div>
   );
 };
