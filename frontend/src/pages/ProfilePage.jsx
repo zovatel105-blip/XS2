@@ -365,6 +365,7 @@ const ProfilePage = () => {
             likes: profile.likes_count || 0,
             votes: profile.votes_count || 0,
             bio: profile.bio || '',
+            occupation: profile.occupation || '', // ✅ ADDED: Include occupation field
             totalVotes: profile.total_votes || 0,
             totalLikes: profile.likes_count || 0,
             totalShares: 0, // Can be added to backend later
