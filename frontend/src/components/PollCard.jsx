@@ -12,7 +12,7 @@ import CommentsModal from './CommentsModal';
 import ShareModal from './ShareModal';
 import { useShare } from '../hooks/useShare';
 
-const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, fullScreen = false }) => {
+const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, userVote, fullScreen = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const navigate = useNavigate();
 
