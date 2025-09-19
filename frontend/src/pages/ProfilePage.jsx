@@ -613,23 +613,46 @@ const ProfilePage = () => {
 
   
   // Function to toggle save status
-  const handleSave = (pollId) => {
-    const isSaved = savedPolls.some(poll => poll.id === pollId);
-    if (isSaved) {
-      setSavedPolls(savedPolls.filter(poll => poll.id !== pollId));
+  const handleSave = async (pollId) => {
+    if (!authUser) {
       toast({
-        title: "Publicación eliminada",
-        description: "La publicación ha sido removida de guardados",
+        title: "Inicia sesión",
+        description: "Necesitas iniciar sesión para guardar publicaciones",
+        variant: "destructive",
       });
-    } else {
-      const pollToSave = polls.find(poll => poll.id === pollId);
-      if (pollToSave) {
-        setSavedPolls([...savedPolls, pollToSave]);
+      return;
+    }
+
+    try {
+      const isSaved = savedPolls.some(poll => poll.id === pollId);
+      
+      if (isSaved) {
+        // Unsave the poll
+        await pollService.unsavePoll(pollId);
+        setSavedPolls(savedPolls.filter(poll => poll.id !== pollId));
+        toast({
+          title: "Publicación eliminada",
+          description: "La publicación ha sido removida de guardados",
+        });
+      } else {
+        // Save the poll
+        await pollService.savePoll(pollId);
+        const pollToSave = polls.find(poll => poll.id === pollId);
+        if (pollToSave) {
+          setSavedPolls([...savedPolls, pollToSave]);
+        }
         toast({
           title: "¡Publicación guardada!",
           description: "La publicación ha sido guardada exitosamente",
         });
       }
+    } catch (error) {
+      console.error('Error toggling save status:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el estado de guardado",
+        variant: "destructive",
+      });
     }
   };
 
