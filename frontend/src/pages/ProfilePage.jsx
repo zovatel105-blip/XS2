@@ -1089,14 +1089,14 @@ const ProfilePage = () => {
               <div className="grid grid-cols-3 gap-1 sm:gap-2 items-center">
                 
                 {/* Votos - Esquina superior izquierda */}
-                <div className="text-center">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                <div className="text-left">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
                       <Vote className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" strokeWidth={1.5} />
                     </div>
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Votos</p>
+                    <div className="min-w-0">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-none">{isOwnProfile ? (displayUser?.totalVotes || 0) : (displayUser?.votes || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Votos</p>
                     </div>
                   </div>
                 </div>
@@ -1105,14 +1105,14 @@ const ProfilePage = () => {
                 <div></div>
                 
                 {/* Me gusta - Esquina superior derecha */}
-                <div className="text-center">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-50 flex items-center justify-center">
-                      <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" strokeWidth={1.5} />
+                <div className="text-right">
+                  <div className="flex items-center gap-2 justify-end">
+                    <div className="min-w-0 text-right order-1">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-none">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Me gusta</p>
                     </div>
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? (displayUser?.totalLikes || 0) : (displayUser?.likes || 0)}</p>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Me gusta</p>
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-50 flex items-center justify-center flex-shrink-0 order-2">
+                      <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" strokeWidth={1.5} />
                     </div>
                   </div>
                 </div>
@@ -1169,16 +1169,16 @@ const ProfilePage = () => {
 
                 {/* Seguidores - Esquina inferior izquierda */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
+                  className="text-left hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
                   onClick={handleFollowersClick}
                 >
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-50 flex items-center justify-center">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
                       <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" strokeWidth={1.5} />
                     </div>
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Seguidores</p>
+                    <div className="min-w-0">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-none">{isOwnProfile ? followersCount : (displayUser?.followers || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Seguidores</p>
                     </div>
                   </div>
                 </button>
@@ -1188,16 +1188,16 @@ const ProfilePage = () => {
                 
                 {/* Seguidos - Esquina inferior derecha */}
                 <button 
-                  className="text-center hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
+                  className="text-right hover:bg-gray-50 rounded-xl p-1 sm:p-2 transition-colors"
                   onClick={handleFollowingClick}
                 >
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-50 flex items-center justify-center">
-                      <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" strokeWidth={1.5} />
+                  <div className="flex items-center gap-2 justify-end">
+                    <div className="min-w-0 text-right order-1">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-none">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">Seguidos</p>
                     </div>
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-gray-900">{isOwnProfile ? followingCount : (displayUser?.following || 0)}</p>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">Seguidos</p>
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0 order-2">
+                      <UserPlus className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" strokeWidth={1.5} />
                     </div>
                   </div>
                 </button>
