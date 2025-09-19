@@ -16,6 +16,22 @@ def get_backend_url():
     # Use external URL as configured in frontend/.env
     return "https://config-post-error.preview.emergentagent.com/api"
 
+def get_mobile_headers():
+    """Get headers that simulate mobile device requests"""
+    return {
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
+        'Origin': 'https://config-post-error.preview.emergentagent.com',
+        'Referer': 'https://config-post-error.preview.emergentagent.com/',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin'
+    }
+
 # Global variables for test data
 test_users = []
 auth_tokens = []
