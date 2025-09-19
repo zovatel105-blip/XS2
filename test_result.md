@@ -890,6 +890,53 @@ Layout "off" - Carrusel Horizontal:
 - **Add Functionality**: `handleAddSlot()` con validación y feedback
 - **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
+## user_problem_statement: "Debug and fix the 500 Internal Server Error occurring on the backend endpoint /api/users/{user_id}/saved-polls which prevents saved posts from appearing in the user's profile."
+
+## backend:
+  - task: "Fix 500 error in saved-polls endpoint"
+    implemented: true
+    working: false
+    file: "server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+      - agent: "main"
+      - comment: "Endpoint exists with debug logging at lines 6191-6250, but causing 500 Internal Server Error when called. Need to test with proper authentication to identify root cause."
+
+## frontend:
+  - task: "Display saved posts in profile"
+    implemented: true
+    working: false
+    file: "ProfilePage.jsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+      - agent: "main"
+      - comment: "Frontend implementation exists but fails due to backend 500 error on saved-polls endpoint. Frontend ready to display saved posts once backend is fixed."
+
+## metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+## test_plan:
+  current_focus:
+    - "Fix 500 error in saved-polls endpoint"
+    - "Test saved posts display functionality"
+  stuck_tasks:
+    - "Fix 500 error in saved-polls endpoint"
+  test_all: false
+  test_priority: "high_first"
+
+## agent_communication:
+  - agent: "main"
+  - message: "🚨 CRITICAL DEBUG NEEDED (2025-01-27): The saved-polls endpoint /api/users/{user_id}/saved-polls is returning 500 Internal Server Error preventing saved posts from appearing in profiles. Endpoint exists with debug logging (lines 6191-6250 in server.py) but error occurs during execution. Need backend testing with proper authentication to identify exact line causing the failure. Debug logging shows comprehensive error handling but logs are not appearing, suggesting issue occurs before/during database operations."
+
 ✅ **MEJORAS IMPLEMENTADAS:**
 
 **1. INDICADORES DE CARRUSEL REPOSICIONADOS:**
