@@ -6231,6 +6231,9 @@ async def get_saved_polls(
         for record in saved_records:
             if record["poll_id"] in polls_dict:
                 poll = polls_dict[record["poll_id"]]
+                # Remove MongoDB ObjectId fields that can't be serialized
+                if "_id" in poll:
+                    del poll["_id"]
                 poll["saved_at"] = record["saved_at"]
                 ordered_polls.append(poll)
         
