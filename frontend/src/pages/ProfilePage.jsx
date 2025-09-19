@@ -1402,6 +1402,120 @@ const ProfilePage = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
+                      {mentionedPolls.map((poll) => (
+                        <PollCard
+                          key={poll.id}
+                          poll={poll}
+                          onVote={handleVote}
+                          onLike={handleLike}
+                          onShare={handleShare}
+                          onComment={handleComment}
+                          onSave={handleSave}
+                          currentUser={authUser}
+                          onUpdatePoll={handleUpdatePoll}
+                          onDeletePoll={handleDeletePoll}
+                          isOwnProfile={isOwnProfile}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+
+                {isOwnProfile && (
+                  <TabsContent value="saved" className="space-y-6">
+                    {savedPolls.length === 0 ? (
+                      <div className="text-center py-16 space-y-6">
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                          <Bookmark className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
+                        </div>
+                        <div className="space-y-2">
+                          <h3 className="text-lg font-semibold text-gray-900">Guardados para después</h3>
+                          <p className="text-gray-600 text-sm leading-relaxed max-w-sm mx-auto">
+                            Los posts que guardes aparecerán aquí
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <TikTokProfileGrid 
+                        polls={savedPolls} 
+                        onPollClick={handlePollClick}
+                        onUpdatePoll={handleUpdatePoll}
+                        onDeletePoll={handleDeletePoll}
+                        currentUser={authUser}
+                        isOwnProfile={false}
+                      />
+                    )}
+                  </TabsContent>
+                )}
+              </div>
+            </Tabs>
+          </div>
+
+          {/* Barra inferior fija con acceso rápido */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 z-30">
+            <div className="flex items-center justify-center gap-8">
+              
+              {/* Inicio */}
+              <button 
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-xl transition-colors"
+                onClick={() => navigate('/feed')}
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <LayoutDashboard className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                </div>
+                <span className="text-xs text-gray-600 font-medium">Inicio</span>
+              </button>
+              
+              {/* Me gusta */}
+              {isOwnProfile && (
+                <button 
+                  className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-xl transition-colors"
+                  onClick={() => setActiveTab('liked')}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-xs text-gray-600 font-medium">Me gusta</span>
+                </button>
+              )}
+              
+              {/* Crear - Botón central cálido */}
+              <button 
+                className="flex flex-col items-center gap-1 p-3 bg-blue-500 hover:bg-blue-600 rounded-2xl transition-colors shadow-lg"
+                onClick={() => navigate('/create')}
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <Plus className="w-5 h-5 text-white" strokeWidth={2} />
+                </div>
+                <span className="text-xs text-white font-medium">Crear</span>
+              </button>
+              
+              {/* Mensajes */}
+              <button 
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-50 rounded-xl transition-colors"
+                onClick={() => navigate('/messages')}
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <MessageCircle className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                </div>
+                <span className="text-xs text-gray-600 font-medium">Mensajes</span>
+              </button>
+              
+              {/* Perfil */}
+              <button 
+                className="flex flex-col items-center gap-1 p-2 bg-gray-100 rounded-xl"
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <UserCircle className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
+                </div>
+                <span className="text-xs text-blue-600 font-medium">Perfil</span>
+              </button>
+              
+            </div>
+          </div>
+
+        </div>
+      )}
                 <span className="text-gray-400 sm:hidden">•</span>
                 <p className="text-xs sm:text-base font-semibold text-gray-600 sm:text-gray-700">
                   {displayUser.occupation}
