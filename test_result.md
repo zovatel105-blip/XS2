@@ -929,10 +929,8 @@ Layout "off" - Carrusel Horizontal:
 
 ## test_plan:
   current_focus:
-    - "Fix 500 error in saved-polls endpoint"
     - "Test saved posts display functionality"
-  stuck_tasks:
-    - "Fix 500 error in saved-polls endpoint"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
