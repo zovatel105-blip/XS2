@@ -8583,3 +8583,193 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+def test_saved_polls_critical_debug(base_url):
+    """🚨 CRITICAL DEBUG: Test saved-polls endpoint 500 error"""
+    print("\n🚨 === CRITICAL DEBUG: SAVED-POLLS ENDPOINT 500 ERROR ===")
+    print("CONTEXT: Backend endpoint /api/users/{user_id}/saved-polls returning 500 Internal Server Error")
+    
+    if not auth_tokens:
+        print("❌ No auth tokens available for saved-polls debug")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    user_id = test_users[0]['id'] if test_users else "test_user_id"
+    success_count = 0
+    
+    print(f"🔍 Testing with User ID: {user_id}")
+    print(f"🔍 Using token: {auth_tokens[0][:20]}...")
+    
+    # Step 1: Test authentication first
+    print("\n📋 Step 1: Verify authentication works")
+    try:
+        response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+        print(f"   Auth check status: {response.status_code}")
+        
+        if response.status_code == 200:
+            user_data = response.json()
+            print(f"   ✅ Authentication working - User: {user_data['username']}")
+            user_id = user_data['id']  # Use actual user ID from auth
+            success_count += 1
+        else:
+            print(f"   ❌ Authentication failed: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"   ❌ Auth check error: {e}")
+        return False
+    
+    # Step 2: Create some saved polls for testing
+    print(f"\n📋 Step 2: Create test saved polls in database")
+    try:
+        # First, let's create a test poll to save
+        poll_data = {
+            "title": "Test poll for saved-polls debugging",
+            "options": [
+                {"text": "Option A", "media": None},
+                {"text": "Option B", "media": None}
+            ],
+            "category": "test"
+        }
+        
+        response = requests.post(f"{base_url}/polls", json=poll_data, headers=headers, timeout=10)
+        print(f"   Create poll status: {response.status_code}")
+        
+        if response.status_code == 200:
+            poll_response = response.json()
+            test_poll_id = poll_response['id']
+            print(f"   ✅ Test poll created: {test_poll_id}")
+            
+            # Now save this poll
+            save_response = requests.post(f"{base_url}/polls/{test_poll_id}/save", headers=headers, timeout=10)
+            print(f"   Save poll status: {save_response.status_code}")
+            
+            if save_response.status_code == 200:
+                print(f"   ✅ Poll saved successfully")
+                success_count += 1
+            else:
+                print(f"   ❌ Failed to save poll: {save_response.text}")
+        else:
+            print(f"   ❌ Failed to create test poll: {response.text}")
+            # Continue with testing anyway - there might be existing saved polls
+            
+    except Exception as e:
+        print(f"   ❌ Error creating test data: {e}")
+    
+    # Step 3: Test the problematic endpoint with detailed error analysis
+    print(f"\n📋 Step 3: Test GET /api/users/{user_id}/saved-polls")
+    try:
+        response = requests.get(f"{base_url}/users/{user_id}/saved-polls", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        print(f"   Response Headers: {dict(response.headers)}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"   ✅ SUCCESS! Saved polls retrieved")
+            print(f"   📊 Saved polls count: {len(data.get('saved_polls', []))}")
+            print(f"   📊 Total: {data.get('total', 0)}")
+            
+            if data.get('saved_polls'):
+                print(f"   📝 First saved poll: {data['saved_polls'][0].get('title', 'N/A')}")
+            
+            success_count += 1
+            
+        elif response.status_code == 500:
+            print(f"   🚨 500 INTERNAL SERVER ERROR CONFIRMED")
+            print(f"   📄 Response body: {response.text}")
+            
+            # Try to parse error details
+            try:
+                error_data = response.json()
+                print(f"   🔍 Error detail: {error_data.get('detail', 'No detail provided')}")
+            except:
+                print(f"   🔍 Raw error response: {response.text}")
+                
+        else:
+            print(f"   ❌ Unexpected status code: {response.status_code}")
+            print(f"   📄 Response: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Request error: {e}")
+    
+    # Step 4: Test with different parameters
+    print(f"\n📋 Step 4: Test with different parameters")
+    try:
+        # Test with pagination parameters
+        response = requests.get(f"{base_url}/users/{user_id}/saved-polls?skip=0&limit=10", 
+                              headers=headers, timeout=10)
+        print(f"   With pagination - Status: {response.status_code}")
+        
+        if response.status_code == 200:
+            print(f"   ✅ Pagination parameters work")
+            success_count += 1
+        elif response.status_code == 500:
+            print(f"   🚨 Still 500 error with pagination")
+        else:
+            print(f"   ❌ Status: {response.status_code}, Response: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Pagination test error: {e}")
+    
+    # Step 5: Test database collections directly (if possible)
+    print(f"\n📋 Step 5: Check related endpoints for database connectivity")
+    try:
+        # Test a similar endpoint to see if database is working
+        response = requests.get(f"{base_url}/polls?limit=1", headers=headers, timeout=10)
+        print(f"   Polls endpoint status: {response.status_code}")
+        
+        if response.status_code == 200:
+            print(f"   ✅ Database connectivity working (polls endpoint)")
+            success_count += 1
+        else:
+            print(f"   ❌ Database connectivity issue: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Database connectivity test error: {e}")
+    
+    # Step 6: Test with wrong user ID (should get 403)
+    print(f"\n📋 Step 6: Test authorization (wrong user ID)")
+    try:
+        fake_user_id = "fake-user-id-12345"
+        response = requests.get(f"{base_url}/users/{fake_user_id}/saved-polls", 
+                              headers=headers, timeout=10)
+        print(f"   Wrong user ID status: {response.status_code}")
+        
+        if response.status_code == 403:
+            print(f"   ✅ Authorization working correctly (403 for wrong user)")
+            success_count += 1
+        elif response.status_code == 500:
+            print(f"   🚨 500 error even with wrong user ID - suggests deeper issue")
+        else:
+            print(f"   ❌ Unexpected status: {response.status_code}")
+            
+    except Exception as e:
+        print(f"   ❌ Authorization test error: {e}")
+    
+    # Step 7: Check backend logs if possible
+    print(f"\n📋 Step 7: Backend logs analysis")
+    print(f"   💡 Check supervisor logs: tail -n 100 /var/log/supervisor/backend.*.log")
+    print(f"   💡 The endpoint has extensive debug logging - logs should show:")
+    print(f"      - '📚 Getting saved polls for user {user_id}'")
+    print(f"      - '📚 Querying saved_polls collection'")
+    print(f"      - '📚 Found X saved records'")
+    print(f"      - If 500 error: '❌ Error getting saved polls: [error details]'")
+    
+    # Summary
+    print(f"\n📊 SAVED-POLLS DEBUG SUMMARY:")
+    print(f"   ✅ Tests passed: {success_count}/6")
+    
+    if success_count >= 4:
+        print(f"   🎯 LIKELY CAUSE: Database query or data processing issue")
+        print(f"   🔧 RECOMMENDATIONS:")
+        print(f"      1. Check MongoDB saved_polls collection exists")
+        print(f"      2. Verify saved_polls collection schema")
+        print(f"      3. Check for data type mismatches in queries")
+        print(f"      4. Review backend logs for specific error details")
+    else:
+        print(f"   🎯 LIKELY CAUSE: Authentication or basic connectivity issue")
+        print(f"   🔧 RECOMMENDATIONS:")
+        print(f"      1. Verify JWT token is valid")
+        print(f"      2. Check database connectivity")
+        print(f"      3. Ensure user exists in database")
+    
+    return success_count >= 3
