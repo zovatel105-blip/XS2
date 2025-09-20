@@ -213,27 +213,32 @@ const AudioDetailPage = () => {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}/save`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/favorites`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          audio_id: audioId,
+          audio_type: audio.is_system_music ? "system" : "user"
+        })
       });
 
       if (response.ok) {
         toast({
           title: "Audio guardado",
-          description: "El audio se ha guardado en tu colección",
+          description: "El audio se ha guardado en tus favoritos",
         });
       } else {
-        throw new Error('Error al guardar el audio');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Error al guardar el audio');
       }
     } catch (error) {
       console.error('Error saving audio:', error);
       toast({
         title: "Error",
-        description: "No se pudo guardar el audio",
+        description: error.message || "No se pudo guardar el audio",
         variant: "destructive"
       });
     }
