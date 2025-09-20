@@ -4,17 +4,7 @@ import { motion } from 'framer-motion';
 import LayoutRenderer from './layouts/LayoutRenderer';
 import PostManagementMenu from './PostManagementMenu';
 
-const TikTokProfileGrid = ({ 
-  polls, 
-  onPollClick, 
-  onUpdatePoll, 
-  onDeletePoll, 
-  currentUser, 
-  isOwnProfile = false, 
-  showUseSoundButton = false, 
-  onUseSound = null,
-  currentAudio = null 
-}) => {
+const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, currentUser, isOwnProfile = false }) => {
   // Function to format vote count
   const formatViewCount = (votes) => {
     if (votes >= 1000000) {
