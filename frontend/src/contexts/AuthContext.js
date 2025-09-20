@@ -245,6 +245,12 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    // Auto-serialize body to JSON if it's an object
+    if (config.body && typeof config.body === 'object' && !(config.body instanceof FormData)) {
+      config.body = JSON.stringify(config.body);
+      config.headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch(url, config);
     
     if (response.status === 401) {
