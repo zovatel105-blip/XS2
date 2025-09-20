@@ -41,7 +41,9 @@ from models import (
     # Audio Favorites Models
     AudioFavorite, AudioFavoriteCreate, AudioFavoriteResponse,
     # Story Models
-    Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy
+    Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy,
+    # Chat Request Models
+    ChatRequest, ChatRequestCreate, ChatRequestResponse, ChatRequestAction
 )
 from auth import (
     verify_password, get_password_hash, create_access_token, 
