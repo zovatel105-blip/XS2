@@ -119,24 +119,37 @@ const MessagesPage = () => {
       if (targetUser) {
         console.log('📤 Sending chat request to:', targetUser.display_name);
         
-        // Enviar solicitud de chat
+        // Enviar mensaje directo en lugar de solicitud de chat
         try {
-          const response = await apiRequest('/api/chat-requests', {
+          const response = await apiRequest('/api/messages', {
             method: 'POST',
             body: {
-              receiver_id: targetUser.id,
-              message: `¡Hola! Me gustaría conectar contigo.`
+              recipient_id: targetUser.id,
+              content: `¡Hola! Me gustaría conectar contigo.`,
+              message_type: 'text'
             }
           });
 
-          if (response.success) {
+          if (response.message_id) {
             toast({
-              title: "Solicitud enviada",
-              description: `Se ha enviado una solicitud de chat a ${targetUser.display_name}`,
+              title: "Mensaje enviado",
+              description: `Se ha iniciado la conversación con ${targetUser.display_name}`,
             });
             
-            // Recargar solicitudes para mostrar la nueva solicitud
-            await loadChatRequests();
+            // Recargar conversaciones para mostrar la nueva conversación
+            await loadConversations();
+            
+            // Buscar y abrir la nueva conversación
+            setTimeout(async () => {
+              await loadConversations();
+              const newConv = conversations.find(conv => 
+                conv.participants.some(p => p.id === targetUser.id)
+              );
+              if (newConv) {
+                console.log('✅ Opening new conversation:', newConv.id);
+                setSelectedConversation(newConv);
+              }
+            }, 1000);
           }
         } catch (error) {
           if (error.message.includes("Chat already exists")) {
