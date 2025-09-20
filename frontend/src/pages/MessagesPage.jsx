@@ -805,7 +805,7 @@ const MessagesPage = () => {
           className="flex-1 flex flex-col bg-white relative z-10"
         >
           {/* VotaTok Chat Header - Profile Style */}
-          <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
+          <div className="bg-white border-b border-gray-100 px-6 py-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 {isMobile && (
