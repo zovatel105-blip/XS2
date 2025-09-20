@@ -735,8 +735,8 @@ const MessagesPage = () => {
                       transition={{ delay: index * 0.1 }}
                       onClick={() => setSelectedConversation(conversation)}
                       className={cn(
-                        "w-full p-5 text-left hover:bg-gray-50 transition-all duration-200 relative group",
-                        selectedConversation?.id === conversation.id && "bg-purple-50 border-r-4 border-purple-500"
+                        "w-full p-5 text-left hover:bg-gray-50 transition-all duration-200 relative group border-b border-gray-100 last:border-b-0",
+                        selectedConversation?.id === conversation.id && "bg-purple-50 border-r-4 border-purple-500 shadow-sm"
                       )}
                     >
                       <div className="flex items-center">
