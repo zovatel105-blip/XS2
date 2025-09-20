@@ -344,8 +344,8 @@ const AudioDetailPage = () => {
             onClick={handleUseThisSound}
             className="flex items-center justify-center space-x-2"
           >
-            <Plus className="w-4 h-4" />
-            <span>Usar</span>
+            <Music className="w-4 h-4" />
+            <span>Use Sound</span>
           </Button>
           
           <Button
