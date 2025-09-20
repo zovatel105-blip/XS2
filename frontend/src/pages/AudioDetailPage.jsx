@@ -209,6 +209,46 @@ const AudioDetailPage = () => {
     await fetchPostsUsingAudio();
   };
 
+  const handleSave = async (pollId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${pollId}/save`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast({
+          title: "Publicación guardada",
+          description: "La publicación se ha guardado exitosamente",
+        });
+        
+        // Update the posts state to reflect the saved status
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
+            post.id === pollId 
+              ? { ...post, isSaved: data.saved, saves: data.saves } 
+              : post
+          )
+        );
+      } else {
+        throw new Error('Error al guardar la publicación');
+      }
+    } catch (error) {
+      console.error('Error saving post:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar la publicación",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
