@@ -834,29 +834,31 @@ const MessagesPage = () => {
         </motion.div>
       )}
 
-      {/* Selector de Emojis */}
+      {/* Selector de Emojis - Sutiles como Pensamientos */}
       <AnimatePresence>
         {showEmojiPicker && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-stone-800/10 backdrop-blur-sm flex items-center justify-center z-50"
             onClick={() => setShowEmojiPicker(false)}
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50"
+              className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-stone-200/50"
             >
-              <p className="text-sm text-gray-600 mb-4 text-center">Reacciona con un toque</p>
-              <div className="flex space-x-3">
+              <p className="text-sm text-stone-600 mb-6 text-center font-light tracking-wide">
+                Reacciona con un pensamiento sutil
+              </p>
+              <div className="flex space-x-4">
                 {quickEmojis.map((emoji) => (
                   <motion.button
                     key={emoji}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.15 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => addReaction(reactionTarget, emoji)}
-                    className="w-12 h-12 bg-gray-50/50 hover:bg-gray-100/50 rounded-2xl flex items-center justify-center text-xl transition-colors"
+                    className="w-14 h-14 bg-stone-50 hover:bg-stone-100 rounded-2xl flex items-center justify-center text-2xl transition-all duration-200 hover:shadow-sm"
                   >
                     {emoji}
                   </motion.button>
