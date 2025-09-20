@@ -9596,51 +9596,73 @@ def test_audio_favorites_system(base_url):
     return success_count >= 6
 
 def main():
-    """Main testing function - CRITICAL MOBILE REGISTRATION TESTING"""
-    print("🚨 TESTING CRÍTICO: HTTP 404 EN ENDPOINT DE REGISTRO - DISPOSITIVOS MÓVILES")
+    """Main testing function - CRITICAL AUDIO FAVORITES TESTING"""
+    print("🎵 TESTING CRÍTICO: SISTEMA DE AUDIO FAVORITOS - POST /api/audio/favorites")
     print("=" * 80)
     
     base_url = get_backend_url()
     print(f"🌐 Backend URL: {base_url}")
     
-    # Ejecutar test crítico de registro móvil
-    print("\n🔥 EJECUTANDO TEST CRÍTICO DE REGISTRO MÓVIL...")
-    mobile_registration_success = test_mobile_registration_critical(base_url)
+    # First run basic setup tests
+    print("\n🔧 EJECUTANDO TESTS DE CONFIGURACIÓN BÁSICA...")
     
-    # Si el test crítico pasa, ejecutar tests adicionales
-    if mobile_registration_success:
-        print("\n✅ Test crítico móvil exitoso - ejecutando tests adicionales...")
-        
-        # Test de salud del servidor
-        health_success = test_health_check(base_url)
-        
-        # Test de registro estándar
-        registration_success = test_user_registration(base_url)
-        
-        # Test de login si hay usuarios registrados
-        if test_users:
-            login_success = test_user_login(base_url)
-            
-            # Test de usuario actual si hay tokens
-            if auth_tokens:
-                current_user_success = test_get_current_user(base_url)
-        
-        print(f"\n📊 RESUMEN FINAL:")
-        print(f"   ✅ Test crítico móvil: {'EXITOSO' if mobile_registration_success else 'FALLIDO'}")
-        print(f"   ✅ Health check: {'EXITOSO' if health_success else 'FALLIDO'}")
-        print(f"   ✅ Registro estándar: {'EXITOSO' if registration_success else 'FALLIDO'}")
-        
-    else:
-        print("\n❌ TEST CRÍTICO MÓVIL FALLIDO - PROBLEMA CONFIRMADO")
-        print("🔍 DIAGNÓSTICO: El endpoint POST /api/auth/register tiene problemas críticos")
+    # Test de salud del servidor
+    health_success = test_health_check(base_url)
+    if not health_success:
+        print("❌ Health check failed - cannot continue")
+        return False
+    
+    # Test de registro para obtener tokens
+    registration_success = test_user_registration(base_url)
+    if not registration_success:
+        print("❌ User registration failed - cannot continue")
+        return False
+    
+    # Test de login si hay usuarios registrados
+    login_success = False
+    if test_users:
+        login_success = test_user_login(base_url)
+        if not login_success:
+            print("❌ User login failed - cannot continue")
+            return False
+    
+    # Test de usuario actual si hay tokens
+    current_user_success = False
+    if auth_tokens:
+        current_user_success = test_get_current_user(base_url)
+        if not current_user_success:
+            print("❌ Get current user failed - cannot continue")
+            return False
+    
+    # Now run the critical audio favorites test
+    print("\n🎵 EJECUTANDO TEST CRÍTICO DE AUDIO FAVORITOS...")
+    audio_favorites_success = test_audio_favorites_system(base_url)
+    
+    print(f"\n📊 RESUMEN FINAL:")
+    print(f"   ✅ Health check: {'EXITOSO' if health_success else 'FALLIDO'}")
+    print(f"   ✅ Registro de usuarios: {'EXITOSO' if registration_success else 'FALLIDO'}")
+    print(f"   ✅ Login de usuarios: {'EXITOSO' if login_success else 'FALLIDO'}")
+    print(f"   ✅ Usuario actual: {'EXITOSO' if current_user_success else 'FALLIDO'}")
+    print(f"   🎵 Audio Favoritos: {'EXITOSO' if audio_favorites_success else 'FALLIDO'}")
+    
+    if audio_favorites_success:
+        print("\n✅ TEST CRÍTICO AUDIO FAVORITOS EXITOSO")
+        print("🎯 CONCLUSIÓN: El endpoint POST /api/audio/favorites funciona correctamente")
         print("💡 RECOMENDACIONES:")
-        print("   1. Verificar que el servidor FastAPI esté corriendo")
-        print("   2. Comprobar configuración de routing en server.py")
-        print("   3. Revisar configuración CORS para dispositivos móviles")
-        print("   4. Verificar configuración de proxy/ingress Kubernetes")
-        print("   5. Comprobar logs del servidor para errores específicos")
+        print("   1. Backend está completamente operacional")
+        print("   2. Si persiste error en frontend, revisar implementación cliente")
+        print("   3. Verificar que frontend usa la URL correcta")
+        print("   4. Comprobar manejo de errores en frontend")
+    else:
+        print("\n❌ TEST CRÍTICO AUDIO FAVORITOS FALLIDO")
+        print("🔍 DIAGNÓSTICO: El sistema de audio favoritos tiene problemas")
+        print("💡 RECOMENDACIONES:")
+        print("   1. Revisar logs del servidor para errores específicos")
+        print("   2. Verificar configuración de base de datos")
+        print("   3. Comprobar modelos AudioFavorite en backend")
+        print("   4. Verificar autenticación y permisos")
     
-    return mobile_registration_success
+    return audio_favorites_success
 
 if __name__ == "__main__":
     success = main()
