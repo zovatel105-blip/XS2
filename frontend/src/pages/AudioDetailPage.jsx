@@ -366,9 +366,8 @@ const AudioDetailPage = () => {
           </div>
         )}
       </div>
-    </div>
 
-    {/* TikTok View */}
+      {/* TikTok View */}
       {showTikTokView && (
         <div className="fixed inset-0 z-50 bg-black">
           <TikTokScrollView
