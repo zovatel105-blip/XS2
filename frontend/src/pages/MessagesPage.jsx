@@ -117,68 +117,22 @@ const MessagesPage = () => {
       });
       
       if (targetUser) {
-        console.log('📤 Sending chat request to:', targetUser.display_name);
+        console.log('✅ Usuario encontrado, abriendo conversación:', targetUser.display_name);
         
-        // Enviar mensaje directo en lugar de solicitud de chat
-        try {
-          const response = await apiRequest('/api/messages', {
-            method: 'POST',
-            body: {
-              recipient_id: targetUser.id,
-              content: `¡Hola! Me gustaría conectar contigo.`,
-              message_type: 'text'
-            }
-          });
-
-          if (response.message_id) {
-            toast({
-              title: "Mensaje enviado",
-              description: `Se ha iniciado la conversación con ${targetUser.display_name}`,
-            });
-            
-            // Recargar conversaciones para mostrar la nueva conversación
-            await loadConversations();
-            
-            // Buscar y abrir la nueva conversación
-            setTimeout(async () => {
-              await loadConversations();
-              const newConv = conversations.find(conv => 
-                conv.participants.some(p => p.id === targetUser.id)
-              );
-              if (newConv) {
-                console.log('✅ Opening new conversation:', newConv.id);
-                setSelectedConversation(newConv);
-              }
-            }, 1000);
-          }
-        } catch (error) {
-          if (error.message.includes("Conversation already exists") || error.message.includes("already exists")) {
-            console.log('✅ Conversation already exists, reloading conversations...');
-            
-            // Si ya existe el chat, recargar conversaciones y abrir
-            await loadConversations();
-            
-            // Buscar la conversación existente
-            setTimeout(async () => {
-              await loadConversations();
-              const existingConv = conversations.find(conv => 
-                conv.participants.some(p => p.id === targetUser.id)
-              );
-              if (existingConv) {
-                console.log('✅ Opening existing conversation:', existingConv.id);
-                setSelectedConversation(existingConv);
-              }
-            }, 1000);
-            
-          } else {
-            console.error('❌ Error enviando mensaje desde perfil:', error);
-            toast({
-              title: "Error",
-              description: "No se pudo iniciar el chat desde el perfil",
-              variant: "destructive"
-            });
-          }
-        }
+        // Crear una conversación temporal para permitir al usuario escribir su mensaje
+        const tempConv = {
+          id: null, // Se creará cuando se envíe el primer mensaje
+          participants: [targetUser],
+          last_message: null,
+          unread_count: 0
+        };
+        
+        setSelectedConversation(tempConv);
+        
+        toast({
+          title: "Chat abierto",
+          description: `Puedes enviar un mensaje a ${targetUser.display_name}`,
+        });
       } else {
         console.error('❌ Usuario no encontrado:', targetParam);
         toast({
