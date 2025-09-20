@@ -60,13 +60,15 @@ def test_mobile_registration_critical(base_url):
     """🚨 TESTING CRÍTICO: HTTP 404 EN ENDPOINT DE REGISTRO EN DISPOSITIVOS MÓVILES"""
     print("\n🚨 === TESTING CRÍTICO: REGISTRO EN DISPOSITIVOS MÓVILES ===")
     print("PROBLEMA REPORTADO: Usuario obtiene HTTP 404 cuando intenta registrarse desde móvil")
+    print("CONTEXTO: Backend endpoint /api/auth/register funciona con curl pero falla desde frontend")
     
-    # Datos de prueba específicos del reporte
+    # Datos de prueba específicos del reporte - usando datos realistas
+    timestamp = int(time.time())
     test_data = {
-        "username": "testuser404",
-        "email": "test404@example.com", 
-        "password": "password123",
-        "display_name": "Test User 404"
+        "username": f"mobile_user_{timestamp}",
+        "email": f"mobile_test_{timestamp}@gmail.com", 
+        "password": "SecurePass123!",
+        "display_name": f"Usuario Móvil {timestamp}"
     }
     
     success_count = 0
