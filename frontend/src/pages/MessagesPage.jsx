@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Send, Camera, Mic, Smile, Heart, Info, Phone, Video, Plus, Image, X, Bell, Check, UserX } from 'lucide-react';
+import { ArrowLeft, Send, Camera, Mic, Smile, Heart, Info, Phone, Video, Plus, Image, X, Bell, Check, UserX, MoreHorizontal } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/use-toast';
 import { cn } from '../lib/utils';
@@ -35,6 +35,37 @@ const MessagesPage = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const showList = !selectedConversation || !isMobile;
   const showChat = selectedConversation && (isMobile || !isMobile);
+
+  // Función para generar colores de avatar únicos basados en el nombre
+  const getAvatarColors = (name) => {
+    const colors = [
+      'from-purple-400 to-pink-400',
+      'from-blue-400 to-indigo-500',
+      'from-green-400 to-teal-500',
+      'from-yellow-400 to-orange-500',
+      'from-red-400 to-pink-500',
+      'from-indigo-400 to-purple-500',
+      'from-teal-400 to-cyan-500',
+      'from-orange-400 to-red-500'
+    ];
+    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
+  };
+
+  // Función para obtener iniciales del nombre
+  const getInitials = (name) => {
+    if (!name) return '?';
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0][0].toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  };
+
+  // Función para determinar si un usuario está online (simulado por ahora)
+  const isUserOnline = (userId) => {
+    // Por ahora simulamos algunos usuarios online
+    const onlineUsers = [user?.id]; // El usuario actual siempre está online
+    return onlineUsers.includes(userId);
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -124,6 +155,7 @@ const MessagesPage = () => {
           id: null, // Se creará cuando se envíe el primer mensaje
           participants: [targetUser],
           last_message: null,
+          last_message_at: null,
           unread_count: 0
         };
         
@@ -156,11 +188,11 @@ const MessagesPage = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (selectedConversation) {
+    if (selectedConversation && selectedConversation.id) {
       loadMessages(selectedConversation.id);
       const interval = setInterval(() => {
         loadMessages(selectedConversation.id);
-      }, 3000);
+      }, 5000); // Reducido a 5 segundos para mejor UX
       return () => clearInterval(interval);
     }
   }, [selectedConversation]);
@@ -271,7 +303,7 @@ const MessagesPage = () => {
       });
       setShowEmojiPicker(false);
       setReactionTarget(null);
-      if (selectedConversation) {
+      if (selectedConversation && selectedConversation.id) {
         loadMessages(selectedConversation.id);
       }
     } catch (error) {
@@ -297,6 +329,7 @@ const MessagesPage = () => {
         id: null, // Se creará cuando se envíe el primer mensaje
         participants: [selectedUser],
         last_message: null,
+        last_message_at: null,
         unread_count: 0
       };
       setSelectedConversation(tempConv);
@@ -362,9 +395,12 @@ const MessagesPage = () => {
   };
 
   const formatTime = (timestamp) => {
+    if (!timestamp) return '';
+    
     const date = new Date(timestamp);
     const now = new Date();
     const diffInHours = (now - date) / (1000 * 60 * 60);
+    const diffInDays = Math.floor(diffInHours / 24);
 
     if (diffInHours < 1) {
       return "ahora";
@@ -373,6 +409,10 @@ const MessagesPage = () => {
         hour: '2-digit', 
         minute: '2-digit' 
       });
+    } else if (diffInDays === 1) {
+      return "ayer";
+    } else if (diffInDays < 7) {
+      return `${diffInDays}d`;
     } else {
       return date.toLocaleDateString('es-ES', { 
         day: '2-digit', 
@@ -381,37 +421,73 @@ const MessagesPage = () => {
     }
   };
 
+  const formatMessageTime = (timestamp) => {
+    if (!timestamp) return '';
+    
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = (now - date) / (1000 * 60 * 60);
+
+    if (diffInHours < 1) {
+      const minutes = Math.floor((now - date) / (1000 * 60));
+      return minutes < 1 ? "ahora" : `${minutes}m`;
+    } else if (diffInHours < 24) {
+      return date.toLocaleTimeString('es-ES', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    } else {
+      return date.toLocaleDateString('es-ES', { 
+        day: '2-digit', 
+        month: '2-digit',
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    }
+  };
+
   // Instagram-style emoji reactions
   const quickEmojis = ['❤️', '😂', '😮', '😢', '😡', '👍'];
 
   return (
-    <div className="h-screen bg-white flex relative">
-      {/* Lista de Conversaciones - Instagram Style */}
+    <div className="h-screen bg-gray-50 flex relative">
+      {/* Lista de Conversaciones - Instagram Style Mejorado */}
       {showList && (
         <motion.div 
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col"
+          className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col shadow-sm"
         >
-          {/* Header estilo Instagram */}
-          <div className="p-4 border-b border-gray-200">
+          {/* Header estilo Instagram mejorado */}
+          <div className="p-4 border-b border-gray-100 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {user?.username || 'Mensajes'}
-              </h1>
               <div className="flex items-center space-x-3">
+                <div className={`w-8 h-8 bg-gradient-to-br ${getAvatarColors(user?.display_name || user?.username || 'User')} rounded-full flex items-center justify-center`}>
+                  <span className="text-white text-sm font-semibold">
+                    {getInitials(user?.display_name || user?.username || 'User')}
+                  </span>
+                </div>
+                <h1 className="text-xl font-bold text-gray-900">
+                  {user?.username || 'Mensajes'}
+                </h1>
+              </div>
+              <div className="flex items-center space-x-2">
                 {/* Notificaciones */}
                 {chatRequests.length > 0 && (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowRequests(!showRequests)}
-                    className="relative p-2"
+                    className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
-                    <Bell className="w-6 h-6 text-gray-700" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <Bell className="w-5 h-5 text-gray-700" />
+                    <motion.span 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium"
+                    >
                       {chatRequests.length}
-                    </span>
+                    </motion.span>
                   </motion.button>
                 )}
                 
@@ -420,14 +496,14 @@ const MessagesPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowNewChat(!showNewChat)}
-                  className="p-2"
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                  <Plus className="w-6 h-6 text-gray-700" />
+                  <Plus className="w-5 h-5 text-gray-700" />
                 </motion.button>
               </div>
             </div>
 
-            {/* Solicitudes de Chat */}
+            {/* Solicitudes de Chat Mejoradas */}
             <AnimatePresence>
               {showRequests && chatRequests.length > 0 && (
                 <motion.div
@@ -436,39 +512,56 @@ const MessagesPage = () => {
                   exit={{ height: 0, opacity: 0 }}
                   className="mb-4 overflow-hidden"
                 >
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  <div className="bg-blue-50 rounded-xl p-3 border border-blue-100">
+                    <h3 className="text-sm font-semibold text-blue-900 mb-3 flex items-center">
+                      <Bell className="w-4 h-4 mr-2" />
                       Solicitudes ({chatRequests.length})
                     </h3>
                     <div className="space-y-2">
                       {chatRequests.map((request) => (
-                        <div key={request.id} className="flex items-center justify-between bg-white rounded-lg p-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
-                              <span className="text-white font-medium text-xs">
-                                {request.sender.display_name[0].toUpperCase()}
+                        <motion.div 
+                          key={request.id} 
+                          initial={{ x: -10, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          className="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm border border-gray-100"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-10 h-10 bg-gradient-to-br ${getAvatarColors(request.sender.display_name)} rounded-full flex items-center justify-center shadow-sm`}>
+                              <span className="text-white font-semibold text-sm">
+                                {getInitials(request.sender.display_name)}
                               </span>
                             </div>
                             <div>
                               <p className="font-medium text-gray-900 text-sm">{request.sender.display_name}</p>
                               <p className="text-xs text-gray-500">@{request.sender.username}</p>
+                              {request.message && (
+                                <p className="text-xs text-gray-600 mt-1 italic line-clamp-1 max-w-32">
+                                  "{request.message}"
+                                </p>
+                              )}
                             </div>
                           </div>
-                          <div className="flex space-x-1">
-                            <button
+                          <div className="flex space-x-2">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
                               onClick={() => handleChatRequest(request.id, 'accept')}
-                              className="bg-blue-500 text-white rounded-full p-1 hover:bg-blue-600 transition-colors"
+                              className="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 transition-colors shadow-sm"
+                              title="Aceptar"
                             >
                               <Check className="w-3 h-3" />
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
                               onClick={() => handleChatRequest(request.id, 'reject')}
-                              className="bg-gray-300 text-gray-600 rounded-full p-1 hover:bg-gray-400 transition-colors"
+                              className="bg-gray-300 text-gray-600 rounded-full p-2 hover:bg-gray-400 transition-colors shadow-sm"
+                              title="Rechazar"
                             >
                               <X className="w-3 h-3" />
-                            </button>
+                            </motion.button>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
@@ -476,7 +569,7 @@ const MessagesPage = () => {
               )}
             </AnimatePresence>
 
-            {/* Búsqueda Instagram Style */}
+            {/* Búsqueda Instagram Style Mejorada */}
             <AnimatePresence>
               {showNewChat && (
                 <motion.div
@@ -488,41 +581,52 @@ const MessagesPage = () => {
                   <div className="relative mb-3">
                     <input
                       type="text"
-                      placeholder="Buscar..."
+                      placeholder="Buscar personas..."
                       value={searchQuery}
                       onChange={(e) => {
                         setSearchQuery(e.target.value);
                         searchUsers(e.target.value);
                       }}
-                      className="w-full px-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                      className="w-full px-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm transition-all border border-transparent focus:border-blue-200"
                     />
+                    {loading && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    )}
                   </div>
                   
-                  {/* Resultados de Búsqueda */}
+                  {/* Resultados de Búsqueda Mejorados */}
                   <AnimatePresence>
                     {searchResults.length > 0 && (
                       <motion.div
                         initial={{ y: -10, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: -10, opacity: 0 }}
-                        className="bg-white border border-gray-200 rounded-lg shadow-sm max-h-48 overflow-y-auto"
+                        className="bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto"
                       >
-                        {searchResults.map(user => (
-                          <button
-                            key={user.id}
-                            onClick={() => startConversation(user)}
-                            className="w-full px-3 py-2 text-left flex items-center hover:bg-gray-50 transition-colors"
+                        {searchResults.map((searchUser, index) => (
+                          <motion.button
+                            key={searchUser.id}
+                            initial={{ x: -10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: index * 0.05 }}
+                            onClick={() => startConversation(searchUser)}
+                            className="w-full px-4 py-3 text-left flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                           >
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3">
-                              <span className="text-white font-medium">
-                                {user.display_name[0].toUpperCase()}
+                            <div className={`w-12 h-12 bg-gradient-to-br ${getAvatarColors(searchUser.display_name)} rounded-full flex items-center justify-center mr-3 shadow-sm`}>
+                              <span className="text-white font-semibold">
+                                {getInitials(searchUser.display_name)}
                               </span>
                             </div>
-                            <div>
-                              <div className="font-medium text-gray-900 text-sm">{user.display_name}</div>
-                              <div className="text-xs text-gray-500">@{user.username}</div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-semibold text-gray-900 text-sm truncate">{searchUser.display_name}</div>
+                              <div className="text-xs text-gray-500 truncate">@{searchUser.username}</div>
                             </div>
-                          </button>
+                            {isUserOnline(searchUser.id) && (
+                              <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                            )}
+                          </motion.button>
                         ))}
                       </motion.div>
                     )}
@@ -532,185 +636,273 @@ const MessagesPage = () => {
             </AnimatePresence>
           </div>
 
-          {/* Lista de Conversaciones Instagram Style */}
+          {/* Lista de Conversaciones Instagram Style Mejorado */}
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Send className="w-6 h-6 text-gray-400" />
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-8 text-center text-gray-500"
+              >
+                <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                  <Send className="w-8 h-8 text-gray-400" />
                 </div>
-                <p className="text-sm mb-1">Tu bandeja de entrada</p>
-                <p className="text-xs text-gray-400">Envía un mensaje para comenzar</p>
-              </div>
+                <h3 className="text-lg font-medium text-gray-700 mb-2">Tu bandeja de entrada</h3>
+                <p className="text-sm text-gray-500 mb-4">Envía un mensaje para comenzar una conversación</p>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowNewChat(true)}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+                >
+                  Nuevo mensaje
+                </motion.button>
+              </motion.div>
             ) : (
-              conversations.map((conversation, index) => {
-                const otherUser = conversation.participants[0];
-                return (
-                  <motion.button
-                    key={conversation.id}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    onClick={() => setSelectedConversation(conversation)}
-                    className={cn(
-                      "w-full p-4 text-left hover:bg-gray-50 transition-colors",
-                      selectedConversation?.id === conversation.id && "bg-blue-50"
-                    )}
-                  >
-                    <div className="flex items-center">
-                      <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3 relative">
-                        <span className="text-white font-medium text-lg">
-                          {otherUser.display_name[0].toUpperCase()}
-                        </span>
-                        {/* Online indicator */}
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-gray-900 truncate">
-                            {otherUser.display_name}
-                          </span>
-                          {conversation.last_message_at && (
-                            <span className="text-xs text-gray-500">
-                              {formatTime(conversation.last_message_at)}
+              <div className="py-2">
+                {conversations.map((conversation, index) => {
+                  const otherUser = conversation.participants[0];
+                  const isOnline = isUserOnline(otherUser.id);
+                  const hasUnread = conversation.unread_count > 0;
+                  
+                  return (
+                    <motion.button
+                      key={conversation.id}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => setSelectedConversation(conversation)}
+                      className={cn(
+                        "w-full p-4 text-left hover:bg-gray-50 transition-all duration-200 relative",
+                        selectedConversation?.id === conversation.id && "bg-blue-50 border-r-3 border-blue-500"
+                      )}
+                    >
+                      <div className="flex items-center">
+                        <div className="relative">
+                          <div className={`w-14 h-14 bg-gradient-to-br ${getAvatarColors(otherUser.display_name)} rounded-full flex items-center justify-center shadow-sm mr-3`}>
+                            <span className="text-white font-semibold text-lg">
+                              {getInitials(otherUser.display_name)}
                             </span>
+                          </div>
+                          {/* Indicador de estado online */}
+                          {isOnline && (
+                            <motion.div 
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"
+                            />
                           )}
                         </div>
-                        <div className="flex items-center justify-between mt-1">
-                          <span className="text-sm text-gray-500 truncate">
-                            {conversation.last_message || 'Di hola 👋'}
-                          </span>
-                          {conversation.unread_count > 0 && (
-                            <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                              {conversation.unread_count}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={cn(
+                              "truncate text-sm",
+                              hasUnread ? "font-bold text-gray-900" : "font-semibold text-gray-700"
+                            )}>
+                              {otherUser.display_name}
                             </span>
-                          )}
+                            {conversation.last_message_at && (
+                              <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                                {formatTime(conversation.last_message_at)}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className={cn(
+                              "text-sm truncate",
+                              hasUnread ? "font-medium text-gray-700" : "text-gray-500"
+                            )}>
+                              {conversation.last_message || `Conectar con ${otherUser.display_name.split(' ')[0]}`}
+                            </span>
+                            {hasUnread && (
+                              <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium ml-2 flex-shrink-0"
+                              >
+                                {conversation.unread_count}
+                              </motion.span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.button>
-                );
-              })
+                    </motion.button>
+                  );
+                })}
+              </div>
             )}
           </div>
         </motion.div>
       )}
 
-      {/* Chat Area - Instagram Style */}
+      {/* Chat Area - Instagram Style Mejorado */}
       {showChat && (
         <motion.div 
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           className="flex-1 flex flex-col bg-white"
         >
-          {/* Header del Chat Instagram Style */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3">
+          {/* Header del Chat Instagram Style Mejorado */}
+          <div className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 {isMobile && (
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedConversation(null)}
-                    className="mr-3 p-1"
+                    className="mr-3 p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
-                    <ArrowLeft className="w-6 h-6" />
-                  </button>
+                    <ArrowLeft className="w-5 h-5" />
+                  </motion.button>
                 )}
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white font-medium">
-                    {selectedConversation.participants[0].display_name[0].toUpperCase()}
-                  </span>
+                <div className="relative">
+                  <div className={`w-10 h-10 bg-gradient-to-br ${getAvatarColors(selectedConversation.participants[0].display_name)} rounded-full flex items-center justify-center mr-3 shadow-sm`}>
+                    <span className="text-white font-semibold">
+                      {getInitials(selectedConversation.participants[0].display_name)}
+                    </span>
+                  </div>
+                  {isUserOnline(selectedConversation.participants[0].id) && (
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                  )}
                 </div>
                 <div>
-                  <h2 className="font-semibold text-gray-900">
+                  <h2 className="font-semibold text-gray-900 text-sm">
                     {selectedConversation.participants[0].display_name}
                   </h2>
-                  <p className="text-sm text-green-500">Activo</p>
+                  <p className={cn(
+                    "text-xs",
+                    isUserOnline(selectedConversation.participants[0].id) 
+                      ? "text-green-600 font-medium" 
+                      : "text-gray-500"
+                  )}>
+                    {isUserOnline(selectedConversation.participants[0].id) ? "Activo ahora" : "Última vez hace un momento"}
+                  </p>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-3">
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <div className="flex items-center space-x-2">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Llamar"
+                >
                   <Phone className="w-5 h-5 text-gray-600" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Videollamada"
+                >
                   <Video className="w-5 h-5 text-gray-600" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Información"
+                >
                   <Info className="w-5 h-5 text-gray-600" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
 
-          {/* Mensajes Instagram Style */}
-          <div className="flex-1 overflow-y-auto p-4 bg-white">
+          {/* Mensajes Instagram Style Mejorado */}
+          <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
             {messages.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-2xl">
-                    {selectedConversation.participants[0].display_name[0].toUpperCase()}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-16"
+              >
+                <div className={`w-24 h-24 bg-gradient-to-br ${getAvatarColors(selectedConversation.participants[0].display_name)} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}>
+                  <span className="text-white font-bold text-3xl">
+                    {getInitials(selectedConversation.participants[0].display_name)}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {selectedConversation.participants[0].display_name}
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  @{selectedConversation.participants[0].username} • Instagram
+                <p className="text-sm text-gray-500 mb-1">
+                  @{selectedConversation.participants[0].username}
                 </p>
-                <p className="text-sm text-gray-500">
-                  Di hola para comenzar la conversación
+                <p className="text-sm text-gray-500 mb-6">
+                  {isUserOnline(selectedConversation.participants[0].id) ? "Activo ahora" : "Usuario de VotaTok"}
                 </p>
-              </div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-white rounded-xl p-4 max-w-sm mx-auto shadow-sm border border-gray-100"
+                >
+                  <p className="text-sm text-gray-600">
+                    Saluda a {selectedConversation.participants[0].display_name.split(' ')[0]} para comenzar la conversación 👋
+                  </p>
+                </motion.div>
+              </motion.div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4 max-w-2xl mx-auto">
                 {messages.map((message, index) => {
                   const isOwnMessage = message.sender_id === user.id;
+                  const showTimestamp = index === 0 || 
+                    (new Date(message.created_at) - new Date(messages[index - 1].created_at)) > 60000; // 1 minuto
                   
                   return (
-                    <motion.div
-                      key={message.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className={cn(
-                        "flex",
-                        isOwnMessage ? "justify-end" : "justify-start"
+                    <motion.div key={message.id}>
+                      {/* Timestamp separador */}
+                      {showTimestamp && (
+                        <div className="text-center mb-4">
+                          <span className="bg-white px-3 py-1 rounded-full text-xs text-gray-500 shadow-sm border border-gray-100">
+                            {formatMessageTime(message.created_at)}
+                          </span>
+                        </div>
                       )}
-                      onTouchStart={() => startLongPress(message.id)}
-                      onTouchEnd={endLongPress}
-                      onMouseDown={() => startLongPress(message.id)}
-                      onMouseUp={endLongPress}
-                      onMouseLeave={endLongPress}
-                    >
-                      <div
+                      
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
                         className={cn(
-                          "max-w-xs lg:max-w-md px-4 py-2 rounded-3xl relative group cursor-pointer",
-                          isOwnMessage
-                            ? "bg-blue-500 text-white rounded-br-lg"
-                            : "bg-gray-100 text-gray-900 rounded-bl-lg"
+                          "flex",
+                          isOwnMessage ? "justify-end" : "justify-start"
                         )}
+                        onTouchStart={() => startLongPress(message.id)}
+                        onTouchEnd={endLongPress}
+                        onMouseDown={() => startLongPress(message.id)}
+                        onMouseUp={endLongPress}
+                        onMouseLeave={endLongPress}
                       >
-                        <p className="text-sm">{message.content}</p>
-                        
-                        {/* Timestamp */}
-                        <p className={cn(
-                          "text-xs mt-1 opacity-70",
-                          isOwnMessage ? "text-blue-100" : "text-gray-500"
-                        )}>
-                          {formatTime(message.created_at)}
-                        </p>
-                        
-                        {/* Reacciones */}
-                        {message.reactions && message.reactions.length > 0 && (
-                          <div className="absolute -bottom-2 left-2 flex space-x-1">
-                            {message.reactions.map((reaction, i) => (
-                              <span key={i} className="text-xs bg-white shadow-sm rounded-full px-2 py-1">
-                                {reaction.emoji}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className={cn(
+                            "max-w-xs lg:max-w-sm px-4 py-3 rounded-3xl relative group cursor-pointer shadow-sm",
+                            isOwnMessage
+                              ? "bg-blue-500 text-white rounded-br-lg"
+                              : "bg-white text-gray-900 border border-gray-100 rounded-bl-lg"
+                          )}
+                        >
+                          <p className="text-sm leading-relaxed">{message.content}</p>
+                          
+                          {/* Reacciones */}
+                          {message.reactions && message.reactions.length > 0 && (
+                            <div className="absolute -bottom-2 left-2 flex space-x-1">
+                              {message.reactions.map((reaction, i) => (
+                                <motion.span 
+                                  key={i}
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="text-sm bg-white shadow-md rounded-full px-2 py-1 border border-gray-100"
+                                >
+                                  {reaction.emoji}
+                                </motion.span>
+                              ))}
+                            </div>
+                          )}
+                        </motion.div>
+                      </motion.div>
                     </motion.div>
                   );
                 })}
@@ -719,27 +911,33 @@ const MessagesPage = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Instagram Style */}
+          {/* Input Instagram Style Mejorado */}
           <div className="bg-white border-t border-gray-200 p-4">
             <form onSubmit={sendMessage} className="flex items-center space-x-3">
-              {/* Media buttons */}
-              <div className="flex items-center space-x-2">
-                <button
+              {/* Media buttons mejorados */}
+              <div className="flex items-center space-x-1">
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setShowMediaPicker(!showMediaPicker)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Cámara"
                 >
                   <Camera className="w-5 h-5 text-gray-600" />
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Imagen"
                 >
                   <Image className="w-5 h-5 text-gray-600" />
-                </button>
+                </motion.button>
               </div>
               
-              {/* Input field */}
+              {/* Input field mejorado */}
               <div className="flex-1 relative">
                 <input
                   ref={inputRef}
@@ -747,96 +945,138 @@ const MessagesPage = () => {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Mensaje..."
-                  className="w-full px-4 py-2 bg-gray-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-4 py-2.5 bg-gray-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm transition-all"
                   disabled={sendingMessage}
                 />
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setShowEmojiPicker(true)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:bg-gray-200 rounded-full p-1 transition-colors"
+                  title="Emojis"
                 >
-                  <Smile className="w-5 h-5 text-gray-500" />
-                </button>
+                  <Smile className="w-4 h-4 text-gray-500" />
+                </motion.button>
               </div>
               
-              {/* Send/Mic button */}
+              {/* Send/Mic button mejorado */}
               {newMessage.trim() ? (
-                <button
+                <motion.button
                   type="submit"
                   disabled={sendingMessage}
-                  className="text-blue-500 font-semibold hover:text-blue-600 transition-colors px-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-blue-500 font-semibold hover:text-blue-600 transition-colors px-3 py-2 disabled:opacity-50"
                 >
                   {sendingMessage ? (
                     <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                   ) : (
                     "Enviar"
                   )}
-                </button>
+                </motion.button>
               ) : (
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Mensaje de voz"
                 >
                   <Mic className="w-5 h-5 text-gray-600" />
-                </button>
+                </motion.button>
               )}
             </form>
           </div>
         </motion.div>
       )}
 
-      {/* Empty State Instagram Style */}
+      {/* Empty State Instagram Style Mejorado */}
       {!selectedConversation && !isMobile && (
-        <div className="flex-1 flex items-center justify-center bg-white">
-          <div className="text-center">
-            <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-              <Send className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-light mb-2 text-gray-600">Tus mensajes</h3>
-            <p className="text-sm text-gray-500 mb-6">
-              Envía mensajes privados a un amigo o grupo
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex-1 flex items-center justify-center bg-white"
+        >
+          <div className="text-center max-w-sm">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.05, 1],
+                rotate: [0, 5, -5, 0]
+              }}
+              transition={{ 
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg"
+            >
+              <Send className="w-10 h-10 text-white" />
+            </motion.div>
+            <h3 className="text-xl font-semibold mb-3 text-gray-800">Tus mensajes</h3>
+            <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+              Envía mensajes privados a amigos o inicia nuevas conversaciones.
             </p>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowNewChat(true)}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              className="bg-blue-500 text-white px-8 py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium shadow-lg hover:shadow-xl"
             >
               Enviar mensaje
-            </button>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {/* Media Picker */}
+      {/* Media Picker Mejorado */}
       <AnimatePresence>
         {showMediaPicker && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-20 left-4 bg-white border border-gray-200 rounded-2xl shadow-lg p-2"
+            className="absolute bottom-20 left-4 bg-white border border-gray-200 rounded-2xl shadow-xl p-3"
           >
             <div className="flex space-x-2">
-              <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+                title="Foto"
+              >
                 <Camera className="w-5 h-5 text-gray-600" />
-              </button>
-              <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+                title="Galería"
+              >
                 <Image className="w-5 h-5 text-gray-600" />
-              </button>
-              <button className="p-3 hover:bg-gray-100 rounded-xl transition-colors">
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+                title="Audio"
+              >
                 <Mic className="w-5 h-5 text-gray-600" />
-              </button>
-              <button 
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowMediaPicker(false)}
                 className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
               >
                 <X className="w-5 h-5 text-gray-400" />
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Emoji Picker Instagram Style */}
+      {/* Emoji Picker Instagram Style Mejorado */}
       <AnimatePresence>
         {showEmojiPicker && (
           <motion.div
@@ -848,17 +1088,20 @@ const MessagesPage = () => {
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl p-6 shadow-xl max-w-sm w-full"
+              className="bg-white rounded-3xl p-6 shadow-2xl max-w-sm w-full border border-gray-100"
             >
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">Reaccionar</h3>
               <div className="grid grid-cols-6 gap-3">
                 {quickEmojis.map((emoji) => (
-                  <button
+                  <motion.button
                     key={emoji}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.8 }}
                     onClick={() => addReaction(reactionTarget, emoji)}
-                    className="w-12 h-12 bg-gray-50 hover:bg-gray-100 rounded-2xl flex items-center justify-center text-2xl transition-colors"
+                    className="w-12 h-12 bg-gray-50 hover:bg-gray-100 rounded-2xl flex items-center justify-center text-2xl transition-all hover:shadow-md"
                   >
                     {emoji}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </motion.div>
