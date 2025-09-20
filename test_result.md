@@ -1102,7 +1102,7 @@ Layout "off" - Carrusel Horizontal:
 
 ## test_plan:
   current_focus:
-    - "Demo login functionality for El Susurro Inteligente access - COMPLETED"
+    - "VoteChat messaging system comprehensive testing - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
