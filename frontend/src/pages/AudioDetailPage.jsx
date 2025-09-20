@@ -372,7 +372,7 @@ const AudioDetailPage = () => {
               className="w-12 h-12 rounded-full p-0"
               variant="outline"
             >
-              <Heart className="w-6 h-6" />
+              <Bookmark className="w-6 h-6" />
             </Button>
           </div>
         </div>
