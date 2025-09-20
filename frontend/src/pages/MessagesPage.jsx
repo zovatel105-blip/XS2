@@ -257,7 +257,7 @@ const MessagesPage = () => {
                 animate={{ y: 0, opacity: 1 }}
                 className="text-2xl font-light text-gray-800 tracking-wide"
               >
-                Susurros
+                Mensajes
               </motion.h1>
               <motion.button
                 whileHover={{ scale: 1.05 }}
