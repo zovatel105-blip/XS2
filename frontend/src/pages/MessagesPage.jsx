@@ -834,31 +834,31 @@ const MessagesPage = () => {
         </motion.div>
       )}
 
-      {/* Selector de Emojis - Sutiles como Pensamientos */}
+      {/* Selector de Emojis - Optimizado para Táctil */}
       <AnimatePresence>
         {showEmojiPicker && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 bg-stone-800/10 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-stone-800/10 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             onClick={() => setShowEmojiPicker(false)}
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-stone-200/50"
+              className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-stone-200/50 max-w-sm w-full"
             >
-              <p className="text-sm text-stone-600 mb-6 text-center font-light tracking-wide">
+              <p className="text-sm text-stone-600 mb-4 md:mb-6 text-center font-light tracking-wide">
                 Reacciona con un pensamiento sutil
               </p>
-              <div className="flex space-x-4">
+              <div className="flex justify-center space-x-3 md:space-x-4">
                 {quickEmojis.map((emoji) => (
                   <motion.button
                     key={emoji}
                     whileHover={{ scale: 1.15 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => addReaction(reactionTarget, emoji)}
-                    className="w-14 h-14 bg-stone-50 hover:bg-stone-100 rounded-2xl flex items-center justify-center text-2xl transition-all duration-200 hover:shadow-sm"
+                    className="w-12 md:w-14 h-12 md:h-14 bg-stone-50 hover:bg-stone-100 active:bg-stone-200 rounded-2xl flex items-center justify-center text-xl md:text-2xl transition-all duration-200 hover:shadow-sm touch-manipulation"
                   >
                     {emoji}
                   </motion.button>
