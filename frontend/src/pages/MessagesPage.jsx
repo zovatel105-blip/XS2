@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Send, Search, MoreVertical, Circle } from 'lucide-react';
+import { ArrowLeft, Send, Mic, Image, Smile, MoreHorizontal, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/use-toast';
 import { cn } from '../lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const MessagesPage = () => {
   const [conversations, setConversations] = useState([]);
@@ -14,9 +15,16 @@ const MessagesPage = () => {
   const [showNewChat, setShowNewChat] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [reactionTarget, setReactionTarget] = useState(null);
+  const [ephemeralMode, setEphemeralMode] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [recordingAudio, setRecordingAudio] = useState(false);
   const { user, apiRequest } = useAuth();
   const { toast } = useToast();
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+  const longPressTimer = useRef(null);
 
   // Load conversations on mount
   useEffect(() => {
