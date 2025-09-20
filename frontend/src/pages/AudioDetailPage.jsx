@@ -9,6 +9,7 @@ import pollService from '../services/pollService';
 import { Button } from '../components/ui/button';
 import CreatePollModal from '../components/CreatePollModal';
 import TikTokScrollView from '../components/TikTokScrollView';
+import TikTokProfileGrid from '../components/TikTokProfileGrid';
 
 const AudioDetailPage = () => {
   const { audioId } = useParams();
