@@ -318,15 +318,17 @@ const AudioDetailPage = () => {
           </Button>
         </div>
 
-        {/* Posts using this audio */}
+        {/* Posts using this audio - Con padding lateral mínimo como ProfilePage */}
         <div className="space-y-4">
-          <div className="max-w-md mx-auto flex items-center justify-between px-2">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Videos con este audio
-            </h3>
-            <div className="flex items-center space-x-1">
-              <Users className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-600">{posts.length}</span>
+          <div className="px-1 sm:px-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Videos con este audio
+              </h3>
+              <div className="flex items-center space-x-1">
+                <Users className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-600">{posts.length}</span>
+              </div>
             </div>
           </div>
           
@@ -336,26 +338,28 @@ const AudioDetailPage = () => {
               <p className="text-gray-500">Cargando videos...</p>
             </div>
           ) : posts.length > 0 ? (
-            <div className="w-full">
-              <TikTokProfileGrid 
-                polls={posts} 
-                onPollClick={handleVideoClick}
-                onUpdatePoll={() => {}} // No update functionality needed here
-                onDeletePoll={() => {}} // No delete functionality needed here
-                currentUser={null} // Not needed for this view
-                isOwnProfile={false}
-              />
-            </div>
+            <TikTokProfileGrid 
+              polls={posts} 
+              onPollClick={handleVideoClick}
+              onUpdatePoll={() => {}} // No update functionality needed here
+              onDeletePoll={() => {}} // No delete functionality needed here
+              currentUser={null} // Not needed for this view
+              isOwnProfile={false}
+            />
           ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h4 className="font-medium text-gray-900 mb-2">
-                Sin videos aún
-              </h4>
-              <p className="text-gray-500 text-sm mb-6">
-                Sé el primero en crear contenido con este audio
-              </p>
-              <Button onClick={handleUseThisSound}>
+            <div className="text-center py-16 space-y-6 px-1 sm:px-2">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                <Users className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-lg font-semibold text-gray-900">
+                  Sin videos aún
+                </h4>
+                <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+                  Sé el primero en crear contenido con este audio
+                </p>
+              </div>
+              <Button onClick={handleUseThisSound} className="mt-4">
                 Crear video
               </Button>
             </div>
