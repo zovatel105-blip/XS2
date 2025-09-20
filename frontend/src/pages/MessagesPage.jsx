@@ -491,7 +491,7 @@ const MessagesPage = () => {
         <motion.div 
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col shadow-lg relative z-10"
+          className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col shadow-sm relative z-10"
         >
           {/* VotaTok Header - Clean like Profile */}
           <div className="p-6 border-b border-gray-100 bg-white sticky top-0 z-20 shadow-sm">
