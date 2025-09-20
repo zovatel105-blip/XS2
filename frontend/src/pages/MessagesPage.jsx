@@ -373,6 +373,74 @@ const MessagesPage = () => {
               </div>
             </div>
 
+            {/* Solicitudes de Chat */}
+            <AnimatePresence>
+              {showRequests && chatRequests.length > 0 && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mb-4 overflow-hidden"
+                >
+                  <h3 className="text-sm font-medium text-gray-700 mb-3 px-1">
+                    Solicitudes de Chat ({chatRequests.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {chatRequests.map((request) => (
+                      <motion.div
+                        key={request.id}
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        className="bg-white/80 backdrop-blur-sm border border-amber-200 rounded-2xl p-4"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-amber-200 rounded-full flex items-center justify-center">
+                              <span className="text-amber-700 font-medium text-sm">
+                                {request.sender.display_name[0].toUpperCase()}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900 text-sm">
+                                {request.sender.display_name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                @{request.sender.username}
+                              </p>
+                              {request.message && (
+                                <p className="text-xs text-gray-600 mt-1 italic">
+                                  "{request.message}"
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="flex space-x-2">
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleChatRequest(request.id, 'accept')}
+                              className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors"
+                            >
+                              <Check className="w-4 h-4" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleChatRequest(request.id, 'reject')}
+                              className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors"
+                            >
+                              <UserX className="w-4 h-4" />
+                            </motion.button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Búsqueda Elegante */}
             <AnimatePresence>
               {showNewChat && (
