@@ -43,7 +43,7 @@ from models import (
     # Story Models
     Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy,
     # Chat Request Models
-    ChatRequest, ChatRequestCreate, ChatRequestResponse, ChatRequestAction
+    ChatRequest, ChatRequestCreate, ChatRequestResponse, ChatRequestAction, ChatRequestStatus
 )
 from auth import (
     verify_password, get_password_hash, create_access_token, 
