@@ -201,8 +201,10 @@ const AudioDetailPage = () => {
     }
   };
 
-  const handleVideoClick = (post, index) => {
-    setSelectedPostIndex(index);
+  const handleVideoClick = (post) => {
+    // Find the index of the post in the posts array
+    const index = posts.findIndex(p => p.id === post.id);
+    setSelectedPostIndex(index >= 0 ? index : 0);
     setShowTikTokView(true);
   };
 
