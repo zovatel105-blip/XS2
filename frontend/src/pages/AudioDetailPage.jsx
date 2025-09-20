@@ -22,8 +22,6 @@ const AudioDetailPage = () => {
   const [postsLoading, setPostsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [preSelectedAudio, setPreSelectedAudio] = useState(null);
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
 
