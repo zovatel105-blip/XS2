@@ -363,12 +363,12 @@ const AudioDetailPage = () => {
             <Button onClick={handleUseThisSound} className="mt-4">
               Crear video
             </Button>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+    </div>
 
-      {/* TikTok View */}
+    {/* TikTok View */}
       {showTikTokView && (
         <div className="fixed inset-0 z-50 bg-black">
           <TikTokScrollView
