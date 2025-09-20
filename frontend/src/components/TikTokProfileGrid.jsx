@@ -5,7 +5,17 @@ import LayoutRenderer from './layouts/LayoutRenderer';
 import PostManagementMenu from './PostManagementMenu';
 import { Button } from './ui/button';
 
-const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, currentUser, isOwnProfile = false }) => {
+const TikTokProfileGrid = ({ 
+  polls, 
+  onPollClick, 
+  onUpdatePoll, 
+  onDeletePoll, 
+  currentUser, 
+  isOwnProfile = false, 
+  showUseSoundButton = false, 
+  onUseSound = null,
+  currentAudio = null 
+}) => {
   // Function to format vote count
   const formatViewCount = (votes) => {
     if (votes >= 1000000) {
