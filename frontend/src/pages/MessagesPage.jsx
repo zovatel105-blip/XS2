@@ -158,21 +158,56 @@ const MessagesPage = () => {
     }
   };
 
-  const startConversation = (selectedUser) => {
+  const startConversation = async (selectedUser) => {
+    // Check if conversation already exists
     const existingConv = conversations.find(conv => 
       conv.participants.some(p => p.id === selectedUser.id)
     );
 
     if (existingConv) {
       setSelectedConversation(existingConv);
-    } else {
-      const tempConv = {
-        id: null,
-        participants: [selectedUser],
-        last_message: null,
-        unread_count: 0
-      };
-      setSelectedConversation(tempConv);
+      setShowNewChat(false);
+      setSearchQuery('');
+      setSearchResults([]);
+      return;
+    }
+
+    // Send chat request instead of creating conversation directly
+    try {
+      const response = await apiRequest('/api/chat-requests', {
+        method: 'POST',
+        body: {
+          receiver_id: selectedUser.id,
+          message: `¡Hola! Me gustaría conectar contigo.`
+        }
+      });
+
+      if (response.success) {
+        toast({
+          title: "Solicitud enviada",
+          description: `Se ha enviado una solicitud de chat a ${selectedUser.display_name}`,
+        });
+      }
+    } catch (error) {
+      if (error.message.includes("Chat request already pending")) {
+        toast({
+          title: "Solicitud pendiente",
+          description: "Ya tienes una solicitud pendiente con este usuario",
+          variant: "default"
+        });
+      } else if (error.message.includes("Chat already exists")) {
+        toast({
+          title: "Chat existente",
+          description: "Ya tienes una conversación con este usuario",
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "No se pudo enviar la solicitud de chat",
+          variant: "destructive"
+        });
+      }
     }
     
     setShowNewChat(false);
