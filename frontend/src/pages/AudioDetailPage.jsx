@@ -330,7 +330,10 @@ const AudioDetailPage = () => {
         {/* Audio Info */}
         <div className="max-w-md mx-auto bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div 
+              className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 cursor-pointer hover:bg-purple-200 transition-colors relative"
+              onClick={handlePlayPause}
+            >
               {audio.cover_url ? (
                 <img 
                   src={audio.cover_url} 
@@ -340,6 +343,15 @@ const AudioDetailPage = () => {
               ) : (
                 <Music className="w-8 h-8 text-purple-600" />
               )}
+              
+              {/* Botón invisible de play superpuesto */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-30 bg-black/20 rounded-lg transition-opacity">
+                {isPlaying ? (
+                  <Pause className="w-6 h-6 text-white" />
+                ) : (
+                  <Play className="w-6 h-6 ml-1 text-white" />
+                )}
+              </div>
             </div>
             
             <div className="flex-1 min-w-0">
@@ -355,15 +367,12 @@ const AudioDetailPage = () => {
             </div>
 
             <Button
-              onClick={handlePlayPause}
+              onClick={handleSaveAudio}
               size="lg"
               className="w-12 h-12 rounded-full p-0"
+              variant="outline"
             >
-              {isPlaying ? (
-                <Pause className="w-6 h-6" />
-              ) : (
-                <Play className="w-6 h-6 ml-1" />
-              )}
+              <Heart className="w-6 h-6" />
             </Button>
           </div>
         </div>
