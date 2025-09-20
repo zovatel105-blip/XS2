@@ -324,20 +324,20 @@ const MessagesPage = () => {
 
   return (
     <div className="h-screen bg-gradient-to-br from-stone-50 via-stone-25 to-white flex">
-      {/* Lista de Conversaciones - El Susurro */}
+      {/* Lista de Conversaciones - Optimizada Móvil */}
       {showList && (
         <motion.div 
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           className="w-full md:w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 flex flex-col"
         >
-          {/* Header Minimalista */}
-          <div className="p-6 border-b border-gray-100/50">
-            <div className="flex items-center justify-between mb-6">
+          {/* Header Minimalista - Móvil */}
+          <div className="p-4 md:p-6 border-b border-gray-100/50">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
               <motion.h1 
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="text-2xl font-light text-gray-800 tracking-wide"
+                className="text-xl md:text-2xl font-light text-gray-800 tracking-wide"
               >
                 Mensajes
               </motion.h1>
@@ -348,13 +348,13 @@ const MessagesPage = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowRequests(!showRequests)}
-                    className="relative w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center hover:bg-amber-200 transition-all duration-200"
+                    className="relative w-9 md:w-10 h-9 md:h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center hover:bg-amber-200 active:bg-amber-300 transition-all duration-200 touch-manipulation"
                   >
                     <Bell className="w-4 h-4" />
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                      className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 md:w-5 h-4 md:h-5 flex items-center justify-center"
                     >
                       {chatRequests.length}
                     </motion.span>
@@ -366,7 +366,7 @@ const MessagesPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowNewChat(!showNewChat)}
-                  className="w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-all duration-200"
+                  className="w-9 md:w-10 h-9 md:h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 active:bg-gray-700 transition-all duration-200 touch-manipulation"
                 >
                   <Send className="w-4 h-4" />
                 </motion.button>
