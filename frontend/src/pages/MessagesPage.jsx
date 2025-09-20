@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Send, Mic, Image, Smile, MoreHorizontal, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Send, Mic, Image, Smile, Eye, EyeOff, Music, Link, Gift, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/use-toast';
 import { cn } from '../lib/utils';
@@ -20,27 +20,35 @@ const MessagesPage = () => {
   const [ephemeralMode, setEphemeralMode] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [recordingAudio, setRecordingAudio] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
   const { user, apiRequest } = useAuth();
   const { toast } = useToast();
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const longPressTimer = useRef(null);
 
-  // Load conversations on mount
+  // Responsive state
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const showList = !selectedConversation || !isMobile;
+  const showChat = selectedConversation && (isMobile || !isMobile);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     loadConversations();
   }, []);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Load messages when conversation is selected
   useEffect(() => {
     if (selectedConversation) {
       loadMessages(selectedConversation.id);
-      // Poll for new messages every 3 seconds
       const interval = setInterval(() => {
         loadMessages(selectedConversation.id);
       }, 3000);
@@ -85,16 +93,14 @@ const MessagesPage = () => {
   };
 
   // 🎯 Funciones del Susurro Inteligente
-  const handleLongPress = (messageId, event) => {
-    event.preventDefault();
+  const handleLongPress = (messageId) => {
     setReactionTarget(messageId);
     setShowEmojiPicker(true);
   };
 
   const startLongPress = (messageId) => {
     longPressTimer.current = setTimeout(() => {
-      setReactionTarget(messageId);
-      setShowEmojiPicker(true);
+      handleLongPress(messageId);
     }, 500);
   };
 
@@ -112,7 +118,6 @@ const MessagesPage = () => {
       });
       setShowEmojiPicker(false);
       setReactionTarget(null);
-      // Reload messages to show reaction
       if (selectedConversation) {
         loadMessages(selectedConversation.id);
       }
@@ -136,7 +141,7 @@ const MessagesPage = () => {
           conversation_id: selectedConversation.id,
           content,
           is_ephemeral: true,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 horas
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
         }
       });
       
@@ -154,7 +159,6 @@ const MessagesPage = () => {
   };
 
   const startConversation = (selectedUser) => {
-    // Check if conversation already exists
     const existingConv = conversations.find(conv => 
       conv.participants.some(p => p.id === selectedUser.id)
     );
@@ -162,9 +166,8 @@ const MessagesPage = () => {
     if (existingConv) {
       setSelectedConversation(existingConv);
     } else {
-      // Create a temporary conversation object
       const tempConv = {
-        id: null, // Will be created when first message is sent
+        id: null,
         participants: [selectedUser],
         last_message: null,
         unread_count: 0
@@ -193,34 +196,22 @@ const MessagesPage = () => {
         body: JSON.stringify({
           recipient_id: recipientId,
           content: messageText,
-          message_type: 'text'
+          message_type: 'text',
+          is_ephemeral: ephemeralMode
         })
       });
 
-      // Reload conversations and messages
-      await loadConversations();
-      if (selectedConversation.id) {
-        await loadMessages(selectedConversation.id);
-      } else {
-        // Find the new conversation
-        const updatedConvs = await apiRequest('/api/conversations');
-        const newConv = updatedConvs.find(conv => 
-          conv.participants.some(p => p.id === recipientId)
-        );
-        if (newConv) {
-          setSelectedConversation(newConv);
-          await loadMessages(newConv.id);
-        }
+      loadConversations();
+      if (selectedConversation?.id) {
+        loadMessages(selectedConversation.id);
       }
-
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
         title: "Error",
         description: "No se pudo enviar el mensaje",
-        variant: "destructive",
+        variant: "destructive"
       });
-      setNewMessage(messageText); // Restore message
     } finally {
       setSendingMessage(false);
     }
@@ -231,251 +222,466 @@ const MessagesPage = () => {
     const now = new Date();
     const diffInHours = (now - date) / (1000 * 60 * 60);
 
-    if (diffInHours < 24) {
-      return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    } else if (diffInHours < 168) { // 7 days
-      return date.toLocaleDateString('es-ES', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+    if (diffInHours < 1) {
+      return "ahora";
+    } else if (diffInHours < 24) {
+      return date.toLocaleTimeString('es-ES', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
     } else {
-      return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString('es-ES', { 
+        day: '2-digit', 
+        month: '2-digit' 
+      });
     }
   };
 
-  // Mobile view - show conversation list or chat
-  const isMobile = window.innerWidth < 768;
-  const showList = !selectedConversation || !isMobile;
-  const showChat = selectedConversation && (!showList || !isMobile);
+  // Emoji reactions para el selector
+  const quickEmojis = ['❤️', '😂', '👍', '😮', '😢', '🔥', '🎉', '✨'];
 
   return (
-    <div className="h-screen bg-gray-50 flex">
-      {/* Conversations List */}
+    <div className="h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-stone-50 flex">
+      {/* Lista de Conversaciones - El Susurro */}
       {showList && (
-        <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col">
-          {/* Header */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl font-semibold text-gray-900">Mensajes</h1>
-              <button
+        <motion.div 
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="w-full md:w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 flex flex-col"
+        >
+          {/* Header Minimalista */}
+          <div className="p-6 border-b border-gray-100/50">
+            <div className="flex items-center justify-between mb-6">
+              <motion.h1 
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-2xl font-light text-gray-800 tracking-wide"
+              >
+                Susurros
+              </motion.h1>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setShowNewChat(!showNewChat)}
-                className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-colors"
+                className="w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-all duration-200"
               >
                 <Send className="w-4 h-4" />
-              </button>
+              </motion.button>
             </div>
 
-            {/* New Chat Search */}
-            {showNewChat && (
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Buscar usuarios..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      searchUsers(e.target.value);
-                    }}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                
-                {/* Search Results */}
-                {searchResults.length > 0 && (
-                  <div className="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-40 overflow-y-auto">
-                    {searchResults.map(user => (
-                      <button
-                        key={user.id}
-                        onClick={() => startConversation(user)}
-                        className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center"
-                      >
-                        <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
-                          <span className="text-white text-sm font-medium">
-                            {user.display_name[0].toUpperCase()}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="font-medium text-gray-900">{user.display_name}</div>
-                          <div className="text-sm text-gray-500">@{user.username}</div>
-                        </div>
-                      </button>
-                    ))}
+            {/* Búsqueda Elegante */}
+            <AnimatePresence>
+              {showNewChat && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="relative mb-4">
+                    <input
+                      type="text"
+                      placeholder="Buscar una presencia..."
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        searchUsers(e.target.value);
+                      }}
+                      className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200/50 rounded-2xl focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent text-sm placeholder-gray-400 transition-all"
+                    />
                   </div>
-                )}
-              </div>
-            )}
+                  
+                  {/* Resultados de Búsqueda */}
+                  <AnimatePresence>
+                    {searchResults.length > 0 && (
+                      <motion.div
+                        initial={{ y: -10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -10, opacity: 0 }}
+                        className="bg-white border border-gray-100 rounded-2xl shadow-sm max-h-48 overflow-y-auto"
+                      >
+                        {searchResults.map(user => (
+                          <motion.button
+                            key={user.id}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.02)" }}
+                            onClick={() => startConversation(user)}
+                            className="w-full px-4 py-3 text-left flex items-center transition-colors"
+                          >
+                            <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-gray-600 text-sm font-medium">
+                                {user.display_name[0].toUpperCase()}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900 text-sm">{user.display_name}</div>
+                              <div className="text-xs text-gray-500">@{user.username}</div>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Conversations List */}
+          {/* Lista de Conversaciones */}
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">
-                <Send className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p>No tienes conversaciones aún</p>
-                <p className="text-sm">¡Busca usuarios para empezar a chatear!</p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="p-8 text-center text-gray-400"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <Send className="w-6 h-6 text-gray-300" />
+                </div>
+                <p className="text-sm mb-1">Silencio total</p>
+                <p className="text-xs">Busca alguien para susurrar</p>
+              </motion.div>
             ) : (
-              conversations.map(conversation => {
-                const otherUser = conversation.participants[0];
-                return (
-                  <button
-                    key={conversation.id}
-                    onClick={() => setSelectedConversation(conversation)}
-                    className={cn(
-                      "w-full p-4 text-left hover:bg-gray-50 border-b border-gray-100",
-                      selectedConversation?.id === conversation.id && "bg-purple-50"
-                    )}
-                  >
-                    <div className="flex items-center">
-                      <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mr-3">
-                        <span className="text-white font-medium">
-                          {otherUser.display_name[0].toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-gray-900">
-                            {otherUser.display_name}
+              <div className="py-2">
+                {conversations.map((conversation, index) => {
+                  const otherUser = conversation.participants[0];
+                  return (
+                    <motion.button
+                      key={conversation.id}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => setSelectedConversation(conversation)}
+                      className={cn(
+                        "w-full p-4 text-left hover:bg-gray-50/50 transition-all duration-200 group",
+                        selectedConversation?.id === conversation.id && "bg-gray-50/80"
+                      )}
+                    >
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mr-3 group-hover:scale-105 transition-transform">
+                          <span className="text-gray-600 font-medium">
+                            {otherUser.display_name[0].toUpperCase()}
                           </span>
-                          {conversation.last_message_at && (
-                            <span className="text-xs text-gray-500">
-                              {formatTime(conversation.last_message_at)}
-                            </span>
-                          )}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500 truncate">
-                            {conversation.last_message || 'Inicia una conversación'}
-                          </span>
-                          {conversation.unread_count > 0 && (
-                            <span className="bg-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                              {conversation.unread_count}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-medium text-gray-900 text-sm truncate">
+                              {otherUser.display_name}
                             </span>
-                          )}
+                            {conversation.last_message_at && (
+                              <span className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {formatTime(conversation.last_message_at)}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500 truncate">
+                              {conversation.last_message || 'Nuevo susurro...'}
+                            </span>
+                            {conversation.unread_count > 0 && (
+                              <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="bg-gray-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                              >
+                                {conversation.unread_count}
+                              </motion.span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })
+                    </motion.button>
+                  );
+                })}
+              </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {/* Chat Area */}
+      {/* Chat Area - La Conversación */}
       {showChat && (
-        <div className="flex-1 flex flex-col">
-          {/* Chat Header */}
-          <div className="bg-white border-b border-gray-200 p-4">
+        <motion.div 
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="flex-1 flex flex-col bg-white/60 backdrop-blur-xl"
+        >
+          {/* Header del Chat */}
+          <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100/50 p-4">
             <div className="flex items-center">
               {isMobile && (
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedConversation(null)}
-                  className="mr-3 p-1 hover:bg-gray-100 rounded"
+                  className="mr-3 p-2 hover:bg-gray-100/50 rounded-full transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" />
-                </button>
+                </motion.button>
               )}
-              <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-3">
-                <span className="text-white font-medium">
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center mr-3">
+                <span className="text-gray-600 font-medium">
                   {selectedConversation.participants[0].display_name[0].toUpperCase()}
                 </span>
               </div>
               <div className="flex-1">
-                <h2 className="font-semibold text-gray-900">
+                <h2 className="font-medium text-gray-900">
                   {selectedConversation.participants[0].display_name}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  @{selectedConversation.participants[0].username}
+                  presente
                 </p>
               </div>
-              <button className="p-2 hover:bg-gray-100 rounded">
-                <MoreVertical className="w-5 h-5 text-gray-500" />
-              </button>
+              
+              {/* Botón Modo Efímero */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setEphemeralMode(!ephemeralMode)}
+                className={cn(
+                  "p-2 rounded-full transition-all mr-2",
+                  ephemeralMode 
+                    ? "bg-amber-100 text-amber-600" 
+                    : "hover:bg-gray-100/50 text-gray-400"
+                )}
+              >
+                {ephemeralMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </motion.button>
             </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Mensajes - Las Burbujas que Respiran */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {messages.length === 0 ? (
-              <div className="text-center text-gray-500 py-8">
-                <Circle className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <p>Inicia la conversación</p>
-                <p className="text-sm">Envía tu primer mensaje</p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center text-gray-400 py-16"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100/50 rounded-full flex items-center justify-center">
+                  <Send className="w-6 h-6 text-gray-300" />
+                </div>
+                <p className="text-sm mb-1">El silencio es oro</p>
+                <p className="text-xs">Comienza la conversación</p>
+              </motion.div>
             ) : (
-              messages.map(message => {
+              messages.map((message, index) => {
                 const isOwnMessage = message.sender_id === user.id;
+                const isEphemeral = message.is_ephemeral;
+                
                 return (
-                  <div
+                  <motion.div
                     key={message.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ 
+                      opacity: isEphemeral ? 0.7 : 1, 
+                      y: 0,
+                      scale: 1
+                    }}
+                    whileHover={{ scale: 1.01 }}
+                    transition={{ delay: index * 0.05 }}
                     className={cn(
                       "flex",
                       isOwnMessage ? "justify-end" : "justify-start"
                     )}
+                    onMouseDown={() => startLongPress(message.id)}
+                    onMouseUp={endLongPress}
+                    onMouseLeave={endLongPress}
+                    onTouchStart={() => startLongPress(message.id)}
+                    onTouchEnd={endLongPress}
                   >
-                    <div
+                    <motion.div
+                      whileHover={{ 
+                        scale: 1.02,
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                      }}
                       className={cn(
-                        "max-w-xs lg:max-w-md px-4 py-2 rounded-2xl",
+                        "max-w-xs lg:max-w-md px-4 py-3 rounded-3xl relative group cursor-pointer",
                         isOwnMessage
-                          ? "bg-purple-500 text-white"
-                          : "bg-gray-200 text-gray-900"
+                          ? "bg-gray-900 text-white"
+                          : "bg-white/80 backdrop-blur-sm text-gray-900 border border-gray-100/50",
+                        isEphemeral && "animate-pulse border-dashed"
                       )}
                     >
-                      <p className="text-sm">{message.content}</p>
+                      <p className="text-sm leading-relaxed">{message.content}</p>
                       <p
                         className={cn(
-                          "text-xs mt-1",
-                          isOwnMessage ? "text-purple-100" : "text-gray-500"
+                          "text-xs mt-2 opacity-60",
+                          isOwnMessage ? "text-gray-300" : "text-gray-500"
                         )}
                       >
                         {formatTime(message.created_at)}
+                        {isEphemeral && " • efímero"}
                       </p>
-                    </div>
-                  </div>
+                      
+                      {/* Reacciones */}
+                      {message.reactions && message.reactions.length > 0 && (
+                        <div className="flex mt-2 space-x-1">
+                          {message.reactions.map((reaction, i) => (
+                            <span key={i} className="text-xs bg-white/20 rounded-full px-2 py-1">
+                              {reaction.emoji}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  </motion.div>
                 );
               })
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Message Input */}
-          <div className="bg-white border-t border-gray-200 p-4">
+          {/* Input de Mensaje - Sin Ruido */}
+          <div className="bg-white/80 backdrop-blur-xl border-t border-gray-100/50 p-4">
             <form onSubmit={sendMessage} className="flex items-center space-x-3">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Escribe un mensaje..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                disabled={sendingMessage}
-              />
-              <button
-                type="submit"
-                disabled={!newMessage.trim() || sendingMessage}
-                className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {sendingMessage ? (
-                  <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  <Send className="w-5 h-5" />
-                )}
-              </button>
+              <div className="flex-1 relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder={ephemeralMode ? "Susurra algo efímero..." : "Escribe tu susurro..."}
+                  className={cn(
+                    "w-full px-4 py-3 bg-gray-50/80 border rounded-full focus:outline-none focus:ring-1 transition-all text-sm",
+                    ephemeralMode 
+                      ? "border-amber-200 focus:ring-amber-300 focus:border-transparent bg-amber-50/50" 
+                      : "border-gray-200/50 focus:ring-gray-300 focus:border-transparent"
+                  )}
+                  disabled={sendingMessage}
+                />
+              </div>
+              
+              {/* Botones de Acción Minimalistas */}
+              <div className="flex items-center space-x-2">
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100/50 rounded-full transition-all"
+                >
+                  <Image className="w-5 h-5" />
+                </motion.button>
+                
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={!newMessage.trim() || sendingMessage}
+                  className={cn(
+                    "p-3 rounded-full focus:outline-none transition-all",
+                    newMessage.trim() && !sendingMessage
+                      ? "bg-gray-900 text-white hover:bg-gray-800"
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  )}
+                >
+                  {sendingMessage ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full"
+                    />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </motion.button>
+              </div>
             </form>
           </div>
-        </div>
+
+          {/* Menú de Compartir */}
+          <AnimatePresence>
+            {showShareMenu && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-20 right-4 bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-lg p-2"
+              >
+                <div className="flex space-x-2">
+                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
+                    <Music className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
+                    <Link className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
+                    <Gift className="w-5 h-5 text-gray-600" />
+                  </button>
+                  <button 
+                    onClick={() => setShowShareMenu(false)}
+                    className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors"
+                  >
+                    <X className="w-5 h-5 text-gray-400" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       )}
 
-      {/* Empty State for Desktop */}
+      {/* Empty State para Desktop */}
       {!selectedConversation && !isMobile && (
-        <div className="flex-1 flex items-center justify-center bg-gray-50">
-          <div className="text-center text-gray-500">
-            <Send className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">Selecciona una conversación</h3>
-            <p>Elige una conversación para empezar a chatear</p>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex-1 flex items-center justify-center bg-gradient-to-br from-gray-50/50 to-white/50"
+        >
+          <div className="text-center text-gray-400 max-w-sm">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.05, 1],
+                opacity: [0.5, 0.8, 0.5]
+              }}
+              transition={{ 
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-20 h-20 mx-auto mb-6 bg-gray-100/50 rounded-full flex items-center justify-center"
+            >
+              <Send className="w-8 h-8 text-gray-300" />
+            </motion.div>
+            <h3 className="text-lg font-light mb-2 text-gray-600">El Susurro Inteligente</h3>
+            <p className="text-sm leading-relaxed">Una conversación que se adapta a ti —no al revés</p>
+            <p className="text-xs mt-4 opacity-60">Selecciona una presencia para comenzar</p>
           </div>
-        </div>
+        </motion.div>
       )}
+
+      {/* Selector de Emojis */}
+      <AnimatePresence>
+        {showEmojiPicker && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={() => setShowEmojiPicker(false)}
+          >
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-gray-200/50"
+            >
+              <p className="text-sm text-gray-600 mb-4 text-center">Reacciona con un toque</p>
+              <div className="flex space-x-3">
+                {quickEmojis.map((emoji) => (
+                  <motion.button
+                    key={emoji}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => addReaction(reactionTarget, emoji)}
+                    className="w-12 h-12 bg-gray-50/50 hover:bg-gray-100/50 rounded-2xl flex items-center justify-center text-xl transition-colors"
+                  >
+                    {emoji}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
