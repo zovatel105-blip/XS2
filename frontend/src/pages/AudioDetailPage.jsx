@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Play, Pause, Music, Users, Share2, Plus, Heart
+  ArrowLeft, Play, Pause, Music, Users, Share2, Plus, Heart, Bookmark
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import audioManager from '../services/AudioManager';
