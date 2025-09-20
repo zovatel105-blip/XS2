@@ -121,14 +121,26 @@ const MessagesPage = () => {
       // Si no existe conversación, buscar el usuario
       console.log('🔍 Searching for user:', targetParam);
       
-      // Intentar buscar por username primero
-      let searchResults = await apiRequest(`/api/users/search?q=${encodeURIComponent(targetParam)}`);
-      let targetUser = searchResults.find(u => u.username === targetParam);
+      let targetUser = null;
       
-      // Si no se encuentra por username, intentar buscar por ID
+      try {
+        // Intentar buscar por username primero usando la API de búsqueda
+        const searchResults = await apiRequest(`/api/users/search?q=${encodeURIComponent(targetParam)}`);
+        targetUser = searchResults.find(u => u.username === targetParam);
+        
+        // Si no se encuentra por username exacto, buscar por coincidencia parcial
+        if (!targetUser && searchResults.length > 0) {
+          targetUser = searchResults.find(u => u.username.toLowerCase().includes(targetParam.toLowerCase()));
+        }
+      } catch (searchError) {
+        console.log('⚠️ Search API failed:', searchError.message);
+      }
+      
+      // Si no se encuentra por búsqueda, intentar buscar por ID usando el endpoint de perfil
       if (!targetUser && targetParam) {
         try {
-          const profileResponse = await apiRequest(`/api/user/profile/${targetParam}`);
+          // Intentar buscar por username usando el endpoint by-username
+          const profileResponse = await apiRequest(`/api/user/profile/by-username/${targetParam}`);
           if (profileResponse) {
             targetUser = {
               id: profileResponse.id,
@@ -137,12 +149,27 @@ const MessagesPage = () => {
             };
           }
         } catch (profileError) {
-          console.log('⚠️ Could not find user by ID:', profileError.message);
+          console.log('⚠️ Could not find user by username via profile:', profileError.message);
+          
+          // Último intento: buscar por ID si el parámetro parece ser un ID
+          if (targetParam.includes('-') && targetParam.length > 20) {
+            try {
+              const profileByIdResponse = await apiRequest(`/api/user/profile/${targetParam}`);
+              if (profileByIdResponse) {
+                targetUser = {
+                  id: profileByIdResponse.id,
+                  username: profileByIdResponse.username,
+                  display_name: profileByIdResponse.display_name
+                };
+              }
+            } catch (idError) {
+              console.log('⚠️ Could not find user by ID:', idError.message);
+            }
+          }
         }
       }
       
       console.log('🔍 User search result:', {
-        searchResults: searchResults.length,
         targetUser: targetUser ? `${targetUser.username}(${targetUser.id})` : 'not found',
         searchParam: targetParam
       });
@@ -162,24 +189,32 @@ const MessagesPage = () => {
         setSelectedConversation(tempConv);
         
         toast({
-          title: "Chat abierto",
-          description: `Puedes enviar un mensaje a ${targetUser.display_name}`,
+          title: "💬 Chat Iniciado",
+          description: `Conectado con ${targetUser.display_name}. ¡Envía tu primer mensaje!`,
         });
       } else {
         console.error('❌ Usuario no encontrado:', targetParam);
+        
+        // Mostrar un toast más amigable y ofrecer alternativas
         toast({
-          title: "Usuario no encontrado",
-          description: "No se pudo encontrar el usuario especificado",
-          variant: "destructive"
+          title: "🔍 Usuario no encontrado",
+          description: "Intenta buscar usuarios en la sección 'Iniciar Conversación'",
+          variant: "default"
         });
+        
+        // Automaticamente abrir el panel de nueva conversación para ayudar al usuario
+        setShowNewChat(true);
       }
     } catch (error) {
       console.error('❌ Error manejando chat desde perfil:', error);
       toast({
-        title: "Error",
-        description: "No se pudo iniciar el chat desde el perfil",
+        title: "⚠️ Error de Conexión",
+        description: "Problema al conectar con el perfil. Intenta de nuevo.",
         variant: "destructive"
       });
+      
+      // En caso de error, también abrir el panel de nueva conversación
+      setShowNewChat(true);
     }
   };
 
