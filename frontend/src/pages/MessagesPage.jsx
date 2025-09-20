@@ -68,6 +68,50 @@ const MessagesPage = () => {
     }
   };
 
+  const loadChatRequests = async () => {
+    try {
+      const data = await apiRequest('/api/chat-requests/received');
+      setChatRequests(data);
+    } catch (error) {
+      console.error('Error loading chat requests:', error);
+    }
+  };
+
+  const handleChatRequest = async (requestId, action) => {
+    try {
+      const response = await apiRequest(`/api/chat-requests/${requestId}`, {
+        method: 'PUT',
+        body: { action }
+      });
+
+      if (response.success) {
+        toast({
+          title: action === 'accept' ? "Solicitud aceptada" : "Solicitud rechazada",
+          description: response.message,
+        });
+
+        // Reload chat requests and conversations
+        await loadChatRequests();
+        await loadConversations();
+
+        // If accepted, navigate to the new conversation
+        if (action === 'accept' && response.conversation_id) {
+          const conversation = await apiRequest(`/api/conversations`);
+          const newConv = conversation.find(c => c.id === response.conversation_id);
+          if (newConv) {
+            setSelectedConversation(newConv);
+          }
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo procesar la solicitud",
+        variant: "destructive"
+      });
+    }
+  };
+
   const loadMessages = async (conversationId) => {
     try {
       const data = await apiRequest(`/api/conversations/${conversationId}/messages`);
