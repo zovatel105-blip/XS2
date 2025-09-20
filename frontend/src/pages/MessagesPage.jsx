@@ -351,7 +351,7 @@ const MessagesPage = () => {
     try {
       const recipientId = selectedConversation.participants[0].id;
       
-      await apiRequest('/api/messages', {
+      const response = await apiRequest('/api/messages', {
         method: 'POST',
         body: {
           recipient_id: recipientId,
@@ -361,10 +361,27 @@ const MessagesPage = () => {
         }
       });
 
-      loadConversations();
-      if (selectedConversation?.id) {
+      // Si es una conversación temporal (nueva), recargar conversaciones
+      if (!selectedConversation.id) {
+        await loadConversations();
+        
+        // Buscar la nueva conversación creada y cambiar a ella
+        setTimeout(async () => {
+          await loadConversations();
+          const newConv = conversations.find(conv => 
+            conv.participants.some(p => p.id === recipientId)
+          );
+          if (newConv) {
+            setSelectedConversation(newConv);
+            loadMessages(newConv.id);
+          }
+        }, 1000);
+      } else {
+        // Si es una conversación existente, solo recargar mensajes
         loadMessages(selectedConversation.id);
       }
+      
+      loadConversations();
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
