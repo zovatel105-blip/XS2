@@ -622,174 +622,180 @@ const MessagesPage = () => {
           </div>
 
           {/* Mensajes - Las Burbujas que Respiran */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto px-8 py-12">
             {messages.length === 0 ? (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center text-gray-400 py-16"
+                className="text-center text-stone-400 py-24"
               >
-                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100/50 rounded-full flex items-center justify-center">
-                  <Send className="w-6 h-6 text-gray-300" />
+                <div className="w-20 h-20 mx-auto mb-8 bg-stone-50 rounded-full flex items-center justify-center">
+                  <div className="w-3 h-3 bg-stone-300 rounded-full animate-pulse"></div>
                 </div>
-                <p className="text-sm mb-1">El silencio es oro</p>
-                <p className="text-xs">Comienza la conversación</p>
+                <p className="text-lg font-light mb-2">El silencio es oro</p>
+                <p className="text-sm opacity-70">Un espacio para estar presente</p>
               </motion.div>
             ) : (
-              messages.map((message, index) => {
-                const isOwnMessage = message.sender_id === user.id;
-                const isEphemeral = message.is_ephemeral;
-                
-                return (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ 
-                      opacity: isEphemeral ? 0.7 : 1, 
-                      y: 0,
-                      scale: 1
-                    }}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ delay: index * 0.05 }}
-                    className={cn(
-                      "flex",
-                      isOwnMessage ? "justify-end" : "justify-start"
-                    )}
-                    onMouseDown={() => startLongPress(message.id)}
-                    onMouseUp={endLongPress}
-                    onMouseLeave={endLongPress}
-                    onTouchStart={() => startLongPress(message.id)}
-                    onTouchEnd={endLongPress}
-                  >
+              <div className="space-y-8 max-w-2xl mx-auto">
+                {messages.map((message, index) => {
+                  const isOwnMessage = message.sender_id === user.id;
+                  const isEphemeral = message.is_ephemeral;
+                  
+                  return (
                     <motion.div
-                      whileHover={{ 
-                        scale: 1.02,
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                      key={message.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ 
+                        opacity: isEphemeral ? 0.6 : 1, 
+                        y: 0
                       }}
+                      transition={{ delay: index * 0.1, duration: 0.4 }}
                       className={cn(
-                        "max-w-xs lg:max-w-md px-4 py-3 rounded-3xl relative group cursor-pointer",
-                        isOwnMessage
-                          ? "bg-gray-900 text-white"
-                          : "bg-white/80 backdrop-blur-sm text-gray-900 border border-gray-100/50",
-                        isEphemeral && "animate-pulse border-dashed"
+                        "flex mb-8",
+                        isOwnMessage ? "justify-end" : "justify-start"
                       )}
+                      onMouseDown={() => startLongPress(message.id)}
+                      onMouseUp={endLongPress}
+                      onMouseLeave={endLongPress}
+                      onTouchStart={() => startLongPress(message.id)}
+                      onTouchEnd={endLongPress}
                     >
-                      <p className="text-sm leading-relaxed">{message.content}</p>
-                      <p
+                      <motion.div
+                        whileHover={{ scale: 1.01 }}
                         className={cn(
-                          "text-xs mt-2 opacity-60",
-                          isOwnMessage ? "text-gray-300" : "text-gray-500"
+                          "relative max-w-md px-6 py-4 rounded-3xl cursor-pointer group",
+                          isOwnMessage
+                            ? "bg-stone-800 text-stone-50 rounded-br-lg"
+                            : "bg-stone-50 text-stone-800 border border-stone-100 rounded-bl-lg",
+                          isEphemeral && "opacity-60 border-dashed"
                         )}
                       >
-                        {formatTime(message.created_at)}
-                        {isEphemeral && " • efímero"}
-                      </p>
-                      
-                      {/* Reacciones */}
-                      {message.reactions && message.reactions.length > 0 && (
-                        <div className="flex mt-2 space-x-1">
-                          {message.reactions.map((reaction, i) => (
-                            <span key={i} className="text-xs bg-white/20 rounded-full px-2 py-1">
-                              {reaction.emoji}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                        <p className="text-base leading-relaxed font-light tracking-wide">
+                          {message.content}
+                        </p>
+                        
+                        {/* Timestamp sutil */}
+                        <p
+                          className={cn(
+                            "text-xs mt-3 font-light tracking-wider",
+                            isOwnMessage ? "text-stone-400" : "text-stone-500"
+                          )}
+                        >
+                          {formatTime(message.created_at)}
+                          {isEphemeral && " • se desvanece"}
+                        </p>
+                        
+                        {/* Reacciones sutiles */}
+                        {message.reactions && message.reactions.length > 0 && (
+                          <div className="flex mt-3 space-x-2">
+                            {message.reactions.map((reaction, i) => (
+                              <motion.span
+                                key={i}
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="text-sm bg-white/10 backdrop-blur-sm rounded-full px-3 py-1"
+                              >
+                                {reaction.emoji}
+                              </motion.span>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Indicador sutil de grupo */}
+                        <div className={cn(
+                          "absolute -bottom-1 w-2 h-2 rounded-full",
+                          isOwnMessage 
+                            ? "-right-1 bg-stone-800" 
+                            : "-left-1 bg-stone-50 border border-stone-100"
+                        )} />
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                );
-              })
+                  );
+                })}
+              </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input de Mensaje - Sin Ruido */}
-          <div className="bg-white/80 backdrop-blur-xl border-t border-gray-100/50 p-4">
-            <form onSubmit={sendMessage} className="flex items-center space-x-3">
-              <div className="flex-1 relative">
+          {/* Campo de Entrada - Sin Ruido, Solo Intención */}
+          <div className="bg-white/90 backdrop-blur-xl border-t border-stone-100 px-8 py-6">
+            <form onSubmit={sendMessage} className="max-w-2xl mx-auto">
+              <div className="relative">
+                {/* Input principal - Limpio y centrado */}
                 <input
                   ref={inputRef}
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder={ephemeralMode ? "Susurra algo efímero..." : "Escribe tu susurro..."}
+                  placeholder={ephemeralMode ? "Un pensamiento que se desvanece..." : "Escribe con intención..."}
                   className={cn(
-                    "w-full px-4 py-3 bg-gray-50/80 border rounded-full focus:outline-none focus:ring-1 transition-all text-sm",
+                    "w-full px-6 py-4 bg-stone-50/80 border-0 rounded-full focus:outline-none focus:ring-1 text-base font-light tracking-wide placeholder-stone-400 transition-all duration-300",
                     ephemeralMode 
-                      ? "border-amber-200 focus:ring-amber-300 focus:border-transparent bg-amber-50/50" 
-                      : "border-gray-200/50 focus:ring-gray-300 focus:border-transparent"
+                      ? "focus:ring-amber-200 focus:bg-amber-50/50" 
+                      : "focus:ring-stone-200 focus:bg-white/80",
+                    newMessage.trim() ? "pr-16" : "pr-6"
                   )}
                   disabled={sendingMessage}
                 />
+                
+                {/* Botón de envío - Único, Redondo, Centrado */}
+                <AnimatePresence>
+                  {newMessage.trim() && (
+                    <motion.button
+                      type="submit"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      disabled={sendingMessage}
+                      className="absolute right-2 top-2 w-10 h-10 bg-stone-800 text-white rounded-full flex items-center justify-center hover:bg-stone-700 transition-all duration-200 focus:outline-none"
+                    >
+                      {sendingMessage ? (
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                        />
+                      ) : (
+                        <Send className="w-4 h-4 ml-0.5" />
+                      )}
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+
+                {/* Indicador de modo efímero */}
+                {ephemeralMode && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute -top-8 left-6 text-xs text-amber-600 font-light"
+                  >
+                    ✨ Se desvanece en 24h
+                  </motion.div>
+                )}
               </div>
               
-              {/* Botones de Acción Minimalistas */}
-              <div className="flex items-center space-x-2">
+              {/* Opciones minimalistas */}
+              <div className="flex justify-center mt-4 space-x-6">
+                {/* Modo efímero */}
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowShareMenu(!showShareMenu)}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100/50 rounded-full transition-all"
-                >
-                  <Image className="w-5 h-5" />
-                </motion.button>
-                
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  disabled={!newMessage.trim() || sendingMessage}
+                  onClick={() => setEphemeralMode(!ephemeralMode)}
                   className={cn(
-                    "p-3 rounded-full focus:outline-none transition-all",
-                    newMessage.trim() && !sendingMessage
-                      ? "bg-gray-900 text-white hover:bg-gray-800"
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    "text-xs font-light tracking-wider transition-all duration-200",
+                    ephemeralMode 
+                      ? "text-amber-600" 
+                      : "text-stone-400 hover:text-stone-600"
                   )}
                 >
-                  {sendingMessage ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full"
-                    />
-                  ) : (
-                    <Send className="w-5 h-5" />
-                  )}
+                  {ephemeralMode ? "∞ Permanente" : "○ Efímero"}
                 </motion.button>
               </div>
             </form>
           </div>
-
-          {/* Menú de Compartir */}
-          <AnimatePresence>
-            {showShareMenu && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute bottom-20 right-4 bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-lg p-2"
-              >
-                <div className="flex space-x-2">
-                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
-                    <Music className="w-5 h-5 text-gray-600" />
-                  </button>
-                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
-                    <Link className="w-5 h-5 text-gray-600" />
-                  </button>
-                  <button className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors">
-                    <Gift className="w-5 h-5 text-gray-600" />
-                  </button>
-                  <button 
-                    onClick={() => setShowShareMenu(false)}
-                    className="p-3 hover:bg-gray-100/50 rounded-xl transition-colors"
-                  >
-                    <X className="w-5 h-5 text-gray-400" />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
       )}
 
