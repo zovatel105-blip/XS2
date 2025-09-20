@@ -338,7 +338,7 @@ const MessagesPage = () => {
                   <Send className="w-6 h-6 text-gray-300" />
                 </div>
                 <p className="text-sm mb-1">Silencio total</p>
-                <p className="text-xs">Busca alguien para susurrar</p>
+                <p className="text-xs">Busca alguien para conversar</p>
               </motion.div>
             ) : (
               <div className="py-2">
