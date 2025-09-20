@@ -255,10 +255,10 @@ const AudioDetailPage = () => {
         </div>
       </header>
 
-      <div className="w-full py-6 space-y-6">
+      <div className="w-full px-4 py-6 space-y-6">
         
         {/* Audio Info */}
-        <div className="max-w-md mx-auto bg-white rounded-lg border border-gray-200 p-6 mx-4">
+        <div className="max-w-md mx-auto bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
               {audio.cover_url ? (
@@ -299,7 +299,7 @@ const AudioDetailPage = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="max-w-md mx-auto grid grid-cols-2 gap-3 px-4">
+        <div className="max-w-md mx-auto grid grid-cols-2 gap-3">
           <Button
             onClick={handleUseThisSound}
             className="flex items-center justify-center space-x-2"
@@ -317,51 +317,52 @@ const AudioDetailPage = () => {
             <span>Compartir</span>
           </Button>
         </div>
+      </div>
 
-        {/* Posts using this audio - Con padding lateral mínimo como ProfilePage */}
-        <div className="space-y-4">
-          <div className="px-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Videos con este audio
-              </h3>
-              <div className="flex items-center space-x-1">
-                <Users className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-600">{posts.length}</span>
-              </div>
+      {/* Posts using this audio - SECCIÓN INDEPENDIENTE SIN PADDING LATERAL */}
+      <div className="space-y-4">
+        <div className="px-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Videos con este audio
+            </h3>
+            <div className="flex items-center space-x-1">
+              <Users className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-600">{posts.length}</span>
             </div>
           </div>
-          
-          {postsLoading ? (
-            <div className="text-center py-8">
-              <div className="w-8 h-8 border-2 border-purple-300 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-500">Cargando videos...</p>
+        </div>
+        
+        {postsLoading ? (
+          <div className="text-center py-8">
+            <div className="w-8 h-8 border-2 border-purple-300 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-500">Cargando videos...</p>
+          </div>
+        ) : posts.length > 0 ? (
+          <TikTokProfileGrid 
+            polls={posts} 
+            onPollClick={handleVideoClick}
+            onUpdatePoll={() => {}} // No update functionality needed here
+            onDeletePoll={() => {}} // No delete functionality needed here
+            currentUser={null} // Not needed for this view
+            isOwnProfile={false}
+          />
+        ) : (
+          <div className="text-center py-16 space-y-6 px-4">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+              <Users className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
             </div>
-          ) : posts.length > 0 ? (
-            <TikTokProfileGrid 
-              polls={posts} 
-              onPollClick={handleVideoClick}
-              onUpdatePoll={() => {}} // No update functionality needed here
-              onDeletePoll={() => {}} // No delete functionality needed here
-              currentUser={null} // Not needed for this view
-              isOwnProfile={false}
-            />
-          ) : (
-            <div className="text-center py-16 space-y-6 px-4">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                <Users className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
-              </div>
-              <div className="space-y-2">
-                <h4 className="text-lg font-semibold text-gray-900">
-                  Sin videos aún
-                </h4>
-                <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
-                  Sé el primero en crear contenido con este audio
-                </p>
-              </div>
-              <Button onClick={handleUseThisSound} className="mt-4">
-                Crear video
-              </Button>
+            <div className="space-y-2">
+              <h4 className="text-lg font-semibold text-gray-900">
+                Sin videos aún
+              </h4>
+              <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+                Sé el primero en crear contenido con este audio
+              </p>
+            </div>
+            <Button onClick={handleUseThisSound} className="mt-4">
+              Crear video
+            </Button>
             </div>
           )}
         </div>
