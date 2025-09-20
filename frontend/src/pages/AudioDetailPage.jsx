@@ -350,10 +350,11 @@ const AudioDetailPage = () => {
           
           <Button
             onClick={handleShare}
-            className="bg-gray-800 hover:bg-gray-700 text-white backdrop-blur-md border-none px-4 py-2.5 h-10 rounded-full transition-all duration-200 hover:scale-105 shadow-xl flex items-center gap-2"
+            variant="outline"
+            className="flex items-center justify-center space-x-2"
           >
             <Share2 className="w-4 h-4" />
-            <span className="font-semibold text-sm">Compartir</span>
+            <span>Compartir</span>
           </Button>
         </div>
       </div>
