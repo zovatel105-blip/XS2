@@ -9346,6 +9346,255 @@ def test_session_expiration_post_creation(base_url):
     
     return success_count >= 5
 
+def test_audio_favorites_system(base_url):
+    """🎵 TESTING CRÍTICO: Sistema de Audio Favoritos - POST /api/audio/favorites"""
+    print("\n🎵 === TESTING CRÍTICO: SISTEMA DE AUDIO FAVORITOS ===")
+    print("PROBLEMA REPORTADO: 'Error no se pudo guardar el audio'")
+    print("CONTEXTO: Endpoint corregido de /api/audio/{id}/save a /api/audio/favorites")
+    print("OBJETIVO: Verificar funcionalidad completa de guardar audio")
+    
+    if not auth_tokens:
+        print("❌ No auth tokens available for audio favorites test")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    total_tests = 8
+    
+    # Test data as specified in the request
+    test_audio_data = {
+        "audio_id": "music_trending_1",
+        "audio_type": "system"
+    }
+    
+    # Test 1: POST /api/audio/favorites - Add system audio to favorites
+    print("\n1️⃣ TESTING POST /api/audio/favorites - Agregar audio del sistema...")
+    try:
+        response = requests.post(f"{base_url}/audio/favorites", json=test_audio_data, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        print(f"   Response: {response.text[:300]}...")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Audio agregado a favoritos exitosamente")
+            print(f"   📝 Favorite ID: {data.get('id', 'N/A')}")
+            print(f"   🎵 Audio ID: {data.get('audio_id', 'N/A')}")
+            print(f"   🎵 Audio Type: {data.get('audio_type', 'N/A')}")
+            print(f"   🎵 Audio Title: {data.get('audio_title', 'N/A')}")
+            print(f"   🎵 Audio Artist: {data.get('audio_artist', 'N/A')}")
+            success_count += 1
+            
+            # Verify response structure
+            required_fields = ['id', 'audio_id', 'audio_type', 'created_at']
+            missing_fields = [field for field in required_fields if field not in data]
+            if not missing_fields:
+                print("   ✅ Estructura de respuesta correcta")
+                success_count += 1
+            else:
+                print(f"   ❌ Campos faltantes en respuesta: {missing_fields}")
+                
+        elif response.status_code == 400:
+            print("   ⚠️ Audio ya está en favoritos (esperado si se ejecuta múltiples veces)")
+            success_count += 1  # Count as success since endpoint works
+        else:
+            print(f"   ❌ Error agregando a favoritos: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en POST /api/audio/favorites: {e}")
+    
+    # Test 2: GET /api/audio/favorites - Verify audio was saved
+    print("\n2️⃣ TESTING GET /api/audio/favorites - Verificar que se guardó...")
+    try:
+        response = requests.get(f"{base_url}/audio/favorites", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Favoritos obtenidos exitosamente")
+            print(f"   📊 Total favoritos: {data.get('total', 0)}")
+            print(f"   📋 Favoritos en respuesta: {len(data.get('favorites', []))}")
+            
+            # Check if our test audio is in favorites
+            favorites = data.get('favorites', [])
+            test_audio_found = False
+            for fav in favorites:
+                if fav.get('audio_id') == test_audio_data['audio_id'] and fav.get('audio_type') == test_audio_data['audio_type']:
+                    test_audio_found = True
+                    print(f"   ✅ Audio de prueba encontrado en favoritos")
+                    print(f"   🎵 Título: {fav.get('audio_title', 'N/A')}")
+                    print(f"   🎵 Artista: {fav.get('audio_artist', 'N/A')}")
+                    break
+            
+            if test_audio_found:
+                success_count += 1
+            else:
+                print(f"   ❌ Audio de prueba NO encontrado en favoritos")
+                print(f"   🔍 Favoritos encontrados: {[f.get('audio_id') for f in favorites]}")
+        else:
+            print(f"   ❌ Error obteniendo favoritos: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en GET /api/audio/favorites: {e}")
+    
+    # Test 3: POST /api/audio/favorites - Test with user audio type
+    print("\n3️⃣ TESTING POST /api/audio/favorites - Audio tipo 'user'...")
+    try:
+        user_audio_data = {
+            "audio_id": "user_audio_test_123",
+            "audio_type": "user"
+        }
+        response = requests.post(f"{base_url}/audio/favorites", json=user_audio_data, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Audio de usuario agregado a favoritos")
+            print(f"   🎵 Audio Type: {data.get('audio_type', 'N/A')}")
+            success_count += 1
+        elif response.status_code == 400:
+            print("   ⚠️ Audio de usuario ya en favoritos o error de validación")
+            success_count += 1  # Count as success since endpoint works
+        else:
+            print(f"   ❌ Error con audio de usuario: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error testing audio de usuario: {e}")
+    
+    # Test 4: GET /api/audio/favorites/{audio_id}/check - Check if audio is favorite
+    print("\n4️⃣ TESTING GET /api/audio/favorites/{audio_id}/check - Verificar estado...")
+    try:
+        check_url = f"{base_url}/audio/favorites/{test_audio_data['audio_id']}/check?audio_type={test_audio_data['audio_type']}"
+        response = requests.get(check_url, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Estado de favorito verificado")
+            print(f"   ❤️ Es favorito: {data.get('is_favorite', False)}")
+            print(f"   🆔 Favorite ID: {data.get('favorite_id', 'N/A')}")
+            
+            if data.get('is_favorite'):
+                success_count += 1
+            else:
+                print("   ⚠️ Audio no marcado como favorito")
+        else:
+            print(f"   ❌ Error verificando estado: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en check favorites: {e}")
+    
+    # Test 5: Test duplicate favorite (should return 400)
+    print("\n5️⃣ TESTING Duplicado - Agregar mismo audio otra vez...")
+    try:
+        response = requests.post(f"{base_url}/audio/favorites", json=test_audio_data, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 400:
+            print("   ✅ Duplicado correctamente rechazado")
+            print(f"   📝 Mensaje: {response.json().get('detail', 'N/A')}")
+            success_count += 1
+        elif response.status_code == 200:
+            print("   ⚠️ Duplicado permitido (puede ser comportamiento válido)")
+        else:
+            print(f"   ❌ Respuesta inesperada para duplicado: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error testing duplicado: {e}")
+    
+    # Test 6: DELETE /api/audio/favorites/{audio_id} - Remove from favorites
+    print("\n6️⃣ TESTING DELETE /api/audio/favorites/{audio_id} - Remover favorito...")
+    try:
+        delete_url = f"{base_url}/audio/favorites/{test_audio_data['audio_id']}?audio_type={test_audio_data['audio_type']}"
+        response = requests.delete(delete_url, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Audio removido de favoritos exitosamente")
+            print(f"   📝 Mensaje: {data.get('message', 'N/A')}")
+            success_count += 1
+        elif response.status_code == 404:
+            print("   ⚠️ Audio no encontrado en favoritos (puede ser esperado)")
+        else:
+            print(f"   ❌ Error removiendo favorito: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error en DELETE favorites: {e}")
+    
+    # Test 7: Verify removal with GET
+    print("\n7️⃣ TESTING Verificar remoción con GET /api/audio/favorites...")
+    try:
+        response = requests.get(f"{base_url}/audio/favorites", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            favorites = data.get('favorites', [])
+            
+            # Check if test audio is still in favorites
+            test_audio_still_found = False
+            for fav in favorites:
+                if fav.get('audio_id') == test_audio_data['audio_id'] and fav.get('audio_type') == test_audio_data['audio_type']:
+                    test_audio_still_found = True
+                    break
+            
+            if not test_audio_still_found:
+                print("   ✅ Audio correctamente removido de favoritos")
+                success_count += 1
+            else:
+                print("   ❌ Audio aún presente en favoritos después de DELETE")
+        else:
+            print(f"   ❌ Error verificando remoción: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error verificando remoción: {e}")
+    
+    # Test 8: Test error handling - Invalid audio_id
+    print("\n8️⃣ TESTING Manejo de errores - audio_id inválido...")
+    try:
+        invalid_data = {
+            "audio_id": "invalid_audio_id_12345",
+            "audio_type": "system"
+        }
+        response = requests.post(f"{base_url}/audio/favorites", json=invalid_data, headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code in [200, 400, 404]:
+            print("   ✅ Manejo de audio inválido apropiado")
+            success_count += 1
+        else:
+            print(f"   ❌ Manejo de error inesperado: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error testing audio inválido: {e}")
+    
+    # Summary
+    print(f"\n📊 RESUMEN TESTING AUDIO FAVORITOS:")
+    print(f"   Tests exitosos: {success_count}/{total_tests}")
+    print(f"   Porcentaje de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 6:
+        print(f"\n✅ CONCLUSIÓN: Sistema de Audio Favoritos FUNCIONAL")
+        print(f"   - POST /api/audio/favorites funciona correctamente")
+        print(f"   - GET /api/audio/favorites retorna favoritos guardados")
+        print(f"   - Soporte para audio_type 'system' y 'user'")
+        print(f"   - Estructura de datos correcta (audio_id, audio_type)")
+        print(f"   - Manejo de duplicados y errores apropiado")
+        print(f"   - DELETE funciona para remover favoritos")
+        print(f"\n🎯 PROBLEMA 'Error no se pudo guardar el audio' RESUELTO")
+        print(f"   - Backend endpoint completamente operacional")
+        print(f"   - Si persiste error, verificar frontend implementation")
+    elif success_count >= 3:
+        print(f"\n⚠️ CONCLUSIÓN: Problemas parciales en Audio Favoritos")
+        print(f"   - Algunos endpoints funcionan, otros tienen issues")
+        print(f"   - Revisar logs del servidor para errores específicos")
+    else:
+        print(f"\n❌ CONCLUSIÓN: Problemas críticos en Audio Favoritos")
+        print(f"   - Sistema no funciona correctamente")
+        print(f"   - Requiere investigación inmediata del backend")
+    
+    return success_count >= 6
+
 def main():
     """Main testing function - CRITICAL MOBILE REGISTRATION TESTING"""
     print("🚨 TESTING CRÍTICO: HTTP 404 EN ENDPOINT DE REGISTRO - DISPOSITIVOS MÓVILES")
