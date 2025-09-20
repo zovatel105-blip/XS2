@@ -319,8 +319,8 @@ const MessagesPage = () => {
     }
   };
 
-  // Emoji reactions para el selector
-  const quickEmojis = ['❤️', '😂', '👍', '😮', '😢', '🔥', '🎉', '✨'];
+  // 5 emojis sutiles para reacciones
+  const quickEmojis = ['❤️', '😊', '👍', '😮', '🤔'];
 
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-stone-50 flex">
