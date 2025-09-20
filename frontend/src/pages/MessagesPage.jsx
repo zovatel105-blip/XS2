@@ -577,31 +577,31 @@ const MessagesPage = () => {
           animate={{ x: 0, opacity: 1 }}
           className="flex-1 flex flex-col bg-stone-50/30 backdrop-blur-xl"
         >
-          {/* Header del Chat - Limpio y Esencial */}
-          <div className="bg-white/60 backdrop-blur-xl border-b border-stone-100 px-8 py-6">
+          {/* Header del Chat - Optimizado Móvil */}
+          <div className="bg-white/60 backdrop-blur-xl border-b border-stone-100 px-4 md:px-8 py-4 md:py-6">
             <div className="flex items-center justify-between max-w-2xl mx-auto">
               {isMobile && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedConversation(null)}
-                  className="mr-4 p-2 text-stone-400 hover:text-stone-600 rounded-full transition-colors"
+                  className="mr-3 md:mr-4 p-2 text-stone-400 hover:text-stone-600 rounded-full transition-colors active:bg-stone-100 touch-manipulation"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </motion.button>
               )}
               
-              <div className="flex items-center space-x-4">
-                <div className="w-11 h-11 bg-gradient-to-br from-stone-100 to-stone-200 rounded-full flex items-center justify-center">
-                  <span className="text-stone-600 font-medium text-lg">
+              <div className="flex items-center space-x-3 md:space-x-4 flex-1">
+                <div className="w-10 md:w-11 h-10 md:h-11 bg-gradient-to-br from-stone-100 to-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-stone-600 font-medium text-base md:text-lg">
                     {selectedConversation.participants[0].display_name[0].toUpperCase()}
                   </span>
                 </div>
-                <div>
-                  <h2 className="font-medium text-stone-800 text-lg tracking-wide">
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-medium text-stone-800 text-base md:text-lg tracking-wide truncate">
                     {selectedConversation.participants[0].display_name}
                   </h2>
-                  <p className="text-sm text-stone-500 font-light">
+                  <p className="text-xs md:text-sm text-stone-500 font-light">
                     presente en el momento
                   </p>
                 </div>
@@ -613,13 +613,13 @@ const MessagesPage = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setEphemeralMode(!ephemeralMode)}
                 className={cn(
-                  "p-2 rounded-full transition-all text-sm font-light",
+                  "p-2 md:p-2 rounded-full transition-all text-sm font-light touch-manipulation flex-shrink-0",
                   ephemeralMode 
                     ? "bg-amber-50 text-amber-600" 
-                    : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"
+                    : "text-stone-400 hover:text-stone-600 hover:bg-stone-50 active:bg-stone-100"
                 )}
               >
-                {ephemeralMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {ephemeralMode ? <EyeOff className="w-4 md:w-5 h-4 md:h-5" /> : <Eye className="w-4 md:w-5 h-4 md:h-5" />}
               </motion.button>
             </div>
           </div>
