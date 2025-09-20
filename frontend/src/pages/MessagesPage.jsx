@@ -152,31 +152,26 @@ const MessagesPage = () => {
             }, 1000);
           }
         } catch (error) {
-          if (error.message.includes("Chat already exists")) {
-            console.log('✅ Chat already exists, reloading conversations...');
+          if (error.message.includes("Conversation already exists") || error.message.includes("already exists")) {
+            console.log('✅ Conversation already exists, reloading conversations...');
             
             // Si ya existe el chat, recargar conversaciones y abrir
             await loadConversations();
             
-            // Buscar la conversación recién cargada
-            setTimeout(() => {
-              const newConv = conversations.find(conv => 
+            // Buscar la conversación existente
+            setTimeout(async () => {
+              await loadConversations();
+              const existingConv = conversations.find(conv => 
                 conv.participants.some(p => p.id === targetUser.id)
               );
-              if (newConv) {
-                console.log('✅ Opening existing conversation:', newConv.id);
-                setSelectedConversation(newConv);
+              if (existingConv) {
+                console.log('✅ Opening existing conversation:', existingConv.id);
+                setSelectedConversation(existingConv);
               }
             }, 1000);
             
-          } else if (error.message.includes("Chat request already pending")) {
-            toast({
-              title: "Solicitud pendiente",
-              description: "Ya tienes una solicitud pendiente con este usuario",
-              variant: "default"
-            });
           } else {
-            console.error('❌ Error enviando solicitud desde perfil:', error);
+            console.error('❌ Error enviando mensaje desde perfil:', error);
             toast({
               title: "Error",
               description: "No se pudo iniciar el chat desde el perfil",
