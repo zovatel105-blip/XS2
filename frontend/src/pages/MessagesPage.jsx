@@ -21,6 +21,8 @@ const MessagesPage = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [chatRequests, setChatRequests] = useState([]);
+  const [showRequests, setShowRequests] = useState(false);
   const { user, apiRequest } = useAuth();
   const { toast } = useToast();
   const messagesEndRef = useRef(null);
