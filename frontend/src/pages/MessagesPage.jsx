@@ -450,7 +450,7 @@ const MessagesPage = () => {
   const votaTokEmojis = ['🔥', '💯', '⚡', '🎯', '💎', '🚀', '✨', '🏆'];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex relative overflow-hidden">
+    <div className="h-screen bg-gray-50 flex relative overflow-hidden">
       {/* VotaTok Conversations Sidebar - Inspired by Profile design */}
       {showList && (
         <motion.div 
