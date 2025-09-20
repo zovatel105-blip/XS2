@@ -42,6 +42,7 @@ const MessagesPage = () => {
 
   useEffect(() => {
     loadConversations();
+    loadChatRequests();
   }, []);
 
   useEffect(() => {
