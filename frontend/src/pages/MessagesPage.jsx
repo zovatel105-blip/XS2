@@ -323,7 +323,9 @@ const MessagesPage = () => {
   const quickEmojis = ['❤️', '😊', '👍', '😮', '🤔'];
 
   return (
-    <div className="h-screen bg-gradient-to-br from-stone-50 via-stone-25 to-white flex">
+    <div className="h-screen bg-gradient-to-br from-stone-50 via-stone-25 to-white flex relative">
+      {/* Safe area bottom para móviles */}
+      <div className="fixed inset-x-0 bottom-0 h-6 bg-white/90 backdrop-blur-xl z-0 md:hidden"></div>
       {/* Lista de Conversaciones - Optimizada Móvil */}
       {showList && (
         <motion.div 
