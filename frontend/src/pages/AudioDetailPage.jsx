@@ -209,6 +209,36 @@ const AudioDetailPage = () => {
     await fetchPostsUsingAudio();
   };
 
+  const handleSaveAudio = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/audio/${audioId}/save`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Audio guardado",
+          description: "El audio se ha guardado en tu colección",
+        });
+      } else {
+        throw new Error('Error al guardar el audio');
+      }
+    } catch (error) {
+      console.error('Error saving audio:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar el audio",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleSave = async (pollId) => {
     try {
       const token = localStorage.getItem('token');
