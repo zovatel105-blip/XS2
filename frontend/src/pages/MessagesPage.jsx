@@ -47,6 +47,93 @@ const MessagesPage = () => {
     loadChatRequests();
   }, []);
 
+  // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
+  useEffect(() => {
+    const targetUsername = searchParams.get('user');
+    if (targetUsername && user) {
+      handleChatFromProfile(targetUsername);
+    }
+  }, [searchParams, user, conversations]);
+
+  const handleChatFromProfile = async (username) => {
+    try {
+      // Limpiar el parámetro de la URL
+      setSearchParams({});
+      
+      // Buscar si ya existe una conversación con este usuario
+      const existingConv = conversations.find(conv => 
+        conv.participants.some(p => p.username === username)
+      );
+
+      if (existingConv) {
+        // Si existe conversación, abrirla directamente
+        setSelectedConversation(existingConv);
+        return;
+      }
+
+      // Si no existe conversación, buscar el usuario y enviar solicitud
+      const searchResults = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
+      const targetUser = searchResults.find(u => u.username === username);
+      
+      if (targetUser) {
+        // Verificar si hay solicitud pendiente
+        try {
+          const response = await apiRequest('/api/chat-requests', {
+            method: 'POST',
+            body: {
+              receiver_id: targetUser.id,
+              message: `¡Hola! Me gustaría conectar contigo.`
+            }
+          });
+
+          if (response.success) {
+            toast({
+              title: "Solicitud enviada",
+              description: `Se ha enviado una solicitud de chat a ${targetUser.display_name}`,
+            });
+          }
+        } catch (error) {
+          if (error.message.includes("Chat already exists")) {
+            // Si ya existe el chat, recargar conversaciones
+            await loadConversations();
+            const newConv = conversations.find(conv => 
+              conv.participants.some(p => p.username === username)
+            );
+            if (newConv) {
+              setSelectedConversation(newConv);
+            }
+          } else if (error.message.includes("Chat request already pending")) {
+            toast({
+              title: "Solicitud pendiente",
+              description: "Ya tienes una solicitud pendiente con este usuario",
+              variant: "default"
+            });
+          } else {
+            console.error('Error enviando solicitud desde perfil:', error);
+            toast({
+              title: "Error",
+              description: "No se pudo iniciar el chat desde el perfil",
+              variant: "destructive"
+            });
+          }
+        }
+      } else {
+        toast({
+          title: "Usuario no encontrado",
+          description: "No se pudo encontrar el usuario especificado",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error manejando chat desde perfil:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo iniciar el chat desde el perfil",
+        variant: "destructive"
+      });
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
