@@ -362,17 +362,6 @@ const AudioDetailPage = () => {
         </div>
       </div>
 
-      {/* Modals */}
-      <CreatePollModal
-        isOpen={showCreateModal}
-        onClose={() => {
-          setShowCreateModal(false);
-          setPreSelectedAudio(null);
-        }}
-        preSelectedAudio={preSelectedAudio}
-        onCreatePoll={handleCreatePoll}
-      />
-
       {/* TikTok View */}
       {showTikTokView && (
         <div className="fixed inset-0 z-50 bg-black">
