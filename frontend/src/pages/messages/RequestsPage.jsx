@@ -7,7 +7,7 @@ import AppConfig from '../../config/config.js';
 
 const RequestsPage = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [requestCount, setRequestCount] = useState(0);
