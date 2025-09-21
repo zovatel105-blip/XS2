@@ -1333,7 +1333,9 @@ async def register(user_data: UserCreate, request: Request):
     # Create user profile
     profile = UserProfile(
         id=user.id,
-        username=user.username
+        username=user.username,
+        display_name=user_data.display_name,
+        avatar_url=user_data.avatar_url  # Incluir avatar_url en el perfil también
     )
     await db.user_profiles.insert_one(profile.dict())
     
