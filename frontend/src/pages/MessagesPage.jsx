@@ -791,7 +791,7 @@ const MessagesPage = () => {
         message: getActivityMessage(activity),
         unreadCount: activity.unread ? 1 : 0,
         time: formatTimeForInbox(activity.created_at),
-        avatar: '🔔', // Icono campana roja
+        avatar: activity.user.avatar_url || getAvatarForUser(activity.user), // Usar foto de perfil real o fallback
         userId: activity.user.id,
         activityType: activity.type,
         isSystem: false
