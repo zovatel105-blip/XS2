@@ -618,7 +618,7 @@ const MessagesPage = () => {
 
       // Intentar cargar seguidores nuevos (con fallback silencioso)
       try {
-        const followersResponse = await apiRequest('/api/user/followers/recent');
+        const followersResponse = await apiRequest('/api/users/followers/recent');
         followersCount = followersResponse?.length || 0;
       } catch (e) {
         // Silently fail and use 0
@@ -627,32 +627,37 @@ const MessagesPage = () => {
 
       // Intentar cargar actividad (con fallback silencioso)
       try {
-        const activityResponse = await apiRequest('/api/user/activity/unread');
-        activityCount = activityResponse?.unread_count || 0;
+        const activityResponse = await apiRequest('/api/users/activity/recent');
+        activityCount = activityResponse?.length || 0;
       } catch (e) {
         // Silently fail and use 0
         console.log('Activity API not available, using fallback');
       }
 
-      // Usar solicitudes de chat existentes como fallback para message requests
+      // Intentar cargar solicitudes de mensajes (con fallback silencioso)
       try {
-        messageRequestsCount = chatRequests.length || 0;
+        const requestsResponse = await apiRequest('/api/messages/requests');
+        messageRequestsCount = requestsResponse?.length || 0;
       } catch (e) {
-        messageRequestsCount = 0;
+        // Usar chat requests existentes como fallback
+        messageRequestsCount = chatRequests?.length || 0;
+        console.log('Message requests API not available, using chat requests fallback');
       }
 
+      // Actualizar estado
       setSegmentData({
         followers: { count: followersCount, loading: false },
         activity: { count: activityCount, loading: false },
         messages: { count: messageRequestsCount, loading: false }
       });
+
     } catch (error) {
-      console.log('Error loading segment data, using defaults:', error.message);
-      // Usar valores por defecto seguros
+      console.log('Error loading segment data:', error.message);
+      // Fallback usando datos existentes
       setSegmentData({
         followers: { count: 0, loading: false },
         activity: { count: 0, loading: false },
-        messages: { count: chatRequests.length || 0, loading: false }
+        messages: { count: chatRequests?.length || 0, loading: false }
       });
     }
   };
