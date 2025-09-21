@@ -603,20 +603,37 @@ const MessagesPage = () => {
     setSelectedSegment(segmentId);
   };
 
-  // Cargar datos reales del sistema
+  // Cargar datos reales del sistema con fallbacks
   const loadSegmentData = async () => {
     try {
-      // Cargar seguidores nuevos
-      const followersResponse = await apiRequest('/api/user/followers/recent');
-      const followersCount = followersResponse?.length || 0;
+      let followersCount = 0;
+      let activityCount = 0;
+      let messageRequestsCount = 0;
 
-      // Cargar actividad (likes, comentarios, etc.)
-      const activityResponse = await apiRequest('/api/user/activity/unread');
-      const activityCount = activityResponse?.unread_count || 0;
+      // Intentar cargar seguidores nuevos (con fallback silencioso)
+      try {
+        const followersResponse = await apiRequest('/api/user/followers/recent');
+        followersCount = followersResponse?.length || 0;
+      } catch (e) {
+        // Silently fail and use 0
+        console.log('Followers API not available, using fallback');
+      }
 
-      // Cargar solicitudes de mensaje
-      const messageRequestsResponse = await apiRequest('/api/messages/requests');
-      const messageRequestsCount = messageRequestsResponse?.length || 0;
+      // Intentar cargar actividad (con fallback silencioso)
+      try {
+        const activityResponse = await apiRequest('/api/user/activity/unread');
+        activityCount = activityResponse?.unread_count || 0;
+      } catch (e) {
+        // Silently fail and use 0
+        console.log('Activity API not available, using fallback');
+      }
+
+      // Usar solicitudes de chat existentes como fallback para message requests
+      try {
+        messageRequestsCount = chatRequests.length || 0;
+      } catch (e) {
+        messageRequestsCount = 0;
+      }
 
       setSegmentData({
         followers: { count: followersCount, loading: false },
@@ -624,12 +641,12 @@ const MessagesPage = () => {
         messages: { count: messageRequestsCount, loading: false }
       });
     } catch (error) {
-      console.error('Error loading segment data:', error);
-      // Usar valores por defecto en caso de error
+      console.log('Error loading segment data, using defaults:', error.message);
+      // Usar valores por defecto seguros
       setSegmentData({
         followers: { count: 0, loading: false },
         activity: { count: 0, loading: false },
-        messages: { count: 0, loading: false }
+        messages: { count: chatRequests.length || 0, loading: false }
       });
     }
   };
