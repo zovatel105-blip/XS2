@@ -925,6 +925,20 @@ const MessagesPage = () => {
       }]
     };
     
+    // Estado por defecto para conversaciones (cuando selectedSegment es null)
+    if (segment === null) {
+      return [{
+        id: 'empty-conversations', 
+        type: 'system',
+        title: '💬 El Susurro Inteligente',
+        message: 'Tus conversaciones aparecerán aquí. Busca usuarios para iniciar nuevos chats',
+        unreadCount: 0,
+        time: '',
+        avatar: '🗨️',
+        isSystem: true
+      }];
+    }
+    
     return emptyStates[segment] || [{
       id: 'empty-default',
       type: 'system', 
