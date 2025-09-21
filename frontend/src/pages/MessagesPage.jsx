@@ -175,6 +175,13 @@ const MessagesPage = () => {
     }
   }, [conversations, chatRequests, user]);
 
+  // Recargar notificaciones cuando cambie el segmento seleccionado  
+  useEffect(() => {
+    if (user && selectedSegment) {
+      loadRealNotifications();
+    }
+  }, [selectedSegment, user]);
+
   // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
   useEffect(() => {
     const targetParam = searchParams.get('user');
