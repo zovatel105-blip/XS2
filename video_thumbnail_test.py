@@ -611,7 +611,7 @@ def test_thumbnail_url_accessibility(base_url):
         
         try:
             # Test with full external URL
-            external_base = base_url.replace('/api', '').replace('http://localhost:8001', 'https://message-nexus-6.preview.emergentagent.com')
+            external_base = base_url.replace('/api', '').replace('http://localhost:8001', 'https://seguir-chat.preview.emergentagent.com')
             full_external_url = f"{external_base}{thumbnail_url}"
             
             print(f"Testing external URL: {full_external_url}")
