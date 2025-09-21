@@ -19,7 +19,7 @@ def get_backend_url():
                     return f"{url}/api"
     except:
         pass
-    return "https://seguir-chat.preview.emergentagent.com/api"
+    return "https://whisper-inbox.preview.emergentagent.com/api"
 
 def get_mobile_headers():
     """Headers que simula un dispositivo móvil real"""
@@ -30,8 +30,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://seguir-chat.preview.emergentagent.com',
-        'Referer': 'https://seguir-chat.preview.emergentagent.com/',
+        'Origin': 'https://whisper-inbox.preview.emergentagent.com',
+        'Referer': 'https://whisper-inbox.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
@@ -133,7 +133,7 @@ def test_registration_comprehensive():
             'User-Agent': 'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
-            'Origin': 'https://seguir-chat.preview.emergentagent.com'
+            'Origin': 'https://whisper-inbox.preview.emergentagent.com'
         }
         response = requests.post(f"{base_url}/auth/register", 
                                json=android_data, headers=android_headers, timeout=10)
@@ -155,7 +155,7 @@ def test_registration_comprehensive():
     print("\n5️⃣ VERIFICANDO CORS PREFLIGHT...")
     try:
         cors_headers = {
-            'Origin': 'https://seguir-chat.preview.emergentagent.com',
+            'Origin': 'https://whisper-inbox.preview.emergentagent.com',
             'Access-Control-Request-Method': 'POST',
             'Access-Control-Request-Headers': 'Content-Type'
         }
@@ -177,7 +177,7 @@ def test_registration_comprehensive():
     print("\n6️⃣ PROBANDO DIFERENTES VARIACIONES DE URL...")
     test_urls = [
         f"{base_url}/auth/register",
-        f"https://seguir-chat.preview.emergentagent.com/api/auth/register",
+        f"https://whisper-inbox.preview.emergentagent.com/api/auth/register",
         f"http://localhost:8001/api/auth/register"
     ]
     
@@ -219,8 +219,8 @@ def test_registration_comprehensive():
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'es-ES,es;q=0.9',
             'Content-Type': 'application/json',
-            'Origin': 'https://seguir-chat.preview.emergentagent.com',
-            'Referer': 'https://seguir-chat.preview.emergentagent.com/auth',
+            'Origin': 'https://whisper-inbox.preview.emergentagent.com',
+            'Referer': 'https://whisper-inbox.preview.emergentagent.com/auth',
             'X-Requested-With': 'XMLHttpRequest'
         }
         
