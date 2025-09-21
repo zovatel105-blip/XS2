@@ -566,34 +566,11 @@ const MessagesPage = () => {
 
   // Control segmentado - sin selección inicial
   const [selectedSegment, setSelectedSegment] = useState(null);
-
-  // Definición de segmentos según especificaciones
-  const segments = [
-    {
-      id: 'followers',
-      icon: 'Users',
-      iconBg: '#4ECDC4', // Teal
-      title: 'New followers',
-      message: 'anayat started following you.',
-      badge: 99
-    },
-    {
-      id: 'activity', 
-      icon: 'Bell',
-      iconBg: '#FF4B8D', // Rosa TikTok
-      title: 'Activity',
-      message: 'commented: 🤪...',
-      badge: 99
-    },
-    {
-      id: 'messages',
-      icon: 'MessageCircle',
-      iconBg: '#4A4A4A', // Gris oscuro
-      title: 'Message requests', 
-      message: 'You have 180 requests',
-      badge: 99
-    }
-  ];
+  const [segmentData, setSegmentData] = useState({
+    followers: { count: 0, loading: true },
+    activity: { count: 0, loading: true },
+    messages: { count: 0, loading: true }
+  });
 
   // Datos mock multilingües según especificaciones
   const mockNotifications = [
