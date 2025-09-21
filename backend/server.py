@@ -2983,27 +2983,22 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         seven_days_ago = datetime.utcnow() - timedelta(days=7)
         activities = []
         
-        # Get recent likes on user's polls
+        # Get user's polls first
+        user_polls = await db.polls.find({
+            "author_id": current_user.id
+        }).to_list(1000)
+        
+        user_poll_ids = [poll["id"] for poll in user_polls]
+        print(f"DEBUG Activity: User has {len(user_poll_ids)} polls")
+        
+        # Get recent likes on user's polls using poll_id
         likes = await db.poll_likes.find({
-            "poll.author_id": current_user.id,
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},  # Exclude self-likes
             "created_at": {"$gte": seven_days_ago}
         }).sort("created_at", -1).limit(20).to_list(20)
         
-        print(f"DEBUG Activity: Looking for likes with poll.author_id={current_user.id}")
-        print(f"DEBUG Activity: Found {len(likes)} likes")
-        
-        # También intentar buscar por author_id directamente
-        likes_alt = await db.poll_likes.find({
-            "author_id": current_user.id,
-            "created_at": {"$gte": seven_days_ago}
-        }).sort("created_at", -1).limit(20).to_list(20)
-        
-        print(f"DEBUG Activity: Alternative search found {len(likes_alt)} likes")
-        
-        # Ver una muestra de la estructura
-        sample_like = await db.poll_likes.find_one({})
-        if sample_like:
-            print(f"DEBUG Activity: Sample like structure: {list(sample_like.keys())}")
+        print(f"DEBUG Activity: Found {len(likes)} likes on user's polls")
         
         for like in likes:
             user = await db.users.find_one({"id": like["user_id"]})
