@@ -193,6 +193,26 @@ const MessagesPage = () => {
     }
   }, [selectedSegment, user]);
 
+  // Polling automático para actualizar datos de segmentos cada 30 segundos
+  useEffect(() => {
+    if (!user) return;
+
+    // Cargar datos inicialmente
+    loadNotifications();
+    loadSegmentData();
+
+    // Configurar polling cada 30 segundos
+    const interval = setInterval(() => {
+      // Solo actualizar si no estamos en una conversación individual
+      if (!selectedConversation) {
+        loadNotifications();
+        loadSegmentData();
+      }
+    }, 30000); // 30 segundos
+
+    return () => clearInterval(interval);
+  }, [user, selectedSegment, selectedConversation]);
+
   // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
   useEffect(() => {
     const targetParam = searchParams.get('user');
