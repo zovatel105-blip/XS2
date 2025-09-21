@@ -1119,7 +1119,7 @@ Layout "off" - Carrusel Horizontal:
 
 ## test_plan:
   current_focus:
-    - "VoteChat messaging system comprehensive testing - COMPLETED"
+    - "Chat Navigation Bug Fix - Dynamic showInbox/showChat based on selectedConversation - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
