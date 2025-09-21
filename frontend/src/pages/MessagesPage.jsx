@@ -213,6 +213,35 @@ const MessagesPage = () => {
     return () => clearInterval(interval);
   }, [user]); // Removido selectedSegment y selectedConversation de dependencies
 
+  // Actualizar cuando la ventana regrese al foco (usuario vuelve a la app)
+  useEffect(() => {
+    if (!user) return;
+
+    const handleFocus = () => {
+      // Actualizar datos cuando el usuario regrese a la aplicación
+      if (!selectedConversation) {
+        loadNotifications();
+        loadSegmentData();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      // Actualizar cuando la pestaña se vuelva visible
+      if (!document.hidden && !selectedConversation) {
+        loadNotifications();
+        loadSegmentData();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user]);
+
   // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
   useEffect(() => {
     const targetParam = searchParams.get('user');
