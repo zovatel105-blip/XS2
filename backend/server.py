@@ -2940,6 +2940,156 @@ async def cancel_chat_request(
         "message": "Chat request cancelled"
     }
 
+# =============  FOLLOWERS, ACTIVITY & MESSAGE REQUESTS ENDPOINTS =============
+
+@api_router.get("/users/followers/recent")
+async def get_recent_followers(current_user: UserResponse = Depends(get_current_user)):
+    """Get recent followers (last 7 days)"""
+    try:
+        # Calculate 7 days ago
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        
+        # Find recent follows where current user is the followed user
+        recent_follows = await db.follows.find({
+            "followed_id": current_user.id,
+            "created_at": {"$gte": seven_days_ago}
+        }).sort("created_at", -1).limit(50).to_list(50)
+        
+        # Get follower details
+        followers = []
+        for follow in recent_follows:
+            follower = await db.users.find_one({"id": follow["follower_id"]})
+            if follower:
+                followers.append({
+                    "id": follower["id"],
+                    "username": follower["username"],
+                    "display_name": follower.get("display_name", follower["username"]),
+                    "avatar": follower.get("avatar"),
+                    "followed_at": follow["created_at"],
+                    "is_verified": follower.get("is_verified", False)
+                })
+        
+        return followers
+        
+    except Exception as e:
+        # Return empty list if no follows collection or error
+        return []
+
+@api_router.get("/users/activity/recent")
+async def get_recent_activity(current_user: UserResponse = Depends(get_current_user)):
+    """Get recent activity (likes, comments, mentions on user's content)"""
+    try:
+        # Get recent activity from last 7 days
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        activities = []
+        
+        # Get recent likes on user's polls
+        likes = await db.poll_likes.find({
+            "poll.author_id": current_user.id,
+            "created_at": {"$gte": seven_days_ago}
+        }).sort("created_at", -1).limit(20).to_list(20)
+        
+        for like in likes:
+            user = await db.users.find_one({"id": like["user_id"]})
+            poll = await db.polls.find_one({"id": like["poll_id"]})
+            if user and poll:
+                activities.append({
+                    "id": f"like-{like['id']}",
+                    "type": "like",
+                    "user": {
+                        "id": user["id"],
+                        "username": user["username"],
+                        "display_name": user.get("display_name", user["username"])
+                    },
+                    "content_type": "poll",
+                    "content_preview": poll.get("question", "")[:50],
+                    "created_at": like["created_at"],
+                    "unread": True
+                })
+        
+        # Get recent comments on user's polls
+        comments = await db.comments.find({
+            "$and": [
+                {"poll_author_id": current_user.id},
+                {"author_id": {"$ne": current_user.id}},  # Exclude self-comments
+                {"created_at": {"$gte": seven_days_ago}}
+            ]
+        }).sort("created_at", -1).limit(20).to_list(20)
+        
+        for comment in comments:
+            user = await db.users.find_one({"id": comment["author_id"]})
+            if user:
+                activities.append({
+                    "id": f"comment-{comment['id']}",
+                    "type": "comment",
+                    "user": {
+                        "id": user["id"],
+                        "username": user["username"],
+                        "display_name": user.get("display_name", user["username"])
+                    },
+                    "content_type": "poll",
+                    "comment_preview": comment.get("content", "")[:100],
+                    "created_at": comment["created_at"],
+                    "unread": True
+                })
+        
+        # Sort all activities by date
+        activities.sort(key=lambda x: x["created_at"], reverse=True)
+        
+        return activities[:30]  # Return max 30 activities
+        
+    except Exception as e:
+        # Return empty list if error
+        return []
+
+@api_router.get("/messages/requests")
+async def get_message_requests(current_user: UserResponse = Depends(get_current_user)):
+    """Get pending message requests from non-followed users"""
+    try:
+        # Get pending chat requests (these are message requests from non-followed users)
+        requests = await db.chat_requests.find({
+            "receiver_id": current_user.id,
+            "status": "pending"
+        }).sort("created_at", -1).limit(50).to_list(50)
+        
+        result = []
+        for req in requests:
+            sender = await db.users.find_one({"id": req["sender_id"]})
+            if sender:
+                # Check if users follow each other (to determine if it's a "request" vs normal message)
+                follows_them = await db.follows.find_one({
+                    "follower_id": current_user.id,
+                    "followed_id": sender["id"]
+                })
+                
+                they_follow_user = await db.follows.find_one({
+                    "follower_id": sender["id"],
+                    "followed_id": current_user.id
+                })
+                
+                # If neither follows the other, it's a message request
+                if not follows_them and not they_follow_user:
+                    result.append({
+                        "id": req["id"],
+                        "sender": {
+                            "id": sender["id"],
+                            "username": sender["username"],
+                            "display_name": sender.get("display_name", sender["username"]),
+                            "avatar": sender.get("avatar"),
+                            "is_verified": sender.get("is_verified", False)
+                        },
+                        "message": req.get("message", ""),
+                        "preview": req.get("message", "")[:100] if req.get("message") else "Solicitud de mensaje",
+                        "created_at": req["created_at"],
+                        "unread": True
+                    })
+        
+        return result
+        
+    except Exception as e:
+        # Return empty list if error
+        return []
+
 # =============  COMMENT ENDPOINTS =============
 
 @api_router.post("/polls/{poll_id}/comments", response_model=CommentResponse)
