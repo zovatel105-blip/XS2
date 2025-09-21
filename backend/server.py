@@ -3042,7 +3042,8 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
                     "user": {
                         "id": user["id"],
                         "username": user["username"],
-                        "display_name": user.get("display_name", user["username"])
+                        "display_name": user.get("display_name", user["username"]),
+                        "avatar_url": user.get("avatar_url")  # Incluir avatar_url
                     },
                     "content_type": "poll",
                     "comment_preview": comment.get("content", "")[:100],
