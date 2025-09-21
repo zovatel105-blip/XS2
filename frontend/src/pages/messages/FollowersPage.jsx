@@ -7,7 +7,7 @@ import AppConfig from '../../config/config.js';
 
 const FollowersPage = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [followers, setFollowers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [followerCount, setFollowerCount] = useState(0);
