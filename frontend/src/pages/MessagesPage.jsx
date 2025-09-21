@@ -445,6 +445,44 @@ const MessagesPage = () => {
     setSearchResults([]);
   };
 
+  // Long press handlers for reactions
+  const startLongPress = (messageId) => {
+    longPressTimer.current = setTimeout(() => {
+      handleLongPress(messageId);
+    }, 500);
+  };
+
+  const endLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+  };
+
+  const handleLongPress = (messageId) => {
+    setReactionTarget(messageId);
+    setShowEmojiPicker(true);
+  };
+
+  const addReaction = async (messageId, emoji) => {
+    try {
+      await apiRequest(`/api/messages/${messageId}/reaction`, {
+        method: 'POST',
+        body: { emoji }
+      });
+      setShowEmojiPicker(false);
+      setReactionTarget(null);
+      if (selectedConversation && selectedConversation.id) {
+        loadMessages(selectedConversation.id);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo agregar la reacción",
+        variant: "destructive"
+      });
+    }
+  };
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || sendingMessage) return;
