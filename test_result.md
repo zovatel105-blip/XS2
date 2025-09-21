@@ -980,7 +980,7 @@ Layout "off" - Carrusel Horizontal:
 - **Add Functionality**: `handleAddSlot()` con validación y feedback
 - **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
-## user_problem_statement: "Debug and fix the 500 Internal Server Error occurring on the backend endpoint /api/users/{user_id}/saved-polls which prevents saved posts from appearing in the user's profile."
+## user_problem_statement: "Probar que el error de inicialización 'Cannot access 'selectedSegment' before initialization' ha sido resuelto en MessagesPage"
 
 ## backend:
   - task: "Demo login functionality for El Susurro Inteligente access"
