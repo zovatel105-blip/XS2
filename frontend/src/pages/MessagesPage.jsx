@@ -1232,11 +1232,12 @@ const MessagesPage = () => {
                     } else if (notification.type === 'new_follower') {
                       // Navegar al perfil del nuevo seguidor
                       console.log('Navigating to follower profile:', notification.userId);
-                      // TODO: Implementar navegación al perfil
+                      window.location.href = `/profile/${notification.userId}`;
                     } else if (notification.type === 'activity_notification') {
-                      // Navegar al contenido que recibió la actividad
-                      console.log('Navigating to activity content:', notification);
-                      // TODO: Implementar navegación al contenido específico
+                      // Para notificaciones de actividad, mostrar información relevante
+                      console.log('Activity notification clicked:', notification);
+                      // Por ahora mostrar un mensaje informativo
+                      alert(`Actividad: ${notification.title}\n${notification.message}`);
                     }
                     // Si no es ningún tipo conocido, no hacer nada
                   }}
