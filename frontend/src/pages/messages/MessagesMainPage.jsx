@@ -337,8 +337,8 @@ const MessagesMainPage = () => {
       ) : (
         /* Chat View */
         <div className="flex flex-col h-full bg-white">
-          {/* Chat Header */}
-          <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
+          {/* Chat Header con diseño centrado estilo Instagram */}
+          <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-6">
             <div className="flex items-center">
               <button
                 onClick={handleCloseChat}
@@ -346,15 +346,49 @@ const MessagesMainPage = () => {
               >
                 <ArrowLeft className="h-5 w-5 text-gray-600" />
               </button>
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                  <span className="text-sm font-semibold">
-                    {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
-                  </span>
+              
+              {/* Información centrada del usuario */}
+              <div className="flex-1 flex flex-col items-center">
+                {/* Avatar grande */}
+                <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-3 shadow-lg relative overflow-hidden">
+                  {selectedConversation?.participants?.[0]?.avatar_url ? (
+                    <>
+                      <img 
+                        src={selectedConversation.participants[0].avatar_url} 
+                        alt="Avatar" 
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                        }}
+                      />
+                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-2xl font-bold text-gray-600" style={{ display: 'none' }}>
+                        {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-semibold text-gray-600">
+                      {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
+                    </span>
+                  )}
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">
+                
+                {/* Nombre de usuario prominente */}
+                <h2 className="text-xl font-bold text-gray-900 mb-1">
                   {selectedConversation?.participants?.[0]?.display_name || 'Usuario'}
                 </h2>
+                
+                {/* Username más pequeño */}
+                <p className="text-sm text-gray-500 mb-2">
+                  @{selectedConversation?.participants?.[0]?.username || 'usuario'}
+                </p>
+                
+                {/* Estado o información adicional */}
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <span>Activo</span>
+                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                  <span>En línea</span>
+                </div>
               </div>
             </div>
           </div>
