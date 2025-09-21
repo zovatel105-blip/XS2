@@ -13,8 +13,8 @@ from datetime import datetime, timedelta
 
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
-    # Use external URL as configured in frontend/.env
-    return "https://seguir-chat.preview.emergentagent.com/api"
+    # Use localhost URL as configured in frontend/.env for testing
+    return "http://localhost:8001/api"
 
 def get_mobile_headers():
     """Get headers that simulate mobile device requests"""
