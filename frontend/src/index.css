@@ -67,6 +67,42 @@ code {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Optimizaciones móviles para TikTok Inbox */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Mejor rendimiento en scroll móvil */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Optimización táctil */
+.touch-optimized {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevenir zoom accidental en inputs en iOS */
+input[type="text"], input[type="search"] {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  /* Mejorar legibilidad en móvil */
+  .mobile-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* Espaciado optimizado para dedos */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Eliminate all white outlines and rings on all elements */
 *:focus,
 *:active,
