@@ -182,14 +182,14 @@ const MessagesPage = () => {
   // Cargar notificaciones cuando las conversaciones cambien
   useEffect(() => {
     if (user) {
-      loadRealNotifications();
+      loadNotifications();
     }
   }, [conversations, chatRequests, user]);
 
   // Recargar notificaciones cuando cambie el segmento seleccionado  
   useEffect(() => {
     if (user && selectedSegment) {
-      loadRealNotifications();
+      loadNotifications();
     }
   }, [selectedSegment, user]);
 
@@ -605,7 +605,7 @@ const MessagesPage = () => {
     setSelectedSegment(segmentId);
     // Recargar notificaciones específicas para el segmento seleccionado
     if (user) {
-      loadRealNotifications();
+      loadNotifications();
     }
   };
 
