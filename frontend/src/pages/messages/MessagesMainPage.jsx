@@ -347,10 +347,27 @@ const MessagesMainPage = () => {
                 <ArrowLeft className="h-5 w-5 text-gray-600" />
               </button>
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                  <span className="text-sm font-semibold">
-                    {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
-                  </span>
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 relative overflow-hidden">
+                  {selectedConversation?.participants?.[0]?.avatar_url ? (
+                    <>
+                      <img 
+                        src={selectedConversation.participants[0].avatar_url} 
+                        alt="Avatar" 
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                        }}
+                      />
+                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-sm font-semibold text-gray-600" style={{ display: 'none' }}>
+                        {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-sm font-semibold text-gray-600">
+                      {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-lg font-semibold text-gray-900">
                   {selectedConversation?.participants?.[0]?.display_name || 'Usuario'}
