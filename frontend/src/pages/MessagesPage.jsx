@@ -882,9 +882,9 @@ const MessagesPage = () => {
     const user = activity.user?.display_name || activity.user?.username || 'Usuario';
     switch (activity.type) {
       case 'like':
-        return `${user} le dio me gusta a tu publicación`;
+        return `${user} le dio me gusta a tu ${activity.content_type || 'publicación'}`;
       case 'comment':
-        return `${user} comentó tu publicación`;
+        return `${user} comentó tu ${activity.content_type || 'publicación'}`;
       case 'mention':
         return `${user} te mencionó`;
       case 'follow':
@@ -899,15 +899,15 @@ const MessagesPage = () => {
   const getActivityMessage = (activity) => {
     switch (activity.type) {
       case 'like':
-        return `❤️ Le encanta tu ${activity.content_type || 'publicación'}`;
+        return `❤️ Le encanta tu ${activity.content_type || 'contenido'}${activity.content_preview ? ': "' + activity.content_preview + '"' : ''}`;
       case 'comment':
         return `💬 "${activity.comment_preview || 'Nuevo comentario'}"`;
       case 'mention':
-        return `📢 Te mencionó en ${activity.context || 'una publicación'}`;
+        return `📢 Te mencionó en ${activity.content_type || 'una publicación'}`;
       case 'follow':
         return `👥 Ahora es tu seguidor`;
       case 'vote':
-        return `🗳️ Votó: "${activity.vote_option || 'tu opción'}"`;
+        return `🗳️ Votó en tu encuesta${activity.content_preview ? ': "' + activity.content_preview + '"' : ''}`;
       default:
         return activity.message || 'Nueva interacción';
     }
