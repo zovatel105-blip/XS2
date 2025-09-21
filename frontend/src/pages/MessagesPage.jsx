@@ -666,8 +666,21 @@ const MessagesPage = () => {
     return icons[iconName] || (() => <span>📱</span>);
   };
 
+  // Debug logging
+  console.log('🔥 MESSAGES PAGE DEBUG:', {
+    showInbox,
+    showChat,
+    selectedConversation: selectedConversation?.id,
+    mockNotifications: mockNotifications.length
+  });
+
   return (
     <div className="h-screen bg-white flex flex-col relative overflow-hidden font-inter">
+      {/* DEBUG MESSAGE */}
+      <div style={{position: 'absolute', top: 0, right: 0, background: 'red', color: 'white', padding: '4px', zIndex: 9999, fontSize: '10px'}}>
+        TikTok: {showInbox ? 'ON' : 'OFF'}
+      </div>
+      
       {/* TikTok Inbox Interface */}
       {showInbox && (
         <motion.div 
