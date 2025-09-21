@@ -879,59 +879,124 @@ const MessagesPage = () => {
             </div>
           </div>
 
-          {/* LISTA DE MENSAJES */}
+          {/* LISTA DE MENSAJES - DATOS REALES */}
           <div className="flex-1 overflow-y-auto">
-            {mockNotifications.map((notification, index) => (
-              <motion.button
-                key={notification.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                onClick={() => {
-                  setSelectedConversation({
-                    id: notification.id,
-                    participants: [{
-                      id: notification.id,
-                      username: notification.title.replace(/[^\w]/g, '').toLowerCase(),
-                      display_name: notification.title
-                    }]
-                  });
-                }}
-                className="w-full flex items-center px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
-              >
-                {/* Avatar (izquierda) */}
-                <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-xl bg-gray-100 flex-shrink-0">
-                  {notification.avatar}
+            {loadingNotifications ? (
+              // Loading state optimizado para móvil
+              <div className="flex items-center justify-center py-20">
+                <div className="flex flex-col items-center space-y-4">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-8 h-8 border-2 border-purple-300 border-t-purple-600 rounded-full"
+                  />
+                  <span className="text-sm text-gray-500">Cargando mensajes...</span>
                 </div>
-                
-                {/* Contenido (centro - flex-1) */}
-                <div className="flex-1 min-w-0 text-left">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-base font-semibold text-black truncate">
-                      {notification.title}
-                    </span>
-                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                      {notification.time}
-                    </span>
+              </div>
+            ) : realNotifications.length === 0 ? (
+              // Empty state
+              <div className="flex items-center justify-center py-20 px-6">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    💬
                   </div>
-                  <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
-                    {notification.message}
-                  </p>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-gray-900">No hay mensajes</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Cuando tengas conversaciones o solicitudes, aparecerán aquí
+                    </p>
+                  </div>
                 </div>
-                
-                {/* Badge (derecha) */}
-                {notification.unreadCount > 0 && (
-                  <div 
-                    className="min-w-[28px] h-7 rounded-full flex items-center justify-center ml-3 flex-shrink-0"
-                    style={{ backgroundColor: '#FF4B8D' }}
-                  >
-                    <span className="text-xs text-white font-medium px-2">
-                      {notification.unreadCount > 99 ? '99+' : notification.unreadCount}
-                    </span>
+              </div>
+            ) : (
+              // Lista de notificaciones reales
+              realNotifications.map((notification, index) => (
+                <motion.button
+                  key={notification.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  onClick={() => {
+                    if (notification.isSystem) return;
+                    
+                    if (notification.type === 'chat_request') {
+                      // Manejar solicitud de chat
+                      setSelectedConversation({
+                        id: `request-${notification.requestId}`,
+                        participants: [{
+                          id: notification.userId,
+                          username: notification.title.replace(/[^\w]/g, '').toLowerCase(),
+                          display_name: notification.title.replace(/[^\w\s]/g, '').trim()
+                        }],
+                        isRequest: true,
+                        requestId: notification.requestId
+                      });
+                    } else {
+                      // Conversación normal
+                      setSelectedConversation({
+                        id: notification.id,
+                        participants: [{
+                          id: notification.userId,
+                          username: notification.title.replace(/[^\w]/g, '').toLowerCase(),
+                          display_name: notification.title.replace(/[^\w\s]/g, '').trim()
+                        }]
+                      });
+                    }
+                  }}
+                  className={`w-full flex items-center px-4 py-4 border-b border-gray-100 transition-colors min-h-[72px] ${
+                    notification.isSystem 
+                      ? 'cursor-default' 
+                      : 'hover:bg-gray-50 active:bg-gray-100'
+                  }`}
+                  style={{ touchAction: 'manipulation' }}
+                  disabled={notification.isSystem}
+                >
+                  {/* Avatar (izquierda) - tamaño optimizado móvil */}
+                  <div className={`w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 ${
+                    notification.type === 'chat_request' 
+                      ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold' 
+                      : notification.isSystem 
+                        ? 'bg-blue-100' 
+                        : 'bg-gray-100'
+                  }`}>
+                    {notification.avatar}
                   </div>
-                )}
-              </motion.button>
-            ))}
+                  
+                  {/* Contenido (centro - flex-1) */}
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`text-base font-semibold truncate ${
+                        notification.type === 'chat_request' 
+                          ? 'text-purple-700' 
+                          : notification.isSystem 
+                            ? 'text-blue-700' 
+                            : 'text-black'
+                      }`}>
+                        {notification.title}
+                      </span>
+                      <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                        {notification.time}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
+                      {notification.message}
+                    </p>
+                  </div>
+                  
+                  {/* Badge (derecha) - solo para mensajes no leídos */}
+                  {notification.unreadCount > 0 && (
+                    <div 
+                      className="min-w-[24px] h-6 rounded-full flex items-center justify-center ml-3 flex-shrink-0"
+                      style={{ backgroundColor: '#FF4B8D' }}
+                    >
+                      <span className="text-xs text-white font-medium px-2">
+                        {notification.unreadCount > 99 ? '99+' : notification.unreadCount}
+                      </span>
+                    </div>
+                  )}
+                </motion.button>
+              ))
+            )}
           </div>
 
           {/* Bottom padding para mobile */}
