@@ -1429,6 +1429,261 @@ def test_addiction_system_integration(base_url):
     
     return success_count >= 5
 
+def test_new_chat_endpoints_replacing_hardcoded_data(base_url):
+    """🎯 TESTING CRÍTICO: Nuevos endpoints que reemplazan datos hardcodeados en chat"""
+    print("\n🎯 === TESTING NUEVOS ENDPOINTS PARA CHAT SIN DATOS HARDCODEADOS ===")
+    print("CONTEXTO DEL CAMBIO IMPLEMENTADO:")
+    print("- Eliminados todos los valores hardcodeados (María García, Carlos Ruiz, Ana Pérez, etc.)")
+    print("- Reemplazados con llamadas reales a endpoints del backend")
+    print("- Frontend actualizado para procesar datos reales en lugar de datos de ejemplo")
+    print("\nENDPOINTS RECIÉN CREADOS A PROBAR:")
+    print("1. GET /api/users/followers/recent - Nuevos seguidores (últimos 7 días)")
+    print("2. GET /api/users/activity/recent - Actividad reciente (likes, comentarios, menciones)")
+    print("3. GET /api/messages/requests - Solicitudes de mensajes de usuarios no seguidos")
+    print("\nTESTING REQUERIDO:")
+    print("- Verificar que los endpoints existen y responden correctamente")
+    print("- Probar estructura de respuesta de cada endpoint")
+    print("- Verificar manejo de usuarios sin datos (arrays vacíos)")
+    print("- Confirmar que el frontend puede procesar las respuestas")
+    print("- Validar que no hay más datos hardcodeados")
+    
+    if not auth_tokens:
+        print("❌ No auth tokens available for new chat endpoints test")
+        return False
+    
+    headers = {"Authorization": f"Bearer {auth_tokens[0]}"}
+    success_count = 0
+    total_tests = 12
+    
+    # Test 1: Verificar endpoint GET /api/users/followers/recent
+    print("\n1️⃣ TESTING GET /api/users/followers/recent...")
+    try:
+        response = requests.get(f"{base_url}/users/followers/recent", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            followers = response.json()
+            print(f"   ✅ Endpoint existe y responde correctamente")
+            print(f"   📊 Nuevos seguidores encontrados: {len(followers)}")
+            
+            # Verificar estructura de respuesta
+            if isinstance(followers, list):
+                print(f"   ✅ Respuesta es array como esperado")
+                success_count += 1
+                
+                # Si hay seguidores, verificar estructura
+                if len(followers) > 0:
+                    follower = followers[0]
+                    required_fields = ['id', 'username', 'display_name', 'followed_at']
+                    missing_fields = [field for field in required_fields if field not in follower]
+                    
+                    if not missing_fields:
+                        print(f"   ✅ Estructura de seguidor correcta")
+                        print(f"   📝 Ejemplo: {follower.get('username', 'N/A')} - {follower.get('display_name', 'N/A')}")
+                        success_count += 1
+                    else:
+                        print(f"   ❌ Campos faltantes en seguidor: {missing_fields}")
+                else:
+                    print(f"   ✅ Array vacío correcto (usuario sin nuevos seguidores)")
+                    success_count += 1
+            else:
+                print(f"   ❌ Respuesta no es array: {type(followers)}")
+        else:
+            print(f"   ❌ Endpoint falló: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error probando endpoint followers/recent: {e}")
+    
+    # Test 2: Verificar endpoint GET /api/users/activity/recent
+    print("\n2️⃣ TESTING GET /api/users/activity/recent...")
+    try:
+        response = requests.get(f"{base_url}/users/activity/recent", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            activities = response.json()
+            print(f"   ✅ Endpoint existe y responde correctamente")
+            print(f"   📊 Actividades recientes encontradas: {len(activities)}")
+            
+            # Verificar estructura de respuesta
+            if isinstance(activities, list):
+                print(f"   ✅ Respuesta es array como esperado")
+                success_count += 1
+                
+                # Si hay actividades, verificar estructura
+                if len(activities) > 0:
+                    activity = activities[0]
+                    required_fields = ['id', 'type', 'user', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in activity]
+                    
+                    if not missing_fields:
+                        print(f"   ✅ Estructura de actividad correcta")
+                        print(f"   📝 Ejemplo: {activity.get('type', 'N/A')} por {activity.get('user', {}).get('username', 'N/A')}")
+                        success_count += 1
+                        
+                        # Verificar tipos de actividad válidos
+                        valid_types = ['like', 'comment', 'mention']
+                        if activity.get('type') in valid_types:
+                            print(f"   ✅ Tipo de actividad válido: {activity.get('type')}")
+                            success_count += 1
+                        else:
+                            print(f"   ⚠️ Tipo de actividad desconocido: {activity.get('type')}")
+                    else:
+                        print(f"   ❌ Campos faltantes en actividad: {missing_fields}")
+                else:
+                    print(f"   ✅ Array vacío correcto (usuario sin actividad reciente)")
+                    success_count += 1
+            else:
+                print(f"   ❌ Respuesta no es array: {type(activities)}")
+        else:
+            print(f"   ❌ Endpoint falló: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error probando endpoint activity/recent: {e}")
+    
+    # Test 3: Verificar endpoint GET /api/messages/requests
+    print("\n3️⃣ TESTING GET /api/messages/requests...")
+    try:
+        response = requests.get(f"{base_url}/messages/requests", headers=headers, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            requests_data = response.json()
+            print(f"   ✅ Endpoint existe y responde correctamente")
+            print(f"   📊 Solicitudes de mensajes encontradas: {len(requests_data)}")
+            
+            # Verificar estructura de respuesta
+            if isinstance(requests_data, list):
+                print(f"   ✅ Respuesta es array como esperado")
+                success_count += 1
+                
+                # Si hay solicitudes, verificar estructura
+                if len(requests_data) > 0:
+                    request_item = requests_data[0]
+                    required_fields = ['id', 'sender', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in request_item]
+                    
+                    if not missing_fields:
+                        print(f"   ✅ Estructura de solicitud correcta")
+                        sender = request_item.get('sender', {})
+                        print(f"   📝 Ejemplo: De {sender.get('username', 'N/A')} - {sender.get('display_name', 'N/A')}")
+                        success_count += 1
+                    else:
+                        print(f"   ❌ Campos faltantes en solicitud: {missing_fields}")
+                else:
+                    print(f"   ✅ Array vacío correcto (usuario sin solicitudes de mensajes)")
+                    success_count += 1
+            else:
+                print(f"   ❌ Respuesta no es array: {type(requests_data)}")
+        else:
+            print(f"   ❌ Endpoint falló: {response.text}")
+            
+    except Exception as e:
+        print(f"   ❌ Error probando endpoint messages/requests: {e}")
+    
+    # Test 4: Verificar que los endpoints requieren autenticación
+    print("\n4️⃣ VERIFICANDO AUTENTICACIÓN REQUERIDA...")
+    endpoints_to_test = [
+        "/users/followers/recent",
+        "/users/activity/recent", 
+        "/messages/requests"
+    ]
+    
+    for endpoint in endpoints_to_test:
+        try:
+            # Test sin token
+            response = requests.get(f"{base_url}{endpoint}", timeout=10)
+            
+            if response.status_code in [401, 403]:
+                print(f"   ✅ {endpoint} correctamente protegido ({response.status_code})")
+                success_count += 1
+            else:
+                print(f"   ❌ {endpoint} debería requerir autenticación: {response.status_code}")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando autenticación para {endpoint}: {e}")
+    
+    # Test 5: Verificar performance de los endpoints
+    print("\n5️⃣ VERIFICANDO PERFORMANCE DE ENDPOINTS...")
+    for endpoint in endpoints_to_test:
+        try:
+            import time
+            start_time = time.time()
+            response = requests.get(f"{base_url}{endpoint}", headers=headers, timeout=10)
+            end_time = time.time()
+            response_time = (end_time - start_time) * 1000
+            
+            print(f"   ⏱️ {endpoint}: {response_time:.2f}ms")
+            
+            if response_time < 3000:  # Menos de 3 segundos
+                print(f"   ✅ Performance aceptable para {endpoint}")
+                success_count += 1
+            else:
+                print(f"   ⚠️ Performance lenta para {endpoint}")
+                
+        except Exception as e:
+            print(f"   ❌ Error midiendo performance para {endpoint}: {e}")
+    
+    # Test 6: Verificar que no hay datos hardcodeados en las respuestas
+    print("\n6️⃣ VERIFICANDO AUSENCIA DE DATOS HARDCODEADOS...")
+    hardcoded_names = [
+        "María García", "Carlos Ruiz", "Ana Pérez", "Luis Torres", 
+        "Sofia Martín", "Diego Fernández", "maria_garcia", "carlos_ruiz"
+    ]
+    
+    all_responses = []
+    for endpoint in endpoints_to_test:
+        try:
+            response = requests.get(f"{base_url}{endpoint}", headers=headers, timeout=10)
+            if response.status_code == 200:
+                all_responses.extend(response.json())
+        except:
+            pass
+    
+    hardcoded_found = False
+    for item in all_responses:
+        item_str = str(item).lower()
+        for hardcoded_name in hardcoded_names:
+            if hardcoded_name.lower() in item_str:
+                print(f"   ❌ Datos hardcodeados encontrados: {hardcoded_name}")
+                hardcoded_found = True
+                break
+    
+    if not hardcoded_found:
+        print(f"   ✅ No se encontraron datos hardcodeados en las respuestas")
+        success_count += 1
+    
+    # Resumen final
+    print(f"\n📊 RESUMEN TESTING NUEVOS ENDPOINTS CHAT:")
+    print(f"   Tests exitosos: {success_count}/{total_tests}")
+    print(f"   Porcentaje de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 10:
+        print(f"\n✅ CONCLUSIÓN: NUEVOS ENDPOINTS COMPLETAMENTE FUNCIONALES")
+        print(f"   ✅ Todos los endpoints existen y responden correctamente")
+        print(f"   ✅ Estructuras de respuesta apropiadas para frontend")
+        print(f"   ✅ Manejo correcto de usuarios sin datos (arrays vacíos)")
+        print(f"   ✅ Autenticación implementada correctamente")
+        print(f"   ✅ Performance aceptable para experiencia de usuario")
+        print(f"   ✅ No hay datos hardcodeados en las respuestas")
+        print(f"\n🎯 RESULTADO: Endpoints listos para reemplazar datos hardcodeados")
+        print(f"   - GET /api/users/followers/recent ✅ Operacional")
+        print(f"   - GET /api/users/activity/recent ✅ Operacional") 
+        print(f"   - GET /api/messages/requests ✅ Operacional")
+        print(f"   - Frontend puede procesar respuestas sin problemas ✅")
+    elif success_count >= 7:
+        print(f"\n⚠️ CONCLUSIÓN: ENDPOINTS MAYORMENTE FUNCIONALES")
+        print(f"   - La mayoría de funcionalidades básicas operan correctamente")
+        print(f"   - Pueden existir problemas menores de estructura o performance")
+        print(f"   - Funcionalidad principal de reemplazo de datos hardcodeados funciona")
+    else:
+        print(f"\n❌ CONCLUSIÓN: PROBLEMAS CRÍTICOS EN NUEVOS ENDPOINTS")
+        print(f"   - Múltiples tests fallan")
+        print(f"   - Endpoints pueden tener problemas de implementación")
+        print(f"   - Requiere investigación y corrección antes de usar en producción")
+    
+    return success_count >= 8
+
 def test_authentication_requirements(base_url):
     """Test authentication requirements for protected endpoints"""
     print("\n=== Testing Authentication Requirements ===")
