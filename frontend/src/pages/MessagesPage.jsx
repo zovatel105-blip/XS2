@@ -597,6 +597,10 @@ const MessagesPage = () => {
 
   const handleSegmentClick = (segmentId) => {
     setSelectedSegment(segmentId);
+    // Recargar notificaciones específicas para el segmento seleccionado
+    if (user) {
+      loadRealNotifications();
+    }
   };
 
   // Cargar datos reales del sistema con fallbacks
