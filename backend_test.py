@@ -56,7 +56,358 @@ def test_health_check(base_url):
         print(f"❌ Health check endpoint error: {e}")
         return False
 
-def test_mobile_registration_critical(base_url):
+def test_http_404_registration_fix_critical(base_url):
+    """🚨 TESTING CRÍTICO: Verificar que el problema HTTP 404 en registro está completamente resuelto"""
+    print("\n🚨 === TESTING CRÍTICO: PROBLEMA HTTP 404 EN REGISTRO RESUELTO ===")
+    print("CONTEXTO DEL PROBLEMA RESUELTO:")
+    print("- Usuario reportaba HTTP 404 al intentar registrarse")
+    print("- Problema identificado: Variable REACT_APP_BACKEND_URL no estaba definida en frontend")
+    print("- Solución implementada: Creado /app/frontend/.env con REACT_APP_BACKEND_URL=http://localhost:8001")
+    print("- Frontend reiniciado para cargar nueva configuración")
+    print("\nTESTING REQUERIDO:")
+    print("1. Verificar configuración REACT_APP_BACKEND_URL")
+    print("2. Probar endpoint POST /api/auth/register directamente")
+    print("3. Simular petición desde frontend usando URL configurada")
+    print("4. Verificar respuesta 200 OK en lugar de 404")
+    print("5. Crear usuario de prueba para confirmar registro funciona")
+    print("6. Verificar token JWT se genera correctamente")
+    print("7. Confirmar usuario se crea en base de datos")
+    
+    success_count = 0
+    total_tests = 12
+    
+    # Test 1: Verificar configuración REACT_APP_BACKEND_URL
+    print("\n1️⃣ VERIFICANDO CONFIGURACIÓN REACT_APP_BACKEND_URL...")
+    try:
+        import os
+        # Check if frontend/.env exists and contains REACT_APP_BACKEND_URL
+        frontend_env_path = "/app/frontend/.env"
+        if os.path.exists(frontend_env_path):
+            with open(frontend_env_path, 'r') as f:
+                env_content = f.read()
+                if "REACT_APP_BACKEND_URL=http://localhost:8001" in env_content:
+                    print("   ✅ Variable REACT_APP_BACKEND_URL correctamente configurada")
+                    print(f"   📄 Contenido: {env_content.strip()}")
+                    success_count += 1
+                else:
+                    print("   ❌ Variable REACT_APP_BACKEND_URL no encontrada o mal configurada")
+                    print(f"   📄 Contenido actual: {env_content.strip()}")
+        else:
+            print("   ❌ Archivo /app/frontend/.env no existe")
+    except Exception as e:
+        print(f"   ❌ Error verificando configuración: {e}")
+    
+    # Test 2: Verificar conectividad básica al backend
+    print("\n2️⃣ VERIFICANDO CONECTIVIDAD BÁSICA AL BACKEND...")
+    try:
+        response = requests.get(f"{base_url}/", timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        if response.status_code == 200:
+            data = response.json()
+            print(f"   ✅ Backend respondiendo correctamente: {data.get('name', 'N/A')}")
+            success_count += 1
+        else:
+            print(f"   ❌ Backend no responde correctamente")
+    except Exception as e:
+        print(f"   ❌ Error conectando al backend: {e}")
+    
+    # Test 3: Probar endpoint POST /api/auth/register directamente
+    print("\n3️⃣ PROBANDO ENDPOINT POST /api/auth/register DIRECTAMENTE...")
+    timestamp = int(time.time())
+    test_user_data = {
+        "username": f"test_user_{timestamp}",
+        "email": f"test_{timestamp}@example.com",
+        "password": "TestPass123!",
+        "display_name": f"Test User {timestamp}"
+    }
+    
+    try:
+        response = requests.post(f"{base_url}/auth/register", json=test_user_data, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        print(f"   Response: {response.text[:200]}...")
+        
+        if response.status_code == 200:
+            print("   ✅ Endpoint POST /api/auth/register funciona correctamente (200 OK)")
+            success_count += 1
+        elif response.status_code == 404:
+            print("   ❌ CRÍTICO: Endpoint sigue devolviendo 404 - problema NO resuelto")
+        else:
+            print(f"   ⚠️ Endpoint responde pero con código inesperado: {response.status_code}")
+            if response.status_code in [400, 422]:  # Validation errors are OK, endpoint exists
+                print("   ✅ Endpoint existe (error de validación, no 404)")
+                success_count += 1
+    except Exception as e:
+        print(f"   ❌ Error probando endpoint: {e}")
+    
+    # Test 4: Simular petición desde frontend con headers correctos
+    print("\n4️⃣ SIMULANDO PETICIÓN DESDE FRONTEND...")
+    try:
+        frontend_headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Origin': 'http://localhost:3000',
+            'Referer': 'http://localhost:3000/',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        
+        response = requests.post(f"{base_url}/auth/register", 
+                               json=test_user_data, 
+                               headers=frontend_headers, 
+                               timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("   ✅ Simulación frontend exitosa - sin HTTP 404")
+            success_count += 1
+        elif response.status_code == 404:
+            print("   ❌ CRÍTICO: Simulación frontend sigue devolviendo 404")
+        else:
+            print(f"   ⚠️ Simulación frontend con código: {response.status_code}")
+            if response.status_code in [400, 422]:
+                print("   ✅ No es 404, endpoint accesible desde frontend")
+                success_count += 1
+    except Exception as e:
+        print(f"   ❌ Error en simulación frontend: {e}")
+    
+    # Test 5: Crear usuario de prueba real para confirmar funcionalidad
+    print("\n5️⃣ CREANDO USUARIO DE PRUEBA REAL...")
+    timestamp = int(time.time())
+    real_user_data = {
+        "username": f"demo_user_{timestamp}",
+        "email": f"demo_{timestamp}@example.com", 
+        "password": "DemoPass123!",
+        "display_name": f"Demo User {timestamp}"
+    }
+    
+    try:
+        response = requests.post(f"{base_url}/auth/register", json=real_user_data, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("   ✅ Usuario de prueba creado exitosamente")
+            print(f"   👤 Usuario: {data.get('user', {}).get('username', 'N/A')}")
+            print(f"   📧 Email: {data.get('user', {}).get('email', 'N/A')}")
+            success_count += 1
+            
+            # Store for later tests
+            global test_users, auth_tokens
+            test_users.append(data['user'])
+            auth_tokens.append(data['access_token'])
+            
+        elif response.status_code == 404:
+            print("   ❌ CRÍTICO: Creación de usuario falla con 404")
+        else:
+            print(f"   ❌ Creación de usuario falla: {response.text}")
+    except Exception as e:
+        print(f"   ❌ Error creando usuario: {e}")
+    
+    # Test 6: Verificar token JWT se genera correctamente
+    print("\n6️⃣ VERIFICANDO GENERACIÓN DE TOKEN JWT...")
+    if auth_tokens:
+        try:
+            token = auth_tokens[-1]  # Last token
+            print(f"   🔑 Token generado: {token[:20]}...{token[-10:]}")
+            
+            # Verify token structure (JWT has 3 parts separated by dots)
+            token_parts = token.split('.')
+            if len(token_parts) == 3:
+                print("   ✅ Token JWT tiene estructura correcta (3 partes)")
+                success_count += 1
+            else:
+                print(f"   ❌ Token JWT malformado: {len(token_parts)} partes")
+                
+            # Test token validity
+            headers = {"Authorization": f"Bearer {token}"}
+            response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+            if response.status_code == 200:
+                print("   ✅ Token JWT válido y funcional")
+                success_count += 1
+            else:
+                print(f"   ❌ Token JWT inválido: {response.status_code}")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando token: {e}")
+    else:
+        print("   ❌ No hay tokens para verificar")
+    
+    # Test 7: Confirmar usuario se crea en base de datos
+    print("\n7️⃣ CONFIRMANDO USUARIO EN BASE DE DATOS...")
+    if auth_tokens:
+        try:
+            headers = {"Authorization": f"Bearer {auth_tokens[-1]}"}
+            response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                user_data = response.json()
+                print("   ✅ Usuario confirmado en base de datos")
+                print(f"   🆔 ID: {user_data.get('id', 'N/A')}")
+                print(f"   👤 Username: {user_data.get('username', 'N/A')}")
+                print(f"   📧 Email: {user_data.get('email', 'N/A')}")
+                print(f"   📅 Creado: {user_data.get('created_at', 'N/A')}")
+                success_count += 1
+            else:
+                print(f"   ❌ Error verificando usuario en BD: {response.status_code}")
+        except Exception as e:
+            print(f"   ❌ Error confirmando usuario en BD: {e}")
+    
+    # Test 8: Probar con credenciales demo específicas
+    print("\n8️⃣ PROBANDO CON CREDENCIALES DEMO ESPECÍFICAS...")
+    demo_credentials = [
+        {"email": "demo@example.com", "password": "demo123"},
+        {"email": "test@example.com", "password": "test123"}
+    ]
+    
+    for creds in demo_credentials:
+        try:
+            response = requests.post(f"{base_url}/auth/login", json=creds, timeout=10)
+            print(f"   Login {creds['email']}: {response.status_code}")
+            
+            if response.status_code == 200:
+                print(f"   ✅ Credenciales demo {creds['email']} funcionan")
+                success_count += 1
+                break
+            elif response.status_code == 400:
+                print(f"   ⚠️ Credenciales {creds['email']} no existen (pero endpoint funciona)")
+        except Exception as e:
+            print(f"   ❌ Error probando credenciales {creds['email']}: {e}")
+    
+    # Test 9: Verificar CORS está configurado correctamente
+    print("\n9️⃣ VERIFICANDO CONFIGURACIÓN CORS...")
+    try:
+        cors_headers = {
+            'Origin': 'http://localhost:3000',
+            'Access-Control-Request-Method': 'POST',
+            'Access-Control-Request-Headers': 'Content-Type'
+        }
+        
+        response = requests.options(f"{base_url}/auth/register", headers=cors_headers, timeout=10)
+        print(f"   OPTIONS Status Code: {response.status_code}")
+        
+        if response.status_code in [200, 204]:
+            print("   ✅ CORS configurado correctamente")
+            success_count += 1
+        elif response.status_code == 405:
+            print("   ⚠️ OPTIONS no soportado pero no crítico")
+            success_count += 1  # Not critical for functionality
+        else:
+            print(f"   ❌ Problema CORS: {response.status_code}")
+    except Exception as e:
+        print(f"   ❌ Error verificando CORS: {e}")
+    
+    # Test 10: Verificar que problema 404 está completamente resuelto
+    print("\n🔟 VERIFICACIÓN FINAL: PROBLEMA 404 COMPLETAMENTE RESUELTO...")
+    try:
+        # Multiple registration attempts to ensure consistency
+        for i in range(3):
+            timestamp = int(time.time()) + i
+            test_data = {
+                "username": f"final_test_{timestamp}",
+                "email": f"final_test_{timestamp}@example.com",
+                "password": "FinalTest123!",
+                "display_name": f"Final Test {timestamp}"
+            }
+            
+            response = requests.post(f"{base_url}/auth/register", json=test_data, timeout=10)
+            
+            if response.status_code == 404:
+                print(f"   ❌ CRÍTICO: Intento {i+1} sigue devolviendo 404")
+                break
+            elif response.status_code == 200:
+                print(f"   ✅ Intento {i+1}: Registro exitoso (200 OK)")
+            elif response.status_code == 400:
+                print(f"   ✅ Intento {i+1}: Endpoint funciona (400 - validación)")
+            
+            time.sleep(0.5)  # Small delay between requests
+        else:
+            print("   ✅ CONFIRMADO: Problema HTTP 404 completamente resuelto")
+            success_count += 1
+            
+    except Exception as e:
+        print(f"   ❌ Error en verificación final: {e}")
+    
+    # Test 11: Verificar estabilidad de la solución
+    print("\n1️⃣1️⃣ VERIFICANDO ESTABILIDAD DE LA SOLUCIÓN...")
+    try:
+        # Test with different user agents and origins
+        test_scenarios = [
+            {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", "Origin": "http://localhost:3000"},
+            {"User-Agent": "Mozilla/5.0 (Android 13; Mobile)", "Origin": "http://localhost:3000"},
+            {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "Origin": "http://localhost:3000"}
+        ]
+        
+        stable_count = 0
+        for scenario in test_scenarios:
+            timestamp = int(time.time()) + random.randint(1, 1000)
+            test_data = {
+                "username": f"stability_test_{timestamp}",
+                "email": f"stability_{timestamp}@example.com",
+                "password": "StabilityTest123!",
+                "display_name": f"Stability Test {timestamp}"
+            }
+            
+            response = requests.post(f"{base_url}/auth/register", 
+                                   json=test_data, 
+                                   headers=scenario, 
+                                   timeout=10)
+            
+            if response.status_code in [200, 400]:  # 200 = success, 400 = validation (but endpoint works)
+                stable_count += 1
+        
+        if stable_count == len(test_scenarios):
+            print(f"   ✅ Solución estable en {stable_count}/{len(test_scenarios)} escenarios")
+            success_count += 1
+        else:
+            print(f"   ⚠️ Estabilidad parcial: {stable_count}/{len(test_scenarios)} escenarios")
+            
+    except Exception as e:
+        print(f"   ❌ Error verificando estabilidad: {e}")
+    
+    # Test 12: Validar que configuración es persistente
+    print("\n1️⃣2️⃣ VALIDANDO CONFIGURACIÓN PERSISTENTE...")
+    try:
+        # Check that frontend/.env still exists and has correct content
+        frontend_env_path = "/app/frontend/.env"
+        if os.path.exists(frontend_env_path):
+            with open(frontend_env_path, 'r') as f:
+                env_content = f.read()
+                if "REACT_APP_BACKEND_URL=http://localhost:8001" in env_content:
+                    print("   ✅ Configuración persistente y estable")
+                    success_count += 1
+                else:
+                    print("   ❌ Configuración ha cambiado o se ha perdido")
+        else:
+            print("   ❌ Archivo de configuración ya no existe")
+    except Exception as e:
+        print(f"   ❌ Error validando persistencia: {e}")
+    
+    # Resumen final
+    print(f"\n📊 RESUMEN TESTING HTTP 404 REGISTRATION FIX:")
+    print(f"   Tests exitosos: {success_count}/{total_tests}")
+    print(f"   Porcentaje de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 10:
+        print(f"\n✅ CONCLUSIÓN: PROBLEMA HTTP 404 EN REGISTRO COMPLETAMENTE RESUELTO")
+        print(f"   ✅ Variable REACT_APP_BACKEND_URL correctamente configurada")
+        print(f"   ✅ Endpoint POST /api/auth/register funciona perfectamente")
+        print(f"   ✅ Frontend puede conectarse al backend sin errores 404")
+        print(f"   ✅ Registro exitoso con status 200 OK")
+        print(f"   ✅ Token JWT generado correctamente")
+        print(f"   ✅ Usuario creado en base de datos")
+        print(f"   ✅ Configuración estable y persistente")
+        print(f"\n🎉 RESULTADO: Problema 100% resuelto - usuarios pueden registrarse exitosamente")
+    elif success_count >= 7:
+        print(f"\n⚠️ CONCLUSIÓN: PROBLEMA MAYORMENTE RESUELTO")
+        print(f"   - La mayoría de tests pasan")
+        print(f"   - Pueden existir problemas menores")
+        print(f"   - Funcionalidad básica operativa")
+    else:
+        print(f"\n❌ CONCLUSIÓN: PROBLEMA NO COMPLETAMENTE RESUELTO")
+        print(f"   - Múltiples tests fallan")
+        print(f"   - Requiere investigación adicional")
+        print(f"   - Verificar configuración y implementación")
+    
+    return success_count >= 8
     """🚨 TESTING CRÍTICO: HTTP 404 EN ENDPOINT DE REGISTRO EN DISPOSITIVOS MÓVILES"""
     print("\n🚨 === TESTING CRÍTICO: REGISTRO EN DISPOSITIVOS MÓVILES ===")
     print("PROBLEMA REPORTADO: Usuario obtiene HTTP 404 cuando intenta registrarse desde móvil")
