@@ -714,38 +714,15 @@ const MessagesPage = () => {
         title: `${follower.display_name || follower.username} te sigue`,
         message: `@${follower.username} comenzó a seguirte`,
         unreadCount: 0,
-        time: formatTimeForInbox(follower.followed_at || follower.created_at),
+        time: formatTimeForInbox(follower.followed_at),
         avatar: '👤', // Icono persona con círculo azul claro
         userId: follower.id,
         isSystem: false
       }));
     } catch (error) {
       console.log('Error loading followers:', error.message);
-      // Datos de ejemplo para demostrar funcionalidad
-      return [
-        {
-          id: 'follower-demo-1',
-          type: 'new_follower',
-          title: 'María García te sigue',
-          message: '@maria_garcia comenzó a seguirte',
-          unreadCount: 0,
-          time: '2h',
-          avatar: '👤',
-          userId: 'demo-user-1',
-          isSystem: false
-        },
-        {
-          id: 'follower-demo-2',
-          type: 'new_follower', 
-          title: 'Carlos Ruiz te sigue',
-          message: '@carlos_ruiz comenzó a seguirte',
-          unreadCount: 0,
-          time: '5h',
-          avatar: '👤',
-          userId: 'demo-user-2',
-          isSystem: false
-        }
-      ];
+      // Retornar array vacío en lugar de datos hardcodeados
+      return [];
     }
   };
 
