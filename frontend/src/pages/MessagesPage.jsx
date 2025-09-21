@@ -158,7 +158,7 @@ const MessagesPage = () => {
   // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
   useEffect(() => {
     const targetParam = searchParams.get('user');
-    if (targetParam && user && conversations.length >= 0) {
+    if (targetParam && user && conversations.length > 0) {
       console.log('🎯 Processing URL parameter:', targetParam);
       handleChatFromProfile(targetParam);
     }
