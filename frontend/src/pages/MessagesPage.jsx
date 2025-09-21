@@ -155,6 +155,13 @@ const MessagesPage = () => {
     setSelectedConversation(null);
   }, []);
 
+  // Also clear selected conversation after conversations load
+  useEffect(() => {
+    if (conversations.length >= 0) {
+      setSelectedConversation(null);
+    }
+  }, [conversations]);
+
   // Procesar parámetro 'user' de la URL para iniciar chat desde perfil
   useEffect(() => {
     const targetParam = searchParams.get('user');
