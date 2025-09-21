@@ -1277,14 +1277,33 @@ const MessagesPage = () => {
                   disabled={notification.isSystem}
                 >
                   {/* Avatar (izquierda) - tamaño optimizado móvil */}
-                  <div className={`w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 ${
+                  <div className={`w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden ${
                     notification.type === 'chat_request' 
                       ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold' 
                       : notification.isSystem 
                         ? 'bg-blue-100' 
                         : 'bg-gray-100'
                   }`}>
-                    {notification.avatar}
+                    {/* Renderizar imagen si es URL, texto si no */}
+                    {notification.avatar && (notification.avatar.startsWith('http') || notification.avatar.startsWith('/')) ? (
+                      <>
+                        <img 
+                          src={notification.avatar} 
+                          alt="Avatar" 
+                          className="w-full h-full rounded-full object-cover"
+                          onError={(e) => {
+                            // Si la imagen falla al cargar, ocultar imagen y mostrar fallback
+                            e.target.style.display = 'none';
+                            e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                          }}
+                        />
+                        <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-bold" style={{ display: 'none' }}>
+                          {notification.title ? notification.title.charAt(0).toUpperCase() : '👤'}
+                        </div>
+                      </>
+                    ) : (
+                      notification.avatar
+                    )}
                   </div>
                   
                   {/* Contenido (centro - flex-1) */}
