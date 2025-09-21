@@ -673,133 +673,144 @@ const MessagesPage = () => {
   };
 
   return (
-    <div className="h-screen bg-white flex flex-col relative overflow-hidden font-['Inter',system-ui,sans-serif]">
-      {/* TikTok-style Interface */}
+    <div className="h-screen bg-white flex flex-col relative overflow-hidden font-inter">
+      {/* TikTok Inbox Interface */}
       {showInbox && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex-1 flex flex-col bg-white"
         >
-          <TikTokHeader 
-            title={activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-            onPlusClick={() => setShowNewChat(true)}
-            onSearchClick={() => {}}
-          />
-          
-          <TikTokTabs />
+          {/* TOP BAR (Header) */}
+          <div className="h-14 flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 sticky top-0 z-20">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowNewChat(true)}
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <Plus className="w-5 h-5 text-black" strokeWidth={2} />
+            </motion.button>
+            
+            <h1 className="text-lg font-semibold text-black">Inbox</h1>
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <Search className="w-5 h-5 text-black" strokeWidth={2} />
+            </motion.button>
+          </div>
 
-          {/* Content based on active tab */}
-          {activeTab === 'inbox' && (
-            <div className="flex-1 overflow-y-auto">
-              {/* Stories Row */}
-              <div className="px-4 py-3 border-b border-gray-100">
-                <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
-                  {mockStoryUsers.map((storyUser, index) => (
-                    <motion.div
-                      key={storyUser.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex-shrink-0 flex flex-col items-center space-y-2"
-                    >
-                      <div className={cn(
-                        "w-18 h-18 rounded-full flex items-center justify-center text-2xl relative",
-                        storyUser.hasStory ? "ring-2 ring-pink-500 ring-offset-2" : "bg-gray-100"
-                      )}
-                      style={{ width: '72px', height: '72px' }}>
-                        {storyUser.avatar}
-                        {storyUser.hasStory && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                            <Plus className="w-3 h-3 text-white" strokeWidth={2} />
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-xs text-gray-700 text-center max-w-16 truncate font-medium">
-                        {storyUser.name}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Inbox Messages */}
-              <div className="flex-1 overflow-y-auto">
-                {mockInboxItems.map((item, index) => (
+          {/* CONTROL SEGMENTADO */}
+          <div className="p-4">
+            <div className="bg-gray-100 rounded-full p-1 flex">
+              {segments.map((segment) => {
+                const isSelected = selectedSegment === segment.id;
+                const IconComponent = getIconComponent(segment.icon);
+                
+                return (
                   <motion.button
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    onClick={() => {
-                      if (item.type === 'chat') {
-                        setSelectedConversation({
-                          id: item.id,
-                          participants: [{
-                            id: item.id,
-                            username: item.title.replace(/[^\w]/g, '').toLowerCase(),
-                            display_name: item.title
-                          }]
-                        });
-                      }
-                    }}
-                    className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
+                    key={segment.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleSegmentClick(segment.id)}
+                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-full transition-all duration-200 ${
+                      isSelected 
+                        ? 'bg-white shadow-sm' 
+                        : 'hover:bg-gray-50'
+                    }`}
                   >
-                    <div className="flex-shrink-0">
-                      {item.isNotification ? (
-                        <div 
-                          className="w-12 h-12 rounded-full flex items-center justify-center text-lg"
-                          style={{ 
-                            backgroundColor: item.iconBg,
-                            width: '48px', 
-                            height: '48px' 
-                          }}
-                        >
-                          <span>{item.icon}</span>
-                        </div>
-                      ) : (
-                        <div 
-                          className="w-12 h-12 rounded-full flex items-center justify-center text-xl bg-gray-100"
-                          style={{ width: '48px', height: '48px' }}
-                        >
-                          {item.avatar}
-                        </div>
-                      )}
+                    {/* Ícono circular */}
+                    <div 
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                      style={{ backgroundColor: segment.iconBg }}
+                    >
+                      <IconComponent />
                     </div>
                     
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold text-black text-base truncate">
-                          {item.title}
-                        </span>
-                        {item.time && (
-                          <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                            {item.time}
-                          </span>
-                        )}
-                      </div>
-                      {item.message && (
-                        <p className="text-sm text-gray-600 truncate leading-relaxed">
-                          {item.message}
-                        </p>
-                      )}
-                    </div>
+                    {/* Texto */}
+                    <span className={`text-sm font-medium truncate ${
+                      isSelected ? 'text-black' : 'text-gray-600'
+                    }`}>
+                      {segment.title}
+                    </span>
                     
-                    {item.count > 0 && (
-                      <div 
-                        className="flex-shrink-0 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: '#FF4B8D' }}
-                      >
-                        <span className="text-xs text-white font-bold">
-                          {item.count > 99 ? '99+' : item.count}
-                        </span>
-                      </div>
-                    )}
+                    {/* Badge */}
+                    <div 
+                      className="min-w-[20px] h-5 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: '#FF4B8D' }}
+                    >
+                      <span className="text-xs text-white font-medium px-1">
+                        {segment.badge > 99 ? '99+' : segment.badge}
+                      </span>
+                    </div>
                   </motion.button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          )}
+          </div>
+
+          {/* LISTA DE MENSAJES */}
+          <div className="flex-1 overflow-y-auto">
+            {mockNotifications.map((notification, index) => (
+              <motion.button
+                key={notification.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => {
+                  setSelectedConversation({
+                    id: notification.id,
+                    participants: [{
+                      id: notification.id,
+                      username: notification.title.replace(/[^\w]/g, '').toLowerCase(),
+                      display_name: notification.title
+                    }]
+                  });
+                }}
+                className="w-full flex items-center px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                {/* Avatar (izquierda) */}
+                <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-xl bg-gray-100 flex-shrink-0">
+                  {notification.avatar}
+                </div>
+                
+                {/* Contenido (centro - flex-1) */}
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-base font-semibold text-black truncate">
+                      {notification.title}
+                    </span>
+                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      {notification.time}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
+                    {notification.message}
+                  </p>
+                </div>
+                
+                {/* Badge (derecha) */}
+                {notification.unreadCount > 0 && (
+                  <div 
+                    className="min-w-[28px] h-7 rounded-full flex items-center justify-center ml-3 flex-shrink-0"
+                    style={{ backgroundColor: '#FF4B8D' }}
+                  >
+                    <span className="text-xs text-white font-medium px-2">
+                      {notification.unreadCount > 99 ? '99+' : notification.unreadCount}
+                    </span>
+                  </div>
+                )}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Bottom padding para mobile */}
+          <div className="h-4"></div>
+        </motion.div>
+      )}
 
           {activeTab === 'chats' && (
             <div className="flex-1 overflow-y-auto">
