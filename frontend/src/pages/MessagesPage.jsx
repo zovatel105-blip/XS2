@@ -445,27 +445,7 @@ const MessagesPage = () => {
     setSearchResults([]);
   };
 
-  // Duplicate functions removed - already exist above
-
-  const addReaction = async (messageId, emoji) => {
-    try {
-      await apiRequest(`/api/messages/${messageId}/reaction`, {
-        method: 'POST',
-        body: { emoji }
-      });
-      setShowEmojiPicker(false);
-      setReactionTarget(null);
-      if (selectedConversation && selectedConversation.id) {
-        loadMessages(selectedConversation.id);
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "No se pudo agregar la reacción",
-        variant: "destructive"
-      });
-    }
-  };
+  // Duplicate function removed - already exists above
 
   const sendMessage = async (e) => {
     e.preventDefault();
