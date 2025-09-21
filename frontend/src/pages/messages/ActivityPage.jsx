@@ -111,7 +111,8 @@ const ActivityPage = () => {
         message: getActivityMessage(activity),
         unreadCount: activity.unread ? 1 : 0,
         time: formatTimeForInbox(activity.created_at),
-        avatar: activity.user.avatar_url || getAvatarForUser(activity.user),
+        avatar: activity.user.avatar_url, // Usar directamente avatar_url
+        fallbackAvatar: getAvatarForUser(activity.user), // Separar el fallback
         userId: activity.user.id,
         activityType: activity.type,
         isSystem: false
