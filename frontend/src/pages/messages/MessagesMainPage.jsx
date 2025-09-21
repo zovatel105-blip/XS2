@@ -278,7 +278,7 @@ const MessagesMainPage = () => {
                       style={{ touchAction: 'manipulation' }}
                     >
                       {/* Avatar */}
-                      <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gray-100">
+                      <div className="w-14 h-14 rounded-full mr-4 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gray-100">
                         {otherUser.avatar_url ? (
                           <>
                             <img 
@@ -290,12 +290,14 @@ const MessagesMainPage = () => {
                                 e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                               }}
                             />
-                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-bold" style={{ display: 'none' }}>
+                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600" style={{ display: 'none' }}>
                               {otherUser.display_name ? otherUser.display_name.charAt(0).toUpperCase() : '👤'}
                             </div>
                           </>
                         ) : (
-                          getAvatarForUser(otherUser)
+                          <div className="w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600">
+                            {getAvatarForUser(otherUser)}
+                          </div>
                         )}
                       </div>
                       
