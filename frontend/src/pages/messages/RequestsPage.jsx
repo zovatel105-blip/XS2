@@ -84,7 +84,8 @@ const RequestsPage = () => {
         message: request.preview || 'Te ha enviado una solicitud de mensaje',
         unreadCount: 1,
         time: formatTimeForInbox(request.created_at),
-        avatar: request.sender.avatar_url || getAvatarForUser(request.sender),
+        avatar: request.sender.avatar_url, // Usar directamente avatar_url
+        fallbackAvatar: getAvatarForUser(request.sender), // Separar el fallback
         userId: request.sender.id,
         requestId: request.id,
         isSystem: false,
