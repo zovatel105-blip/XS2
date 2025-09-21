@@ -30,36 +30,103 @@ const MessagesPage = () => {
   const showInbox = !selectedConversation;
   const showChat = selectedConversation;
 
-  // VotaTok-specific color schemes inspired by ProfilePage
-  const getVotaTokColors = (name) => {
-    const votaTokGradients = [
-      'from-purple-500 via-pink-500 to-red-500',      // Profile story gradient
-      'from-blue-500 via-purple-500 to-pink-500',     // VotaTok brand
-      'from-indigo-500 via-purple-500 to-pink-500',   // Deep purple
-      'from-cyan-500 via-blue-500 to-purple-500',     // Cool blues
-      'from-pink-500 via-purple-500 to-indigo-500',   // Warm pinks
-      'from-violet-500 via-purple-500 to-pink-500',   // Violet mix
-      'from-fuchsia-500 via-purple-500 to-blue-500',  // Fuchsia blend
-      'from-rose-500 via-pink-500 to-purple-500'      // Rose gradient
-    ];
-    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return votaTokGradients[hash % votaTokGradients.length];
-  };
+  // Mock data for TikTok-style stories
+  const mockStoryUsers = [
+    { id: '1', name: 'Sarah Johnson ✨', avatar: '🇺🇸', hasStory: true },
+    { id: '2', name: 'Ahmed Hassan 🌟', avatar: '🇺🇸', hasStory: true },
+    { id: '3', name: 'Parque MinSu 🎵', avatar: '🇺🇸', hasStory: true },
+    { id: '4', name: 'María Rodríguez 💖', avatar: '🇺🇸', hasStory: true },
+    { id: '5', name: 'Elena Volkov 🔥', avatar: '🇺🇸', hasStory: true },
+    { id: '6', name: 'Jake Thompson 🚀', avatar: '🇺🇸', hasStory: false },
+    { id: '7', name: 'Yuki Tanaka 🌸', avatar: '🇺🇸', hasStory: true },
+  ];
 
-  // Función para obtener iniciales del nombre
-  const getInitials = (name) => {
-    if (!name) return '?';
-    const words = name.trim().split(' ');
-    if (words.length === 1) return words[0][0].toUpperCase();
-    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-  };
-
-  // Función para determinar si un usuario está online (simulado por ahora)
-  const isUserOnline = (userId) => {
-    // Por ahora simulamos algunos usuarios online
-    const onlineUsers = [user?.id]; // El usuario actual siempre está online
-    return onlineUsers.includes(userId);
-  };
+  // Mock data for TikTok-style inbox messages
+  const mockInboxItems = [
+    {
+      id: '1',
+      type: 'followers',
+      icon: '👥',
+      iconBg: '#0096ff',
+      title: 'seguidores',
+      message: '',
+      count: 99,
+      isNotification: true
+    },
+    {
+      id: '2', 
+      type: 'activity',
+      icon: '🔔',
+      iconBg: '#FF4B8D',
+      title: 'Actividad',
+      message: '',
+      count: 99,
+      isNotification: true
+    },
+    {
+      id: '3',
+      type: 'chat',
+      avatar: '🇺🇸',
+      title: 'Sarah Johnson ✨',
+      message: '¡Hola! Me encantó tu último video...',
+      count: 3,
+      time: 'ahora'
+    },
+    {
+      id: '4', 
+      type: 'chat',
+      avatar: '🇺🇸',
+      title: 'Ahmed Hassan 🌟',
+      message: 'شكرا لك، هل يمكننا التعاون؟',
+      count: 1,
+      time: '2h'
+    },
+    {
+      id: '5',
+      type: 'chat', 
+      avatar: '🇺🇸',
+      title: 'Parque MinSu 🎵',
+      message: '안녕하세요! 정말 멋진 영상이었어요...',
+      count: 2,
+      time: '5h'
+    },
+    {
+      id: '6',
+      type: 'chat',
+      avatar: '🇺🇸', 
+      title: 'María Rodríguez 💖',
+      message: '¡Hola! Me encanta tu contenido. ...',
+      count: 1,
+      time: '1d'
+    },
+    {
+      id: '7',
+      type: 'chat',
+      avatar: '🇺🇸',
+      title: 'Elena Volkov 🔥', 
+      message: 'Привет! ¡Dos contenidos súper...',
+      count: 4,
+      time: '2d'
+    },
+    {
+      id: '8',
+      type: 'chat',
+      avatar: '🇺🇸',
+      title: 'Jake Thompson 🚀',
+      message: 'Amigo, tu última tendencia de b...',
+      count: 7,
+      time: '3d'
+    },
+    {
+      id: '9',
+      type: 'chat',
+      avatar: '🇺🇸',
+      title: 'Yuki Tanaka 🌸',
+      message: 'こんにちは！あなたの動画、とて...',
+      count: 1,
+      time: '1w'
+    }
+  ];
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
