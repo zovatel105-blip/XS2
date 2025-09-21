@@ -768,7 +768,8 @@ const MessagesPage = () => {
     showInbox,
     showChat,
     selectedConversation: selectedConversation?.id,
-    mockNotifications: mockNotifications.length
+    realNotifications: realNotifications.length,
+    loadingNotifications
   });
 
   return (
