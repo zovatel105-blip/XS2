@@ -2655,12 +2655,6 @@ async def get_conversations(current_user: UserResponse = Depends(get_current_use
         for participant_id in participant_ids:
             user_data = await db.users.find_one({"id": participant_id})
             if user_data:
-                # Asignar avatar por defecto si no tiene uno
-                if not user_data.get("avatar_url"):
-                    username = user_data.get("username", "user")
-                    # Usar DiceBear API para generar avatar consistente basado en username
-                    user_data["avatar_url"] = f"https://api.dicebear.com/7.x/avataaars/svg?seed={username}&backgroundColor=b6e3f4,c0aede,d1d4f9"
-                
                 participants.append(UserResponse(**user_data))
         
         # Get unread count for current user
