@@ -274,11 +274,11 @@ const MessagesMainPage = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                       onClick={() => handleConversationClick(conversation)}
-                      className="w-full flex items-center px-6 py-4 border-b border-gray-100 transition-colors min-h-[80px] hover:bg-gray-50 active:bg-gray-100"
+                      className="w-full flex flex-col items-center px-6 py-6 border-b border-gray-100 transition-colors min-h-[140px] hover:bg-gray-50 active:bg-gray-100"
                       style={{ touchAction: 'manipulation' }}
                     >
-                      {/* Avatar */}
-                      <div className="w-14 h-14 rounded-full mr-4 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gray-100">
+                      {/* Avatar Grande Centrado */}
+                      <div className="w-20 h-20 rounded-full mb-3 flex items-center justify-center text-2xl flex-shrink-0 relative overflow-hidden bg-gray-100 shadow-md">
                         {otherUser.avatar_url ? (
                           <>
                             <img 
@@ -290,36 +290,40 @@ const MessagesMainPage = () => {
                                 e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                               }}
                             />
-                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600" style={{ display: 'none' }}>
+                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-2xl font-bold text-gray-600" style={{ display: 'none' }}>
                               {otherUser.display_name ? otherUser.display_name.charAt(0).toUpperCase() : '👤'}
                             </div>
                           </>
                         ) : (
-                          <div className="w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600">
+                          <div className="w-full h-full rounded-full flex items-center justify-center text-2xl font-bold text-gray-600">
                             {getAvatarForUser(otherUser)}
                           </div>
                         )}
                       </div>
                       
-                      {/* Content */}
-                      <div className="flex-1 min-w-0 text-left">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-semibold truncate text-gray-900">
-                            {otherUser.display_name || otherUser.username || 'Usuario'}
+                      {/* Información Centrada */}
+                      <div className="flex flex-col items-center text-center w-full">
+                        {/* Nombre de usuario prominente */}
+                        <span className="text-lg font-semibold text-gray-900 mb-1 truncate max-w-full">
+                          {otherUser.display_name || otherUser.username || 'Usuario'}
+                        </span>
+                        
+                        {/* Último mensaje y tiempo */}
+                        <div className="flex items-center space-x-2 text-sm text-gray-600">
+                          <span className="truncate max-w-[200px]">
+                            {conversation.last_message || 'Iniciar conversación'}
                           </span>
-                          <span className="text-sm text-gray-500 ml-2 flex-shrink-0">
+                          <span className="text-gray-400">•</span>
+                          <span className="flex-shrink-0">
                             {formatTimeForInbox(conversation.last_message_at || conversation.created_at)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 truncate leading-relaxed">
-                          {conversation.last_message || 'Iniciar conversación'}
-                        </p>
                       </div>
 
-                      {/* Unread Badge */}
+                      {/* Badge de mensajes no leídos */}
                       {conversation.unread_count > 0 && (
                         <div 
-                          className="min-w-[24px] h-6 rounded-full flex items-center justify-center ml-3 flex-shrink-0"
+                          className="absolute top-4 right-4 min-w-[24px] h-6 rounded-full flex items-center justify-center"
                           style={{ backgroundColor: '#FF4B8D' }}
                         >
                           <span className="text-xs text-white font-medium px-2">
