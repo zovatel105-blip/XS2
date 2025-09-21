@@ -957,11 +957,6 @@ const MessagesPage = () => {
         return activity.message || 'Nueva interacción';
     }
   };
-          time: 'ahora',
-          avatar: '🎯',
-          isSystem: true
-        });
-      }
 
       setRealNotifications(realData);
     } catch (error) {
