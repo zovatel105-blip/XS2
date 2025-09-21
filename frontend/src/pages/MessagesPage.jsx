@@ -570,36 +570,320 @@ const MessagesPage = () => {
   // VotaTok-specific emoji reactions for voting-style interactions
   const votaTokEmojis = ['🔥', '💯', '⚡', '🎯', '💎', '🚀', '✨', '🏆'];
 
+  // TikTok tabs
+  const [activeTab, setActiveTab] = useState('inbox');
+
+  const TikTokHeader = ({ title, onPlusClick, onSearchClick }) => (
+    <div className="flex items-center justify-between px-4 py-3 bg-white sticky top-0 z-20">
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={onPlusClick}
+        className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+      >
+        <Plus className="w-5 h-5 text-black" strokeWidth={2} />
+      </motion.button>
+      
+      <h1 className="text-lg font-semibold text-black">{title}</h1>
+      
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={onSearchClick}
+        className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
+      >
+        <Search className="w-5 h-5 text-black" strokeWidth={2} />
+      </motion.button>
+    </div>
+  );
+
+  const TikTokTabs = () => (
+    <div className="flex bg-white border-b border-gray-100">
+      {['inbox', 'chats', 'calls'].map((tab) => (
+        <motion.button
+          key={tab}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setActiveTab(tab)}
+          className={`flex-1 py-3 text-center font-medium capitalize transition-colors ${
+            activeTab === tab 
+              ? 'text-black border-b-2 border-black' 
+              : 'text-gray-500'
+          }`}
+        >
+          {tab}
+        </motion.button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="h-screen bg-white flex flex-col relative overflow-hidden font-['Inter',system-ui,sans-serif]">
-      {/* TikTok-style Inbox */}
+      {/* TikTok-style Interface */}
       {showInbox && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex-1 flex flex-col bg-white"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-white sticky top-0 z-20">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowNewChat(true)}
-              className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-            >
-              <Plus className="w-5 h-5 text-black" strokeWidth={2} />
-            </motion.button>
-            
-            <h1 className="text-lg font-semibold text-black">Inbox</h1>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"
-            >
-              <Search className="w-5 h-5 text-black" strokeWidth={2} />
-            </motion.button>
-          </div>
+          <TikTokHeader 
+            title={activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+            onPlusClick={() => setShowNewChat(true)}
+            onSearchClick={() => {}}
+          />
+          
+          <TikTokTabs />
+
+          {/* Content based on active tab */}
+          {activeTab === 'inbox' && (
+            <div className="flex-1 overflow-y-auto">
+              {/* Stories Row */}
+              <div className="px-4 py-3 border-b border-gray-100">
+                <div className="flex space-x-4 overflow-x-auto scrollbar-hide">
+                  {mockStoryUsers.map((storyUser, index) => (
+                    <motion.div
+                      key={storyUser.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex-shrink-0 flex flex-col items-center space-y-2"
+                    >
+                      <div className={cn(
+                        "w-18 h-18 rounded-full flex items-center justify-center text-2xl relative",
+                        storyUser.hasStory ? "ring-2 ring-pink-500 ring-offset-2" : "bg-gray-100"
+                      )}
+                      style={{ width: '72px', height: '72px' }}>
+                        {storyUser.avatar}
+                        {storyUser.hasStory && (
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                            <Plus className="w-3 h-3 text-white" strokeWidth={2} />
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-700 text-center max-w-16 truncate font-medium">
+                        {storyUser.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Inbox Messages */}
+              <div className="flex-1 overflow-y-auto">
+                {mockInboxItems.map((item, index) => (
+                  <motion.button
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => {
+                      if (item.type === 'chat') {
+                        setSelectedConversation({
+                          id: item.id,
+                          participants: [{
+                            id: item.id,
+                            username: item.title.replace(/[^\w]/g, '').toLowerCase(),
+                            display_name: item.title
+                          }]
+                        });
+                      }
+                    }}
+                    className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
+                  >
+                    <div className="flex-shrink-0">
+                      {item.isNotification ? (
+                        <div 
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-lg"
+                          style={{ 
+                            backgroundColor: item.iconBg,
+                            width: '48px', 
+                            height: '48px' 
+                          }}
+                        >
+                          <span>{item.icon}</span>
+                        </div>
+                      ) : (
+                        <div 
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-xl bg-gray-100"
+                          style={{ width: '48px', height: '48px' }}
+                        >
+                          {item.avatar}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold text-black text-base truncate">
+                          {item.title}
+                        </span>
+                        {item.time && (
+                          <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                            {item.time}
+                          </span>
+                        )}
+                      </div>
+                      {item.message && (
+                        <p className="text-sm text-gray-600 truncate leading-relaxed">
+                          {item.message}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {item.count > 0 && (
+                      <div 
+                        className="flex-shrink-0 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: '#FF4B8D' }}
+                      >
+                        <span className="text-xs text-white font-bold">
+                          {item.count > 99 ? '99+' : item.count}
+                        </span>
+                      </div>
+                    )}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'chats' && (
+            <div className="flex-1 overflow-y-auto">
+              {/* Recent Chats */}
+              <div className="flex-1 overflow-y-auto">
+                {[
+                  { id: '1', name: 'Sarah Johnson ✨', message: '¡Hola! Me encantó tu último video...', time: 'ahora', avatar: '🇺🇸', unread: 2 },
+                  { id: '2', name: 'Ahmed Hassan 🌟', message: 'شكرا لك، هل يمكننا التعاون؟', time: '2h', avatar: '🇺🇸', unread: 1 },
+                  { id: '3', name: 'Parque MinSu 🎵', message: '안녕하세요! 정말 멋진 영상이었어요...', time: '5h', avatar: '🇺🇸', unread: 0 },
+                  { id: '4', name: 'María Rodríguez 💖', message: '¡Hola! Me encanta tu contenido...', time: '1d', avatar: '🇺🇸', unread: 5 },
+                  { id: '5', name: 'Elena Volkov 🔥', message: 'Привет! ¡Dos contenidos súper...', time: '2d', avatar: '🇺🇸', unread: 0 },
+                  { id: '6', name: 'Jake Thompson 🚀', message: 'Amigo, tu última tendencia de b...', time: '3d', avatar: '🇺🇸', unread: 1 },
+                ].map((chat, index) => (
+                  <motion.button
+                    key={chat.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => {
+                      setSelectedConversation({
+                        id: chat.id,
+                        participants: [{
+                          id: chat.id,
+                          username: chat.name.replace(/[^\w]/g, '').toLowerCase(),
+                          display_name: chat.name
+                        }]
+                      });
+                    }}
+                    className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
+                  >
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl bg-gray-100" style={{ width: '48px', height: '48px' }}>
+                      {chat.avatar}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold text-black text-base truncate">
+                          {chat.name}
+                        </span>
+                        <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                          {chat.time}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 truncate leading-relaxed">
+                        {chat.message}
+                      </p>
+                    </div>
+                    
+                    {chat.unread > 0 && (
+                      <div className="flex-shrink-0 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FF4B8D' }}>
+                        <span className="text-xs text-white font-bold">
+                          {chat.unread > 99 ? '99+' : chat.unread}
+                        </span>
+                      </div>
+                    )}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'calls' && (
+            <div className="flex-1 overflow-y-auto">
+              {/* Call History */}
+              <div className="flex-1 overflow-y-auto">
+                {[
+                  { id: '1', name: 'Sarah Johnson ✨', type: 'video', time: 'Hace 5 min', duration: '00:23', missed: false, avatar: '🇺🇸' },
+                  { id: '2', name: 'Ahmed Hassan 🌟', type: 'audio', time: 'Hace 1 h', duration: '02:15', missed: false, avatar: '🇺🇸' },
+                  { id: '3', name: 'Parque MinSu 🎵', type: 'video', time: 'Ayer', duration: '', missed: true, avatar: '🇺🇸' },
+                  { id: '4', name: 'María Rodríguez 💖', type: 'audio', time: 'Hace 2 días', duration: '01:45', missed: false, avatar: '🇺🇸' },
+                  { id: '5', name: 'Elena Volkov 🔥', type: 'video', time: 'Hace 3 días', duration: '00:45', missed: true, avatar: '🇺🇸' },
+                  { id: '6', name: 'Jake Thompson 🚀', type: 'audio', time: 'Hace 1 semana', duration: '03:22', missed: false, avatar: '🇺🇸' },
+                ].map((call, index) => (
+                  <motion.button
+                    key={call.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
+                  >
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl bg-gray-100" style={{ width: '48px', height: '48px' }}>
+                      {call.avatar}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className={`font-semibold text-base truncate ${call.missed ? 'text-red-500' : 'text-black'}`}>
+                          {call.name}
+                        </span>
+                        <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                          {call.time}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          call.type === 'video' 
+                            ? 'bg-blue-100 text-blue-600' 
+                            : 'bg-green-100 text-green-600'
+                        }`}>
+                          {call.type === 'video' ? '📹 Video' : '📞 Audio'}
+                        </span>
+                        {call.duration && (
+                          <span className="text-sm text-gray-600">
+                            {call.duration}
+                          </span>
+                        )}
+                        {call.missed && (
+                          <span className="text-xs text-red-500 font-medium">
+                            Perdida
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        call.type === 'video' 
+                          ? 'bg-blue-500 hover:bg-blue-600' 
+                          : 'bg-green-500 hover:bg-green-600'
+                      } transition-colors`}
+                    >
+                      <span className="text-white text-lg">
+                        {call.type === 'video' ? '📹' : '📞'}
+                      </span>
+                    </motion.button>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bottom padding for mobile */}
+          <div className="h-4"></div>
+        </motion.div>
+      )}
+
+      {/* Rest of the component stays the same */}
 
           {/* Stories Row */}
           <div className="px-4 py-3 border-b border-gray-100">
