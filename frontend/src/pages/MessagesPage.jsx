@@ -768,7 +768,7 @@ const MessagesPage = () => {
       }));
     } catch (error) {
       console.log('Error loading message requests:', error.message);
-      // Usar datos existentes de chatRequests o datos de ejemplo
+      // Usar datos existentes de chatRequests si disponibles
       if (chatRequests && chatRequests.length > 0) {
         return chatRequests.map(request => ({
           id: `request-${request.id}`,
@@ -785,22 +785,8 @@ const MessagesPage = () => {
         }));
       }
       
-      // Datos de ejemplo
-      return [
-        {
-          id: 'request-demo-1',
-          type: 'message_request',
-          title: 'Diego Fernández',
-          message: 'Hola! Me gusta mucho tu contenido, ¿podemos hablar?',
-          unreadCount: 1,
-          time: '1d',
-          avatar: '💬',
-          userId: 'demo-user-6',
-          requestId: 'demo-request-1',
-          isSystem: false,
-          needsApproval: true
-        }
-      ];
+      // Retornar array vacío en lugar de datos hardcodeados
+      return [];
     }
   };
 
