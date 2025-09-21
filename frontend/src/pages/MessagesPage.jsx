@@ -590,8 +590,8 @@ const MessagesPage = () => {
   // VotaTok-specific emoji reactions for voting-style interactions
   const votaTokEmojis = ['🔥', '💯', '⚡', '🎯', '💎', '🚀', '✨', '🏆'];
 
-  // Control segmentado - sin selección inicial
-  const [selectedSegment, setSelectedSegment] = useState(null);
+  // Control segmentado - comenzar con "followers" por defecto
+  const [selectedSegment, setSelectedSegment] = useState('followers');
   const [segmentData, setSegmentData] = useState({
     followers: { count: 0, loading: true },
     activity: { count: 0, loading: true },
