@@ -1092,12 +1092,25 @@ const MessagesPage = () => {
           {/* CONTROL SEGMENTADO - OPTIMIZADO MÓVIL */}
           <div className="p-4">
             {/* Indicador de vista actual */}
-            {selectedSegment === null && (
+            {selectedSegment === null ? (
               <div className="mb-3 flex items-center justify-center">
                 <div className="bg-blue-50 px-4 py-2 rounded-full flex items-center space-x-2">
                   <MessageCircle className="w-4 h-4 text-blue-600" />
                   <span className="text-sm font-medium text-blue-800">Chats</span>
                 </div>
+              </div>
+            ) : (
+              <div className="mb-3 flex items-center justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleSegmentClick(null)}
+                  className="bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-full flex items-center space-x-2 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 text-gray-600" />
+                  <MessageCircle className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700">Volver a Chats</span>
+                </motion.button>
               </div>
             )}
             
