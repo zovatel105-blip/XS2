@@ -11332,6 +11332,10 @@ def main():
     print("\n👤 TESTING: Get Current User")
     test_results["get_current_user"] = test_get_current_user(base_url)
     
+    # Run chat configuration test
+    print("\n💬 TESTING: Chat Configuration New Implementation")
+    test_results["chat_configuration"] = test_chat_configuration_new_implementation(base_url)
+    
     # Final summary
     print("\n" + "=" * 80)
     print("📊 FINAL TEST RESULTS SUMMARY")
