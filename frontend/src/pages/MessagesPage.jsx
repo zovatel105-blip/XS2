@@ -807,12 +807,32 @@ const MessagesPage = () => {
             </motion.button>
           </div>
 
-          {/* CONTROL SEGMENTADO */}
+          {/* CONTROL SEGMENTADO - OPTIMIZADO MÓVIL */}
           <div className="p-4">
             <div className="bg-gray-100 rounded-full p-1 flex">
-              {segments.map((segment) => {
+              {[
+                {
+                  id: 'followers',
+                  icon: 'Users',
+                  iconBg: '#4ECDC4',
+                  title: 'New followers',
+                },
+                {
+                  id: 'activity', 
+                  icon: 'Bell',
+                  iconBg: '#FF4B8D',
+                  title: 'Activity',
+                },
+                {
+                  id: 'messages',
+                  icon: 'MessageCircle',
+                  iconBg: '#4A4A4A',
+                  title: 'Message requests',
+                }
+              ].map((segment) => {
                 const isSelected = selectedSegment === segment.id;
                 const IconComponent = getIconComponent(segment.icon);
+                const badgeCount = getSegmentBadgeCount(segment.id);
                 
                 return (
                   <motion.button
@@ -820,36 +840,39 @@ const MessagesPage = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handleSegmentClick(segment.id)}
-                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-full transition-all duration-200 ${
+                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-2 rounded-full transition-all duration-200 min-h-[44px] ${
                       isSelected 
                         ? 'bg-white shadow-sm' 
-                        : 'hover:bg-gray-50'
+                        : 'hover:bg-gray-50 active:bg-gray-100'
                     }`}
+                    style={{ touchAction: 'manipulation' }} // Optimización táctil
                   >
-                    {/* Ícono circular */}
+                    {/* Ícono circular - tamaño optimizado para táctil */}
                     <div 
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0"
                       style={{ backgroundColor: segment.iconBg }}
                     >
                       <IconComponent />
                     </div>
                     
-                    {/* Texto */}
-                    <span className={`text-sm font-medium truncate ${
+                    {/* Texto - responsive */}
+                    <span className={`text-xs font-medium truncate max-w-[60px] leading-tight ${
                       isSelected ? 'text-black' : 'text-gray-600'
                     }`}>
                       {segment.title}
                     </span>
                     
-                    {/* Badge */}
-                    <div 
-                      className="min-w-[20px] h-5 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: '#FF4B8D' }}
-                    >
-                      <span className="text-xs text-white font-medium px-1">
-                        {segment.badge > 99 ? '99+' : segment.badge}
-                      </span>
-                    </div>
+                    {/* Badge - solo mostrar si hay contenido */}
+                    {badgeCount && (
+                      <div 
+                        className="min-w-[18px] h-[18px] rounded-full flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: '#FF4B8D' }}
+                      >
+                        <span className="text-[10px] text-white font-medium px-1">
+                          {badgeCount}
+                        </span>
+                      </div>
+                    )}
                   </motion.button>
                 );
               })}
