@@ -1038,5 +1038,6 @@ const MessagesPage = () => {
       </AnimatePresence>
     </div>
   );
+};
 
 export default MessagesPage;
