@@ -999,6 +999,11 @@ const MessagesPage = () => {
   const getAvatarForUser = (user) => {
     if (!user) return '👤';
     
+    // Si el usuario tiene avatar_url, devolverlo para que se renderice como imagen
+    if (user.avatar_url) {
+      return user.avatar_url;
+    }
+    
     // Si el usuario tiene avatar personalizado, usar iniciales
     if (user.display_name || user.username) {
       const name = user.display_name || user.username;
