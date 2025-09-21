@@ -2474,7 +2474,7 @@ async def follow_user(user_id: str, current_user: UserResponse = Depends(get_cur
     # Check if already following
     existing_follow = await db.follows.find_one({
         "follower_id": current_user.id,
-        "following_id": user_id
+        "followed_id": user_id
     })
     if existing_follow:
         raise HTTPException(status_code=400, detail="Already following this user")
@@ -2482,7 +2482,7 @@ async def follow_user(user_id: str, current_user: UserResponse = Depends(get_cur
     # Create follow relationship
     follow_data = Follow(
         follower_id=current_user.id,
-        following_id=user_id
+        followed_id=user_id
     )
     
     result = await db.follows.insert_one(follow_data.model_dump())
