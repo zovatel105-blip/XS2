@@ -665,24 +665,29 @@ const MessagesPage = () => {
       let realData = [];
 
       // Cargar datos según el segmento seleccionado
-      switch (selectedSegment) {
-        case 'followers':
-          // **Nuevos seguidores** - Personas que te siguen recientemente
-          realData = await loadNewFollowersData();
-          break;
-          
-        case 'activity':
-          // **Actividad** - Comentarios, me gusta y reacciones a tus publicaciones
-          realData = await loadActivityData();
-          break;
-          
-        case 'messages':
-          // **Solicitudes de mensajes** - Mensajes de personas que no sigues
-          realData = await loadMessageRequestsData();
-          break;
-          
-        default:
-          realData = await loadConversationsData();
+      if (selectedSegment === null) {
+        // Sin selección de segmento = mostrar conversaciones normales (función inicial)
+        realData = await loadConversationsData();
+      } else {
+        switch (selectedSegment) {
+          case 'followers':
+            // **Nuevos seguidores** - Personas que te siguen recientemente
+            realData = await loadNewFollowersData();
+            break;
+            
+          case 'activity':
+            // **Actividad** - Comentarios, me gusta y reacciones a tus publicaciones
+            realData = await loadActivityData();
+            break;
+            
+          case 'messages':
+            // **Solicitudes de mensajes** - Mensajes de personas que no sigues
+            realData = await loadMessageRequestsData();
+            break;
+            
+          default:
+            realData = await loadConversationsData();
+        }
       }
 
       // Si no hay datos específicos, usar mensaje apropiado
