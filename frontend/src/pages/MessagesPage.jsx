@@ -17,24 +17,18 @@ const MessagesPage = () => {
   const [showNewChat, setShowNewChat] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [reactionTarget, setReactionTarget] = useState(null);
-  const [ephemeralMode, setEphemeralMode] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const [recordingAudio, setRecordingAudio] = useState(false);
-  const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [chatRequests, setChatRequests] = useState([]);
-  const [showRequests, setShowRequests] = useState(false);
+  const [storyUsers, setStoryUsers] = useState([]);
   const { user, apiRequest } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-  const longPressTimer = useRef(null);
 
-  // Responsive state
+  // Mobile responsive
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const showList = !selectedConversation || !isMobile;
-  const showChat = selectedConversation && (isMobile || !isMobile);
+  const showInbox = !selectedConversation;
+  const showChat = selectedConversation;
 
   // VotaTok-specific color schemes inspired by ProfilePage
   const getVotaTokColors = (name) => {
