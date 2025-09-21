@@ -854,10 +854,10 @@ const MessagesPage = () => {
                   >
                     {/* Ícono circular - tamaño optimizado para táctil */}
                     <div 
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0"
+                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: segment.iconBg }}
                     >
-                      <IconComponent />
+                      <IconComponent className="w-4 h-4 text-white" strokeWidth={2} />
                     </div>
                     
                     {/* Texto - responsive */}
