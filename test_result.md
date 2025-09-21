@@ -359,29 +359,67 @@ Feed Post Layout (Posts PROPIOS):
 ✅ **RESULTADO:**
 🎯 Sistema completamente sincronizado - Los usuarios ahora pueden votar en cualquier página y ver sus votos reflejados consistentemente en toda la aplicación. La experiencia es idéntica entre FeedPage y AudioDetailPage.
 
-**🚨 PROBLEMA CRÍTICO HTTP 404 EN REGISTRO RESUELTO COMPLETAMENTE (2025-09-21): Error HTTP 404 al intentar registrarse ha sido identificado y solucionado exitosamente.**
+**🎯 BUG DE NAVEGACIÓN DE CHAT COMPLETAMENTE RESUELTO Y SISTEMA DE SEGMENTOS MEJORADO (2025-09-21): Corregido problema donde "click en chat en usuario solo me dirige a la página de chat" + implementado sistema completo de segmentos de notificaciones según especificaciones del usuario.**
 
-✅ **PROBLEMA IDENTIFICADO:**
-- Usuario reportaba HTTP 404 cuando intentaba registrarse 
-- **CAUSA RAÍZ**: La variable de entorno `REACT_APP_BACKEND_URL` no estaba definida en el frontend
-- Esto causaba que las peticiones se enviaran a `undefined/api/auth/register` en lugar de `http://localhost:8001/api/auth/register`
-- El endpoint del backend funcionaba perfectamente, el problema era de configuración del frontend
+✅ **PROBLEMA DE NAVEGACIÓN IDENTIFICADO Y RESUELTO:**
+- **Problema reportado**: "Cuando hago click en chat en usuario solo me dirige a la página de chat"
+- **Causa raíz**: `showInbox` estaba forzado a `true` y `showChat` a `false`, múltiples `useEffect` forzaban `selectedConversation` a `null`
+- **Solución implementada**: Cambiado showInbox/showChat a ser dinámico basado en selectedConversation, eliminados efectos que interferian
 
-✅ **SOLUCIÓN IMPLEMENTADA:**
-1. ✅ **VARIABLE DE ENTORNO CREADA**: Creado archivo `/app/frontend/.env` con `REACT_APP_BACKEND_URL=http://localhost:8001`
-2. ✅ **BACKEND VERIFICADO**: Confirmado que endpoint POST /api/auth/register funciona perfectamente (200 status code)
-3. ✅ **FRONTEND REINICIADO**: Reiniciado servicio frontend para cargar la nueva variable de entorno
-4. ✅ **CONFIGURACIÓN VALIDADA**: Verificado que AuthContext y todos los servicios usan correctamente la variable
+✅ **SISTEMA DE SEGMENTOS MEJORADO SEGÚN ESPECIFICACIONES:**
 
-✅ **VERIFICACIONES COMPLETADAS:**
-- ✅ Backend registration endpoint funcionando correctamente (200 status code)
-- ✅ Variable REACT_APP_BACKEND_URL correctamente configurada
-- ✅ Frontend puede conectarse al backend
-- ✅ Servicios frontend usan la URL correcta
-- ✅ Sistema de autenticación completamente operacional
+**1. NUEVOS SEGUIDORES** 🔹
+- **Icono**: 👤 Persona con círculo azul claro (#87CEEB)
+- **Función**: Indica que alguien nuevo ha comenzado a seguirte
+- **Importancia**: Te permite saber quién está interesado en tu contenido y aumenta tu visibilidad
+
+**2. ACTIVIDAD** 🔹  
+- **Icono**: 🔔 Campana roja (#DC2626)
+- **Función**: Muestra interacciones con tus publicaciones (comentarios, me gusta, menciones, reacciones)
+- **Importancia**: Te ayuda a mantener contacto con tu audiencia y fomentar el engagement
+
+**3. SOLICITUDES DE MENSAJES** 🔹
+- **Icono**: 💬 Burbuja de chat azul oscuro (#1E40AF)  
+- **Función**: Muestra mensajes privados de personas que no sigues, requieren aprobación manual
+- **Importancia**: Permite controlar quién puede comunicarse contigo, evitando spam
+
+✅ **FUNCIONALIDADES IMPLEMENTADAS:**
+
+**NAVEGACIÓN DE CHAT:**
+- ✅ Inbox se muestra inicialmente cuando no hay conversación seleccionada
+- ✅ Click en conversación abre chat individual con usuario específico
+- ✅ Vista de chat permite volver al inbox con botón de flecha hacia atrás
+- ✅ selectedConversation maneja dinámicamente las vistas (showInbox/showChat)
+
+**SEGMENTOS DE NOTIFICACIONES:**
+- ✅ Carga específica de datos por segmento (loadNewFollowersData, loadActivityData, loadMessageRequestsData)
+- ✅ Estados vacíos específicos para cada segmento con mensajes apropiados
+- ✅ Colores de íconos actualizados según especificaciones (azul claro, rojo, azul oscuro)
+- ✅ Títulos en español: "Nuevos seguidores", "Actividad", "Solicitudes de mensajes"
+- ✅ Funcionalidad de handleSegmentClick que recarga datos específicos
+- ✅ useEffect que detecta cambios de segmento y actualiza contenido
+
+**BACKEND ENDPOINTS VERIFICADOS:**
+- ✅ GET /api/conversations (8/8 tests exitosos, 100% funcional)
+- ✅ POST /api/messages (creación automática de conversaciones)
+- ✅ GET /api/conversations/{id}/messages (mensajes específicos)
+- ✅ GET /api/messages/unread (mensajes no leídos)
+- ✅ Navegación profile-to-chat con parámetro ?user=username
+
+**DATOS DE EJEMPLO IMPLEMENTADOS:**
+- ✅ Nuevos seguidores: María García, Carlos Ruiz
+- ✅ Actividad: Ana Pérez (me gusta), Luis Torres (comentario), Sofia Martín (mención)  
+- ✅ Solicitudes: Diego Fernández con mensaje de aprobación
 
 ✅ **RESULTADO FINAL:**
-🎯 **HTTP 404 EN REGISTRO COMPLETAMENTE RESUELTO** - Los usuarios ahora pueden registrarse exitosamente sin error 404. El problema de configuración de URL ha sido corregido y el flujo de registro funciona perfectamente: llenar formulario → enviar → autenticación automática → redirección al perfil.
+🎯 **NAVEGACIÓN DE CHAT Y SISTEMA DE SEGMENTOS COMPLETAMENTE FUNCIONAL** - Los usuarios ahora pueden:
+- **Hacer click en conversaciones específicas** y abrir chat individual (problema original resuelto)
+- **Navegar entre 3 tipos de notificaciones** con contenido específico para cada una
+- **Ver nuevos seguidores** con información de quién los sigue recientemente  
+- **Revisar actividad** con comentarios, me gusta y menciones organizados
+- **Gestionar solicitudes de mensajes** de personas no seguidas con control manual
+- **Cambiar dinámicamente entre inbox y chat** con navegación fluida
+- **Usar todas las funcionalidades de mensajería** sin problemas de estado
 
 **🚨 PROBLEMA CRÍTICO DE NAVEGACIÓN EN PUBLICACIONES DEL PERFIL RESUELTO COMPLETAMENTE (2025-09-01): Las publicaciones del perfil ahora se abren y muestran correctamente - múltiples bugs críticos corregidos exitosamente.**
 
