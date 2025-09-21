@@ -12066,6 +12066,10 @@ def main():
     print("\n💬 TESTING: Chat Configuration New Implementation")
     test_results["chat_configuration"] = test_chat_configuration_new_implementation(base_url)
     
+    # Run notification system automatic updates test
+    print("\n🔔 TESTING: Notification System Automatic Updates")
+    test_results["notification_system"] = test_notification_system_automatic_updates(base_url)
+    
     # Run new chat endpoints test (replacing hardcoded data)
     print("\n🎯 TESTING: New Chat Endpoints Replacing Hardcoded Data")
     test_results["new_chat_endpoints"] = test_new_chat_endpoints_replacing_hardcoded_data(base_url)
