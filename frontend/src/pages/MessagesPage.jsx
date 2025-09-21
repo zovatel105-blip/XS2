@@ -769,7 +769,7 @@ const MessagesPage = () => {
         message: `@${follower.username} comenzó a seguirte`,
         unreadCount: 0,
         time: formatTimeForInbox(follower.followed_at),
-        avatar: '👤', // Icono persona con círculo azul claro
+        avatar: follower.avatar_url || getAvatarForUser(follower), // Usar foto de perfil real o fallback
         userId: follower.id,
         isSystem: false
       }));
