@@ -785,23 +785,27 @@ const MessagesPage = () => {
           animate={{ opacity: 1 }}
           className="flex-1 flex flex-col bg-white"
         >
-          {/* TOP BAR (Header) */}
-          <div className="h-14 flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 sticky top-0 z-20">
+          {/* TOP BAR (Header) - OPTIMIZADO MÓVIL */}
+          <div className="h-14 flex items-center justify-between px-4 py-3 bg-white border-b border-gray-100 sticky top-0 z-20 safe-area-top">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowNewChat(true)}
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="w-11 h-11 rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition-colors"
+              style={{ touchAction: 'manipulation' }}
+              aria-label="Nueva conversación"
             >
               <Plus className="w-5 h-5 text-black" strokeWidth={2} />
             </motion.button>
             
-            <h1 className="text-lg font-semibold text-black">Inbox TikTok ✨</h1>
+            <h1 className="text-lg font-semibold text-black">Inbox</h1>
             
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="w-11 h-11 rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 transition-colors"
+              style={{ touchAction: 'manipulation' }}
+              aria-label="Buscar"
             >
               <Search className="w-5 h-5 text-black" strokeWidth={2} />
             </motion.button>
