@@ -1040,6 +1040,7 @@ const MessagesPage = () => {
   console.log('🔥 MESSAGES PAGE DEBUG:', {
     showInbox,
     showChat,
+    selectedSegment: selectedSegment || 'conversations', // null = conversaciones por defecto
     selectedConversation: selectedConversation ? {
       id: selectedConversation.id,
       participant: selectedConversation.participants?.[0]?.display_name
