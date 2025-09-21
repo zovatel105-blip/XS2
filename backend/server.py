@@ -1323,7 +1323,8 @@ async def register(user_data: UserCreate, request: Request):
         email=user_data.email,
         username=user_data.username,
         display_name=user_data.display_name,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        avatar_url=user_data.avatar_url  # Incluir avatar_url del registro
     )
     
     # Insert user
