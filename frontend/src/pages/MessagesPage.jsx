@@ -22,6 +22,17 @@ const MessagesPage = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [reactionTarget, setReactionTarget] = useState(null);
   const [ephemeralMode, setEphemeralMode] = useState(false);
+  
+  // Control segmentado - comenzar con "followers" por defecto
+  const [selectedSegment, setSelectedSegment] = useState('followers');
+  const [segmentData, setSegmentData] = useState({
+    followers: { count: 0, loading: true },
+    activity: { count: 0, loading: true },
+    messages: { count: 0, loading: true }
+  });
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [realNotifications, setRealNotifications] = useState([]);
+  
   const longPressTimer = useRef(null);
   const { user, apiRequest } = useAuth();
   const { toast } = useToast();
