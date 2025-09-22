@@ -401,13 +401,33 @@ const MessagesMainPage = () => {
       console.log('🔍 Valor exacto recipient.id:', JSON.stringify(recipient.id));
       console.log('🔍 Tipo de content:', typeof messageContent);
       console.log('🔍 Valor exacto content:', JSON.stringify(messageContent));
+      console.log('🔍 Token del usuario:', token ? `${token.substring(0, 20)}...` : 'NO_TOKEN');
+      console.log('🔍 Usuario actual:', user.id, user.username);
       
-      const response = await apiRequest('/api/messages', {
-        method: 'POST',
-        body: messagePayload
-      });
+      try {
+        const response = await apiRequest('/api/messages', {
+          method: 'POST',
+          body: messagePayload
+        });
 
-      console.log('✅ Mensaje enviado exitosamente:', response);
+        console.log('✅ Mensaje enviado exitosamente:', response);
+      } catch (error) {
+        console.error('❌ Error enviando mensaje COMPLETO:', error);
+        console.error('❌ Error message:', error.message);
+        console.error('❌ Error stack:', error.stack);
+        
+        // Verificar si es error 422 específicamente
+        if (error.message && error.message.includes('422')) {
+          console.error('❌ Error 422 - Datos enviados:');
+          console.error('  - messagePayload:', messagePayload);
+          console.error('  - recipient.id tipo:', typeof recipient.id);
+          console.error('  - recipient.id valor:', recipient.id);
+          console.error('  - content tipo:', typeof messageContent);
+          console.error('  - content valor:', messageContent);
+        }
+        
+        throw error;
+      }
 
       // Actualizar el mensaje temporal con la respuesta del servidor
       setMessages(prevMessages =>
