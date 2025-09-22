@@ -160,6 +160,80 @@ const MessagesMainPage = () => {
     }
   }, [location.state, navigate, location.pathname]);
 
+  // Manejar parámetro user en URL para abrir chat directo
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const targetUsername = urlParams.get('user');
+    
+    if (targetUsername && conversations.length > 0) {
+      console.log('🔍 Buscando conversación para usuario:', targetUsername);
+      
+      // Buscar conversación existente con este usuario
+      const existingConversation = conversations.find(conv => {
+        const otherUser = conv.participants?.find(p => p.id !== user?.id);
+        return otherUser?.username === targetUsername;
+      });
+
+      if (existingConversation) {
+        console.log('✅ Conversación existente encontrada:', existingConversation.id);
+        setSelectedConversation(existingConversation);
+        setShowChat(true);
+        // Limpiar la URL sin el parámetro user
+        navigate('/messages', { replace: true });
+      } else {
+        // Si no existe conversación, iniciar nueva con el usuario
+        console.log('🆕 Iniciando nueva conversación con:', targetUsername);
+        handleStartNewConversationWithUser(targetUsername);
+        // Limpiar la URL sin el parámetro user
+        navigate('/messages', { replace: true });
+      }
+    }
+  }, [location.search, conversations, user, navigate]);
+
+  // Función para iniciar nueva conversación con un usuario específico
+  const handleStartNewConversationWithUser = async (username) => {
+    try {
+      // Buscar el usuario por username
+      const users = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
+      const targetUser = users.find(u => u.username === username);
+      
+      if (targetUser) {
+        // Crear conversación simulada
+        const newConversation = {
+          id: `new-${targetUser.id}`,
+          participants: [
+            {
+              id: user.id,
+              username: user.username,
+              display_name: user.display_name,
+              avatar_url: user.avatar_url
+            },
+            {
+              id: targetUser.id,
+              username: targetUser.username,
+              display_name: targetUser.display_name,
+              avatar_url: targetUser.avatar_url
+            }
+          ],
+          last_message: {
+            content: '',
+            timestamp: new Date().toISOString(),
+            sender_id: user.id
+          },
+          unread_count: 0
+        };
+        
+        console.log('✅ Nueva conversación creada:', newConversation);
+        setSelectedConversation(newConversation);
+        setShowChat(true);
+      } else {
+        console.error('❌ Usuario no encontrado:', username);
+      }
+    } catch (error) {
+      console.error('❌ Error buscando usuario:', error);
+    }
+  };
+
   // Función para obtener badge count
   const getSegmentBadgeCount = (segmentId) => {
     const data = segmentData[segmentId];
