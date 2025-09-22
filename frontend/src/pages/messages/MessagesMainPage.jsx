@@ -466,11 +466,27 @@ const MessagesMainPage = () => {
       console.log('🔍 Buscando usuario:', username);
       console.log('🔍 Usuario actual (user):', user);
       
+      // VALIDACIÓN CRÍTICA: No buscar si es el mismo usuario
+      if (username === user.username || username === user.display_name) {
+        console.error('❌ Error: Intentando buscar al mismo usuario actual');
+        alert('No puedes crear una conversación contigo mismo');
+        return;
+      }
+      
       // Buscar el usuario por username
       const users = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
       console.log('📝 Resultados de búsqueda:', users);
       
-      const targetUser = users.find(u => u.username === username);
+      // Filtrar resultados para excluir al usuario actual
+      const filteredUsers = users.filter(u => u.id !== user.id && u.username !== user.username);
+      console.log('📝 Usuarios filtrados (sin usuario actual):', filteredUsers);
+      
+      // Buscar usuario target con coincidencia exacta
+      const targetUser = filteredUsers.find(u => 
+        u.username === username || 
+        u.display_name === username ||
+        u.username.toLowerCase() === username.toLowerCase()
+      );
       
       if (targetUser) {
         console.log('✅ Usuario encontrado:', targetUser);
@@ -478,30 +494,40 @@ const MessagesMainPage = () => {
         console.log('  - Usuario actual:', user.username, user.id);
         console.log('  - Usuario target:', targetUser.username, targetUser.id);
         
-        // Verificar que no estamos creando conversación con nosotros mismos
-        if (targetUser.id === user.id || targetUser.username === user.username) {
-          console.error('❌ Error: Intentando crear conversación con mismo usuario');
+        // VALIDACIÓN DOBLE: Verificar que no es el mismo usuario
+        if (targetUser.id === user.id) {
+          console.error('❌ Error: Target user es el mismo que el usuario actual');
           alert('No puedes crear una conversación contigo mismo');
           return;
         }
         
-        // Crear conversación simulada
+        // Crear conversación simulada CON VALIDACIÓN DE PARTICIPANTES
+        const participant1 = {
+          id: user.id,
+          username: user.username,
+          display_name: user.display_name || user.username,
+          avatar_url: user.avatar_url
+        };
+        
+        const participant2 = {
+          id: targetUser.id,
+          username: targetUser.username,
+          display_name: targetUser.display_name || targetUser.username,
+          avatar_url: targetUser.avatar_url
+        };
+        
+        // VALIDACIÓN FINAL: Verificar que los participantes son diferentes
+        if (participant1.id === participant2.id) {
+          console.error('❌ Error crítico: Los participantes son el mismo usuario');
+          console.error('  - Participant 1:', participant1);
+          console.error('  - Participant 2:', participant2);
+          alert('ERROR: No se puede crear conversación - usuarios idénticos');
+          return;
+        }
+        
         const newConversation = {
           id: `new-${targetUser.id}`,
-          participants: [
-            {
-              id: user.id,
-              username: user.username,
-              display_name: user.display_name,
-              avatar_url: user.avatar_url
-            },
-            {
-              id: targetUser.id,
-              username: targetUser.username,
-              display_name: targetUser.display_name,
-              avatar_url: targetUser.avatar_url
-            }
-          ],
+          participants: [participant1, participant2],
           last_message: {
             content: '',
             timestamp: new Date().toISOString(),
@@ -512,15 +538,15 @@ const MessagesMainPage = () => {
         
         console.log('✅ Nueva conversación creada:', newConversation);
         console.log('🔍 Participantes de la conversación:');
-        newConversation.participants.forEach((p, i) => {
-          console.log(`  ${i + 1}. ${p.username} (${p.id})`);
-        });
+        console.log(`  1. ${participant1.username} (${participant1.id}) - Usuario actual`);
+        console.log(`  2. ${participant2.username} (${participant2.id}) - Usuario target`);
         
         setSelectedConversation(newConversation);
         setShowChat(true);
       } else {
-        console.error('❌ Usuario no encontrado en resultados:', username);
-        console.error('❌ Usuarios disponibles:', users.map(u => u.username));
+        console.error('❌ Usuario no encontrado en resultados filtrados:', username);
+        console.error('❌ Usuarios disponibles:', filteredUsers.map(u => u.username));
+        console.error('❌ Usuarios originales:', users.map(u => u.username));
         // Mostrar mensaje de error al usuario
         alert(`No se pudo encontrar al usuario: ${username}`);
       }
