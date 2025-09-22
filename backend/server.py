@@ -2585,12 +2585,29 @@ async def get_user_following(user_id: str):
 # =============  MESSAGING ENDPOINTS =============
 
 @api_router.post("/messages")
-async def send_message(message: MessageCreate, current_user: UserResponse = Depends(get_current_user)):
+async def send_message(request: Request, message: MessageCreate, current_user: UserResponse = Depends(get_current_user)):
     """Send a message to another user"""
-    # Verify recipient exists
-    recipient = await db.users.find_one({"id": message.recipient_id})
-    if not recipient:
-        raise HTTPException(status_code=404, detail="Recipient not found")
+    try:
+        # Debug logging - log the incoming request data
+        request_body = await request.body()
+        print(f"🔍 DEBUG - Raw request body: {request_body}")
+        print(f"🔍 DEBUG - Content-Type: {request.headers.get('content-type')}")
+        print(f"🔍 DEBUG - Message object: {message}")
+        print(f"🔍 DEBUG - Message dict: {message.dict()}")
+        print(f"🔍 DEBUG - Current user: {current_user.id}")
+        
+        # Verify recipient exists
+        recipient = await db.users.find_one({"id": message.recipient_id})
+        if not recipient:
+            print(f"❌ DEBUG - Recipient not found: {message.recipient_id}")
+            raise HTTPException(status_code=404, detail="Recipient not found")
+        
+        print(f"✅ DEBUG - Recipient found: {recipient.get('username')}")
+        
+    except Exception as e:
+        print(f"❌ DEBUG - Error in send_message: {str(e)}")
+        print(f"❌ DEBUG - Error type: {type(e)}")
+        raise e
     
     # Find or create conversation
     conversation_data = await db.conversations.find_one({
