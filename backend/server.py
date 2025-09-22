@@ -2619,14 +2619,10 @@ async def debug_message_request(request: Request):
         return {"status": "debug_error", "error": str(e)}
 
 @api_router.post("/messages")
-async def send_message(request: Request, message: MessageCreate, current_user: UserResponse = Depends(get_current_user)):
+async def send_message(message: MessageCreate, current_user: UserResponse = Depends(get_current_user)):
     """Send a message to another user"""
     try:
-        # Debug logging - log the incoming request data
-        request_body = await request.body()
-        print(f"🔍 DEBUG - Raw request body: {request_body}")
-        print(f"🔍 DEBUG - Content-Type: {request.headers.get('content-type')}")
-        print(f"🔍 DEBUG - Message object: {message}")
+        # Debug logging simplificado
         print(f"🔍 DEBUG - Message dict: {message.dict()}")
         print(f"🔍 DEBUG - Current user: {current_user.id}")
         
