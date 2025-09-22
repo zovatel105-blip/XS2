@@ -224,6 +224,13 @@ export const AuthProvider = ({ children }) => {
           } else {
             throw new Error(errorData.detail);
           }
+        } else if (response.status === 422 && errorData.errors) {
+          // Handle FastAPI validation errors (422)
+          const validationErrors = errorData.errors.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
+          throw new Error(`Validation error: ${validationErrors}`);
+        } else if (response.status === 422) {
+          // Generic 422 handling
+          throw new Error('Invalid data provided. Please check all required fields are filled correctly.');
         } else {
           throw new Error(`Registration failed: ${response.statusText || 'Unknown error'}`);
         }
