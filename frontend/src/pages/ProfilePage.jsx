@@ -404,7 +404,21 @@ const ProfilePage = () => {
   }, [userId, navigate, toast]);
 
   // Define isOwnProfile early - needed by useEffect hooks
-  const isOwnProfile = !userId || (authUser && (userId === authUser?.username || userId === authUser?.id));
+  const isOwnProfile = useMemo(() => {
+    if (!userId) return true; // No userId means viewing own profile
+    if (!authUser) return false; // Not authenticated, can't be own profile
+    
+    // Check if userId matches current user's username or ID
+    const isMatch = userId === authUser.username || userId === authUser.id;
+    console.log('🔍 isOwnProfile calculation:', {
+      userId,
+      authUsername: authUser.username,
+      authId: authUser.id,
+      isMatch
+    });
+    
+    return isMatch;
+  }, [userId, authUser]);
 
   // Estado temporal para debug visual en móvil
   const [debugInfo, setDebugInfo] = useState(null);
