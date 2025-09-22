@@ -1336,10 +1336,24 @@ const ProfilePage = () => {
                     variant="outline" 
                     className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => {
+                      // Usar viewedUser si está disponible, si no, usar userId de la URL
                       const targetUser = viewedUser?.username || userId;
                       console.log('🔍 ProfilePage - Enviando mensaje a:', targetUser);
-                      console.log('🔍 ProfilePage - viewedUser:', viewedUser);
-                      console.log('🔍 ProfilePage - userId:', userId);
+                      console.log('🔍 ProfilePage - viewedUser completo:', viewedUser);
+                      console.log('🔍 ProfilePage - userId from URL:', userId);
+                      console.log('🔍 ProfilePage - authUser:', authUser?.username);
+                      
+                      // Validar que no está enviando mensaje a sí mismo
+                      if (targetUser === authUser?.username || targetUser === authUser?.id) {
+                        console.error('❌ Error: Intentando enviar mensaje a sí mismo');
+                        toast({
+                          title: "Error",
+                          description: "No puedes enviarte mensajes a ti mismo",
+                          variant: "destructive"
+                        });
+                        return;
+                      }
+                      
                       navigate(`/messages?user=${targetUser}`);
                     }}
                   >
