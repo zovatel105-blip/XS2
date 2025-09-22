@@ -193,11 +193,17 @@ const MessagesMainPage = () => {
   // Función para iniciar nueva conversación con un usuario específico
   const handleStartNewConversationWithUser = async (username) => {
     try {
+      console.log('🔍 Buscando usuario:', username);
+      
       // Buscar el usuario por username
       const users = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
+      console.log('📝 Resultados de búsqueda:', users);
+      
       const targetUser = users.find(u => u.username === username);
       
       if (targetUser) {
+        console.log('✅ Usuario encontrado:', targetUser);
+        
         // Crear conversación simulada
         const newConversation = {
           id: `new-${targetUser.id}`,
@@ -227,10 +233,14 @@ const MessagesMainPage = () => {
         setSelectedConversation(newConversation);
         setShowChat(true);
       } else {
-        console.error('❌ Usuario no encontrado:', username);
+        console.error('❌ Usuario no encontrado en resultados:', username);
+        // Mostrar mensaje de error al usuario
+        alert(`No se pudo encontrar al usuario: ${username}`);
       }
     } catch (error) {
       console.error('❌ Error buscando usuario:', error);
+      // Mostrar mensaje de error al usuario
+      alert(`Error al buscar usuario: ${error.message}`);
     }
   };
 
