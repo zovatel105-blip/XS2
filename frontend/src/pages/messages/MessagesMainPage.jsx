@@ -213,7 +213,97 @@ const MessagesMainPage = () => {
     }
   }, [pendingUserToOpen, conversations, user]);
 
-  // Función para iniciar nueva conversación con un usuario específico
+  // Función para enviar mensaje
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedConversation) return;
+
+    const messageContent = newMessage.trim();
+    const tempMessageId = `temp-${Date.now()}`;
+    
+    // Crear mensaje temporal para mostrar inmediatamente en la UI
+    const tempMessage = {
+      id: tempMessageId,
+      content: messageContent,
+      sender_id: user.id,
+      timestamp: new Date().toISOString(),
+      sender: {
+        id: user.id,
+        username: user.username,
+        display_name: user.display_name,
+        avatar_url: user.avatar_url
+      },
+      status: 'sending' // Estado temporal
+    };
+
+    try {
+      console.log('📤 Enviando mensaje:', messageContent);
+      
+      // Agregar mensaje temporal a la UI inmediatamente
+      setMessages(prevMessages => [...prevMessages, tempMessage]);
+      setNewMessage('');
+
+      // Determinar el destinatario
+      const recipient = selectedConversation.participants?.find(p => p.id !== user.id);
+      if (!recipient) {
+        throw new Error('No se pudo encontrar el destinatario');
+      }
+
+      // Enviar mensaje al backend
+      const response = await apiRequest('/api/messages', {
+        method: 'POST',
+        body: {
+          recipient_id: recipient.id,
+          content: messageContent
+        }
+      });
+
+      console.log('✅ Mensaje enviado exitosamente:', response);
+
+      // Actualizar el mensaje temporal con la respuesta del servidor
+      setMessages(prevMessages =>
+        prevMessages.map(msg =>
+          msg.id === tempMessageId
+            ? { ...response, status: 'sent' }
+            : msg
+        )
+      );
+
+      // Actualizar la conversación con el último mensaje
+      setSelectedConversation(prev => ({
+        ...prev,
+        last_message: {
+          content: messageContent,
+          timestamp: response.timestamp,
+          sender_id: user.id
+        }
+      }));
+
+      // Recargar conversaciones para actualizar la lista
+      loadConversations();
+
+    } catch (error) {
+      console.error('❌ Error enviando mensaje:', error);
+      
+      // Marcar mensaje como fallido
+      setMessages(prevMessages =>
+        prevMessages.map(msg =>
+          msg.id === tempMessageId
+            ? { ...msg, status: 'failed' }
+            : msg
+        )
+      );
+
+      // Mostrar error al usuario
+      alert(`Error al enviar mensaje: ${error.message}`);
+    }
+  };
+
+  // Función para manejar envío con Enter
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && newMessage.trim()) {
+      handleSendMessage();
+    }
+  };
   const handleStartNewConversationWithUser = async (username) => {
     try {
       console.log('🔍 Buscando usuario:', username);
