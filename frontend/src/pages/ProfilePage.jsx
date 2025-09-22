@@ -1365,15 +1365,10 @@ const ProfilePage = () => {
                     variant="outline" 
                     className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => {
-                      console.log('🔍 ProfilePage - CLICK MENSAJE - Estado completo:');
-                      console.log('  - viewedUser:', viewedUser);
-                      console.log('  - userId from URL:', userId);
-                      console.log('  - authUser:', authUser?.username, authUser?.id);
-                      console.log('  - isOwnProfile:', isOwnProfile);
+                      // LÓGICA SIMPLIFICADA PARA MÓVIL
                       
-                      // Si es perfil propio, no permitir
+                      // Si es perfil propio, error inmediato
                       if (isOwnProfile) {
-                        console.error('❌ Error: Intentando enviar mensaje en perfil propio');
                         toast({
                           title: "Error",
                           description: "No puedes enviarte mensajes a ti mismo",
@@ -1382,47 +1377,24 @@ const ProfilePage = () => {
                         return;
                       }
                       
-                      // Determinar usuario target con lógica robusta
-                      let targetUser = null;
-                      
-                      // Prioridad 1: viewedUser.username (datos cargados del backend)
+                      // Si tenemos viewedUser, usar su username
                       if (viewedUser && viewedUser.username) {
-                        targetUser = viewedUser.username;
-                        console.log('✅ Usando viewedUser.username:', targetUser);
-                      }
-                      // Prioridad 2: userId de la URL si es válido y diferente al usuario actual
-                      else if (userId && userId !== authUser?.username && userId !== authUser?.id) {
-                        targetUser = userId;
-                        console.log('✅ Usando userId de URL:', targetUser);
-                      }
-                      // Error: no se pudo determinar usuario target
-                      else {
-                        console.error('❌ Error: No se pudo determinar usuario target');
-                        console.error('  - viewedUser disponible:', !!viewedUser);
-                        console.error('  - userId válido:', userId);
-                        console.error('  - Es diferente a authUser:', userId !== authUser?.username && userId !== authUser?.id);
-                        
-                        toast({
-                          title: "Error",
-                          description: "No se pudo identificar el usuario. Intenta recargar la página.",
-                          variant: "destructive"
-                        });
+                        navigate(`/messages?user=${viewedUser.username}`);
                         return;
                       }
                       
-                      // Validación adicional: asegurar que no es el usuario actual
-                      if (targetUser === authUser?.username || targetUser === authUser?.id) {
-                        console.error('❌ Error: targetUser resuelve al usuario actual');
-                        toast({
-                          title: "Error",
-                          description: "No puedes enviarte mensajes a ti mismo",
-                          variant: "destructive"
-                        });
+                      // Si no tenemos viewedUser, usar userId de la URL directamente
+                      if (userId) {
+                        navigate(`/messages?user=${userId}`);
                         return;
                       }
                       
-                      console.log('🚀 Navegando a mensajes con usuario:', targetUser);
-                      navigate(`/messages?user=${targetUser}`);
+                      // Error: no hay información suficiente
+                      toast({
+                        title: "Error",
+                        description: "No se pudo identificar el usuario. Recarga la página.",
+                        variant: "destructive"
+                      });
                     }}
                   >
                     <MessageCircle className="w-4 h-4 mr-2" strokeWidth={1.5} />
