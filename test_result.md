@@ -957,7 +957,7 @@ Layout "off" - Carrusel Horizontal:
 - **Add Functionality**: `handleAddSlot()` con validación y feedback
 - **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
-## user_problem_statement: "Problema en sistema de mensajes: Al enviar mensaje no se muestra en la interfaz del chat después del envío"
+## user_problem_statement: "Las estadísticas que aparecen dentro del chat conversaciones deben ser datos reales - Cambiar estadísticas hardcodeadas por datos reales del usuario"
 
 ## backend:
   - task: "AuthContext backend compatibility validation"
