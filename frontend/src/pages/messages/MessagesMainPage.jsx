@@ -450,6 +450,7 @@ const MessagesMainPage = () => {
   const handleStartNewConversationWithUser = async (username) => {
     try {
       console.log('🔍 Buscando usuario:', username);
+      console.log('🔍 Usuario actual (user):', user);
       
       // Buscar el usuario por username
       const users = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
@@ -459,6 +460,16 @@ const MessagesMainPage = () => {
       
       if (targetUser) {
         console.log('✅ Usuario encontrado:', targetUser);
+        console.log('🔍 Comparación usuarios:');
+        console.log('  - Usuario actual:', user.username, user.id);
+        console.log('  - Usuario target:', targetUser.username, targetUser.id);
+        
+        // Verificar que no estamos creando conversación con nosotros mismos
+        if (targetUser.id === user.id || targetUser.username === user.username) {
+          console.error('❌ Error: Intentando crear conversación con mismo usuario');
+          alert('No puedes crear una conversación contigo mismo');
+          return;
+        }
         
         // Crear conversación simulada
         const newConversation = {
@@ -486,10 +497,16 @@ const MessagesMainPage = () => {
         };
         
         console.log('✅ Nueva conversación creada:', newConversation);
+        console.log('🔍 Participantes de la conversación:');
+        newConversation.participants.forEach((p, i) => {
+          console.log(`  ${i + 1}. ${p.username} (${p.id})`);
+        });
+        
         setSelectedConversation(newConversation);
         setShowChat(true);
       } else {
         console.error('❌ Usuario no encontrado en resultados:', username);
+        console.error('❌ Usuarios disponibles:', users.map(u => u.username));
         // Mostrar mensaje de error al usuario
         alert(`No se pudo encontrar al usuario: ${username}`);
       }
