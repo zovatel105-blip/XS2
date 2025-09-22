@@ -957,7 +957,7 @@ Layout "off" - Carrusel Horizontal:
 - **Add Functionality**: `handleAddSlot()` con validación y feedback
 - **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
-## user_problem_statement: "Un authcontext mejorado que no presente errores - Crear un AuthContext mejorado que funcione sin errores durante el proceso de registro"
+## user_problem_statement: "Problema de navegación en mensajes: Al hacer clic en mensaje desde perfil de usuario, dirige a página general de chat en lugar de abrir conversación específica con ese usuario"
 
 ## backend:
   - task: "AuthContext backend compatibility validation"
