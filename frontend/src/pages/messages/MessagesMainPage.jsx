@@ -302,11 +302,21 @@ const MessagesMainPage = () => {
 
   // Cuando se selecciona una conversación, cargar estadísticas del otro usuario
   useEffect(() => {
+    console.log('🔄 useEffect selectedConversation cambió:', selectedConversation);
+    
     if (selectedConversation) {
+      console.log('🔄 Participants:', selectedConversation.participants);
       const otherUser = selectedConversation.participants?.find(p => p.id !== user?.id);
+      console.log('🔄 User actual:', user?.id, user?.username);
+      console.log('🔄 Other user encontrado:', otherUser);
+      
       if (otherUser && otherUser.id) {
+        console.log('🔄 Cargando estadísticas para:', otherUser.id, otherUser.username);
         loadUserStats(otherUser.id);
+      } else {
+        console.warn('⚠️ No se pudo encontrar otherUser o no tiene ID válido');
       }
+      
       loadMessages(selectedConversation.id);
     }
   }, [selectedConversation]);
