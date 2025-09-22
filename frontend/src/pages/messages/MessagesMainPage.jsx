@@ -401,7 +401,6 @@ const MessagesMainPage = () => {
       console.log('🔍 Valor exacto recipient.id:', JSON.stringify(recipient.id));
       console.log('🔍 Tipo de content:', typeof messageContent);
       console.log('🔍 Valor exacto content:', JSON.stringify(messageContent));
-      console.log('🔍 Token del usuario:', token ? `${token.substring(0, 20)}...` : 'NO_TOKEN');
       console.log('🔍 Usuario actual:', user.id, user.username);
       
       try {
