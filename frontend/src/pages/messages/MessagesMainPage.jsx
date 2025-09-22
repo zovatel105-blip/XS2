@@ -745,29 +745,35 @@ const MessagesMainPage = () => {
               </button>
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 relative overflow-hidden">
-                  {selectedConversation?.participants?.[0]?.avatar_url ? (
-                    <>
-                      <img 
-                        src={selectedConversation.participants[0].avatar_url} 
-                        alt="Avatar" 
-                        className="w-full h-full rounded-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
-                        }}
-                      />
-                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-sm font-semibold text-gray-600" style={{ display: 'none' }}>
-                        {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
-                      </div>
-                    </>
-                  ) : (
-                    <span className="text-sm font-semibold text-gray-600">
-                      {selectedConversation?.participants?.[0]?.display_name?.charAt(0) || '👤'}
-                    </span>
-                  )}
+                  {(() => {
+                    const otherUser = selectedConversation?.participants?.find(p => p.id !== user?.id);
+                    return otherUser?.avatar_url ? (
+                      <>
+                        <img 
+                          src={otherUser.avatar_url} 
+                          alt="Avatar" 
+                          className="w-full h-full rounded-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                          }}
+                        />
+                        <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-sm font-semibold text-gray-600" style={{ display: 'none' }}>
+                          {otherUser?.display_name?.charAt(0) || '👤'}
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-sm font-semibold text-gray-600">
+                        {otherUser?.display_name?.charAt(0) || '👤'}
+                      </span>
+                    );
+                  })()}
                 </div>
                 <h2 className="text-lg font-semibold text-gray-900">
-                  {selectedConversation?.participants?.[0]?.display_name || 'Usuario'}
+                  {(() => {
+                    const otherUser = selectedConversation?.participants?.find(p => p.id !== user?.id);
+                    return otherUser?.display_name || otherUser?.username || 'Usuario';
+                  })()}
                 </h2>
               </div>
             </div>
