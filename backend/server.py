@@ -1874,19 +1874,36 @@ async def ensure_user_profile(user_id: str):
         # Count total votes and polls
         total_polls = await db.polls.count_documents({"author_id": user_id, "is_active": True})
         
-        # Calculate actual vote statistics
-        total_votes_received = 0
-        user_polls = await db.polls.find({"author_id": user_id, "is_active": True}).to_list(length=None)
-        for poll in user_polls:
-            total_votes_received += poll.get("total_votes", 0)
+        # Calculate actual vote statistics using aggregation for accuracy
+        # Use MongoDB aggregation to count real votes received on user's polls
+        pipeline = [
+            {"$match": {"author_id": user_id, "is_active": True}},
+            {"$unwind": "$options"},
+            {"$group": {
+                "_id": None,
+                "total_votes_received": {"$sum": "$options.votes"}
+            }}
+        ]
+        
+        result = await db.polls.aggregate(pipeline).to_list(length=1)
+        total_votes_received = result[0]["total_votes_received"] if result else 0
+        
+        logger.info(f"📊 Calculated real votes for user {user_id}: {total_votes_received}")
         
         # Count votes made by this user
         votes_made_by_user = await db.votes.count_documents({"user_id": user_id})
         
-        # Count likes received on user's polls
-        likes_received = 0
-        for poll in user_polls:
-            likes_received += poll.get("likes", 0)
+        # Count likes received on user's polls using aggregation
+        likes_pipeline = [
+            {"$match": {"author_id": user_id, "is_active": True}},
+            {"$group": {
+                "_id": None,
+                "total_likes": {"$sum": "$likes"}
+            }}
+        ]
+        
+        likes_result = await db.polls.aggregate(likes_pipeline).to_list(length=1)
+        likes_received = likes_result[0]["total_likes"] if likes_result else 0
         
         # Count likes given by this user
         likes_given_by_user = await db.poll_likes.count_documents({"user_id": user_id})
