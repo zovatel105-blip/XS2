@@ -195,6 +195,14 @@ const MessagesMainPage = () => {
       console.log('🔍 Procesando usuario pendiente:', pendingUserToOpen);
       console.log('🔍 Conversaciones disponibles:', conversations.length);
       
+      // Actualizar debug info
+      setChatDebugInfo({
+        pendingUser: pendingUserToOpen,
+        currentUser: user.username,
+        conversationsCount: conversations.length,
+        timestamp: new Date().toLocaleTimeString()
+      });
+      
       // Buscar conversación existente
       const existingConversation = conversations.find(conv => {
         const otherUser = conv.participants?.find(p => p.id !== user?.id);
