@@ -198,6 +198,8 @@ const MessagesMainPage = () => {
         const found = otherUser?.username === pendingUserToOpen;
         if (found) {
           console.log('✅ Conversación encontrada con:', otherUser.username);
+          console.log('🔍 Conversación completa:', conv);
+          console.log('🔍 Otros participantes:', otherUser);
         }
         return found;
       });
@@ -208,6 +210,7 @@ const MessagesMainPage = () => {
         setShowChat(true);
       } else {
         console.log('🆕 Creando nueva conversación con:', pendingUserToOpen);
+        console.log('🔍 Usuario actual para nueva conversación:', user.username, user.id);
         handleStartNewConversationWithUser(pendingUserToOpen);
       }
       
