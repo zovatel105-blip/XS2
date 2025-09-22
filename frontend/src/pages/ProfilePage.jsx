@@ -351,7 +351,11 @@ const ProfilePage = () => {
       // Fetch user profile from backend
       const fetchUserProfile = async () => {
         try {
+          console.log('🔍 FETCH PROFILE - userId parameter:', userId);
+          console.log('🔍 FETCH PROFILE - authUser:', authUser?.username, authUser?.id);
+          
           const profile = await userService.getUserProfile(userId);
+          console.log('🔍 FETCH PROFILE - Profile response:', profile);
           
           // Transform backend profile to frontend format
           const transformedUser = {
@@ -373,6 +377,7 @@ const ProfilePage = () => {
             totalPolls: profile.total_polls_created || 0
           };
           
+          console.log('🔍 FETCH PROFILE - Transformed user:', transformedUser);
           setViewedUser(transformedUser);
         } catch (error) {
           console.error('Error fetching user profile:', error);
