@@ -269,8 +269,20 @@ const MessagesMainPage = () => {
 
       // Determinar el destinatario
       const recipient = selectedConversation.participants?.find(p => p.id !== user.id);
+      console.log('🔍 Debug recipient:', {
+        selectedConversation: selectedConversation,
+        participants: selectedConversation.participants,
+        user: user,
+        recipient: recipient,
+        recipientId: recipient?.id
+      });
+      
       if (!recipient) {
         throw new Error('No se pudo encontrar el destinatario');
+      }
+
+      if (!recipient.id) {
+        throw new Error('El destinatario no tiene ID válido');
       }
 
       // Enviar mensaje al backend
