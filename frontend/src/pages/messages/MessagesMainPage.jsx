@@ -268,14 +268,46 @@ const MessagesMainPage = () => {
       setNewMessage('');
 
       // Determinar el destinatario
-      const recipient = selectedConversation.participants?.find(p => p.id !== user.id);
-      console.log('🔍 Debug recipient:', {
+      let recipient = selectedConversation.participants?.find(p => p.id !== user.id);
+      
+      console.log('🔍 Debug recipient inicial:', {
         selectedConversation: selectedConversation,
         participants: selectedConversation.participants,
         user: user,
         recipient: recipient,
         recipientId: recipient?.id
       });
+      
+      // Si es una conversación nueva (ID empieza con 'new-'), necesitamos crear la conversación real primero
+      if (selectedConversation.id.startsWith('new-')) {
+        console.log('🆕 Conversación nueva detectada, creando conversación real...');
+        
+        try {
+          // Crear conversación real en el backend
+          const conversationResponse = await apiRequest('/api/conversations', {
+            method: 'POST',
+            body: {
+              participant_id: recipient.id // ID del otro usuario
+            }
+          });
+          
+          console.log('✅ Conversación real creada:', conversationResponse);
+          
+          // Actualizar la conversación seleccionada con los datos reales
+          setSelectedConversation({
+            ...selectedConversation,
+            id: conversationResponse.id || conversationResponse.conversation_id,
+            ...conversationResponse
+          });
+          
+          // Recargar conversaciones para incluir la nueva
+          loadConversations();
+          
+        } catch (convError) {
+          console.error('❌ Error creando conversación:', convError);
+          // Continuar con la conversación simulada si falla
+        }
+      }
       
       if (!recipient) {
         throw new Error('No se pudo encontrar el destinatario');
