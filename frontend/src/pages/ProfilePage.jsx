@@ -416,6 +416,15 @@ const ProfilePage = () => {
     console.log('  - viewedUser:', viewedUser);
     console.log('  - authUser:', authUser?.username, authUser?.id);
     console.log('  - isOwnProfile:', isOwnProfile);
+    
+    // Actualizar debug info para mostrar en UI móvil
+    setDebugInfo({
+      userId: userId,
+      viewedUserExists: !!viewedUser,
+      viewedUsername: viewedUser?.username,
+      authUsername: authUser?.username,
+      isOwnProfile: isOwnProfile
+    });
   }, [userId, viewedUser, authUser, isOwnProfile]);
 
   // Load saved polls on component mount
