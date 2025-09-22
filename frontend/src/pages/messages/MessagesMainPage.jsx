@@ -236,9 +236,55 @@ const MessagesMainPage = () => {
     }
   };
 
-  // Cuando se selecciona una conversación, cargar sus mensajes
+  // Cargar estadísticas del usuario
+  const loadUserStats = async (userId) => {
+    try {
+      console.log('📊 Cargando estadísticas para usuario:', userId);
+      
+      // Si ya tenemos las estadísticas cached, no recargar
+      if (userStats[userId]) {
+        return userStats[userId];
+      }
+      
+      // Cargar estadísticas del usuario desde el backend
+      const userProfile = await apiRequest(`/api/users/${userId}/profile`);
+      
+      // Calcular estadísticas reales
+      const stats = {
+        votes: userProfile.total_votes || 0,
+        followers: userProfile.followers_count || 0,
+        following: userProfile.following_count || 0,
+        posts: userProfile.posts_count || 0
+      };
+      
+      console.log('✅ Estadísticas cargadas:', stats);
+      
+      // Cachear las estadísticas
+      setUserStats(prev => ({
+        ...prev,
+        [userId]: stats
+      }));
+      
+      return stats;
+    } catch (error) {
+      console.error('❌ Error cargando estadísticas:', error);
+      // Retornar estadísticas por defecto en caso de error
+      return {
+        votes: 0,
+        followers: 0,
+        following: 0,
+        posts: 0
+      };
+    }
+  };
+
+  // Cuando se selecciona una conversación, cargar estadísticas del otro usuario
   useEffect(() => {
     if (selectedConversation) {
+      const otherUser = selectedConversation.participants?.find(p => p.id !== user?.id);
+      if (otherUser && otherUser.id) {
+        loadUserStats(otherUser.id);
+      }
       loadMessages(selectedConversation.id);
     }
   }, [selectedConversation]);
