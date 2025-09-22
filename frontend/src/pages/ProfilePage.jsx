@@ -380,7 +380,10 @@ const ProfilePage = () => {
           console.log('🔍 FETCH PROFILE - Transformed user:', transformedUser);
           setViewedUser(transformedUser);
         } catch (error) {
-          console.error('Error fetching user profile:', error);
+          console.error('❌ FETCH PROFILE ERROR - userId:', userId);
+          console.error('❌ FETCH PROFILE ERROR - Error:', error);
+          console.error('❌ FETCH PROFILE ERROR - Error message:', error.message);
+          
           // Show error message instead of falling back to mock data
           toast({
             title: "Usuario no encontrado",
