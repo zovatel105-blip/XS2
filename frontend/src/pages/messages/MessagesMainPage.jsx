@@ -293,6 +293,10 @@ const MessagesMainPage = () => {
       };
       
       console.log('📤 Payload enviando al backend:', messagePayload);
+      console.log('🔍 Tipo de recipient.id:', typeof recipient.id);
+      console.log('🔍 Valor exacto recipient.id:', JSON.stringify(recipient.id));
+      console.log('🔍 Tipo de content:', typeof messageContent);
+      console.log('🔍 Valor exacto content:', JSON.stringify(messageContent));
       
       const response = await apiRequest('/api/messages', {
         method: 'POST',
