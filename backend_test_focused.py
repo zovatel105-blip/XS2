@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://socmedia-dev.preview.emergentagent.com',
-        'Referer': 'https://socmedia-dev.preview.emergentagent.com/',
+        'Origin': 'https://access-facelift.preview.emergentagent.com',
+        'Referer': 'https://access-facelift.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
