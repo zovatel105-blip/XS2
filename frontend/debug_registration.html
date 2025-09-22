@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .error { background-color: #ffebee; }
+        .success { background-color: #e8f5e9; }
+        .info { background-color: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <h1>Debug Registration Test</h1>
+    
+    <div id="results"></div>
+    
+    <form id="testForm">
+        <input type="email" id="email" placeholder="Email" value="debugtest@example.com" required><br><br>
+        <input type="text" id="username" placeholder="Username" value="debugtest" required><br><br>
+        <input type="password" id="password" placeholder="Password" value="testpass123" required><br><br>
+        <input type="text" id="display_name" placeholder="Display Name" value="Debug Test User" required><br><br>
+        <button type="submit">Test Registration</button>
+    </form>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(type, message, data = null) {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${type.toUpperCase()}:</strong> ${message}`;
+            if (data) {
+                div.innerHTML += `<br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            results.appendChild(div);
+        }
+        
+        // Test backend URL detection
+        const backendUrl = process?.env?.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+        addResult('info', `Backend URL: ${backendUrl}`);
+        
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                display_name: document.getElementById('display_name').value
+            };
+            
+            addResult('info', 'Starting registration test...', userData);
+            
+            try {
+                const registerUrl = `${backendUrl}/api/auth/register`;
+                addResult('info', `Making request to: ${registerUrl}`);
+                
+                const response = await fetch(registerUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+                
+                addResult('info', `Response status: ${response.status}`);
+                
+                if (!response.ok) {
+                    let errorData;
+                    try {
+                        errorData = await response.json();
+                        addResult('error', 'Registration failed', errorData);
+                    } catch (parseError) {
+                        addResult('error', `Registration failed: HTTP ${response.status} - ${response.statusText}`);
+                    }
+                    return;
+                }
+                
+                const responseData = await response.json();
+                addResult('success', 'Registration successful!', {
+                    user: responseData.user?.email,
+                    hasToken: !!responseData.access_token,
+                    tokenLength: responseData.access_token?.length || 0
+                });
+                
+            } catch (error) {
+                addResult('error', 'Network or fetch error', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                });
+            }
+        });
+    </script>
+</body>
+</html>
