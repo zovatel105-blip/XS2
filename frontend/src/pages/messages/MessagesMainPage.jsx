@@ -539,47 +539,38 @@ const MessagesMainPage = () => {
           return;
         }
         
-        // Crear conversación simulada CON VALIDACIÓN DE PARTICIPANTES
-        const participant1 = {
-          id: user.id,
-          username: user.username,
-          display_name: user.display_name || user.username,
-          avatar_url: user.avatar_url
-        };
-        
-        const participant2 = {
-          id: targetUser.id,
-          username: targetUser.username,
-          display_name: targetUser.display_name || targetUser.username,
-          avatar_url: targetUser.avatar_url
-        };
-        
-        // VALIDACIÓN FINAL: Verificar que los participantes son diferentes
-        if (participant1.id === participant2.id) {
-          console.error('❌ Error crítico: Los participantes son el mismo usuario');
-          console.error('  - Participant 1:', participant1);
-          console.error('  - Participant 2:', participant2);
-          alert('ERROR: No se puede crear conversación - usuarios idénticos');
-          return;
-        }
-        
-        const newConversation = {
-          id: `new-${targetUser.id}`,
-          participants: [participant1, participant2],
+        // En lugar de crear conversación simulada, usar datos reales para envío directo
+        const realConversation = {
+          id: null, // Sin ID - se creará en backend al enviar primer mensaje  
+          participants: [
+            {
+              id: user.id,
+              username: user.username,
+              display_name: user.display_name || user.username,
+              avatar_url: user.avatar_url
+            },
+            {
+              id: targetUser.id,
+              username: targetUser.username,
+              display_name: targetUser.display_name || targetUser.username,
+              avatar_url: targetUser.avatar_url
+            }
+          ],
           last_message: {
             content: '',
             timestamp: new Date().toISOString(),
             sender_id: user.id
           },
-          unread_count: 0
+          unread_count: 0,
+          isNewConversation: true // Flag para identificar conversaciones nuevas
         };
         
-        console.log('✅ Nueva conversación creada:', newConversation);
+        console.log('✅ Conversación real preparada:', realConversation);
         console.log('🔍 Participantes de la conversación:');
-        console.log(`  1. ${participant1.username} (${participant1.id}) - Usuario actual`);
-        console.log(`  2. ${participant2.username} (${participant2.id}) - Usuario target`);
+        console.log(`  1. ${user.username} (${user.id}) - Usuario actual`);
+        console.log(`  2. ${targetUser.username} (${targetUser.id}) - Usuario target`);
         
-        setSelectedConversation(newConversation);
+        setSelectedConversation(realConversation);
         setShowChat(true);
       } else {
         console.error('❌ Usuario no encontrado en resultados filtrados:', username);
