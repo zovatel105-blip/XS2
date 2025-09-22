@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Message Navigation</title>
+</head>
+<body>
+    <h1>Test Navigation to Messages</h1>
+    <div id="result"></div>
+    
+    <p>Testing URLs:</p>
+    <ul>
+        <li><a href="http://localhost:3000/messages" target="_blank">General Messages Page</a></li>
+        <li><a href="http://localhost:3000/messages?user=demo" target="_blank">Messages with user=demo</a></li>
+        <li><a href="http://localhost:3000/messages?user=testuser" target="_blank">Messages with user=testuser</a></li>
+    </ul>
+    
+    <p>Expected behavior:</p>
+    <ul>
+        <li>URL with ?user=username should automatically open chat with that user</li>
+        <li>Console should show debug logs about finding and opening conversation</li>
+        <li>Chat interface should be shown directly, not the conversation list</li>
+    </ul>
+    
+    <script>
+        // Test the URL parsing
+        const testUrl = 'http://localhost:3000/messages?user=demo';
+        const url = new URL(testUrl);
+        const username = url.searchParams.get('user');
+        
+        document.getElementById('result').innerHTML = `
+            <h3>URL Parsing Test:</h3>
+            <p>Test URL: ${testUrl}</p>
+            <p>Extracted username: ${username}</p>
+            <p>Expected: 'demo'</p>
+            <p>Status: ${username === 'demo' ? 'PASS ✅' : 'FAIL ❌'}</p>
+        `;
+    </script>
+</body>
+</html>
