@@ -126,6 +126,14 @@ export const AuthProvider = ({ children }) => {
       config.body = JSON.stringify(config.body);
     }
 
+    // Debug logging para requests de mensajes
+    if (url.includes('/api/messages')) {
+      console.log('🔍 DEBUG makeAuthenticatedRequest - URL:', fullUrl);
+      console.log('🔍 DEBUG makeAuthenticatedRequest - Headers:', config.headers);
+      console.log('🔍 DEBUG makeAuthenticatedRequest - Body:', config.body);
+      console.log('🔍 DEBUG makeAuthenticatedRequest - Token length:', token?.length || 0);
+    }
+
     try {
       const response = await fetch(fullUrl, config);
       
