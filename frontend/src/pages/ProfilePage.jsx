@@ -1353,16 +1353,15 @@ const ProfilePage = () => {
                     variant="outline" 
                     className="h-11 sm:h-12 rounded-2xl border-gray-200 hover:bg-gray-50 font-medium text-sm"
                     onClick={() => {
-                      // Usar viewedUser si está disponible, si no, usar userId de la URL
-                      const targetUser = viewedUser?.username || userId;
-                      console.log('🔍 ProfilePage - Enviando mensaje a:', targetUser);
-                      console.log('🔍 ProfilePage - viewedUser completo:', viewedUser);
-                      console.log('🔍 ProfilePage - userId from URL:', userId);
-                      console.log('🔍 ProfilePage - authUser:', authUser?.username);
+                      console.log('🔍 ProfilePage - CLICK MENSAJE - Estado completo:');
+                      console.log('  - viewedUser:', viewedUser);
+                      console.log('  - userId from URL:', userId);
+                      console.log('  - authUser:', authUser?.username, authUser?.id);
+                      console.log('  - isOwnProfile:', isOwnProfile);
                       
-                      // Validar que no está enviando mensaje a sí mismo
-                      if (targetUser === authUser?.username || targetUser === authUser?.id) {
-                        console.error('❌ Error: Intentando enviar mensaje a sí mismo');
+                      // Si es perfil propio, no permitir
+                      if (isOwnProfile) {
+                        console.error('❌ Error: Intentando enviar mensaje en perfil propio');
                         toast({
                           title: "Error",
                           description: "No puedes enviarte mensajes a ti mismo",
@@ -1371,6 +1370,46 @@ const ProfilePage = () => {
                         return;
                       }
                       
+                      // Determinar usuario target con lógica robusta
+                      let targetUser = null;
+                      
+                      // Prioridad 1: viewedUser.username (datos cargados del backend)
+                      if (viewedUser && viewedUser.username) {
+                        targetUser = viewedUser.username;
+                        console.log('✅ Usando viewedUser.username:', targetUser);
+                      }
+                      // Prioridad 2: userId de la URL si es válido y diferente al usuario actual
+                      else if (userId && userId !== authUser?.username && userId !== authUser?.id) {
+                        targetUser = userId;
+                        console.log('✅ Usando userId de URL:', targetUser);
+                      }
+                      // Error: no se pudo determinar usuario target
+                      else {
+                        console.error('❌ Error: No se pudo determinar usuario target');
+                        console.error('  - viewedUser disponible:', !!viewedUser);
+                        console.error('  - userId válido:', userId);
+                        console.error('  - Es diferente a authUser:', userId !== authUser?.username && userId !== authUser?.id);
+                        
+                        toast({
+                          title: "Error",
+                          description: "No se pudo identificar el usuario. Intenta recargar la página.",
+                          variant: "destructive"
+                        });
+                        return;
+                      }
+                      
+                      // Validación adicional: asegurar que no es el usuario actual
+                      if (targetUser === authUser?.username || targetUser === authUser?.id) {
+                        console.error('❌ Error: targetUser resuelve al usuario actual');
+                        toast({
+                          title: "Error",
+                          description: "No puedes enviarte mensajes a ti mismo",
+                          variant: "destructive"
+                        });
+                        return;
+                      }
+                      
+                      console.log('🚀 Navegando a mensajes con usuario:', targetUser);
                       navigate(`/messages?user=${targetUser}`);
                     }}
                   >
