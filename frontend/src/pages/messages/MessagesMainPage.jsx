@@ -908,6 +908,23 @@ const MessagesMainPage = () => {
           </div>
         </div>
       )}
+
+      {/* DEBUG INFO TEMPORAL PARA MÓVIL - CHAT */}
+      {chatDebugInfo && (
+        <div className="fixed top-4 left-4 right-4 bg-red-600 bg-opacity-90 text-white p-3 rounded-lg z-50 text-xs">
+          <div className="font-bold mb-1">CHAT DEBUG:</div>
+          <div>Pending User: {chatDebugInfo.pendingUser || 'null'}</div>
+          <div>Current User: {chatDebugInfo.currentUser || 'null'}</div>
+          <div>Conversations: {chatDebugInfo.conversationsCount || 0}</div>
+          <div>Time: {chatDebugInfo.timestamp}</div>
+          <button 
+            onClick={() => setChatDebugInfo(null)}
+            className="absolute top-1 right-2 text-white opacity-60 hover:opacity-100"
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   );
 };
