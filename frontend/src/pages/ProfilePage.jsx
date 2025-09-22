@@ -395,6 +395,9 @@ const ProfilePage = () => {
     }
   }, [userId, navigate, toast]);
 
+  // Define isOwnProfile early - needed by useEffect hooks
+  const isOwnProfile = !userId || (authUser && (userId === authUser?.username || userId === authUser?.id));
+
   // Debug useEffect para verificar estado del perfil
   useEffect(() => {
     console.log('🔍 ProfilePage DEBUG - Estado actual:');
@@ -403,9 +406,6 @@ const ProfilePage = () => {
     console.log('  - authUser:', authUser?.username, authUser?.id);
     console.log('  - isOwnProfile:', isOwnProfile);
   }, [userId, viewedUser, authUser, isOwnProfile]);
-
-  // Define isOwnProfile early - needed by useEffect hooks
-  const isOwnProfile = !userId || (authUser && (userId === authUser?.username || userId === authUser?.id));
 
   // Load saved polls on component mount
   useEffect(() => {
