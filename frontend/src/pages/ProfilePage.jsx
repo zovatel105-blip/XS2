@@ -532,18 +532,28 @@ const ProfilePage = () => {
 
     setSavingSocialLinks(true);
     try {
-      // Aquí se implementará la llamada al backend para guardar los enlaces sociales
-      // Por ahora simulamos el guardado y mostramos el toast
-      
-      // Simular llamada API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch(`${config.API_ENDPOINTS.USERS.SOCIAL_LINKS}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(socialLinks)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save social links');
+      }
+
+      const savedLinks = await response.json();
+      setSocialLinks(savedLinks);
       
       toast({
         title: "Enlaces guardados",
         description: "Tus enlaces de redes sociales han sido actualizados",
       });
       
-      console.log('🔗 Social links saved:', socialLinks);
+      console.log('🔗 Social links saved:', savedLinks);
       
     } catch (error) {
       console.error('Error saving social links:', error);
@@ -560,24 +570,21 @@ const ProfilePage = () => {
   // Load user's social links on component mount
   useEffect(() => {
     const loadUserSocialLinks = async () => {
-      if (!authUser?.id || !isOwnProfile) return;
+      if (!userId && !authUser?.id) return;
       
       try {
-        // Aquí se implementará la carga de enlaces desde el backend
-        // Por ahora usamos datos de ejemplo
-        const savedLinks = {
-          website: '',
-          behance: '',
-          dribbble: '',
-          tiktok: '',
-          twitch: '',
-          instagram: '',
-          discord: '',
-          youtube: ''
-        };
-        
-        setSocialLinks(savedLinks);
-        console.log('🔗 Social links loaded:', savedLinks);
+        const targetUserId = userId || authUser?.id;
+        const response = await fetch(`${config.API_ENDPOINTS.USERS.SOCIAL_LINKS(targetUserId)}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (response.ok) {
+          const links = await response.json();
+          setSocialLinks(links);
+          console.log('🔗 Social links loaded:', links);
+        }
         
       } catch (error) {
         console.error('Error loading social links:', error);
@@ -585,7 +592,7 @@ const ProfilePage = () => {
     };
 
     loadUserSocialLinks();
-  }, [authUser?.id, isOwnProfile]);
+  }, [authUser?.id, userId]);
 
   // Handle when a new story is created
   const handleStoryCreated = async (newStory) => {
