@@ -541,6 +541,99 @@ const MessagesPage = () => {
 
   // Duplicate function removed - already exists above
 
+  // Función para aceptar solicitud de chat
+  const acceptChatRequest = async (requestId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat-requests/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'accept'
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        toast({
+          title: "Solicitud aceptada",
+          description: "Ahora puedes chatear con este usuario",
+          variant: "default",
+          duration: 3000,
+        });
+
+        // Recargar datos para mostrar la nueva conversación
+        await loadConversations();
+        
+        // Si hay conversation_id, navegar a ella
+        if (result.conversation_id) {
+          const newConversation = conversations.find(conv => conv.id === result.conversation_id);
+          if (newConversation) {
+            setSelectedConversation(newConversation);
+          }
+        }
+        
+        // Recargar notificaciones para quitar la solicitud
+        await loadNotifications();
+        
+      } else {
+        throw new Error('Error accepting chat request');
+      }
+    } catch (error) {
+      console.error('Error accepting chat request:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo aceptar la solicitud",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  // Función para rechazar solicitud de chat
+  const rejectChatRequest = async (requestId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat-requests/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'reject'
+        })
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Solicitud rechazada",
+          description: "Se ha rechazado la solicitud de chat",
+          variant: "default",
+          duration: 3000,
+        });
+
+        // Recargar notificaciones para quitar la solicitud
+        await loadNotifications();
+        
+      } else {
+        throw new Error('Error rejecting chat request');
+      }
+    } catch (error) {
+      console.error('Error rejecting chat request:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo rechazar la solicitud",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
   // Función para enviar mensaje con manejo de chat requests
   const sendMessage = async (e) => {
     e.preventDefault();
