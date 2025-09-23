@@ -625,7 +625,10 @@ const MessagesMainPage = () => {
                 <MessageCircle className="h-6 w-6 text-blue-500 mr-2" />
                 <h1 className="text-xl font-semibold text-gray-900">Inbox</h1>
               </div>
-              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <button 
+                onClick={() => setShowNewChatModal(true)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
                 <Plus className="h-5 w-5 text-gray-600" />
               </button>
             </div>
