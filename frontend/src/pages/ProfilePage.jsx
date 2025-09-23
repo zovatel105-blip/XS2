@@ -1524,6 +1524,14 @@ const ProfilePage = () => {
                       <Bookmark className="w-4 h-4" strokeWidth={1.5} />
                     </TabsTrigger>
                   )}
+                  {isOwnProfile && (
+                    <TabsTrigger 
+                      value="social" 
+                      className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    >
+                      <Share2 className="w-4 h-4" strokeWidth={1.5} />
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               </div>
 
