@@ -541,6 +541,7 @@ const MessagesPage = () => {
 
   // Duplicate function removed - already exists above
 
+  // Función para enviar mensaje con manejo de chat requests
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || sendingMessage) return;
@@ -562,33 +563,68 @@ const MessagesPage = () => {
         }
       });
 
-      // Si es una conversación temporal (nueva), recargar conversaciones
-      if (!selectedConversation.id) {
-        await loadConversations();
-        
-        // Buscar la nueva conversación creada y cambiar a ella
-        setTimeout(async () => {
+      const result = await response.json();
+
+      if (response.ok) {
+        if (result.type === 'chat_request') {
+          // Se envió una solicitud de chat
+          toast({
+            title: "Solicitud enviada",
+            description: "Se ha enviado una solicitud de chat. El usuario debe aceptarla primero.",
+            variant: "default",
+            duration: 4000,
+          });
+          
+          // Limpiar el mensaje y cerrar chat
+          setNewMessage('');
+          setSelectedConversation(null);
+          
+          // Recargar datos para mostrar la solicitud enviada
           await loadConversations();
-          const newConv = conversations.find(conv => 
-            conv.participants.some(p => p.id === recipientId)
-          );
-          if (newConv) {
-            setSelectedConversation(newConv);
-            loadMessages(newConv.id);
+        } else {
+          // Mensaje enviado normalmente
+          // Si es una conversación temporal (nueva), recargar conversaciones
+          if (!selectedConversation.id) {
+            await loadConversations();
+            
+            // Buscar la nueva conversación creada y cambiar a ella
+            setTimeout(async () => {
+              await loadConversations();
+              const newConv = conversations.find(conv => 
+                conv.participants.some(p => p.id === recipientId)
+              );
+              if (newConv) {
+                setSelectedConversation(newConv);
+                loadMessages(newConv.id);
+              }
+            }, 1000);
+          } else {
+            // Si es una conversación existente, solo recargar mensajes
+            loadMessages(selectedConversation.id);
           }
-        }, 1000);
+          
+          loadConversations();
+        }
       } else {
-        // Si es una conversación existente, solo recargar mensajes
-        loadMessages(selectedConversation.id);
+        // Manejar errores específicos
+        if (response.status === 403 && result.detail?.includes('Chat request already sent')) {
+          toast({
+            title: "Solicitud pendiente",
+            description: "Ya has enviado una solicitud a este usuario. Espera a que la acepte.",
+            variant: "destructive",
+            duration: 4000,
+          });
+        } else {
+          throw new Error(result.detail || 'Error sending message');
+        }
       }
-      
-      loadConversations();
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
         title: "Error",
-        description: "No se pudo enviar el mensaje",
-        variant: "destructive"
+        description: error.message || "No se pudo enviar el mensaje",
+        variant: "destructive",
+        duration: 3000,
       });
     } finally {
       setSendingMessage(false);
