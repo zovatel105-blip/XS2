@@ -1432,9 +1432,10 @@ const ProfilePage = () => {
                 <TabsList className={`grid w-full ${isOwnProfile ? 'grid-cols-4' : 'grid-cols-2'} bg-gray-50 rounded-2xl p-1 h-auto`}>
                   <TabsTrigger 
                     value="polls" 
-                    className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm flex items-center gap-2"
                   >
                     <LayoutDashboard className="w-4 h-4" strokeWidth={1.5} />
+                    <span className="hidden sm:inline">Publicaciones</span>
                   </TabsTrigger>
                   {isOwnProfile && (
                     <TabsTrigger 
