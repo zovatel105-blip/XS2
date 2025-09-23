@@ -605,15 +605,23 @@ const ProfilePage = () => {
 
     const linkId = newSocialName.toLowerCase().replace(/[^a-z0-9]/g, '_');
     const color = getRandomColor();
+    
+    const newLink = {
+      name: newSocialName.trim(),
+      url: newSocialUrl.trim(),
+      color: color
+    };
 
-    setSocialLinks(prev => ({
-      ...prev,
-      [linkId]: {
-        name: newSocialName.trim(),
-        url: newSocialUrl.trim(),
-        color: color
-      }
-    }));
+    console.log('➕ Adding new social link:', linkId, newLink);
+    
+    setSocialLinks(prev => {
+      const updated = {
+        ...prev,
+        [linkId]: newLink
+      };
+      console.log('🔄 Updated socialLinks state:', updated);
+      return updated;
+    });
     
     setNewSocialName('');
     setNewSocialUrl('');
