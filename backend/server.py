@@ -2856,6 +2856,41 @@ async def get_unread_count(current_user: UserResponse = Depends(get_current_user
     
     return {"unread_count": total_unread}
 
+@api_router.get("/messages/requests")
+async def get_message_requests(current_user: UserResponse = Depends(get_current_user)):
+    """Get message requests (pending chat requests) for the current user"""
+    try:
+        # Get pending chat requests where current user is the receiver
+        requests = await db.chat_requests.find({
+            "receiver_id": current_user.id,
+            "status": "pending"
+        }).sort("created_at", -1).to_list(50)
+        
+        result = []
+        for req in requests:
+            # Get sender info
+            sender = await db.users.find_one({"id": req["sender_id"]})
+            if sender:
+                result.append({
+                    "id": req["id"],
+                    "sender": {
+                        "id": sender["id"],
+                        "username": sender["username"],
+                        "display_name": sender.get("display_name"),
+                        "avatar_url": sender.get("avatar_url")
+                    },
+                    "message": req.get("message"),
+                    "preview": req.get("message", "Te ha enviado una solicitud de mensaje"),
+                    "created_at": req["created_at"],
+                    "updated_at": req["updated_at"]
+                })
+        
+        return result
+        
+    except Exception as e:
+        print(f"❌ Error getting message requests: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error getting message requests")
+
 # =============  CHAT REQUEST ENDPOINTS =============
 
 @api_router.post("/chat-requests")
