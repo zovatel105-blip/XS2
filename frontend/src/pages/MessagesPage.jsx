@@ -1363,18 +1363,10 @@ const MessagesPage = () => {
                   onClick={() => {
                     if (notification.isSystem) return;
                     
-                    if (notification.type === 'chat_request') {
-                      // Manejar solicitud de chat
-                      setSelectedConversation({
-                        id: `request-${notification.requestId}`,
-                        participants: [{
-                          id: notification.userId,
-                          username: notification.title.replace(/[^\w]/g, '').toLowerCase(),
-                          display_name: notification.title.replace(/[^\w\s]/g, '').trim()
-                        }],
-                        isRequest: true,
-                        requestId: notification.requestId
-                      });
+                    if (notification.type === 'message_request') {
+                      // Para solicitudes de mensaje, no hacer nada aquí
+                      // Los botones de aceptar/rechazar están dentro de la tarjeta
+                      return;
                     } else if (notification.type === 'conversation') {
                       // Conversación normal
                       setSelectedConversation({
@@ -1400,14 +1392,16 @@ const MessagesPage = () => {
                   className={`w-full flex items-center px-4 py-4 border-b border-gray-100 transition-colors min-h-[72px] ${
                     notification.isSystem 
                       ? 'cursor-default' 
-                      : 'hover:bg-gray-50 active:bg-gray-100'
+                      : notification.type === 'message_request'
+                        ? 'cursor-default'  // Las solicitudes no son clickeables
+                        : 'hover:bg-gray-50 active:bg-gray-100'
                   }`}
                   style={{ touchAction: 'manipulation' }}
-                  disabled={notification.isSystem}
+                  disabled={notification.isSystem || notification.type === 'message_request'}
                 >
                   {/* Avatar (izquierda) - tamaño optimizado móvil */}
                   <div className={`w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden ${
-                    notification.type === 'chat_request' 
+                    notification.type === 'message_request' 
                       ? 'bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold' 
                       : notification.isSystem 
                         ? 'bg-blue-100' 
@@ -1439,7 +1433,7 @@ const MessagesPage = () => {
                   <div className="flex-1 min-w-0 text-left">
                     <div className="flex items-center justify-between mb-1">
                       <span className={`text-base font-semibold truncate ${
-                        notification.type === 'chat_request' 
+                        notification.type === 'message_request' 
                           ? 'text-purple-700' 
                           : notification.isSystem 
                             ? 'text-blue-700' 
@@ -1454,6 +1448,34 @@ const MessagesPage = () => {
                     <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
                       {notification.message}
                     </p>
+                    
+                    {/* Botones de aceptar/rechazar para solicitudes de mensaje */}
+                    {notification.type === 'message_request' && notification.needsApproval && (
+                      <div className="flex items-center space-x-2 mt-3">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            acceptChatRequest(notification.requestId);
+                          }}
+                          className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
+                        >
+                          Aceptar
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            rejectChatRequest(notification.requestId);
+                          }}
+                          className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                        >
+                          Rechazar
+                        </motion.button>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Badge (derecha) - solo para mensajes no leídos */}
