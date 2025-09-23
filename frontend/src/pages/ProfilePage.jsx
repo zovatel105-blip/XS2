@@ -657,10 +657,13 @@ const ProfilePage = () => {
         console.log('🔍 Loading social links for user:', targetUserId);
         
         // Use the appropriate endpoint based on whether it's current user or other user
-        const endpoint = !userId || userId === authUser?.id 
+        // If no userId in URL params, or if userId matches current user, use /me endpoint
+        const isCurrentUser = !userId || userId === authUser?.id || userId === authUser?.username;
+        const endpoint = isCurrentUser
           ? config.API_ENDPOINTS.SOCIAL_LINKS.MY_LINKS
           : config.API_ENDPOINTS.SOCIAL_LINKS.USER_LINKS(targetUserId);
         
+        console.log('🔍 isCurrentUser:', isCurrentUser, 'userId:', userId, 'authUser.id:', authUser?.id, 'authUser.username:', authUser?.username);
         console.log('📡 Calling endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
