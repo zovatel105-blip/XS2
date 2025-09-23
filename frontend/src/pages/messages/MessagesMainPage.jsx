@@ -1054,6 +1054,103 @@ const MessagesMainPage = () => {
           </div>
         </div>
       )}
+
+      {/* New Chat Modal */}
+      {showNewChatModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-lg p-6 w-full max-w-md"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Nueva conversación</h3>
+              <button
+                onClick={closeNewChatModal}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Search Input */}
+            <div className="relative mb-4">
+              <input
+                type="text"
+                placeholder="Buscar usuarios..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  searchUsers(e.target.value);
+                }}
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                autoFocus
+              />
+            </div>
+
+            {/* Search Results */}
+            <div className="max-h-60 overflow-y-auto">
+              {searchLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+                  <span className="ml-2 text-gray-600">Buscando...</span>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="space-y-2">
+                  {searchResults.map((result) => (
+                    <motion.button
+                      key={result.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => startConversation(result)}
+                      className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                        {result.avatar_url ? (
+                          <>
+                            <img 
+                              src={result.avatar_url} 
+                              alt="Avatar" 
+                              className="w-full h-full rounded-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                              }}
+                            />
+                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-semibold text-gray-600" style={{ display: 'none' }}>
+                              {result.display_name?.charAt(0) || result.username?.charAt(0) || '👤'}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-lg font-semibold text-gray-600">
+                            {result.display_name?.charAt(0) || result.username?.charAt(0) || '👤'}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">
+                          {result.display_name || result.username}
+                        </p>
+                        <p className="text-sm text-gray-600 truncate">
+                          @{result.username}
+                        </p>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              ) : searchQuery.trim() ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No se encontraron usuarios</p>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">Escribe para buscar usuarios</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
