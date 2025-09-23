@@ -1994,7 +1994,20 @@ async def get_user_profile(user_id: str):
 async def get_user_profile_by_username(username: str):
     """Get user profile by username (public endpoint)"""
     # First find user by username to get user_id
+    # Try exact match first, then try with trimmed spaces to handle trailing spaces in usernames
     user_data = await db.users.find_one({"username": username})
+    if not user_data:
+        # Try trimmed version and also check if any username when stripped matches
+        stripped_username = username.strip()
+        user_data = await db.users.find_one({"username": stripped_username})
+        if not user_data:
+            # Try finding users where the trimmed version of stored username matches
+            users_cursor = db.users.find({})
+            async for user in users_cursor:
+                if user.get("username", "").strip() == stripped_username:
+                    user_data = user
+                    break
+    
     if not user_data:
         raise HTTPException(status_code=404, detail="User not found")
     
