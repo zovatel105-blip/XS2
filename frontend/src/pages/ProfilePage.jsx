@@ -1446,10 +1446,9 @@ const ProfilePage = () => {
                   )}
                   <TabsTrigger 
                     value="mentions" 
-                    className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm flex items-center gap-2"
+                    className="rounded-xl py-3 text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
                   >
                     <UserCircle className="w-4 h-4" strokeWidth={1.5} />
-                    <span className="hidden sm:inline">Menciones</span>
                   </TabsTrigger>
                   {isOwnProfile && (
                     <TabsTrigger 
