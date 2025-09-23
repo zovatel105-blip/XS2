@@ -1814,38 +1814,50 @@ const ProfilePage = () => {
                           Agregar red social
                         </button>
 
-                        {/* Enlaces Guardados - DEBAJO del botón */}
-                        {Object.entries(socialLinks).map(([linkId, linkData]) => {
-                          if (!linkData || (typeof linkData === 'object' && !linkData.url)) return null;
-                          
-                          const displayName = typeof linkData === 'object' ? linkData.name : linkId;
-                          const url = typeof linkData === 'object' ? linkData.url : linkData;
-                          const color = typeof linkData === 'object' && linkData.color ? linkData.color : 'bg-gray-600';
-                          
-                          return (
-                            <div key={linkId} className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                  <div className={`w-5 h-5 rounded-full ${color.includes('gradient') ? `bg-gradient-to-r ${color}` : color}`}></div>
-                                  {displayName}
-                                </label>
-                                <button
-                                  onClick={() => handleRemoveSocialLink(linkId)}
-                                  className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                              <input
-                                type="url"
-                                value={url}
-                                onChange={(e) => handleUpdateSocialLink(linkId, e.target.value)}
-                                placeholder="https://ejemplo.com/tuusuario"
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                              />
-                            </div>
-                          );
-                        })}
+                        {/* Enlaces Guardados - Como botones/cards bonitos */}
+                        {Object.entries(socialLinks).length > 0 && (
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            {Object.entries(socialLinks).map(([linkId, linkData]) => {
+                              if (!linkData || (typeof linkData === 'object' && !linkData.url)) return null;
+                              
+                              const displayName = typeof linkData === 'object' ? linkData.name : linkId;
+                              const url = typeof linkData === 'object' ? linkData.url : linkData;
+                              const color = typeof linkData === 'object' && linkData.color ? linkData.color : 'bg-gray-600';
+                              
+                              return (
+                                <div key={linkId} className="relative group">
+                                  {/* Botón principal del enlace */}
+                                  <a
+                                    href={url.startsWith('http') ? url : `https://${url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`block w-full p-4 rounded-2xl text-white font-semibold text-center relative overflow-hidden transition-transform hover:scale-105 ${
+                                      color.includes('gradient') ? `bg-gradient-to-r ${color}` : color
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-lg font-bold">{displayName}</span>
+                                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                      </svg>
+                                    </div>
+                                  </a>
+                                  
+                                  {/* Botón de eliminar (aparece solo en hover) */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleRemoveSocialLink(linkId);
+                                    }}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
 
                         {/* Modal para Agregar Red Social Personalizada */}
                         {showAddSocialModal && (
