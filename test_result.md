@@ -969,17 +969,41 @@ Layout "off" - Carrusel Horizontal:
 ## user_problem_statement: "Test user-to-user messaging functionality: Verificar completamente si los usuarios pueden enviarse mensajes entre sí"
 
 ## frontend:
-  - task: "Save button state persistence functionality with loadSavedPolls on component mount"
+  - task: "User-to-user messaging functionality - complete message sending system"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/TikTokScrollView.jsx"
+    working: false
+    file: "/app/frontend/src/pages/messages/MessagesMainPage.jsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
+      - working: false
+      - agent: "testing"
+      - comment: "❌ CRITICAL MESSAGING FUNCTIONALITY ISSUES IDENTIFIED (2025-01-27): Comprehensive testing reveals major gaps in user-to-user messaging. PROBLEMS FOUND: 1) Plus button exists but has NO onClick handler - clicking does nothing, 2) No user search interface for creating new conversations, 3) URL parameter approach (?user=username) not working, 4) Missing core functionality to search and select users for messaging. WORKING ELEMENTS: ✅ Login successful with demo@example.com/demo123, ✅ Messages page loads with proper 'Inbox' header, ✅ Navigation tabs present (Nuevos, Actividad, Solicitud), ✅ Empty state messaging displays correctly, ✅ Backend message sending logic exists in code. ROOT CAUSE: The Plus button in MessagesMainPage.jsx line 629 has no onClick handler attached - it's a static button that does nothing when clicked. Users cannot initiate new conversations because there's no search interface to find other users."
+
+  - task: "Message requests functionality - accept/reject chat requests"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/messages/RequestsPage.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
       - working: true
       - agent: "testing"
-      - comment: "✅ SAVE BUTTON STATE PERSISTENCE TESTING COMPLETED (2025-01-27): Comprehensive testing of the fixed save button state persistence functionality reveals COMPLETE SUCCESS. CORE FUNCTIONALITY VERIFIED: ✅ Login successful with demo@example.com/demo123, ✅ loadSavedPolls function working - Console log shows 'Loaded saved poll IDs: [8b562bc1-4653-40d2-98fd-459147327603]', ✅ Initial state loading working - Previously saved posts show yellow bookmark icon from page load, ✅ Save/unsave toggle functionality working - Visual state changes from white to yellow and back, ✅ Toast notifications working - '¡Publicación guardada!' appears after save actions, ✅ API calls functioning - Backend integration working for both save and unsave operations, ✅ State persistence verified - Saved state maintained across component re-renders, ✅ Console logging working - Detailed logs show saved poll loading and state management, ✅ Visual feedback working - Bookmark icon shows correct fill state (yellow when saved, white when unsaved). TECHNICAL IMPLEMENTATION VERIFIED: ✅ loadSavedPolls() executes on component mount, ✅ Proper API endpoint calls to /api/users/{userId}/saved-polls, ✅ Local state management with savedPolls Set, ✅ Visual state synchronization between backend data and UI, ✅ Proper error handling and fallbacks. RESULT: The save button state persistence functionality is working perfectly - users can see their previously saved posts with correct visual indicators immediately upon page load, and the save/unsave functionality works seamlessly with proper backend synchronization."ate visual feedback working - button changes color instantly on click, ✅ Smooth transitions and hover effects working correctly. TECHNICAL DETAILS: The savedPolls state is properly managed with Set data structure, visual feedback uses conditional className with yellow colors for saved state and white for unsaved state, bookmark icon uses 'fill-current' class for filled appearance when saved. MINOR OBSERVATION: During testing, the demo poll was already saved in backend (API returns 'Poll already saved'), which explains why button shows saved state initially - this is correct behavior showing persistent saved state. CONCLUSION: Enhanced save button with visual state changes is FULLY FUNCTIONAL and working as specified in requirements."
+      - comment: "✅ MESSAGE REQUESTS FUNCTIONALITY WORKING (2025-01-27): Requests section accessible and functional. Navigation to /messages/requests works correctly, shows proper empty state 'Sin solicitudes de mensajes' with appropriate messaging. RequestsPage component properly implemented with API integration for loading and handling message requests. UI displays correctly with proper styling and user feedback."
+
+  - task: "Messages navigation and interface - tabs and routing"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/messages/MessagesMainPage.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+      - agent: "testing"
+      - comment: "✅ MESSAGES NAVIGATION WORKING (2025-01-27): Messages interface loads correctly with proper header 'Inbox', navigation tabs (Nuevos, Actividad, Solicitud) are present and functional. Routing to /messages works correctly, empty state displays appropriate messaging 'El Susurro Inteligente - Tus conversaciones aparecerán aquí. Busca usuarios para iniciar nuevos chats'. Visual design and layout working as expected."
 
 ## backend:
   - task: "AuthContext backend compatibility validation"
