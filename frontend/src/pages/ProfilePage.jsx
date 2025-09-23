@@ -1650,127 +1650,154 @@ const ProfilePage = () => {
                   </TabsContent>
                 )}
 
-                {/* Panel de Compartición Social Rápida */}
+                {/* Panel de Enlaces de Redes Sociales */}
                 {isOwnProfile && (
                   <TabsContent value="social" className="space-y-6">
                     <div className="px-4 py-6">
                       {/* Header del Panel */}
                       <div className="text-center mb-8">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Panel de Compartición Social</h3>
-                        <p className="text-sm text-gray-600">Comparte tu perfil en tus redes sociales favoritas</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Mis Redes Sociales</h3>
+                        <p className="text-sm text-gray-600">Agrega los enlaces a tus perfiles de redes sociales</p>
                       </div>
                       
-                      {/* Grid de Botones Sociales */}
-                      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                        {/* My Website */}
-                        <button
-                          onClick={() => handleSocialShare('website')}
-                          className="group relative overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">My Website</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                      {/* Formulario de Enlaces Sociales */}
+                      <div className="max-w-lg mx-auto space-y-4">
+                        {/* Website */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full"></div>
+                            Mi Website
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.website || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, website: e.target.value }))}
+                            placeholder="https://mipagina.com"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          />
+                        </div>
 
                         {/* Behance */}
-                        <button
-                          onClick={() => handleSocialShare('behance')}
-                          className="group relative overflow-hidden bg-blue-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Behance</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-blue-600 rounded-full"></div>
+                            Behance
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.behance || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, behance: e.target.value }))}
+                            placeholder="https://behance.net/tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
 
                         {/* Dribbble */}
-                        <button
-                          onClick={() => handleSocialShare('dribbble')}
-                          className="group relative overflow-hidden bg-pink-500 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Dribbble</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
-
-                        {/* Twitch */}
-                        <button
-                          onClick={() => handleSocialShare('twitch')}
-                          className="group relative overflow-hidden bg-purple-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Twitch</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-pink-500 rounded-full"></div>
+                            Dribbble
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.dribbble || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, dribbble: e.target.value }))}
+                            placeholder="https://dribbble.com/tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                          />
+                        </div>
 
                         {/* TikTok */}
-                        <button
-                          onClick={() => handleSocialShare('tiktok')}
-                          className="group relative overflow-hidden bg-black text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">TikTok</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-black rounded-full"></div>
+                            TikTok
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.tiktok || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, tiktok: e.target.value }))}
+                            placeholder="https://tiktok.com/@tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                          />
+                        </div>
 
-                        {/* SnapChat */}
-                        <button
-                          onClick={() => handleSocialShare('snapchat')}
-                          className="group relative overflow-hidden bg-yellow-400 text-gray-800 p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">SnapChat</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        {/* Twitch */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-purple-600 rounded-full"></div>
+                            Twitch
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.twitch || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, twitch: e.target.value }))}
+                            placeholder="https://twitch.tv/tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          />
+                        </div>
 
-                        {/* Unsplash */}
-                        <button
-                          onClick={() => handleSocialShare('unsplash')}
-                          className="group relative overflow-hidden bg-gradient-to-r from-gray-800 to-gray-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Unsplash</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        {/* Instagram */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+                            Instagram
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.instagram || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, instagram: e.target.value }))}
+                            placeholder="https://instagram.com/tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                          />
+                        </div>
 
                         {/* Discord */}
-                        <button
-                          onClick={() => handleSocialShare('discord')}
-                          className="group relative overflow-hidden bg-indigo-600 text-white p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold">Discord</span>
-                            <svg className="w-6 h-6 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19 2-2m0 0 2-2m-2 2-2-2m2 2-2-2M3 7l3-3M6 4l3 3M3 17l3 3M6 20l3-3" />
-                            </svg>
-                          </div>
-                        </button>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-indigo-600 rounded-full"></div>
+                            Discord
+                          </label>
+                          <input
+                            type="text"
+                            value={socialLinks.discord || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, discord: e.target.value }))}
+                            placeholder="tuusuario#1234"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                          />
+                        </div>
+
+                        {/* YouTube */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <div className="w-5 h-5 bg-red-600 rounded-full"></div>
+                            YouTube
+                          </label>
+                          <input
+                            type="url"
+                            value={socialLinks.youtube || ''}
+                            onChange={(e) => setSocialLinks(prev => ({ ...prev, youtube: e.target.value }))}
+                            placeholder="https://youtube.com/@tuusuario"
+                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                          />
+                        </div>
+
+                        {/* Botón Guardar */}
+                        <div className="pt-6">
+                          <button
+                            onClick={handleSaveSocialLinks}
+                            disabled={savingSocialLinks}
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50"
+                          >
+                            {savingSocialLinks ? 'Guardando...' : 'Guardar Enlaces'}
+                          </button>
+                        </div>
                       </div>
 
                       {/* Información adicional */}
                       <div className="mt-8 text-center">
                         <p className="text-xs text-gray-500">
-                          Comparte tu perfil para aumentar el engagement y el tráfico cruzado
+                          Los enlaces aparecerán en tu perfil para que otros puedan encontrarte
                         </p>
                       </div>
                     </div>
