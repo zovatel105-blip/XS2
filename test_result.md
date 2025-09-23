@@ -1118,6 +1118,18 @@ Layout "off" - Carrusel Horizontal:
       - working: true
       - agent: "main"
       - comment: "ROOT CAUSE IDENTIFIED: Frontend services were using wrong localStorage key 'authToken' instead of 'token' (which AuthContext uses). Fixed across all service files: pollService.js, uploadService.js, userService.js, musicService.js, commentService.js, searchService.js, storyService.js, addictionApi.js, AudioDetailPage.jsx, MusicSelector.jsx. Authentication tokens now properly retrieved for API requests."
+
+## test_plan:
+  current_focus:
+    - "User-to-user messaging functionality - complete message sending system"
+  stuck_tasks:
+    - "User-to-user messaging functionality - complete message sending system"
+  test_all: false
+  test_priority: "high_first"
+
+## agent_communication:
+    -agent: "testing"
+    -message: "💬 CRITICAL MESSAGING FUNCTIONALITY ISSUES IDENTIFIED (2025-01-27): Comprehensive testing of user-to-user messaging reveals MAJOR FUNCTIONALITY GAPS. CRITICAL PROBLEMS: ❌ Plus button exists but has NO onClick handler - clicking does nothing, ❌ No user search interface for creating new conversations, ❌ URL parameter approach (?user=username) not working, ❌ Missing core functionality to search and select users for messaging. WORKING ELEMENTS: ✅ Login successful with demo@example.com/demo123, ✅ Messages page loads with proper 'Inbox' header, ✅ Navigation tabs present (Nuevos, Actividad, Solicitud), ✅ Empty state messaging displays correctly, ✅ Backend message sending logic exists in code, ✅ Requests section accessible and functional. ROOT CAUSE: The Plus button in MessagesMainPage.jsx line 629 has no onClick handler attached - it's a static button. Users cannot initiate new conversations because there's no search interface to find other users. RECOMMENDATION: Implement onClick handler for Plus button that opens a user search modal/interface to allow users to search for and select other users to start conversations with."
       - working: true
       - agent: "testing"
       - comment: "🎉 CRITICAL SESSION EXPIRATION ISSUE RESOLVED (2025-09-19): Comprehensive testing completed with 7/7 tests passed (100% success rate). INVESTIGATION RESULTS: 1) Created test user and obtained JWT token with correct 24-hour expiration (86400 seconds), 2) Verified token validity with GET /api/auth/me endpoint - working correctly, 3) Tested POST /api/polls endpoint with same token - poll creation successful (Status 200), 4) Re-verified token validity after post creation - token remained valid, 5) Confirmed token expiration settings match configuration (1440 minutes = 24 hours), 6) Tested fresh login + immediate post creation - working perfectly, 7) Verified token persistence across multiple requests - all successful. CONCLUSION: Backend authentication system is working correctly. Token generation, validation, and post creation endpoints are all functional. The reported session expiration error is likely a frontend token handling issue, not a backend authentication problem. Backend authentication infrastructure is solid and properly configured."
