@@ -359,7 +359,26 @@ class PollService {
   // Get user's saved polls
   async getSavedPolls() {
     try {
-      const response = await fetch(`${this.baseURL}/polls/saved`, {
+      // Get current user ID from token
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      
+      // Decode token to get user ID (simple base64 decode of JWT payload)
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        throw new Error('Invalid token format');
+      }
+      
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const userId = payload.sub;
+      
+      if (!userId) {
+        throw new Error('User ID not found in token');
+      }
+      
+      const response = await fetch(`${this.baseURL}/users/${userId}/saved-polls`, {
         method: 'GET',
         headers: this.getAuthHeaders()
       });
@@ -369,7 +388,8 @@ class PollService {
         throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      return result.saved_polls || [];
     } catch (error) {
       console.error('Error getting saved polls:', error);
       throw error;
