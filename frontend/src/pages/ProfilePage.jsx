@@ -1378,6 +1378,101 @@ const ProfilePage = () => {
               </div>
             </div>
 
+            {/* Enlaces de Redes Sociales */}
+            {(socialLinks.website || socialLinks.behance || socialLinks.dribbble || socialLinks.tiktok || 
+              socialLinks.twitch || socialLinks.instagram || socialLinks.discord || socialLinks.youtube) && (
+              <div className="flex flex-wrap gap-3 justify-center">
+                {socialLinks.website && (
+                  <a
+                    href={socialLinks.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 rounded-lg hover:from-purple-200 hover:to-blue-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full"></div>
+                    Website
+                  </a>
+                )}
+                {socialLinks.behance && (
+                  <a
+                    href={socialLinks.behance}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                    Behance
+                  </a>
+                )}
+                {socialLinks.dribbble && (
+                  <a
+                    href={socialLinks.dribbble}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-pink-500 rounded-full"></div>
+                    Dribbble
+                  </a>
+                )}
+                {socialLinks.tiktok && (
+                  <a
+                    href={socialLinks.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-black rounded-full"></div>
+                    TikTok
+                  </a>
+                )}
+                {socialLinks.twitch && (
+                  <a
+                    href={socialLinks.twitch}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
+                    Twitch
+                  </a>
+                )}
+                {socialLinks.instagram && (
+                  <a
+                    href={socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-lg hover:from-purple-200 hover:to-pink-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+                    Instagram
+                  </a>
+                )}
+                {socialLinks.discord && (
+                  <a
+                    href={socialLinks.discord.startsWith('http') ? socialLinks.discord : `https://discord.com/users/${socialLinks.discord}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-indigo-600 rounded-full"></div>
+                    Discord
+                  </a>
+                )}
+                {socialLinks.youtube && (
+                  <a
+                    href={socialLinks.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm"
+                  >
+                    <div className="w-4 h-4 bg-red-600 rounded-full"></div>
+                    YouTube
+                  </a>
+                )}
+              </div>
+            )}
+
             {/* Botones de acción con iconografía integrada */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-sm mx-auto">
               {isOwnProfile ? (
