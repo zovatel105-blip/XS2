@@ -389,7 +389,10 @@ class PollService {
       }
 
       const result = await response.json();
-      return result.saved_polls || [];
+      const rawSavedPolls = result.saved_polls || [];
+      
+      // Transform backend poll data to frontend format
+      return rawSavedPolls.map(poll => this.transformPollData(poll));
     } catch (error) {
       console.error('Error getting saved polls:', error);
       throw error;
