@@ -127,6 +127,40 @@ class UserResponse(BaseModel):
     # Account settings
     two_factor_enabled: bool = False
 
+class UserSocialLinks(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    website: Optional[str] = None
+    behance: Optional[str] = None
+    dribbble: Optional[str] = None
+    tiktok: Optional[str] = None
+    twitch: Optional[str] = None
+    instagram: Optional[str] = None
+    discord: Optional[str] = None
+    youtube: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SocialLinksUpdate(BaseModel):
+    website: Optional[str] = None
+    behance: Optional[str] = None
+    dribbble: Optional[str] = None
+    tiktok: Optional[str] = None
+    twitch: Optional[str] = None
+    instagram: Optional[str] = None
+    discord: Optional[str] = None
+    youtube: Optional[str] = None
+
+class SocialLinksResponse(BaseModel):
+    website: Optional[str] = None
+    behance: Optional[str] = None
+    dribbble: Optional[str] = None
+    tiktok: Optional[str] = None
+    twitch: Optional[str] = None
+    instagram: Optional[str] = None
+    discord: Optional[str] = None
+    youtube: Optional[str] = None
+
 class Token(BaseModel):
     access_token: str
     token_type: str
