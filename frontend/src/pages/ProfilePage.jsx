@@ -665,24 +665,50 @@ const ProfilePage = () => {
       
       try {
         const targetUserId = userId || authUser?.id;
+        console.log('🔍 Loading social links for user:', targetUserId);
+        
         const response = await fetch(config.API_ENDPOINTS.USERS.SOCIAL_LINKS(targetUserId), {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
 
+        console.log('📡 Load response status:', response.status);
+        
         if (response.ok) {
           const links = await response.json();
-          // Solo mantener enlaces que tienen valor
-          const filteredLinks = Object.fromEntries(
-            Object.entries(links).filter(([key, value]) => value && value.trim() !== '')
-          );
-          setSocialLinks(filteredLinks);
-          console.log('🔗 Social links loaded:', filteredLinks);
+          console.log('📥 Loaded links from backend:', links);
+          
+          // Convertir al formato interno si es necesario
+          const processedLinks = {};
+          Object.entries(links).forEach(([key, value]) => {
+            if (value && value.trim()) {
+              // Si ya tenemos información local (nombre y color), mantenerla
+              const existingLink = socialLinks[key];
+              if (existingLink && typeof existingLink === 'object') {
+                processedLinks[key] = {
+                  ...existingLink,
+                  url: value
+                };
+              } else {
+                // Crear nuevo enlace con datos por defecto
+                processedLinks[key] = {
+                  name: key.charAt(0).toUpperCase() + key.slice(1),
+                  url: value,
+                  color: getRandomColor()
+                };
+              }
+            }
+          });
+          
+          setSocialLinks(processedLinks);
+          console.log('🔄 Processed social links:', processedLinks);
+        } else {
+          console.log('ℹ️ No social links found or error loading');
         }
         
       } catch (error) {
-        console.error('Error loading social links:', error);
+        console.error('❌ Error loading social links:', error);
       }
     };
 
