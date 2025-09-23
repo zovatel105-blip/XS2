@@ -966,7 +966,7 @@ Layout "off" - Carrusel Horizontal:
 - **Add Functionality**: `handleAddSlot()` con validación y feedback
 - **Max Limit**: `Math.min(totalSlots, 6)` en `getSlotsCount()`
 
-## user_problem_statement: "Test user-to-user messaging functionality: Verificar completamente si los usuarios pueden enviarse mensajes entre sí"
+## user_problem_statement: "URGENTE: Diagnosticar y resolver problema crítico de conectividad 'Network connection failed' en VotaTok"
 
 ## frontend:
   - task: "User-to-user messaging functionality - complete message sending system"
