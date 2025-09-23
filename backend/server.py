@@ -6951,6 +6951,88 @@ async def get_poll_save_status(
         logger.error(f"Error checking save status: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# =============  SOCIAL LINKS ENDPOINTS =============
+
+@api_router.get("/users/{user_id}/social-links", response_model=SocialLinksResponse)
+async def get_user_social_links(
+    user_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get user's social media links"""
+    try:
+        # Find user's social links
+        social_links = await db.user_social_links.find_one({"user_id": user_id})
+        
+        if not social_links:
+            # Return empty social links if none exist
+            return SocialLinksResponse()
+        
+        return SocialLinksResponse(
+            website=social_links.get("website"),
+            behance=social_links.get("behance"),
+            dribbble=social_links.get("dribbble"),
+            tiktok=social_links.get("tiktok"),
+            twitch=social_links.get("twitch"),
+            instagram=social_links.get("instagram"),
+            discord=social_links.get("discord"),
+            youtube=social_links.get("youtube")
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting social links: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.put("/users/social-links", response_model=SocialLinksResponse)
+async def update_user_social_links(
+    social_links_data: SocialLinksUpdate,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Update current user's social media links"""
+    try:
+        # Prepare update data
+        update_data = {
+            "user_id": current_user.id,
+            "website": social_links_data.website,
+            "behance": social_links_data.behance,
+            "dribbble": social_links_data.dribbble,
+            "tiktok": social_links_data.tiktok,
+            "twitch": social_links_data.twitch,
+            "instagram": social_links_data.instagram,
+            "discord": social_links_data.discord,
+            "youtube": social_links_data.youtube,
+            "updated_at": datetime.utcnow()
+        }
+        
+        # Check if social links already exist
+        existing_links = await db.user_social_links.find_one({"user_id": current_user.id})
+        
+        if existing_links:
+            # Update existing social links
+            await db.user_social_links.update_one(
+                {"user_id": current_user.id},
+                {"$set": update_data}
+            )
+        else:
+            # Create new social links record
+            update_data["id"] = str(uuid.uuid4())
+            update_data["created_at"] = datetime.utcnow()
+            await db.user_social_links.insert_one(update_data)
+        
+        return SocialLinksResponse(
+            website=social_links_data.website,
+            behance=social_links_data.behance,
+            dribbble=social_links_data.dribbble,
+            tiktok=social_links_data.tiktok,
+            twitch=social_links_data.twitch,
+            instagram=social_links_data.instagram,
+            discord=social_links_data.discord,
+            youtube=social_links_data.youtube
+        )
+        
+    except Exception as e:
+        logger.error(f"Error updating social links: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 # Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
