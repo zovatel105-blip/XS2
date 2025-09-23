@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
     # Use external URL as configured in frontend/.env
-    return "https://socsave.preview.emergentagent.com/api"
+    return "https://social-share-panel.preview.emergentagent.com/api"
 
 def get_mobile_headers():
     """Get headers that simulate mobile device requests"""
@@ -25,8 +25,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://socsave.preview.emergentagent.com',
-        'Referer': 'https://socsave.preview.emergentagent.com/',
+        'Origin': 'https://social-share-panel.preview.emergentagent.com',
+        'Referer': 'https://social-share-panel.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'

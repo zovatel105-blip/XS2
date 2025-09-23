@@ -12,7 +12,7 @@ from datetime import datetime
 
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
-    return "https://socsave.preview.emergentagent.com/api"
+    return "https://social-share-panel.preview.emergentagent.com/api"
 
 def test_specific_endpoints():
     """Test the specific endpoints requested in the review"""
