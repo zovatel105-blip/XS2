@@ -1805,11 +1805,19 @@ const ProfilePage = () => {
                         {Object.entries(socialLinks).length > 0 && (
                           <div className="grid grid-cols-2 gap-4 mb-4">
                             {Object.entries(socialLinks).map(([linkId, linkData]) => {
-                              if (!linkData || (typeof linkData === 'object' && !linkData.url)) return null;
+                              // Debug logging
+                              console.log('🔍 Rendering social link:', linkId, linkData);
+                              
+                              if (!linkData) return null;
                               
                               const displayName = typeof linkData === 'object' ? linkData.name : linkId;
                               const url = typeof linkData === 'object' ? linkData.url : linkData;
                               const color = typeof linkData === 'object' && linkData.color ? linkData.color : 'bg-gray-600';
+                              
+                              // Skip if no URL
+                              if (!url || url.trim() === '') return null;
+                              
+                              console.log('✅ Rendering link button:', displayName, url);
                               
                               return (
                                 <div key={linkId} className="relative group">
