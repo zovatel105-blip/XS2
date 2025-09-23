@@ -550,15 +550,29 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                   console.log('🔖 TikTokScrollView: About to call onSave...');
                   try {
                     onSave(poll.id);
+                    // Toggle saved state locally for immediate visual feedback
+                    setSavedPolls(prev => {
+                      const newSet = new Set(prev);
+                      if (newSet.has(poll.id)) {
+                        newSet.delete(poll.id); // Unsave
+                      } else {
+                        newSet.add(poll.id); // Save
+                      }
+                      return newSet;
+                    });
                     console.log('🔖 TikTokScrollView: onSave called successfully');
                   } catch (error) {
                     console.error('🔖 TikTokScrollView: Error calling onSave:', error);
                   }
                 }}
-                className="flex items-center justify-center text-white hover:text-yellow-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm cursor-pointer pointer-events-auto z-50"
+                className={`flex items-center justify-center hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg backdrop-blur-sm cursor-pointer pointer-events-auto z-50 ${
+                  savedPolls.has(poll.id) 
+                    ? 'text-yellow-400 bg-yellow-500/20 hover:text-yellow-300' 
+                    : 'text-white bg-black/20 hover:text-yellow-400'
+                }`}
                 style={{ pointerEvents: 'auto' }}
               >
-                <Bookmark className="w-5 h-5" />
+                <Bookmark className={`w-5 h-5 ${savedPolls.has(poll.id) ? 'fill-current' : ''}`} />
               </Button>
             ) : (
               console.log('🔖 TikTokScrollView: onSave prop is falsy, not rendering save button')
