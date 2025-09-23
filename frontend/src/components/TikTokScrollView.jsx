@@ -375,7 +375,7 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                     src={poll.author?.avatar_url && poll.author.avatar_url !== null ? poll.author.avatar_url : undefined} 
                     className="object-cover" 
                   />
-                  <AvatarFallback className="bg-gradient-to-br from-yellow-500 to-orange-600 text-white font-bold">
+                  <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 font-bold">
                     {(poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'U').charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
