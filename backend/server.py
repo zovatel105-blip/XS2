@@ -7047,6 +7047,85 @@ async def update_user_social_links(
         logger.error(f"Error updating social links: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# =============  CUSTOM SOCIAL LINKS ENDPOINTS =============
+
+@api_router.post("/social_links")
+async def save_user_social_links(
+    social_links_data: SocialLinksCreate,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Save user's custom social media links"""
+    try:
+        # Prepare data for MongoDB
+        social_links_document = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user.id,
+            "links": [link.dict() for link in social_links_data.links],
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+        
+        # Check if social links already exist for this user
+        existing_links = await db.social_links.find_one({"user_id": current_user.id})
+        
+        if existing_links:
+            # Update existing social links
+            await db.social_links.update_one(
+                {"user_id": current_user.id},
+                {
+                    "$set": {
+                        "links": social_links_document["links"],
+                        "updated_at": social_links_document["updated_at"]
+                    }
+                }
+            )
+        else:
+            # Create new social links record
+            await db.social_links.insert_one(social_links_document)
+        
+        return {"message": "Social links saved successfully", "links": social_links_data.links}
+        
+    except Exception as e:
+        logger.error(f"Error saving social links: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/social_links/me")
+async def get_current_user_social_links(
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get current user's custom social media links"""
+    try:
+        # Find user's social links
+        social_links = await db.social_links.find_one({"user_id": current_user.id})
+        
+        if not social_links:
+            return {"links": []}
+        
+        return {"links": social_links.get("links", [])}
+        
+    except Exception as e:
+        logger.error(f"Error getting current user social links: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.get("/social_links/{user_id}")
+async def get_user_social_links_by_id(
+    user_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get user's custom social media links by user ID"""
+    try:
+        # Find user's social links
+        social_links = await db.social_links.find_one({"user_id": user_id})
+        
+        if not social_links:
+            return {"links": []}
+        
+        return {"links": social_links.get("links", [])}
+        
+    except Exception as e:
+        logger.error(f"Error getting user social links: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 # Agregar middleware CORS ANTES de incluir routers
 app.add_middleware(
     CORSMiddleware,
