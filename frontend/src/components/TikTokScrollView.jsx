@@ -154,12 +154,12 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
 
   const authorUserId = getAuthorUserId();
 
-  // Check follow status when component mounts
+  // Check follow status when component mounts or follow state changes
   useEffect(() => {
     if (authorUserId && currentUser && authorUserId !== currentUser.id) {
       getFollowStatus(authorUserId);
     }
-  }, [authorUserId, currentUser, getFollowStatus]);
+  }, [authorUserId, currentUser, getFollowStatus, followStateVersion]);
 
   // SINCRONIZACIÓN COMPLETA DE AUDIO con detección mejorada
   useEffect(() => {
