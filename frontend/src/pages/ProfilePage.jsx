@@ -1471,34 +1471,6 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Enlaces de Redes Sociales */}
-            {Object.keys(socialLinks).length > 0 && (
-              <div className="flex flex-wrap gap-3 justify-center">
-                {Object.entries(socialLinks).map(([linkId, linkData]) => {
-                  if (!linkData) return null;
-                  
-                  const displayName = typeof linkData === 'object' ? linkData.name : linkId;
-                  const url = typeof linkData === 'object' ? linkData.url : linkData;
-                  const color = typeof linkData === 'object' && linkData.color ? linkData.color : 'bg-gray-600';
-                  
-                  if (!url || url.trim() === '') return null;
-                  
-                  return (
-                    <a
-                      key={linkId}
-                      href={url.startsWith('http') ? url : `https://${url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm"
-                    >
-                      <div className={`w-4 h-4 rounded-full ${color.includes('gradient') ? `bg-gradient-to-r ${color}` : color}`}></div>
-                      {displayName}
-                    </a>
-                  );
-                })}
-              </div>
-            )}
-
             {/* Botones de acción con iconografía integrada */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-sm mx-auto">
               {isOwnProfile ? (
