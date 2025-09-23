@@ -166,7 +166,9 @@ class AppConfig {
         FOLLOWING: `${baseUrl}/api/users/following`,
         FOLLOWERS: (id) => `${baseUrl}/api/users/${id}/followers`,
         PROFILE: (id) => `${baseUrl}/api/user/profile/${id}`,
-        PROFILE_BY_USERNAME: (username) => `${baseUrl}/api/user/profile/by-username/${username}`
+        PROFILE_BY_USERNAME: (username) => `${baseUrl}/api/user/profile/by-username/${username}`,
+        SOCIAL_LINKS: (id) => `${baseUrl}/api/users/${id}/social-links`,
+        UPDATE_SOCIAL_LINKS: `${baseUrl}/api/users/social-links`
       },
       UPLOAD: {
         FILE: `${baseUrl}/api/upload`,
