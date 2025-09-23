@@ -2513,6 +2513,16 @@ async def follow_user(user_id: str, current_user: UserResponse = Depends(get_cur
     await update_follow_counts(user_id)  # Update followed user's follower count
     await update_follow_counts(current_user.id)  # Update current user's following count
     
+    # Clear cache for this relationship
+    cache_key = f"{current_user.id}:{user_id}"
+    if cache_key in follow_status_cache:
+        del follow_status_cache[cache_key]
+    
+    # Also clear reverse cache (for the followed user's perspective)
+    reverse_cache_key = f"{user_id}:{current_user.id}"
+    if reverse_cache_key in follow_status_cache:
+        del follow_status_cache[reverse_cache_key]
+    
     return {"message": "Successfully followed user", "follow_id": follow_data.id}
 
 @api_router.delete("/users/{user_id}/follow")
