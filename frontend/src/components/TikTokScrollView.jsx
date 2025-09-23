@@ -130,6 +130,11 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
 
 
 
+  // Debug logging for save functionality
+  useEffect(() => {
+    console.log('🔖 TikTokScrollView: onSave prop received:', typeof onSave, !!onSave);
+  }, [onSave]);
+
   // Get user ID from poll author
   const getAuthorUserId = () => {
     // Primero intentar con el objeto author si existe (priorizar UUID)
