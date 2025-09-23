@@ -2502,7 +2502,7 @@ async def follow_user(user_id: str, current_user: UserResponse = Depends(get_cur
     # Create follow relationship
     follow_data = Follow(
         follower_id=current_user.id,
-        followed_id=user_id
+        following_id=user_id
     )
     
     result = await db.follows.insert_one(follow_data.model_dump())
