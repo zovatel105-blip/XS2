@@ -537,10 +537,13 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
                 variant="ghost"
                 size="sm"
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
+                  console.log('🔖 TikTokScrollView: Save button clicked for poll:', poll.id);
                   onSave(poll.id);
                 }}
-                className="flex items-center justify-center text-white hover:text-yellow-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm"
+                className="flex items-center justify-center text-white hover:text-yellow-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm cursor-pointer pointer-events-auto z-50"
+                style={{ pointerEvents: 'auto' }}
               >
                 <Bookmark className="w-5 h-5" />
               </Button>
