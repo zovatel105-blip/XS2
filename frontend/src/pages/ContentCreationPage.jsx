@@ -1106,6 +1106,8 @@ const ContentCreationPage = () => {
           onImageRemove={handleImageRemove}
           onOptionTextChange={handleOptionTextChange}
           onMentionSelect={handleMentionSelect}
+          onMentionInputChange={handleMentionInputChange}
+          mentionInputValues={mentionInputValues}
           onCropFromPreview={handleCropFromPreview}
           cropActiveSlot={cropActiveSlot}
           onInlineCropSave={handleInlineCropSave}
