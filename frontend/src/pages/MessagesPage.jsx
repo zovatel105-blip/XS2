@@ -40,11 +40,161 @@ const MessagesPage = () => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Mobile responsive
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  // Dynamic view based on selected conversation
-  const showInbox = !selectedConversation; // Show inbox when no conversation selected
-  const showChat = !!selectedConversation; // Show chat when conversation is selected
+  // Load real conversations from backend
+  const loadConversations = async () => {
+    if (!user?.id) return;
+    
+    setLoading(true);
+    try {
+      console.log('🔄 Loading conversations for user:', user.id);
+      
+      const response = await apiRequest('/api/conversations', {
+        method: 'GET'
+      });
+      
+      console.log('📥 Loaded conversations:', response);
+      
+      if (Array.isArray(response)) {
+        setConversations(response);
+      } else {
+        console.log('ℹ️ No conversations found');
+        setConversations([]);
+      }
+    } catch (error) {
+      console.error('❌ Error loading conversations:', error);
+      setConversations([]);
+      
+      if (error.message.includes('404')) {
+        console.log('ℹ️ No conversations endpoint available yet');
+      } else {
+        toast({
+          title: "Error al cargar conversaciones",
+          description: "No se pudieron cargar las conversaciones",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load messages for a specific conversation
+  const loadMessages = async (conversationId) => {
+    if (!conversationId || !user?.id) return;
+    
+    try {
+      console.log('📩 Loading messages for conversation:', conversationId);
+      
+      const response = await apiRequest(`/api/conversations/${conversationId}/messages`, {
+        method: 'GET'
+      });
+      
+      console.log('📥 Loaded messages:', response);
+      
+      if (Array.isArray(response)) {
+        setMessages(response);
+      } else {
+        console.log('ℹ️ No messages found');
+        setMessages([]);
+      }
+      
+      // Scroll to bottom
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      
+    } catch (error) {
+      console.error('❌ Error loading messages:', error);
+      setMessages([]);
+      
+      if (!error.message.includes('404')) {
+        toast({
+          title: "Error al cargar mensajes",
+          description: "No se pudieron cargar los mensajes",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  // Search users for new conversation
+  const searchUsers = async (query) => {
+    if (!query || query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    
+    try {
+      console.log('🔍 Searching users:', query);
+      
+      const response = await apiRequest(`/api/users/search?q=${encodeURIComponent(query)}`, {
+        method: 'GET'
+      });
+      
+      console.log('📥 Search results:', response);
+      
+      if (Array.isArray(response)) {
+        // Filter out current user from results
+        const filteredResults = response.filter(u => u.id !== user.id);
+        setSearchResults(filteredResults);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error('❌ Error searching users:', error);
+      setSearchResults([]);
+    }
+  };
+
+  // Start new conversation with user
+  const startNewConversation = async (targetUser) => {
+    if (!targetUser || !user?.id) return;
+    
+    try {
+      console.log('🆕 Starting new conversation with:', targetUser.username);
+      
+      // Check if conversation already exists
+      const existingConversation = conversations.find(conv => 
+        conv.participants.some(p => p.id === targetUser.id)
+      );
+      
+      if (existingConversation) {
+        console.log('🔄 Using existing conversation:', existingConversation.id);
+        setSelectedConversation(existingConversation);
+        loadMessages(existingConversation.id);
+        setShowNewChat(false);
+        setSearchQuery('');
+        setSearchResults([]);
+        return;
+      }
+      
+      // Create new conversation object (will be saved when first message is sent)
+      const newConversation = {
+        id: `new-${Date.now()}`,
+        participants: [user, targetUser],
+        otherParticipant: targetUser,
+        last_message: null,
+        created_at: new Date().toISOString(),
+        isNewConversation: true
+      };
+      
+      setSelectedConversation(newConversation);
+      setMessages([]);
+      setShowNewChat(false);
+      setSearchQuery('');
+      setSearchResults([]);
+      
+      console.log('✅ New conversation created:', newConversation);
+      
+    } catch (error) {
+      console.error('❌ Error starting new conversation:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo iniciar la conversación",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
