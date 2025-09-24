@@ -127,6 +127,13 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
                 {option.text}
               </div>
             )}
+            
+            {/* Debug info */}
+            {isActive && (
+              <div className="absolute top-2 left-2 bg-red-600 text-white p-1 text-xs rounded">
+                {option.text ? `"${option.text.substring(0, 10)}"` : 'NO TEXT'}
+              </div>
+            )}
           </div>
         );
       })}
