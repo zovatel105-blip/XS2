@@ -690,7 +690,19 @@ const MessagesMainPage = () => {
           )
         );
 
-        alert(`Error al enviar mensaje: ${error.message}`);
+        // Mejor manejo del mensaje de error
+        let errorMessage = 'Error desconocido al enviar mensaje';
+        
+        if (error.message && typeof error.message === 'string') {
+          errorMessage = error.message;
+        } else if (error.status) {
+          errorMessage = `Error del servidor: HTTP ${error.status}`;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        console.error('📱 Mostrando error al usuario:', errorMessage);
+        alert(`Error al enviar mensaje: ${errorMessage}`);
       }
     }
   };
