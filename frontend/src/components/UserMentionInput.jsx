@@ -3,13 +3,19 @@ import { Search, User } from 'lucide-react';
 import { Textarea } from './ui/textarea';
 
 const UserMentionInput = ({ 
-  value, 
-  onChange, 
+  value: externalValue, 
+  onChange: externalOnChange, 
   placeholder, 
   className,
   onMentionSelect,
   ...props 
 }) => {
+  // Use internal state for text if no external value/onChange provided
+  const [internalValue, setInternalValue] = useState('');
+  const isControlled = externalValue !== undefined && typeof externalOnChange === 'function';
+  
+  const value = isControlled ? externalValue : internalValue;
+  const onChange = isControlled ? externalOnChange : setInternalValue;
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [mentionQuery, setMentionQuery] = useState('');
