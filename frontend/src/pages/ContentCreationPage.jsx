@@ -693,6 +693,10 @@ const ContentCreationPage = () => {
     updateOption(index, 'text', text);
   };
 
+  const handleMentionInputChange = (index, value) => {
+    setMentionInputValues(prev => ({...prev, [index]: value}));
+  };
+
   const handleMentionSelect = (index, user) => {
     const currentOption = options[index] || { text: '', media: null, mentionedUsers: [] };
     const currentMentioned = currentOption.mentionedUsers || [];
