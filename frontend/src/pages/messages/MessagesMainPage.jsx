@@ -45,7 +45,20 @@ const MessagesMainPage = () => {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      // Try to get error message from response body
+      let errorMessage = `HTTP ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.detail) {
+          errorMessage = errorData.detail;
+        }
+      } catch (e) {
+        // If we can't parse the error body, use the status
+      }
+      
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      throw error;
     }
 
     return response.json();
