@@ -121,8 +121,8 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
             )}
 
-            {/* Option Description - Position based on grid type and option index */}
-            {option.text && (() => {
+            {/* Option Description - Only show when active (TikTok scroll) */}
+            {isActive && option.text && (() => {
               let descriptionPosition;
               
               // Determine position based on grid type and option index
