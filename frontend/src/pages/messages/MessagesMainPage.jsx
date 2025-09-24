@@ -247,11 +247,52 @@ const MessagesMainPage = () => {
   // Estado para manejar navegación directa a usuario
   const [pendingUserToOpen, setPendingUserToOpen] = useState(null);
   
+  // Cache para búsquedas de usuarios para evitar rate limiting
+  const [userSearchCache, setUserSearchCache] = useState({});
+  
   // Estado para estadísticas del usuario en chat
   const [userStats, setUserStats] = useState({});
   
   // Estado temporal para debug en móvil
   const [chatDebugInfo, setChatDebugInfo] = useState(null);
+
+  // Función de búsqueda de usuarios con cache y rate limiting protection
+  const searchUserWithCache = async (username) => {
+    const cacheKey = username.toLowerCase();
+    
+    // Check cache first (expires after 5 minutes)
+    if (userSearchCache[cacheKey] && 
+        Date.now() - userSearchCache[cacheKey].timestamp < 5 * 60 * 1000) {
+      console.log('📋 Using cached user search result for:', username);
+      return userSearchCache[cacheKey].data;
+    }
+
+    try {
+      console.log('🔍 Making API search for user:', username);
+      const users = await apiRequest(`/api/users/search?q=${encodeURIComponent(username)}`);
+      
+      // Cache the result
+      setUserSearchCache(prev => ({
+        ...prev,
+        [cacheKey]: {
+          data: users,
+          timestamp: Date.now()
+        }
+      }));
+      
+      return users;
+    } catch (error) {
+      if (error.message.includes('429')) {
+        // Rate limit error - try to use stale cache if available
+        if (userSearchCache[cacheKey]) {
+          console.log('⚠️ Rate limited - using stale cache for:', username);
+          return userSearchCache[cacheKey].data;
+        }
+        throw new Error('Demasiadas búsquedas. Intenta de nuevo en unos momentos.');
+      }
+      throw error;
+    }
+  };
 
   // Detectar parámetro user en URL inmediatamente
   useEffect(() => {
