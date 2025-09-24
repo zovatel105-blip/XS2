@@ -2009,17 +2009,17 @@ const ProfilePage = () => {
                               
                               return (
                                 <div key={linkId} className="relative group">
-                                  {/* Tarjeta principal del enlace */}
+                                  {/* Tarjeta principal del enlace - más compacta */}
                                   <a
                                     href={url.startsWith('http') ? url : `https://${url}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`block w-full h-24 rounded-2xl text-white font-bold relative overflow-hidden transition-transform hover:scale-105 shadow-lg bg-gradient-to-br ${platformStyle.gradient}`}
+                                    className={`block w-full h-16 rounded-xl text-white font-bold relative overflow-hidden transition-transform hover:scale-105 shadow-md bg-gradient-to-br ${platformStyle.gradient}`}
                                   >
-                                    <div className="h-full flex flex-col justify-between p-4">
+                                    <div className="h-full flex flex-col justify-between p-3">
                                       {/* Ícono de enlace externo en esquina superior derecha */}
                                       <div className="flex justify-end">
-                                        <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
                                       </div>
@@ -2029,7 +2029,7 @@ const ProfilePage = () => {
                                         <div className="text-white">
                                           {platformStyle.icon}
                                         </div>
-                                        <span className="text-sm font-bold leading-tight">{displayName}</span>
+                                        <span className="text-xs font-bold leading-tight">{displayName}</span>
                                       </div>
                                     </div>
                                   </a>
@@ -2040,7 +2040,7 @@ const ProfilePage = () => {
                                       e.preventDefault();
                                       handleRemoveSocialLink(linkId);
                                     }}
-                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs shadow-lg"
+                                    className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs shadow-lg"
                                   >
                                     ×
                                   </button>
