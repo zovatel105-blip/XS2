@@ -92,11 +92,11 @@ const UserMentionInput = ({
             const data = await response.json();
             setSuggestions(data.slice(0, 5));
           } else {
-            setSuggestions(mockUsers.slice(0, 5));
+            setSuggestions([]);
           }
         } catch (error) {
           console.error('Error loading users:', error);
-          setSuggestions(mockUsers.slice(0, 5));
+          setSuggestions([]);
         } finally {
           setLoading(false);
         }
