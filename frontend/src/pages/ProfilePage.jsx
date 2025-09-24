@@ -130,8 +130,23 @@ const ProfilePage = () => {
       try {
         // Get all polls first
         const allPolls = await pollService.getPollsForFrontend({ limit: 100 });
-        const targetUserId = userId || authUser?.id;
-        const targetUsername = userId || authUser?.username;
+        
+        // Determine target user info
+        let targetUserId, targetUsername;
+        
+        if (userId && viewedUser) {
+          // Viewing another user's profile - use viewedUser data
+          targetUserId = viewedUser.id;
+          targetUsername = viewedUser.username;
+        } else if (!userId && authUser) {
+          // Viewing own profile - use authUser data
+          targetUserId = authUser.id;
+          targetUsername = authUser.username;
+        } else if (userId && !viewedUser) {
+          // Still loading viewedUser data, return early
+          setPollsLoading(false);
+          return;
+        }
         
         console.log('Target user ID:', targetUserId);
         console.log('Target username:', targetUsername);
@@ -140,7 +155,6 @@ const ProfilePage = () => {
         // Filter polls by the target user (check both ID and username)
         const userPolls = allPolls.filter(poll => {
           const authorMatches = poll.authorUser?.id === targetUserId || 
-                               poll.authorUser?.username === targetUserId ||
                                poll.authorUser?.username === targetUsername;
                                
           console.log(`Poll "${poll.title}" by ${poll.authorUser?.username} (${poll.authorUser?.id}) - matches: ${authorMatches}`);
@@ -162,7 +176,7 @@ const ProfilePage = () => {
     };
 
     loadUserPolls();
-  }, [authUser?.id, authUser?.username, userId, toast]);
+  }, [authUser?.id, authUser?.username, userId, viewedUser, toast]);
 
   // Load follow statistics
   useEffect(() => {
