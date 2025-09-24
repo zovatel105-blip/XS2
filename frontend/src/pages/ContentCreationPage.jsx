@@ -1013,7 +1013,7 @@ const ContentCreationPage = () => {
 
       const pollData = {
         title: title.trim(),
-        description: description.trim() || null, // Use actual description input
+        description: null, // No general description - use option descriptions instead
         options: processedOptions,
         music_id: selectedMusic?.id || null, // Use music_id format
         tags: [], // No tags
