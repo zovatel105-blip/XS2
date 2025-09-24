@@ -115,7 +115,9 @@ const FollowersPage = () => {
   // Manejar clic en follower (navegar a perfil)
   const handleFollowerClick = (follower) => {
     if (follower.isSystem) return;
-    window.location.href = `/profile/${follower.userId}`;
+    console.log('🔍 Clicking on follower:', follower);
+    console.log('🔍 Navigating to profile:', follower.userId);
+    navigate(`/profile/${follower.userId}`);
   };
 
   return (
