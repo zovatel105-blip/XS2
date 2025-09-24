@@ -2146,12 +2146,6 @@ const ProfilePage = () => {
                 {!isOwnProfile && Object.keys(socialLinks).length > 0 && (
                   <TabsContent value="social" className="space-y-6">
                     <div className="px-4 py-6">
-                      {/* Header del Panel */}
-                      <div className="text-center mb-8">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Enlaces Sociales</h3>
-                        <p className="text-sm text-gray-600">Encuentra a {displayUser?.display_name || 'este usuario'} en otras plataformas</p>
-                      </div>
-                      
                       {/* Lista de Enlaces (Solo vista) - Tarjetas coloridas como en referencia */}
                       <div className="max-w-lg mx-auto">
                         <div className="grid grid-cols-2 gap-3">
@@ -2172,12 +2166,12 @@ const ProfilePage = () => {
                                 href={url.startsWith('http') ? url : `https://${url}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`block w-full h-24 rounded-2xl text-white font-bold relative overflow-hidden transition-transform hover:scale-105 shadow-lg bg-gradient-to-br ${platformStyle.gradient}`}
+                                className={`block w-full h-16 rounded-xl text-white font-bold relative overflow-hidden transition-transform hover:scale-105 shadow-md bg-gradient-to-br ${platformStyle.gradient}`}
                               >
-                                <div className="h-full flex flex-col justify-between p-4">
+                                <div className="h-full flex flex-col justify-between p-3">
                                   {/* Ícono de enlace externo en esquina superior derecha */}
                                   <div className="flex justify-end">
-                                    <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
                                   </div>
@@ -2187,7 +2181,7 @@ const ProfilePage = () => {
                                     <div className="text-white">
                                       {platformStyle.icon}
                                     </div>
-                                    <span className="text-sm font-bold leading-tight">{displayName}</span>
+                                    <span className="text-xs font-bold leading-tight">{displayName}</span>
                                   </div>
                                 </div>
                               </a>
