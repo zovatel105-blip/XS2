@@ -907,8 +907,8 @@ const MessagesPage = () => {
       followers: [{
         id: 'empty-followers',
         type: 'system',
-        title: '👥 Sin nuevos seguidores',
-        message: 'Cuando alguien nuevo te siga, aparecerá aquí para que puedas saberlo',
+        title: 'Sin nuevos seguidores',
+        message: 'Los nuevos seguidores aparecerán aquí',
         unreadCount: 0,
         time: '',
         avatar: '👤',
@@ -917,8 +917,8 @@ const MessagesPage = () => {
       activity: [{
         id: 'empty-activity',
         type: 'system',
-        title: '🔔 Sin actividad reciente',
-        message: 'Los comentarios, me gusta y menciones aparecerán aquí',
+        title: 'Sin actividad reciente',
+        message: 'Las notificaciones de actividad aparecerán aquí',
         unreadCount: 0,
         time: '',
         avatar: '🔔',
@@ -927,8 +927,8 @@ const MessagesPage = () => {
       messages: [{
         id: 'empty-requests',
         type: 'system',
-        title: '💬 Sin solicitudes de mensajes',
-        message: 'Las solicitudes de personas que no sigues aparecerán aquí',
+        title: 'Sin solicitudes de mensajes',
+        message: 'Las nuevas solicitudes aparecerán aquí',
         unreadCount: 0,
         time: '',
         avatar: '💬',
@@ -941,11 +941,11 @@ const MessagesPage = () => {
       return [{
         id: 'empty-conversations', 
         type: 'system',
-        title: '💬 El Susurro Inteligente',
-        message: 'Tus conversaciones aparecerán aquí. Busca usuarios para iniciar nuevos chats',
+        title: 'Mensajes',
+        message: 'Tus conversaciones aparecerán aquí',
         unreadCount: 0,
         time: '',
-        avatar: '🗨️',
+        avatar: '💬',
         isSystem: true
       }];
     }
@@ -953,8 +953,8 @@ const MessagesPage = () => {
     return emptyStates[segment] || [{
       id: 'empty-default',
       type: 'system', 
-      title: '¡Hola! 👋',
-      message: 'Tus notificaciones aparecerán aquí',
+      title: 'Sin notificaciones',
+      message: 'Las notificaciones aparecerán aquí',
       unreadCount: 0,
       time: '',
       avatar: '📱',
