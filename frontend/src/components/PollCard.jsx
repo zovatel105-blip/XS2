@@ -531,6 +531,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
               )}
               
               {/* Mentioned Users Display - Circular Avatars */}
+              {console.log('PollCard Debug - Poll:', poll.title, 'Mentions:', poll.mentioned_users) || null}
               {poll.mentioned_users && poll.mentioned_users.length > 0 && (
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-xs text-gray-500">Menciona a:</span>
