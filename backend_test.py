@@ -15048,6 +15048,13 @@ def main():
     print("\n💾 TESTING: Saved Polls Functionality")
     test_results["saved_polls_functionality"] = test_saved_polls_functionality(base_url)
     
+    # NEW CRITICAL TESTS FOR REVIEW REQUEST
+    print("\n🚨 TESTING CRÍTICO: Chat System HTTP 403 Error Handling")
+    test_results["chat_system_403_error"] = test_chat_system_http_403_error_handling(base_url)
+    
+    print("\n🚨 TESTING CRÍTICO: Poll Mentions Functionality")
+    test_results["poll_mentions_functionality"] = test_poll_mentions_functionality(base_url)
+    
     # Final summary
     print("\n" + "=" * 80)
     print("📊 FINAL TEST RESULTS SUMMARY")
