@@ -549,14 +549,6 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                   </div>
                 </div>
               )}
-
-              {/* DEBUG: Show mention data */}
-              {process.env.NODE_ENV === 'development' && (
-                <div className="mt-2 p-2 bg-red-100 text-xs">
-                  <div>Poll mentions: {JSON.stringify(poll.mentioned_users)}</div>
-                  <div>Option mentions: {JSON.stringify(poll.options?.map(opt => opt.mentioned_users))}</div>
-                </div>
-              )}
             </div>
 
             {/* Media Grid - Takes most space */}
