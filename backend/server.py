@@ -4465,6 +4465,21 @@ async def create_poll(
         )
         options.append(option)
     
+    # Validate mentioned users exist before saving
+    valid_mentioned_users = []
+    if poll_data.mentioned_users:
+        try:
+            mentioned_users_cursor = db.users.find({"id": {"$in": poll_data.mentioned_users}})
+            existing_users = await mentioned_users_cursor.to_list(len(poll_data.mentioned_users))
+            valid_mentioned_users = [user["id"] for user in existing_users]
+            
+            invalid_users = set(poll_data.mentioned_users) - set(valid_mentioned_users)
+            if invalid_users:
+                print(f"DEBUG: Invalid mentioned user IDs filtered out: {invalid_users}")
+        except Exception as e:
+            print(f"DEBUG: Error validating mentioned users: {e}")
+            valid_mentioned_users = []
+
     # Create poll
     poll = Poll(
         title=poll_data.title,
@@ -4474,7 +4489,7 @@ async def create_poll(
         music_id=poll_data.music_id,
         tags=poll_data.tags,
         category=poll_data.category,
-        mentioned_users=poll_data.mentioned_users,
+        mentioned_users=valid_mentioned_users,  # Only save validated user IDs
         video_playback_settings=poll_data.video_playback_settings,
         layout=poll_data.layout  # Include layout configuration
     )
