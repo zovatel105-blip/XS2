@@ -121,9 +121,9 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
             )}
 
-            {/* Option Description - Above vote area as shown in screenshot */}
+            {/* Option Description - Above vote area (moved higher) */}
             {option.text && (
-              <div className="absolute bottom-16 left-2 right-2 z-10">
+              <div className="absolute bottom-20 left-2 right-2 z-10">
                 <div className="w-full bg-black/70 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm">
                   {option.text}
                 </div>
