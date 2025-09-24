@@ -980,16 +980,32 @@ Layout "off" - Carrusel Horizontal:
       - comment: "✅ BACKEND CONNECTIVITY FULLY OPERATIONAL (2025-01-27): Comprehensive testing confirms backend is responding correctly. VERIFIED: ✅ Health check endpoint (GET /api/) returns 200 OK with 'Social Network API', ✅ Backend running on port 8001 as expected, ✅ CORS properly configured for frontend requests, ✅ Network reliability excellent (avg 2ms response time), ✅ All user agents (mobile/desktop) work correctly. Backend infrastructure is solid and ready for production."
   
   - task: "Chat System HTTP 403 Error Handling"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/frontend/src/pages/messages/MessagesMainPage.jsx"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: false
       - agent: "main"
       - comment: "ISSUE IDENTIFIED: Frontend MessagesMainPage doesn't properly handle HTTP 403 'Chat request already sent' response from backend. Backend correctly returns 403 with message 'Chat request already sent. Wait for user to accept.' at line 2709 in server.py, but frontend handleSendMessage function (lines 493-598) doesn't check for this specific error. Need to add proper error handling to display appropriate message to user and manage UI state."
+      - working: true
+      - agent: "main"
+      - comment: "FIXED COMPLETELY: Enhanced apiRequest function (lines 34-56) to parse error messages from response body instead of just returning generic 'HTTP 403'. Updated handleSendMessage error handling (lines 580-630) to specifically detect 403 'Chat request already sent' error and display informative system message '⏳ Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte para poder intercambiar mensajes.' The system now properly handles the pending chat request state and closes conversation after showing the message."
+
+## frontend:
+  - task: "Poll Mentions Display Issue"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/components/PollCard.jsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+      - agent: "main"
+      - comment: "ISSUE IDENTIFIED: PollCard component doesn't display mentioned users at all. Backend correctly stores and returns poll.mentioned_users (verified in /api/polls endpoint at lines 4239), but frontend PollCard.jsx has no code to display mentions. Users who are mentioned in polls don't see visual indicators. Need to add mentions display section in PollCard component."
 
   - task: "User Registration System - POST /api/auth/register"
     implemented: true
