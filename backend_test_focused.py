@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://link-share-config.preview.emergentagent.com',
-        'Referer': 'https://link-share-config.preview.emergentagent.com/',
+        'Origin': 'https://profile-links-hub.preview.emergentagent.com',
+        'Referer': 'https://profile-links-hub.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
