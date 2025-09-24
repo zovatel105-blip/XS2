@@ -2026,7 +2026,9 @@ const ProfilePage = () => {
                                       
                                       {/* Contenido principal */}
                                       <div className="flex items-center gap-2">
-                                        <span className="text-lg">{platformStyle.icon}</span>
+                                        <div className="text-white">
+                                          {platformStyle.icon}
+                                        </div>
                                         <span className="text-sm font-bold leading-tight">{displayName}</span>
                                       </div>
                                     </div>
