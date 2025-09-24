@@ -996,16 +996,19 @@ Layout "off" - Carrusel Horizontal:
 
 ## frontend:
   - task: "Poll Mentions Display Issue"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "/app/frontend/src/components/PollCard.jsx"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: false
       - agent: "main"
       - comment: "ISSUE IDENTIFIED: PollCard component doesn't display mentioned users at all. Backend correctly stores and returns poll.mentioned_users (verified in /api/polls endpoint at lines 4239), but frontend PollCard.jsx has no code to display mentions. Users who are mentioned in polls don't see visual indicators. Need to add mentions display section in PollCard component."
+      - working: true
+      - agent: "main"
+      - comment: "FIXED COMPLETELY: Added mentions display section in PollCard.jsx after poll title (lines 517-533) showing 'Menciona a: @username1, @username2 +X más'. Enhanced backend GET /polls (lines 4220-4242) and POST /polls (lines 4481-4506) endpoints to resolve mentioned user IDs to user objects with username/display_name/avatar_url instead of returning raw IDs. Now users can see who is mentioned in each poll with clickable @username links."
 
   - task: "User Registration System - POST /api/auth/register"
     implemented: true
