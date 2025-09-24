@@ -1005,7 +1005,7 @@ Layout "off" - Carrusel Horizontal:
     file: "/app/frontend/src/pages/messages/MessagesMainPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
       - agent: "main"
@@ -1013,6 +1013,24 @@ Layout "off" - Carrusel Horizontal:
       - working: true
       - agent: "main"
       - comment: "FIXED RATE LIMITING ISSUE: Implemented comprehensive rate limiting protection. ADDED: userSearchCache state with 5-minute cache expiration, searchUserWithCache function that checks cache before API calls, stale cache fallback when rate limited, 300ms debouncing in useEffect to prevent rapid calls, better error messaging ('Demasiadas búsquedas. Intenta de nuevo en unos momentos.'). The system now caches user search results and handles rate limits gracefully without blocking chat functionality."
+
+  - task: "Message Send Error [object Object]"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/messages/MessagesMainPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+      - agent: "main"
+      - comment: "USER REPORTED ISSUE: After fixing rate limiting, users now get 'Error al enviar mensaje: [object Object]' when trying to send chat messages. Error occurs after successfully opening chat interface, when attempting to send the actual message."
+      - working: true
+      - agent: "troubleshoot"
+      - comment: "ROOT CAUSE IDENTIFIED by troubleshoot_agent: Frontend sending JavaScript object directly instead of JSON string in POST request body. Line 556 uses 'body: messagePayload' instead of 'body: JSON.stringify(messagePayload)'. Backend expects properly formatted JSON with recipient_id and content fields but receives '[object Object]' due to missing JSON serialization."
+      - working: true
+      - agent: "main"
+      - comment: "FIXED JSON SERIALIZATION ISSUE: Changed line 556 from 'body: messagePayload' to 'body: JSON.stringify(messagePayload)'. This ensures the request body is properly serialized as JSON string before sending to backend. The apiRequest function already sets correct Content-Type header ('application/json'), so only body serialization was needed. Now backend should receive proper JSON with recipient_id and content fields as expected by MessageCreate model."
 
   - task: "Poll Mentions Functionality Backend Resolution"
     implemented: true
