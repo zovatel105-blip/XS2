@@ -553,7 +553,7 @@ const MessagesMainPage = () => {
       try {
         const response = await apiRequest('/api/messages', {
           method: 'POST',
-          body: messagePayload
+          body: JSON.stringify(messagePayload)
         });
 
         console.log('✅ Respuesta del servidor:', response);
