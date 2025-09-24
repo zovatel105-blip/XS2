@@ -2016,21 +2016,12 @@ const ProfilePage = () => {
                                     rel="noopener noreferrer"
                                     className={`block w-full h-16 rounded-xl text-white font-bold relative overflow-hidden transition-transform hover:scale-105 shadow-md bg-gradient-to-br ${platformStyle.gradient}`}
                                   >
-                                    <div className="h-full flex flex-col justify-between p-3">
-                                      {/* Ícono de enlace externo en esquina superior derecha */}
-                                      <div className="flex justify-end">
-                                        <svg className="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
+                                    {/* Contenido centrado */}
+                                    <div className="h-full flex items-center justify-center gap-3 p-3">
+                                      <div className="text-white">
+                                        {platformStyle.icon}
                                       </div>
-                                      
-                                      {/* Contenido principal */}
-                                      <div className="flex items-center gap-2">
-                                        <div className="text-white">
-                                          {platformStyle.icon}
-                                        </div>
-                                        <span className="text-xs font-bold leading-tight">{displayName}</span>
-                                      </div>
+                                      <span className="text-sm font-bold">{displayName}</span>
                                     </div>
                                   </a>
                                   
