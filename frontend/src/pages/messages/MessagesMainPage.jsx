@@ -595,17 +595,56 @@ const MessagesMainPage = () => {
       console.error('❌ Error message:', error.message);
       console.error('❌ Error stack:', error.stack);
       
-      // Marcar mensaje como fallido
+      // Eliminar mensaje temporal
       setMessages(prevMessages =>
-        prevMessages.map(msg =>
-          msg.id === tempMessageId
-            ? { ...msg, status: 'failed' }
-            : msg
-        )
+        prevMessages.filter(msg => msg.id !== tempMessageId)
       );
 
-      // Mostrar error al usuario
-      alert(`Error al enviar mensaje: ${error.message}`);
+      // Manejar errores específicos
+      if (error.status === 403 && error.message.includes('Chat request already sent')) {
+        // El backend devolvió 403 con "Chat request already sent"
+        console.log('📨 Chat request ya enviado - mostrando mensaje informativo');
+        
+        const chatRequestPendingMessage = {
+          id: `system-${Date.now()}`,
+          content: '⏳ Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte para poder intercambiar mensajes.',
+          sender_id: 'system',
+          isSystemMessage: true,
+          created_at: new Date().toISOString()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, chatRequestPendingMessage]);
+        
+        // Cerrar la conversación después de mostrar el mensaje
+        setTimeout(() => {
+          setSelectedConversation(null);
+          setShowChat(false);
+        }, 4000);
+        
+      } else if (error.status === 403) {
+        // Otros errores 403
+        const permissionMessage = {
+          id: `system-${Date.now()}`,
+          content: '🚫 No tienes permiso para enviar mensajes a este usuario.',
+          sender_id: 'system',
+          isSystemMessage: true,
+          created_at: new Date().toISOString()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, permissionMessage]);
+        
+      } else {
+        // Otros errores - marcar mensaje como fallido y mostrar error genérico
+        setMessages(prevMessages =>
+          prevMessages.map(msg =>
+            msg.id === tempMessageId
+              ? { ...msg, status: 'failed' }
+              : msg
+          )
+        );
+
+        alert(`Error al enviar mensaje: ${error.message}`);
+      }
     }
   };
 
