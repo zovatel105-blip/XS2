@@ -4397,17 +4397,27 @@ async def get_following_polls(
         if poll_data.get("mentioned_users"):
             mentioned_user_ids = poll_data.get("mentioned_users", [])
             if mentioned_user_ids:
-                mentioned_users_cursor = db.users.find({"id": {"$in": mentioned_user_ids}})
-                mentioned_users_list = await mentioned_users_cursor.to_list(len(mentioned_user_ids))
-                mentioned_users_data = [
-                    MentionedUser(
-                        id=user["id"],
-                        username=user["username"],
-                        display_name=user.get("display_name"),
-                        avatar_url=user.get("avatar_url")
-                    ) 
-                    for user in mentioned_users_list
-                ]
+                try:
+                    mentioned_users_cursor = db.users.find({"id": {"$in": mentioned_user_ids}})
+                    mentioned_users_list = await mentioned_users_cursor.to_list(len(mentioned_user_ids))
+                    
+                    # Log for debugging
+                    print(f"DEBUG: Found {len(mentioned_users_list)} users out of {len(mentioned_user_ids)} mentioned IDs for poll {poll_data['id']}")
+                    if len(mentioned_users_list) != len(mentioned_user_ids):
+                        print(f"DEBUG: Missing users for IDs: {set(mentioned_user_ids) - set(user['id'] for user in mentioned_users_list)}")
+                    
+                    mentioned_users_data = [
+                        MentionedUser(
+                            id=user["id"],
+                            username=user["username"],
+                            display_name=user.get("display_name"),
+                            avatar_url=user.get("avatar_url")
+                        ) 
+                        for user in mentioned_users_list
+                    ]
+                except Exception as e:
+                    print(f"DEBUG: Error resolving mentioned users for poll {poll_data['id']}: {e}")
+                    mentioned_users_data = []
         
         poll_response = PollResponse(
             id=poll_data["id"],
