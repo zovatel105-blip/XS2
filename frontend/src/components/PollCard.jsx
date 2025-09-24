@@ -517,9 +517,9 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 <div className="flex items-center gap-1 mt-2">
                   <span className="text-xs text-gray-500">Menciona a:</span>
                   <div className="flex items-center gap-1 flex-wrap">
-                    {poll.mentioned_users.slice(0, 3).map((mentionedUserId, index) => (
-                      <span key={mentionedUserId} className="text-xs font-medium text-blue-600 hover:text-blue-800 cursor-pointer">
-                        @usuario{index + 1}
+                    {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
+                      <span key={mentionedUser.id || index} className="text-xs font-medium text-blue-600 hover:text-blue-800 cursor-pointer">
+                        @{mentionedUser.username || mentionedUser.display_name || `usuario${index + 1}`}
                         {index < Math.min(poll.mentioned_users.length - 1, 2) && <span className="text-gray-400">, </span>}
                       </span>
                     ))}
