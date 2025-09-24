@@ -557,11 +557,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 </div>
               )}
 
-              {/* TEMPORARY DEBUG - Check mention data */}
-              <div className="mt-1 text-xs bg-red-500 text-white p-1 rounded">
-                Mentions: {poll.mentioned_users ? poll.mentioned_users.length : 'undefined'} | 
-                Data: {JSON.stringify(poll.mentioned_users)}
-              </div>
+
             </div>
 
             {/* Media Grid - Takes most space */}
