@@ -4481,6 +4481,21 @@ async def create_poll(
     # Get music info if available
     music_info = await get_music_info(poll.music_id) if poll.music_id else None
     
+    # Resolve mentioned users to user objects for the response
+    mentioned_users_data = []
+    if poll.mentioned_users:
+        mentioned_users_cursor = db.users.find({"id": {"$in": poll.mentioned_users}})
+        mentioned_users_list = await mentioned_users_cursor.to_list(len(poll.mentioned_users))
+        mentioned_users_data = [
+            {
+                "id": user["id"],
+                "username": user["username"],
+                "display_name": user.get("display_name"),
+                "avatar_url": user.get("avatar_url")
+            } 
+            for user in mentioned_users_list
+        ]
+    
     return PollResponse(
         id=poll.id,
         title=poll.title,
@@ -4497,7 +4512,7 @@ async def create_poll(
         is_featured=poll.is_featured,
         tags=poll.tags,
         category=poll.category,
-        mentioned_users=poll.mentioned_users,  # Include mentioned users in poll
+        mentioned_users=mentioned_users_data,  # Include resolved mentioned users
         layout=poll.layout,  # ✅ FIXED: Include layout field in response
         created_at=poll.created_at,
         time_ago=calculate_time_ago(poll.created_at)
