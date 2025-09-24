@@ -121,17 +121,12 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
             )}
 
-            {/* Option Description - Show when description exists */}
+            {/* Option Description - Show above votes */}
             {option.text && (
-              <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur-sm text-white p-1.5 rounded text-xs z-10 line-clamp-2">
+              <div className="absolute top-2 left-2 right-2 bg-black/70 backdrop-blur-sm text-white p-1.5 rounded text-xs z-10 line-clamp-2">
                 {option.text}
               </div>
             )}
-            
-            {/* Debug info */}
-            <div className="absolute top-2 left-2 bg-red-600 text-white p-1 text-xs rounded z-20">
-              {option.text ? `"${option.text.substring(0, 5)}"` : 'NO'} | A:{isActive ? 'Y' : 'N'}
-            </div>
           </div>
         );
       })}
