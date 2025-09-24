@@ -4220,6 +4220,23 @@ async def get_polls(
         # Get music info if available
         music_info = await get_music_info(poll_data.get("music_id")) if poll_data.get("music_id") else None
         
+        # Resolve mentioned users to user objects
+        mentioned_users_data = []
+        if poll_data.get("mentioned_users"):
+            mentioned_user_ids = poll_data.get("mentioned_users", [])
+            if mentioned_user_ids:
+                mentioned_users_cursor = db.users.find({"id": {"$in": mentioned_user_ids}})
+                mentioned_users_list = await mentioned_users_cursor.to_list(len(mentioned_user_ids))
+                mentioned_users_data = [
+                    {
+                        "id": user["id"],
+                        "username": user["username"],
+                        "display_name": user.get("display_name"),
+                        "avatar_url": user.get("avatar_url")
+                    } 
+                    for user in mentioned_users_list
+                ]
+        
         poll_response = PollResponse(
             id=poll_data["id"],
             title=poll_data["title"],
@@ -4236,7 +4253,7 @@ async def get_polls(
             is_featured=poll_data["is_featured"],
             tags=poll_data.get("tags", []),
             category=poll_data.get("category"),
-            mentioned_users=poll_data.get("mentioned_users", []),  # Include mentioned users
+            mentioned_users=mentioned_users_data,  # Include resolved mentioned users
             layout=poll_data.get("layout"),  # Include layout configuration
             created_at=poll_data["created_at"],
             time_ago=calculate_time_ago(poll_data["created_at"])
