@@ -336,7 +336,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     <div className="mt-2">
                       <UserMentionInput 
                         value={mentionInputValues[slotIndex] || ''}
-                        onChange={(value) => setMentionInputValues(prev => ({...prev, [slotIndex]: value}))}
+                        onChange={(value) => onMentionInputChange(slotIndex, value)}
                         onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
                         placeholder={`Mencionar usuarios...`}
                         size="sm"
