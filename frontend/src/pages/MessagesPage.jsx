@@ -346,18 +346,49 @@ const MessagesPage = () => {
       
       // Mark message as failed
       setMessages(prevMessages =>
-        prevMessages.map(msg =>
-          msg.id === tempMessageId
-            ? { ...msg, status: 'failed' }
-            : msg
-        )
+        prevMessages.filter(msg => msg.id !== tempMessageId)
       );
       
-      toast({
-        title: "Error al enviar mensaje",
-        description: error.message || "No se pudo enviar el mensaje",
-        variant: "destructive",
-      });
+      // Handle specific error cases
+      if (error.message.includes('Chat request already sent')) {
+        const existingRequestMessage = {
+          id: `system-${Date.now()}`,
+          content: '⏳ Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte.',
+          sender_id: 'system',
+          isSystemMessage: true,
+          created_at: new Date().toISOString()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, existingRequestMessage]);
+        
+        toast({
+          title: "Solicitud pendiente",
+          description: "Ya enviaste una solicitud de chat a este usuario",
+          variant: "default",
+        });
+      } else if (error.message.includes('403')) {
+        const permissionMessage = {
+          id: `system-${Date.now()}`,
+          content: '🚫 No tienes permiso para enviar mensajes a este usuario.',
+          sender_id: 'system',
+          isSystemMessage: true,
+          created_at: new Date().toISOString()
+        };
+        
+        setMessages(prevMessages => [...prevMessages, permissionMessage]);
+        
+        toast({
+          title: "Sin permisos",
+          description: "No puedes enviar mensajes a este usuario",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error al enviar mensaje",
+          description: error.message || "No se pudo enviar el mensaje",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSendingMessage(false);
     }
