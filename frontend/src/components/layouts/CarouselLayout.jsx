@@ -180,19 +180,17 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                 <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
               )}
 
-              {/* Option Description - Show when active and description exists */}
-              {isActive && option.text && (
+              {/* Option Description - Show when description exists */}
+              {option.text && (
                 <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-sm text-white p-2 rounded-lg text-sm z-10">
                   {option.text}
                 </div>
               )}
               
               {/* Debug info */}
-              {isActive && (
-                <div className="absolute top-4 left-4 bg-red-600 text-white p-1 text-xs rounded">
-                  Debug: {option.text ? `"${option.text}"` : 'NO TEXT'}
-                </div>
-              )}
+              <div className="absolute top-4 left-4 bg-red-600 text-white p-1 text-xs rounded z-20">
+                Debug: {option.text ? `"${option.text}"` : 'NO TEXT'} | Active: {isActive ? 'YES' : 'NO'}
+              </div>
             </div>
           );
         })}
