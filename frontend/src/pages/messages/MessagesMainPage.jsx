@@ -640,7 +640,10 @@ const MessagesMainPage = () => {
     } catch (error) {
       console.error('❌ Error enviando mensaje COMPLETO:', error);
       console.error('❌ Error message:', error.message);
+      console.error('❌ Error status:', error.status);
       console.error('❌ Error stack:', error.stack);
+      console.error('❌ Error typeof:', typeof error);
+      console.error('❌ Error keys:', Object.keys(error));
       
       // Eliminar mensaje temporal
       setMessages(prevMessages =>
@@ -648,7 +651,7 @@ const MessagesMainPage = () => {
       );
 
       // Manejar errores específicos
-      if (error.status === 403 && error.message.includes('Chat request already sent')) {
+      if (error.status === 403 && error.message && error.message.includes('Chat request already sent')) {
         // El backend devolvió 403 con "Chat request already sent"
         console.log('📨 Chat request ya enviado - mostrando mensaje informativo');
         
