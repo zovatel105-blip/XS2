@@ -36,7 +36,7 @@ from models import (
     Comment, CommentCreate, CommentUpdate, CommentResponse, CommentLike,
     Follow, FollowCreate, FollowResponse, FollowStatus, FollowingList, FollowersList,
     LoginAttempt, UserDevice, UserSession, SecurityNotification,
-    Poll, PollCreate, PollResponse, PollOption, Vote, VoteCreate, PollLike, Music,
+    Poll, PollCreate, PollResponse, PollOption, Vote, VoteCreate, PollLike, Music, MentionedUser,
     UploadType, FileType, UploadedFile, UploadResponse,
     # User Audio Models
     UserAudio, UserAudioCreate, UserAudioUpdate, UserAudioResponse, UserAudioUse, AudioPrivacy,
