@@ -1040,7 +1040,6 @@ const ContentCreationPage = () => {
         // Reset form data AFTER navigation starts (to avoid crop state interference)
         setTimeout(() => {
           setTitle('');
-          setDescription(''); // Reset description field
           setOptions([]);
           setSelectedMusic(null);
           setSelectedLayout(LAYOUT_OPTIONS[0]);
