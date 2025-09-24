@@ -139,7 +139,13 @@ const UserMentionInput = ({
     // Replace the @query with @username
     const newValue = beforeMention + `@${user.username} ` + textAfterCursor;
     
-    onChange(newValue);
+    // Verificar que onChange sea una función antes de llamarla
+    if (typeof onChange === 'function') {
+      onChange(newValue);
+    } else {
+      console.error('UserMentionInput: onChange prop is not a function:', typeof onChange);
+    }
+    
     setShowSuggestions(false);
     setSuggestions([]);
     setMentionQuery('');
