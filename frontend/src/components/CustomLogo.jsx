@@ -3,7 +3,7 @@ import React from 'react';
 const CustomLogo = ({ size = 24, className = "" }) => {
   return (
     <div
-      className={`${className} relative flex items-center justify-center bg-black rounded-full`}
+      className={`${className} relative flex items-center justify-center bg-white rounded-full`}
       style={{ 
         width: `${size}px`, 
         height: `${size}px`,
@@ -13,19 +13,19 @@ const CustomLogo = ({ size = 24, className = "" }) => {
         overflow: 'hidden'
       }}
     >
-      {/* Crear un logo puramente CSS para evitar el problema del borde blanco */}
+      {/* Logo completamente blanco */}
       <div 
-        className="relative flex items-center justify-center bg-black rounded-full"
+        className="relative flex items-center justify-center bg-white rounded-full"
         style={{ 
           width: `${size}px`, 
           height: `${size}px`
         }}
       >
-        {/* Logo personalizado con gradiente y formas CSS */}
+        {/* Logo personalizado completamente blanco */}
         <div 
           className="absolute inset-0 rounded-full flex items-center justify-center"
           style={{
-            background: 'linear-gradient(135deg, #1e40af 0%, #7c3aed 50%, #059669 100%)',
+            background: 'white',
             width: `${Math.round(size * 0.85)}px`,
             height: `${Math.round(size * 0.85)}px`,
             left: '50%',
@@ -33,9 +33,9 @@ const CustomLogo = ({ size = 24, className = "" }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          {/* Símbolo personalizado en el centro */}
+          {/* Símbolo en negro para contraste */}
           <div 
-            className="text-white font-bold flex items-center justify-center"
+            className="text-black font-bold flex items-center justify-center"
             style={{ 
               fontSize: `${Math.round(size * 0.4)}px`,
               fontFamily: 'system-ui, -apple-system, sans-serif'
