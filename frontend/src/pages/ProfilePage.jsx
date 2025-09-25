@@ -1983,7 +1983,12 @@ const ProfilePage = () => {
                 )}
 
                 <TabsContent value="mentions" className="space-y-6">
-                  {mentionedPolls.length === 0 ? (
+                  {mentionedPollsLoading ? (
+                    <div className="flex justify-center items-center py-16">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                      <span className="ml-3 text-gray-600">Cargando menciones...</span>
+                    </div>
+                  ) : mentionedPolls.length === 0 ? (
                     <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
                         <UserCircle className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
