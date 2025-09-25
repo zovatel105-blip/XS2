@@ -121,8 +121,8 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
             )}
 
-            {/* Mentioned Users - Encima de cada descripción */}
-            {isActive && poll.mentioned_users && poll.mentioned_users.length > 0 && (() => {
+            {/* Mentioned Users - Específicas para esta opción */}
+            {isActive && option.mentioned_users && option.mentioned_users.length > 0 && (() => {
               let mentionPosition;
               
               // Determine position based on grid type and option index
@@ -146,7 +146,7 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
                 <div className={`absolute ${mentionPosition} left-2 right-2 z-10`}>
                   <div className="flex flex-wrap gap-1 items-center justify-center mb-1">
                     <span className="text-xs text-white/70 mr-1">Menciona:</span>
-                    {poll.mentioned_users.slice(0, 2).map((mentionedUser, index) => (
+                    {option.mentioned_users.slice(0, 2).map((mentionedUser, index) => (
                       <div key={mentionedUser.id || index} className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
                         <img
                           src={mentionedUser.avatar_url || '/default-avatar.png'}
@@ -161,10 +161,10 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
                         </span>
                       </div>
                     ))}
-                    {poll.mentioned_users.length > 2 && (
+                    {option.mentioned_users.length > 2 && (
                       <div className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
                         <span className="text-xs text-white/90">
-                          +{poll.mentioned_users.length - 2}
+                          +{option.mentioned_users.length - 2}
                         </span>
                       </div>
                     )}
