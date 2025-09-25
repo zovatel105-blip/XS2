@@ -65,7 +65,7 @@ const LogoWithQuickActions = ({ size = 32, className = "" }) => {
     <>
       <div
         {...longPressProps}
-        className={`${className} relative flex items-center justify-center cursor-pointer select-none transition-all duration-300 rounded-full bg-black ${
+        className={`${className} relative flex items-center justify-center cursor-pointer select-none transition-all duration-300 rounded-full bg-white ${
           isPressed 
             ? 'scale-110 shadow-none' 
             : 'hover:scale-105 shadow-none'
