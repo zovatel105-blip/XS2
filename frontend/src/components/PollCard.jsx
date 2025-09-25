@@ -530,20 +530,36 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 </div>
               )}
 
-              {/* Mentioned Users - Same banner style as descriptions - TEST VISUAL */}
+              {/* Mentioned Users - Same banner style as descriptions */}
               {poll.mentioned_users && poll.mentioned_users.length > 0 && (
                 <div className="mt-2">
-                  <div className="bg-red-500 text-white p-2 rounded">
-                    DEBUG: {poll.mentioned_users.length} menciones encontradas
-                  </div>
-                </div>
-              )}
-
-              {/* Fallback test - always show if poll exists */}
-              {poll.title && poll.title.includes('TEST') && (
-                <div className="mt-2">
-                  <div className="bg-blue-500 text-white p-2 rounded">
-                    POLL DE TEST DETECTADO: {poll.title}
+                  <div className="flex flex-wrap gap-1 items-center">
+                    <span className="text-xs text-gray-500 mr-1">Menciona a:</span>
+                    {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
+                      <div key={mentionedUser.id || index} className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
+                        <img
+                          src={mentionedUser.avatar_url || '/default-avatar.png'}
+                          alt={`@${mentionedUser.username || mentionedUser.display_name}`}
+                          className="w-4 h-4 rounded-full mr-1 border border-gray-300"
+                          onError={(e) => {
+                            e.target.src = '/default-avatar.png';
+                          }}
+                        />
+                        <span className="text-xs text-gray-600 font-medium">
+                          {mentionedUser.display_name || mentionedUser.username}
+                        </span>
+                      </div>
+                    ))}
+                    {poll.mentioned_users.length > 3 && (
+                      <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
+                        <div className="w-4 h-4 rounded-full bg-gray-400 flex items-center justify-center mr-1">
+                          <span className="text-xs text-white font-bold">+</span>
+                        </div>
+                        <span className="text-xs text-gray-600">
+                          {poll.mentioned_users.length - 3} más
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
