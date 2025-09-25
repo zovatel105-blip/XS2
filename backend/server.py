@@ -4466,6 +4466,186 @@ async def get_following_polls(
     
     return result
 
+@api_router.get("/users/{user_id}/mentioned-polls", response_model=List[PollResponse])
+async def get_user_mentioned_polls(
+    user_id: str,
+    limit: int = 20,
+    offset: int = 0,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get polls where a specific user is mentioned (in poll or options)"""
+    
+    try:
+        # Verify the user exists
+        target_user = await db.users.find_one({"id": user_id})
+        if not target_user:
+            # Try to find by username if not found by ID
+            target_user = await db.users.find_one({"username": user_id})
+            if not target_user:
+                raise HTTPException(status_code=404, detail="User not found")
+            user_id = target_user["id"]  # Use the actual UUID
+        
+        # Find polls where user is mentioned (either in poll level or option level)
+        polls_cursor = db.polls.find({
+            "is_active": True,
+            "$or": [
+                # User mentioned in poll level
+                {"mentioned_users": user_id},
+                # User mentioned in any option
+                {"options.mentioned_users": user_id}
+            ]
+        }).sort("created_at", -1).skip(offset).limit(limit)
+        
+        polls = await polls_cursor.to_list(limit)
+        
+        if not polls:
+            return []
+        
+        # Get all unique author IDs
+        author_ids = list(set(poll["author_id"] for poll in polls))
+        authors_cursor = db.users.find({"id": {"$in": author_ids}})
+        authors_list = await authors_cursor.to_list(len(author_ids))
+        authors_dict = {user["id"]: UserResponse(**user) for user in authors_list}
+        
+        # Check following status for all authors
+        following_cursor = db.follows.find({
+            "follower_id": current_user.id,
+            "following_id": {"$in": author_ids}
+        })
+        following_list = await following_cursor.to_list(len(author_ids))
+        following_dict = {follow["following_id"]: follow for follow in following_list}
+        
+        # Get user votes and likes for these polls
+        poll_ids = [poll["id"] for poll in polls]
+        
+        user_votes_cursor = db.votes.find({
+            "poll_id": {"$in": poll_ids},
+            "user_id": current_user.id
+        })
+        user_votes = await user_votes_cursor.to_list(len(poll_ids))
+        user_votes_dict = {vote["poll_id"]: vote["option_id"] for vote in user_votes}
+        
+        user_likes_cursor = db.likes.find({
+            "poll_id": {"$in": poll_ids},
+            "user_id": current_user.id
+        })
+        user_likes = await user_likes_cursor.to_list(len(poll_ids))
+        user_likes_set = {like["poll_id"] for like in user_likes}
+        
+        # Process each poll and build response
+        result = []
+        for poll_data in polls:
+            # Get all option user IDs for this poll
+            option_user_ids = []
+            for option in poll_data.get("options", []):
+                if "user_id" in option:
+                    option_user_ids.append(option["user_id"])
+            
+            # Get option users
+            option_users_dict = {}
+            if option_user_ids:
+                option_users_cursor = db.users.find({"id": {"$in": option_user_ids}})
+                option_users = await option_users_cursor.to_list(len(option_user_ids))
+                option_users_dict = {user["id"]: user for user in option_users}
+            
+            # Build options with resolved mentioned_users
+            options = []
+            for option in poll_data.get("options", []):
+                option_user = option_users_dict.get(option.get("user_id"))
+                
+                # Resolve mentioned users for this option
+                resolved_mentioned_users = []
+                mentioned_user_ids = option.get("mentioned_users", [])
+                
+                if mentioned_user_ids:
+                    mentioned_users_cursor = db.users.find({"id": {"$in": mentioned_user_ids}})
+                    mentioned_users_data = await mentioned_users_cursor.to_list(len(mentioned_user_ids))
+                    
+                    for mentioned_user_data in mentioned_users_data:
+                        resolved_mentioned_users.append({
+                            "id": mentioned_user_data["id"],
+                            "username": mentioned_user_data["username"],
+                            "display_name": mentioned_user_data.get("display_name", mentioned_user_data["username"]),
+                            "avatar_url": mentioned_user_data.get("avatar_url", "")
+                        })
+                
+                # Handle media URLs
+                media_url = option.get("media_url")
+                thumbnail_url = option.get("thumbnail_url")
+                
+                option_dict = {
+                    "id": option.get("id"),
+                    "text": option["text"],
+                    "votes": option["votes"],
+                    "user": {
+                        "username": option_user["username"] if option_user else "unknown",
+                        "displayName": option_user["display_name"] if option_user else "Unknown User",
+                        "avatar": option_user.get("avatar_url") if option_user else None,
+                        "verified": option_user.get("is_verified", False) if option_user else False,
+                        "id": option_user["id"] if option_user else None
+                    } if option_user else None,
+                    "mentioned_users": resolved_mentioned_users,
+                    "media": {
+                        "type": option.get("media_type"),
+                        "url": media_url,
+                        "thumbnail": thumbnail_url,
+                        "transform": option.get("media_transform")
+                    } if media_url else None
+                }
+                options.append(option_dict)
+            
+            # Get author information
+            author = authors_dict.get(poll_data["author_id"])
+            if not author:
+                continue
+            
+            # Resolve poll-level mentioned users
+            poll_mentioned_users = []
+            poll_mentioned_user_ids = poll_data.get("mentioned_users", [])
+            
+            if poll_mentioned_user_ids:
+                poll_mentioned_cursor = db.users.find({"id": {"$in": poll_mentioned_user_ids}})
+                poll_mentioned_data = await poll_mentioned_cursor.to_list(len(poll_mentioned_user_ids))
+                
+                for mentioned_user_data in poll_mentioned_data:
+                    poll_mentioned_users.append({
+                        "id": mentioned_user_data["id"],
+                        "username": mentioned_user_data["username"],
+                        "display_name": mentioned_user_data.get("display_name", mentioned_user_data["username"]),
+                        "avatar_url": mentioned_user_data.get("avatar_url", "")
+                    })
+            
+            # Create poll response
+            poll_response = PollResponse(
+                id=poll_data["id"],
+                title=poll_data["title"],
+                description=poll_data.get("description", ""),
+                authorUser=author,
+                author_id=poll_data["author_id"],
+                options=options,
+                totalVotes=poll_data.get("total_votes", 0),
+                isPublic=poll_data.get("is_public", True),
+                userVoted=user_votes_dict.get(poll_data["id"]) is not None,
+                userVote=user_votes_dict.get(poll_data["id"]),
+                likes=poll_data.get("likes", 0),
+                liked=poll_data["id"] in user_likes_set,
+                shares=poll_data.get("shares", 0),
+                comments_count=poll_data.get("comments_count", 0),
+                createdAt=poll_data.get("created_at"),
+                layout=poll_data.get("layout", "carousel"),
+                is_following=following_dict.get(poll_data["author_id"]) is not None,
+                mentioned_users=poll_mentioned_users
+            )
+            result.append(poll_response)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error getting mentioned polls: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 @api_router.post("/polls", response_model=PollResponse)
 async def create_poll(
     poll_data: PollCreate,
