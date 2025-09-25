@@ -534,7 +534,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
               {poll.mentioned_users && poll.mentioned_users.length > 0 && (
                 <div className="mt-2">
                   <div className="flex flex-wrap gap-1 items-center">
-                    <span className="text-xs text-gray-500 mr-1">Menciona a:</span>
+
                     {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
                       <div key={mentionedUser.id || index} className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
                         <img
