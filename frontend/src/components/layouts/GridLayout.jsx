@@ -145,7 +145,7 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               return (
                 <div className={`absolute ${mentionPosition} left-2 right-2 z-10`}>
                   <div className="flex flex-wrap gap-1 items-center justify-center mb-1">
-                    <span className="text-xs text-white/70 mr-1">Menciona:</span>
+
                     {option.mentioned_users.slice(0, 2).map((mentionedUser, index) => (
                       <div key={mentionedUser.id || index} className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
                         <img
