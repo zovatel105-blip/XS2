@@ -414,6 +414,29 @@ class PollService {
       throw error;
     }
   }
+
+  // Get polls where a specific user is mentioned
+  async getUserMentionedPolls(userId, limit = 20, offset = 0) {
+    try {
+      const response = await fetch(`${this.baseURL}/users/${userId}/mentioned-polls?limit=${limit}&offset=${offset}`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      const rawMentionedPolls = await response.json();
+      
+      // Transform backend poll data to frontend format
+      return rawMentionedPolls.map(poll => this.transformPollData(poll));
+    } catch (error) {
+      console.error('Error getting mentioned polls:', error);
+      throw error;
+    }
+  }
 }
 
 // Export singleton instance
