@@ -100,7 +100,7 @@ const LogoWithQuickActions = ({ size = 32, className = "" }) => {
           border: 'none',
           outline: 'none',
           boxShadow: 'none',
-          backgroundColor: 'black',
+          backgroundColor: 'white',
           // Forzar eliminación de cualquier outline o ring del navegador
           WebkitAppearance: 'none',
           MozAppearance: 'none',
