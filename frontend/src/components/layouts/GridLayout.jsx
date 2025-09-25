@@ -4,6 +4,7 @@ import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
 
 const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
+  const navigate = useNavigate();
   const getGridClasses = () => {
     switch (gridType) {
       case 'vertical': // 2 columnas lado a lado
