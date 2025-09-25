@@ -196,22 +196,28 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                             navigate(`/profile/${username}`);
                           }
                         }}
-                        className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                        className="flex items-center bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm cursor-pointer hover:bg-white/30 transition-all duration-200"
                       >
                         <img
                           src={mentionedUser.avatar_url || '/default-avatar.png'}
                           alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                          className="w-6 h-6 rounded-full border-2 border-white/70 shadow-sm hover:border-white"
+                          className="w-4 h-4 rounded-full mr-1 border border-white/50"
                           onError={(e) => {
                             e.target.src = '/default-avatar.png';
                           }}
                         />
+                        <span className="text-xs text-white font-medium">
+                          {mentionedUser.display_name || mentionedUser.username}
+                        </span>
                       </button>
                     ))}
                     {option.mentioned_users.length > 3 && (
-                      <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center border-2 border-white/70 backdrop-blur-sm">
-                        <span className="text-xs text-white font-bold">
-                          +{option.mentioned_users.length - 3}
+                      <div className="flex items-center bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">
+                        <div className="w-4 h-4 rounded-full bg-white/30 flex items-center justify-center mr-1">
+                          <span className="text-xs text-white font-bold">+</span>
+                        </div>
+                        <span className="text-xs text-white/90">
+                          {option.mentioned_users.length - 3} más
                         </span>
                       </div>
                     )}
