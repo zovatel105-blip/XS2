@@ -3266,6 +3266,76 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
                     "unread": True
                 })
         
+        # Get recent mentions - find polls where user is mentioned
+        print(f"DEBUG Activity: Looking for mentions of user {current_user.id}")
+        
+        # Search in general_mentioned_users (poll level mentions)
+        polls_with_general_mentions = await db.polls.find({
+            "general_mentioned_users.id": current_user.id,
+            "author_id": {"$ne": current_user.id},  # Exclude own polls
+            "created_at": {"$gte": seven_days_ago}
+        }).sort("created_at", -1).limit(20).to_list(20)
+        
+        print(f"DEBUG Activity: Found {len(polls_with_general_mentions)} polls with general mentions")
+        
+        for poll in polls_with_general_mentions:
+            author = await db.users.find_one({"id": poll["author_id"]})
+            if author:
+                activities.append({
+                    "id": f"mention-general-{poll['id']}",
+                    "type": "mention",
+                    "user": {
+                        "id": author["id"],
+                        "username": author["username"],
+                        "display_name": author.get("display_name", author["username"]),
+                        "avatar_url": author.get("avatar_url")
+                    },
+                    "content_type": "poll",
+                    "content_preview": poll.get("title", "")[:50],
+                    "mention_type": "general",
+                    "created_at": poll["created_at"],
+                    "unread": True
+                })
+        
+        # Search in option-specific mentions
+        polls_with_option_mentions = await db.polls.find({
+            "options.mentioned_users.id": current_user.id,
+            "author_id": {"$ne": current_user.id},  # Exclude own polls
+            "created_at": {"$gte": seven_days_ago}
+        }).sort("created_at", -1).limit(20).to_list(20)
+        
+        print(f"DEBUG Activity: Found {len(polls_with_option_mentions)} polls with option mentions")
+        
+        for poll in polls_with_option_mentions:
+            author = await db.users.find_one({"id": poll["author_id"]})
+            if author:
+                # Find which option mentioned the user
+                mentioned_option = None
+                for option in poll.get("options", []):
+                    for mentioned_user in option.get("mentioned_users", []):
+                        if mentioned_user.get("id") == current_user.id:
+                            mentioned_option = option.get("text", "")
+                            break
+                    if mentioned_option:
+                        break
+                
+                activities.append({
+                    "id": f"mention-option-{poll['id']}",
+                    "type": "mention", 
+                    "user": {
+                        "id": author["id"],
+                        "username": author["username"],
+                        "display_name": author.get("display_name", author["username"]),
+                        "avatar_url": author.get("avatar_url")
+                    },
+                    "content_type": "poll",
+                    "content_preview": poll.get("title", "")[:50],
+                    "mention_type": "option",
+                    "mention_option": mentioned_option,
+                    "created_at": poll["created_at"],
+                    "unread": True
+                })
+        
         # Sort all activities by date
         activities.sort(key=lambda x: x["created_at"], reverse=True)
         
