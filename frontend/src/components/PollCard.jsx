@@ -721,6 +721,13 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
           {/* Mentioned Users Banners - Positioned after title, before content */}
           {console.log('🎯 PollCard render:', poll.title, 'has mentions:', !!(poll.mentioned_users && poll.mentioned_users.length > 0)) || null}
           {poll.mentioned_users && poll.mentioned_users.length > 0 && (
+            <div className="px-4 pb-2">
+              <div className="bg-red-600 text-white p-2 rounded text-sm font-bold">
+                ⚠️ MENCIONES DETECTADAS: {poll.mentioned_users.length} usuario(s)
+              </div>
+            </div>
+          )}
+          {poll.mentioned_users && poll.mentioned_users.length > 0 && (
             <div className="px-4 pb-2 space-y-1">
               {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
                 <div 
