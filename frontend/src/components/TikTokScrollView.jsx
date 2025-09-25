@@ -438,6 +438,40 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
           <h2 className="text-white font-bold text-xl leading-tight text-left">
             {poll.title}
           </h2>
+          
+          {/* Mentioned Users - Mismo estilo que en PollCard pero adaptado para TikTok */}
+          {poll.mentioned_users && poll.mentioned_users.length > 0 && (
+            <div className="mt-2">
+              <div className="flex flex-wrap gap-1 items-center">
+                <span className="text-xs text-white/50 mr-1">Menciona a:</span>
+                {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
+                  <div key={mentionedUser.id || index} className="flex items-center bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">
+                    <img
+                      src={mentionedUser.avatar_url || '/default-avatar.png'}
+                      alt={`@${mentionedUser.username || mentionedUser.display_name}`}
+                      className="w-4 h-4 rounded-full mr-1 border border-white/30"
+                      onError={(e) => {
+                        e.target.src = '/default-avatar.png';
+                      }}
+                    />
+                    <span className="text-xs text-white font-medium">
+                      {mentionedUser.display_name || mentionedUser.username}
+                    </span>
+                  </div>
+                ))}
+                {poll.mentioned_users.length > 3 && (
+                  <div className="flex items-center bg-white/10 px-2 py-1 rounded-full backdrop-blur-sm">
+                    <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center mr-1">
+                      <span className="text-xs text-white font-bold">+</span>
+                    </div>
+                    <span className="text-xs text-white/80">
+                      {poll.mentioned_users.length - 3} más
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
 
