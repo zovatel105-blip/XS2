@@ -259,6 +259,11 @@ class PollService {
   async getPollsForFrontend(options = {}) {
     try {
       const backendPolls = await this.getPolls(options);
+      console.log('🚨 getPollsForFrontend - Raw backend polls:', backendPolls.map(p => ({
+        title: p.title,
+        mentioned_users: p.mentioned_users,
+        hasmentions: !!(p.mentioned_users && p.mentioned_users.length > 0)
+      })));
       return backendPolls.map(poll => this.transformPollData(poll));
     } catch (error) {
       console.error('Error fetching polls for frontend:', error);
