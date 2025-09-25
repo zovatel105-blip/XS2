@@ -4,6 +4,7 @@ import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
 
 const CarouselLayout = ({ poll, onVote, isActive }) => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
