@@ -719,25 +719,18 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
           </div>
 
           {/* Mentioned Users Banners - Positioned after title, before content */}
-          {console.log('🎯 PollCard render:', poll.title, 'has mentions:', !!(poll.mentioned_users && poll.mentioned_users.length > 0)) || null}
+          {/* Mentioned Users Banners - Final Implementation */}
           {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-            <div className="px-4 pb-2">
-              <div className="bg-red-600 text-white p-2 rounded text-sm font-bold">
-                ⚠️ MENCIONES DETECTADAS: {poll.mentioned_users.length} usuario(s)
-              </div>
-            </div>
-          )}
-          {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-            <div className="px-4 pb-2 space-y-1">
+            <div className="px-4 pb-3 space-y-2">
               {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
                 <div 
                   key={mentionedUser.id || index} 
-                  className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-3 py-2"
+                  className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-4 py-2.5"
                 >
                   <img
                     src={mentionedUser.avatar_url || '/default-avatar.png'}
                     alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                    className="w-8 h-8 rounded-full border-2 border-white shadow-sm mr-3"
+                    className="w-8 h-8 rounded-full border-2 border-white shadow-sm mr-3 flex-shrink-0"
                     onError={(e) => {
                       e.target.src = '/default-avatar.png';
                     }}
@@ -748,8 +741,8 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 </div>
               ))}
               {poll.mentioned_users.length > 3 && (
-                <div className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-3 py-2">
-                  <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-xs text-white font-bold mr-3 border-2 border-white">
+                <div className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-4 py-2.5">
+                  <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-xs text-white font-bold mr-3 border-2 border-white flex-shrink-0">
                     +{poll.mentioned_users.length - 3}
                   </div>
                   <span className="text-white text-sm font-medium">
