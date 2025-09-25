@@ -13,7 +13,7 @@ const CustomLogo = ({ size = 24, className = "" }) => {
         background: 'transparent'
       }}
     >
-      {/* Logo SVG estilo estrella angular con líneas verdes y azules */}
+      {/* Logo SVG con líneas cruzadas verde y azul formando una X */}
       <svg
         width={size}
         height={size}
@@ -21,18 +21,18 @@ const CustomLogo = ({ size = 24, className = "" }) => {
         xmlns="http://www.w3.org/2000/svg"
         style={{ display: 'block' }}
       >
-        {/* Línea verde neón - diagonal superior */}
+        {/* Línea verde - diagonal de arriba izquierda a abajo derecha */}
         <path
-          d="M15 25 L85 15 L90 25 L85 35 L15 45 L10 35 Z"
+          d="M15 15 L85 85 L80 90 L10 20 Z"
           fill="#00ff00"
-          style={{ filter: 'drop-shadow(0 0 3px #00ff0060)' }}
+          style={{ filter: 'drop-shadow(0 0 4px #00ff0070)' }}
         />
         
-        {/* Línea azul eléctrico - diagonal inferior */}
+        {/* Línea azul - diagonal de arriba derecha a abajo izquierda */}
         <path
-          d="M15 75 L85 65 L90 75 L85 85 L15 95 L10 85 Z"
-          fill="#0066ff"
-          style={{ filter: 'drop-shadow(0 0 3px #0066ff60)' }}
+          d="M85 15 L15 85 L20 90 L90 20 Z"
+          fill="#00aaff"
+          style={{ filter: 'drop-shadow(0 0 4px #00aaff70)' }}
         />
       </svg>
     </div>
