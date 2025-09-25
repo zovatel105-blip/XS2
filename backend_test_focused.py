@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://socialpoll-1.preview.emergentagent.com',
-        'Referer': 'https://socialpoll-1.preview.emergentagent.com/',
+        'Origin': 'https://poll-mention-fix.preview.emergentagent.com',
+        'Referer': 'https://poll-mention-fix.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
