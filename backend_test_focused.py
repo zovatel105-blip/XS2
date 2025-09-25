@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://poll-avatar-debug.preview.emergentagent.com',
-        'Referer': 'https://poll-avatar-debug.preview.emergentagent.com/',
+        'Origin': 'https://mentionsfeed.preview.emergentagent.com',
+        'Referer': 'https://mentionsfeed.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
