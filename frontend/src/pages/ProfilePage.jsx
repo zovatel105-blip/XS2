@@ -2001,23 +2001,14 @@ const ProfilePage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-4 px-1 sm:px-2">
-                      {mentionedPolls.map((poll) => (
-                        <PollCard
-                          key={poll.id}
-                          poll={poll}
-                          onVote={handleVote}
-                          onLike={handleLike}
-                          onShare={handleShare}
-                          onComment={handleComment}
-                          onSave={handleSave}
-                          currentUser={authUser}
-                          onUpdatePoll={handleUpdatePoll}
-                          onDeletePoll={handleDeletePoll}
-                          isOwnProfile={isOwnProfile}
-                        />
-                      ))}
-                    </div>
+                    <TikTokProfileGrid 
+                      polls={mentionedPolls} 
+                      onPollClick={handlePollClick}
+                      onUpdatePoll={handleUpdatePoll}
+                      onDeletePoll={handleDeletePoll}
+                      currentUser={authUser}
+                      isOwnProfile={isOwnProfile}
+                    />
                   )}
                 </TabsContent>
 
