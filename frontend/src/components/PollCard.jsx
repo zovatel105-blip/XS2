@@ -531,7 +531,6 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
               )}
               
               {/* Mentioned Users Display - Overlay Banners */}
-              {console.log('PollCard Debug - Poll:', poll.title, 'Mentions:', poll.mentioned_users) || null}
               {poll.mentioned_users && poll.mentioned_users.length > 0 && (
                 <div className="absolute top-4 left-4 z-10 space-y-2">
                   {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
