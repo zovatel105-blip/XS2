@@ -66,6 +66,8 @@ const StatCard = ({ icon: Icon, label, value, color = "blue", onClick, clickable
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("polls");
   const [polls, setPolls] = useState([]);
+  const [mentionedPolls, setMentionedPolls] = useState([]);
+  const [mentionedPollsLoading, setMentionedPollsLoading] = useState(true);
   const [viewedUser, setViewedUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [savedPolls, setSavedPolls] = useState([]);
