@@ -3269,9 +3269,9 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         # Get recent mentions - find polls where user is mentioned
         print(f"DEBUG Activity: Looking for mentions of user {current_user.id}")
         
-        # Search in general_mentioned_users (poll level mentions)
+        # Search in mentioned_users (poll level mentions)
         polls_with_general_mentions = await db.polls.find({
-            "general_mentioned_users.id": current_user.id,
+            "mentioned_users": current_user.id,
             "author_id": {"$ne": current_user.id},  # Exclude own polls
             "created_at": {"$gte": seven_days_ago}
         }).sort("created_at", -1).limit(20).to_list(20)
