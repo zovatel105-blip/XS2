@@ -3,47 +3,26 @@ import React from 'react';
 const CustomLogo = ({ size = 24, className = "" }) => {
   return (
     <div
-      className={`${className} relative flex items-center justify-center bg-white rounded-full`}
+      className={`${className} flex items-center justify-center`}
       style={{ 
         width: `${size}px`, 
         height: `${size}px`,
         border: 'none',
         outline: 'none',
         boxShadow: 'none',
-        overflow: 'hidden'
+        background: 'transparent'
       }}
     >
-      {/* Logo completamente blanco */}
+      {/* Símbolo directo sin contenedores adicionales */}
       <div 
-        className="relative flex items-center justify-center bg-white rounded-full"
+        className="text-black font-bold flex items-center justify-center"
         style={{ 
-          width: `${size}px`, 
-          height: `${size}px`
+          fontSize: `${Math.round(size * 0.6)}px`,
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          background: 'transparent'
         }}
       >
-        {/* Logo personalizado completamente blanco */}
-        <div 
-          className="absolute inset-0 rounded-full flex items-center justify-center"
-          style={{
-            background: 'white',
-            width: `${Math.round(size * 0.85)}px`,
-            height: `${Math.round(size * 0.85)}px`,
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          {/* Símbolo en negro para contraste */}
-          <div 
-            className="text-black font-bold flex items-center justify-center"
-            style={{ 
-              fontSize: `${Math.round(size * 0.4)}px`,
-              fontFamily: 'system-ui, -apple-system, sans-serif'
-            }}
-          >
-            ⚡
-          </div>
-        </div>
+        ⚡
       </div>
     </div>
   );
