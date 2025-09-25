@@ -157,20 +157,23 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
                             navigate(`/profile/${username}`);
                           }
                         }}
-                        className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                        className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm cursor-pointer hover:bg-white/30 transition-all duration-200"
                       >
                         <img
                           src={mentionedUser.avatar_url || '/default-avatar.png'}
                           alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                          className="w-5 h-5 rounded-full border-2 border-white/70 shadow-sm hover:border-white"
+                          className="w-3 h-3 rounded-full mr-1 border border-white/50"
                           onError={(e) => {
                             e.target.src = '/default-avatar.png';
                           }}
                         />
+                        <span className="text-xs text-white font-medium">
+                          {(mentionedUser.display_name || mentionedUser.username)?.slice(0, 8)}
+                        </span>
                       </button>
                     ))}
                     {option.mentioned_users.length > 2 && (
-                      <div className="w-5 h-5 rounded-full bg-white/30 flex items-center justify-center border-2 border-white/70 backdrop-blur-sm">
+                      <div className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
                         <span className="text-xs text-white/90">
                           +{option.mentioned_users.length - 2}
                         </span>
