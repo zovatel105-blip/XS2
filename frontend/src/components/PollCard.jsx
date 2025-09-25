@@ -530,31 +530,38 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 </div>
               )}
               
-              {/* Mentioned Users Display - Circular Avatars */}
+              {/* Mentioned Users Display - Overlay Banners */}
               {console.log('PollCard Debug - Poll:', poll.title, 'Mentions:', poll.mentioned_users) || null}
               {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs text-gray-500">Menciona a:</span>
-                  <div className="flex items-center gap-1">
-                    {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
-                      <div key={mentionedUser.id || index} className="relative">
-                        <img
-                          src={mentionedUser.avatar_url || '/default-avatar.png'}
-                          alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                          className="w-6 h-6 rounded-full border border-white shadow-sm cursor-pointer hover:scale-110 transition-transform"
-                          onError={(e) => {
-                            e.target.src = '/default-avatar.png';
-                          }}
-                          title={`@${mentionedUser.username || mentionedUser.display_name}`}
-                        />
-                      </div>
-                    ))}
-                    {poll.mentioned_users.length > 3 && (
-                      <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs text-white font-bold">
+                <div className="absolute top-4 left-4 z-10 space-y-2">
+                  {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
+                    <div 
+                      key={mentionedUser.id || index} 
+                      className="flex items-center bg-black bg-opacity-75 rounded-full px-3 py-2 min-w-[120px] max-w-[200px]"
+                    >
+                      <img
+                        src={mentionedUser.avatar_url || '/default-avatar.png'}
+                        alt={`@${mentionedUser.username || mentionedUser.display_name}`}
+                        className="w-6 h-6 rounded-full border border-white shadow-sm mr-2"
+                        onError={(e) => {
+                          e.target.src = '/default-avatar.png';
+                        }}
+                      />
+                      <span className="text-white text-sm font-medium truncate">
+                        {mentionedUser.display_name || mentionedUser.username}
+                      </span>
+                    </div>
+                  ))}
+                  {poll.mentioned_users.length > 3 && (
+                    <div className="flex items-center bg-black bg-opacity-75 rounded-full px-3 py-2">
+                      <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs text-white font-bold mr-2">
                         +{poll.mentioned_users.length - 3}
                       </div>
-                    )}
-                  </div>
+                      <span className="text-white text-sm font-medium">
+                        más usuarios
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
