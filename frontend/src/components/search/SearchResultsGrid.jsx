@@ -110,7 +110,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
         </div>
         
         {/* Hashtags */}
-        {post.hashtags && post.hashtags.length > 0 && (
+        {(post.hashtags && post.hashtags.length > 0) && (
           <div className="flex flex-wrap gap-1 mb-2">
             {post.hashtags.slice(0, 3).map((hashtag, index) => (
               <span key={index} className="text-xs font-medium opacity-90 drop-shadow-md">
@@ -118,7 +118,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
               </span>
             ))}
             {post.hashtags.length > 3 && (
-              <span className="text-xs opacity-75">...</span>
+              <span className="text-xs opacity-75">+{post.hashtags.length - 3}</span>
             )}
           </div>
         )}
