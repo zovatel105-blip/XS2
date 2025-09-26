@@ -306,29 +306,38 @@ const SearchPage = () => {
         </div>
       </div>
 
-      {/* Modern Tabs with Enhanced Design */}
+      {/* Cyberpunk-style Tabs */}
       {hasSearched && (
-        <div className="bg-white/70 backdrop-blur-md border-b border-white/30 shadow-sm">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="bg-black/40 backdrop-blur-md border-b border-cyan-500/10 shadow-xl relative">
+          {/* Circuit pattern background */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+          </div>
+          
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
             {/* Mobile Layout */}
             <div className="block lg:hidden py-4">
-              <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
                     <button
                       key={tab.id}
                       onClick={() => handleTabChange(tab.id)}
-                      className={`flex items-center space-x-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 min-w-fit relative overflow-hidden group ${
+                      className={`group flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 min-w-fit relative overflow-hidden border ${
                         activeTab === tab.id
-                          ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
-                          : 'text-gray-600 hover:bg-white/60 hover:text-gray-800 bg-white/40'
+                          ? `bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border-cyan-500/50 shadow-lg shadow-cyan-500/20`
+                          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-300 bg-slate-800/30 border-slate-700/30 hover:border-slate-600/50'
                       }`}
                     >
                       {activeTab === tab.id && (
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 animate-pulse"></div>
+                          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+                        </>
                       )}
-                      <Icon size={16} className="relative z-10" />
+                      <Icon size={16} className={`relative z-10 transition-all duration-300 ${activeTab === tab.id ? 'drop-shadow-glow' : ''}`} />
                       <span className="relative z-10">{tab.label}</span>
                     </button>
                   );
@@ -338,7 +347,7 @@ const SearchPage = () => {
             
             {/* Desktop Layout */}
             <div className="hidden lg:flex items-center justify-center py-6">
-              <div className="flex space-x-3 bg-white/60 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/40">
+              <div className="flex space-x-4 bg-slate-900/60 backdrop-blur-sm rounded-2xl p-3 shadow-2xl border border-slate-700/50">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
@@ -347,17 +356,21 @@ const SearchPage = () => {
                       onClick={() => handleTabChange(tab.id)}
                       className={`group flex items-center space-x-3 px-6 py-4 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden ${
                         activeTab === tab.id
-                          ? `bg-gradient-to-r ${tab.color} text-white shadow-xl scale-105`
-                          : 'text-gray-600 hover:bg-white/80 hover:text-gray-800 hover:scale-102'
+                          ? `bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 shadow-xl shadow-cyan-500/20 scale-105 border border-cyan-500/30`
+                          : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-300 hover:scale-102 border border-transparent hover:border-slate-600/30'
                       }`}
                     >
                       {activeTab === tab.id && (
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        <>
+                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 animate-pulse"></div>
+                          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+                        </>
                       )}
-                      <Icon size={18} className="relative z-10 group-hover:scale-110 transition-transform" />
+                      <Icon size={18} className={`relative z-10 group-hover:scale-110 transition-transform ${activeTab === tab.id ? 'drop-shadow-glow' : ''}`} />
                       <div className="relative z-10">
                         <span className="block">{tab.label}</span>
-                        <span className="text-xs opacity-80 block">{tab.description}</span>
+                        <span className="text-xs opacity-70 block">{tab.description}</span>
                       </div>
                     </button>
                   );
