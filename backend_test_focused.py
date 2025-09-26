@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://mention-grid-app.preview.emergentagent.com',
-        'Referer': 'https://mention-grid-app.preview.emergentagent.com/',
+        'Origin': 'https://publish-ready-6.preview.emergentagent.com',
+        'Referer': 'https://publish-ready-6.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
