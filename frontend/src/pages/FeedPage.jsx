@@ -56,7 +56,9 @@ const FeedPage = () => {
           title: p.title, 
           mentioned_users: p.mentioned_users ? p.mentioned_users.length : 0
         })));
+        console.log('📊 Total polls received from backend:', pollsData.length);
         setPolls(pollsData);
+        console.log('📊 Polls set in state, length:', pollsData.length);
         
         // Check if there's a specific post ID in the URL
         const postId = searchParams.get('post');
