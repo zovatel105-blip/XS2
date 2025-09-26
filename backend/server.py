@@ -2490,7 +2490,7 @@ async def search_autocomplete(
                     ]
                 }
             ]
-        }).limit(5).to_list(5)
+        }).limit(limit // 2).to_list(limit // 2)
         
         for user in users:
             suggestions.append({
