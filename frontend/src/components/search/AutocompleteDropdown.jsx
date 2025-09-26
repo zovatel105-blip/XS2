@@ -15,17 +15,17 @@ const AutocompleteDropdown = ({
   const getIcon = (type) => {
     switch (type) {
       case 'user':
-        return <User size={16} className="text-blue-500" />;
+        return <User size={16} className="text-cyan-400" />;
       case 'hashtag':
-        return <Hash size={16} className="text-green-500" />;
+        return <Hash size={16} className="text-purple-400" />;
       case 'music':
-        return <Music size={16} className="text-pink-500" />;
+        return <Music size={16} className="text-pink-400" />;
       case 'trending':
-        return <TrendingUp size={16} className="text-orange-500" />;
+        return <TrendingUp size={16} className="text-orange-400" />;
       case 'recent':
-        return <Clock size={16} className="text-gray-500" />;
+        return <Clock size={16} className="text-slate-400" />;
       default:
-        return <Search size={16} className="text-gray-400" />;
+        return <Search size={16} className="text-slate-500" />;
     }
   };
 
