@@ -2069,7 +2069,8 @@ async def universal_search(
     current_user: UserResponse = Depends(get_current_user)
 ):
     """Universal search across all content types"""
-    if not q.strip():
+    # Validate and clean query parameter
+    if not q or not q.strip():
         return {
             "success": True,
             "results": [],
