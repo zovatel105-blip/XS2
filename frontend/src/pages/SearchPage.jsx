@@ -344,10 +344,10 @@ const SearchPage = () => {
               </div>
               
               <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Descubre contenido increíble
+                {SEARCH_CONFIG.UI.EMPTY_STATE_TITLE}
               </h1>
               <p className="text-gray-600 text-base mb-8 max-w-md mx-auto">
-                Busca usuarios, videos, sonidos y hashtags populares
+                {SEARCH_CONFIG.UI.EMPTY_STATE_SUBTITLE}
               </p>
             </div>
             
