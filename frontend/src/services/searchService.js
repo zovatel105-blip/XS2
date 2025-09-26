@@ -149,7 +149,13 @@ class SearchService {
   }
 
   // Universal search with filter support
-  async universalSearch(query, filter = 'all', sortBy = 'popularity', limit = 20, offset = 0) {
+  async universalSearch(
+    query, 
+    filter = SEARCH_CONFIG.FILTERS.DEFAULT, 
+    sortBy = SEARCH_CONFIG.SORT_OPTIONS.DEFAULT, 
+    limit = SEARCH_CONFIG.LIMITS.SEARCH_RESULTS, 
+    offset = 0
+  ) {
     try {
       const params = new URLSearchParams({
         q: query,  // Backend expects 'q' not 'query'
