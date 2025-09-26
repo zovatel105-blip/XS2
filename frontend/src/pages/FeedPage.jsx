@@ -54,6 +54,8 @@ const FeedPage = () => {
       try {
         setIsLoading(true);
         setError(null);
+        setCurrentPage(0);  // Reset pagination
+        setHasMoreContent(true);  // Reset content availability
         const pollsData = await pollService.getPollsForFrontend({ limit: 30 });
         console.log('🔍 FeedPage loaded polls:', pollsData.map(p => ({
           title: p.title, 
