@@ -2392,58 +2392,9 @@ async def get_search_suggestions_helper(current_user_id: str = None):
         return suggestions
 
 @api_router.get("/search/suggestions")
-async def get_search_suggestions(current_user_id: str = None):
+async def get_search_suggestions_endpoint(current_user: UserResponse = Depends(get_current_user)):
     """Get search suggestions including recent searches and popular terms"""
-    suggestions = {
-        "recent_searches": [],
-        "popular_terms": [],
-        "trending_hashtags": [],
-        "suggested_users": []
-    }
-    
-    try:
-        # Get popular hashtags from recent posts
-        pipeline = [
-            {"$match": {"created_at": {"$gte": (datetime.utcnow() - timedelta(days=7)).isoformat()}}},
-            {"$project": {"content": 1}},
-            {"$limit": 1000}
-        ]
-        
-        recent_posts = await db.polls.aggregate(pipeline).to_list(1000)
-        hashtag_counts = {}
-        
-        for post in recent_posts:
-            hashtags = extract_hashtags_from_text(post.get("content", ""))
-            for hashtag in hashtags:
-                hashtag_counts[hashtag] = hashtag_counts.get(hashtag, 0) + 1
-        
-        # Get top trending hashtags
-        trending = sorted(hashtag_counts.items(), key=lambda x: x[1], reverse=True)[:10]
-        suggestions["trending_hashtags"] = [{"hashtag": h[0], "count": h[1]} for h in trending]
-        
-        # Get suggested users (users with high follower count)
-        pipeline = [
-            {"$sort": {"followers_count": -1}},
-            {"$limit": 5}
-        ]
-        
-        top_profiles = await db.user_profiles.aggregate(pipeline).to_list(5)
-        for profile in top_profiles:
-            user = await db.users.find_one({"id": profile["user_id"]})
-            if user and user["id"] != current_user_id:
-                suggestions["suggested_users"].append({
-                    "id": user["id"],
-                    "username": user["username"],
-                    "display_name": user.get("display_name", ""),
-                    "avatar": user.get("avatar"),
-                    "followers_count": profile.get("followers_count", 0)
-                })
-        
-        return suggestions
-        
-    except Exception as e:
-        logger.error(f"Error getting search suggestions: {str(e)}")
-        return suggestions
+    return await get_search_suggestions_helper(current_user.id)
 
 async def get_trending_content(current_user_id: str):
     """Get trending content for discovery section"""
