@@ -2,6 +2,8 @@
  * Search Service - Handles all search-related API calls
  */
 
+import SEARCH_CONFIG from '../config/searchConfig';
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 class SearchService {
