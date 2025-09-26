@@ -2267,7 +2267,7 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
             "author": {
                 "username": author.get("username", "") if author else "",
                 "display_name": author.get("display_name", "") if author else "",
-                "avatar": author.get("avatar") if author else None
+                "avatar": author.get("avatar_url") if author else None  # Usar avatar_url en lugar de avatar
             },
             "relevance_score": relevance_score,
             "popularity_score": votes_count + comments_count,
