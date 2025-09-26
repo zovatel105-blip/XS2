@@ -108,17 +108,21 @@ const SearchPage = () => {
   };
 
   const handleAutocomplete = async (query) => {
-    if (!query || query.length < 2) {
+    if (!query || query.length < SEARCH_CONFIG.VALIDATION.MIN_AUTOCOMPLETE_LENGTH) {
       setAutocompleteResults([]);
       setShowAutocomplete(false);
       return;
     }
 
+    if (query.length > SEARCH_CONFIG.VALIDATION.MAX_QUERY_LENGTH) {
+      return; // Ignore queries that are too long
+    }
+
     setIsAutocompleteLoading(true);
     try {
-      const response = await searchService.getAutocomplete(query);
+      const response = await searchService.getAutocomplete(query, SEARCH_CONFIG.LIMITS.AUTOCOMPLETE_RESULTS);
       setAutocompleteResults(response.suggestions || []);
-      setShowAutocomplete(true);
+      setShowAutocomplete(SEARCH_CONFIG.FEATURES.ENABLE_AUTOCOMPLETE);
     } catch (error) {
       console.error('Error in autocomplete:', error);
       setAutocompleteResults([]);
