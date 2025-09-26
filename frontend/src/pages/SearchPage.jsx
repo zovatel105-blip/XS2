@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import searchService from '../services/searchService';
-import SearchResultItem from '../components/search/SearchResultItem';
+import SearchResultsGrid from '../components/search/SearchResultsGrid';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
 import DiscoverySection from '../components/search/DiscoverySection';
 import PostsIcon from '../components/icons/PostsIcon';
