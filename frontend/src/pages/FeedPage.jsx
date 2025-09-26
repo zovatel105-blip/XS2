@@ -22,7 +22,10 @@ const FeedPage = () => {
   const [searchParams] = useSearchParams();
   const [polls, setPolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMoreContent, setHasMoreContent] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [selectedPollId, setSelectedPollId] = useState(null);
   const [selectedPollTitle, setSelectedPollTitle] = useState('');
