@@ -46,11 +46,11 @@ const SearchPage = () => {
   }, []);
 
   const tabs = [
-    { id: 'all', label: 'Todo', icon: Sparkles, description: 'Buscar en todo' },
-    { id: 'users', label: 'Usuarios', icon: User, description: 'Encuentra personas' },
-    { id: 'posts', label: 'Posts', icon: PostsIcon, description: 'Descubre contenido' },
-    { id: 'hashtags', label: 'Hashtags', icon: Hash, description: 'Trending topics' },
-    { id: 'sounds', label: 'Sonidos', icon: Music, description: 'Audio popular' },
+    { id: SEARCH_CONFIG.FILTERS.ALL, label: 'Todo', icon: Sparkles, description: 'Buscar en todo' },
+    { id: SEARCH_CONFIG.FILTERS.USERS, label: 'Usuarios', icon: User, description: 'Encuentra personas' },
+    { id: SEARCH_CONFIG.FILTERS.POSTS, label: 'Posts', icon: PostsIcon, description: 'Descubre contenido' },
+    { id: SEARCH_CONFIG.FILTERS.HASHTAGS, label: 'Hashtags', icon: Hash, description: 'Trending topics' },
+    { id: SEARCH_CONFIG.FILTERS.SOUNDS, label: 'Sonidos', icon: Music, description: 'Audio popular' },
   ];
 
   const updateURLParams = (query, filter) => {
