@@ -707,6 +707,9 @@ const FeedPage = () => {
           onSave={handleSave}
           onExitTikTok={handleExitTikTok}
           onCreatePoll={handleCreatePoll}
+          onLoadMore={loadMorePolls}
+          isLoadingMore={isLoadingMore}
+          hasMoreContent={hasMoreContent}
           showLogo={false}
           initialIndex={initialIndex}
         />
