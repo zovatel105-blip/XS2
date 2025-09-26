@@ -210,17 +210,10 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500 transform -translate-x-1/2 -translate-y-1/2"></div>
-      </div>
-
-      {/* Logo fijo SIEMPRE VISIBLE - Estilo oscuro */}
+    <div className="min-h-screen bg-white">
+      {/* Logo fijo SIEMPRE VISIBLE - Estilo TikTok */}
       <div 
-        className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-cyan-500/30 shadow-2xl hover:scale-110 hover:border-cyan-400/50 transition-all duration-300"
+        className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 hover:scale-110 transition-transform duration-300"
         style={{ 
           position: 'fixed',
           top: '16px',
@@ -231,66 +224,50 @@ const SearchPage = () => {
         <LogoWithQuickActions size={32} />
       </div>
 
-      {/* Futuristic Header with Neon Effects */}
-      <div className="bg-black/30 backdrop-blur-2xl border-b border-cyan-500/20 sticky top-0 z-50 shadow-2xl relative">
-        {/* Neon glow line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
-        
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
-          <div className="flex items-center gap-4 sm:gap-6">
+      {/* TikTok Style Header */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(-1)}
-              className="p-3 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 flex-shrink-0 group hover:scale-110 active:scale-95 border border-slate-700/50 hover:border-cyan-500/30"
+              className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
             >
-              <ArrowLeft size={22} className="text-slate-400 group-hover:text-cyan-400 transition-colors" />
+              <ArrowLeft size={20} className="text-gray-900" />
             </button>
             
             <div className="flex-1 relative">
-              {/* Futuristic Search Input */}
-              <div className="relative group">
-                {/* Animated border glow */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                
-                <div className="relative bg-slate-800/90 backdrop-blur-sm rounded-xl border border-slate-600/50 group-focus-within:border-cyan-500/50 transition-all duration-300">
-                  {/* Search icon with glow effect */}
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                    <Search size={20} className="text-slate-400 group-focus-within:text-cyan-400 transition-colors duration-300" />
-                    <Search size={20} className="absolute inset-0 text-cyan-400 opacity-0 group-focus-within:opacity-50 blur-sm transition-opacity duration-300" />
-                  </div>
+              {/* TikTok Style Search Input */}
+              <div className="relative">
+                <div className="relative bg-gray-100 rounded-lg border-0 focus-within:bg-gray-50 transition-colors duration-200">
+                  <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                   
                   {searchQuery && (
                     <button
                       onClick={clearSearch}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-red-400 z-10 p-1 rounded-full hover:bg-red-500/10 transition-all duration-200 group/clear"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-400 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors duration-200 group"
                     >
-                      <X size={18} />
-                      <X size={18} className="absolute inset-0 text-red-400 opacity-0 group-hover/clear:opacity-50 blur-sm transition-opacity duration-200" />
+                      <X size={12} className="text-white" />
                     </button>
                   )}
                   
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="🔍 Buscar en el universo digital..."
+                    placeholder="Buscar"
                     value={searchQuery}
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     onKeyDown={handleKeyDown}
-                    className="w-full pl-12 pr-12 py-4 sm:py-5 bg-transparent text-white placeholder-slate-400 border-0 focus:ring-0 focus:outline-none text-sm sm:text-base font-medium tracking-wide"
+                    className="w-full pl-10 pr-10 py-3 bg-transparent text-gray-900 placeholder-gray-500 border-0 focus:ring-0 focus:outline-none text-base"
                     autoFocus
                   />
-                  
-                  {/* Typing indicator */}
-                  {searchQuery && (
-                    <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent animate-pulse"></div>
-                  )}
                 </div>
               </div>
               
               {isAutocompleteLoading && (
-                <div className="absolute right-14 top-1/2 transform -translate-y-1/2">
-                  <div className="w-5 h-5 border-2 border-slate-600 border-t-cyan-400 rounded-full animate-spin"></div>
+                <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
                 </div>
               )}
               
@@ -302,80 +279,44 @@ const SearchPage = () => {
                 onClose={() => setShowAutocomplete(false)}
               />
             </div>
+
+            {/* More options (three dots) */}
+            <button className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200">
+              <div className="flex flex-col space-y-0.5">
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+              </div>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Cyberpunk-style Tabs */}
+      {/* TikTok Style Tabs */}
       {hasSearched && (
-        <div className="bg-black/40 backdrop-blur-md border-b border-cyan-500/10 shadow-xl relative">
-          {/* Circuit pattern background */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
-          </div>
-          
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
-            {/* Mobile Layout */}
-            <div className="block lg:hidden py-4">
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => handleTabChange(tab.id)}
-                      className={`group flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 min-w-fit relative overflow-hidden border ${
-                        activeTab === tab.id
-                          ? `bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border-cyan-500/50 shadow-lg shadow-cyan-500/20`
-                          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-300 bg-slate-800/30 border-slate-700/30 hover:border-slate-600/50'
-                      }`}
-                    >
-                      {activeTab === tab.id && (
-                        <>
-                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 animate-pulse"></div>
-                          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
-                        </>
-                      )}
-                      <Icon size={16} className={`relative z-10 transition-all duration-300 ${activeTab === tab.id ? 'drop-shadow-glow' : ''}`} />
-                      <span className="relative z-10">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            
-            {/* Desktop Layout */}
-            <div className="hidden lg:flex items-center justify-center py-6">
-              <div className="flex space-x-4 bg-slate-900/60 backdrop-blur-sm rounded-2xl p-3 shadow-2xl border border-slate-700/50">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => handleTabChange(tab.id)}
-                      className={`group flex items-center space-x-3 px-6 py-4 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden ${
-                        activeTab === tab.id
-                          ? `bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 shadow-xl shadow-cyan-500/20 scale-105 border border-cyan-500/30`
-                          : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-300 hover:scale-102 border border-transparent hover:border-slate-600/30'
-                      }`}
-                    >
-                      {activeTab === tab.id && (
-                        <>
-                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 animate-pulse"></div>
-                          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
-                          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-                        </>
-                      )}
-                      <Icon size={18} className={`relative z-10 group-hover:scale-110 transition-transform ${activeTab === tab.id ? 'drop-shadow-glow' : ''}`} />
-                      <div className="relative z-10">
-                        <span className="block">{tab.label}</span>
-                        <span className="text-xs opacity-70 block">{tab.description}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-6xl mx-auto px-4">
+            {/* Mobile and Desktop unified layout */}
+            <div className="flex space-x-6 overflow-x-auto scrollbar-hide py-3">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`flex items-center space-x-2 px-1 py-2 text-sm font-semibold transition-all duration-200 whitespace-nowrap flex-shrink-0 relative ${
+                      activeTab === tab.id
+                        ? 'text-black'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    {activeTab === tab.id && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black rounded-full"></div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
