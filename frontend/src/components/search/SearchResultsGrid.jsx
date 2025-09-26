@@ -45,9 +45,9 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
       className="relative bg-black rounded-lg overflow-hidden cursor-pointer group aspect-[3/4] shadow-lg hover:shadow-xl transition-all duration-300"
     >
       {/* Background Image or Video Thumbnail */}
-      {post.image_url ? (
+      {(post.image_url || post.thumbnail_url) ? (
         <img 
-          src={post.image_url} 
+          src={post.image_url || post.thumbnail_url} 
           alt={post.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
