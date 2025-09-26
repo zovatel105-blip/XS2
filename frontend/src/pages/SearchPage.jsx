@@ -136,7 +136,7 @@ const SearchPage = () => {
     const debounceTimer = setTimeout(() => {
       handleSearch(searchQuery, activeTab);
       updateURLParams(searchQuery, activeTab);
-    }, 500);
+    }, SEARCH_CONFIG.DEBOUNCE.SEARCH_DELAY);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery, activeTab]);
@@ -145,7 +145,7 @@ const SearchPage = () => {
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       handleAutocomplete(searchQuery);
-    }, 200);
+    }, SEARCH_CONFIG.DEBOUNCE.AUTOCOMPLETE_DELAY);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
