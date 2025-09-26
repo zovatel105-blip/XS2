@@ -2355,7 +2355,7 @@ async def search_sounds_advanced(query: str, current_user_id: str, limit: int):
             "created_at": audio.get("created_at", "")
         })
     
-    results = [r for r in results if r["relevance_score"] > 0.2]
+    results = [r for r in results if r["relevance_score"] > config.SEARCH_CONFIG['MIN_RELEVANCE_SCORE']]
     return sorted(results, key=lambda x: x["relevance_score"], reverse=True)[:limit]
 
 async def get_search_suggestions_helper(current_user_id: str = None):
