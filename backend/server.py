@@ -2208,7 +2208,7 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
         comments_count = await db.comments.count_documents({"poll_id": post["id"]})
         
         # Get author info
-        author = await db.users.find_one({"id": post["user_id"]})
+        author = await db.users.find_one({"id": post["author_id"]})
         
         results.append({
             "type": "post",
