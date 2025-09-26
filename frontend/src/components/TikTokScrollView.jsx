@@ -1242,6 +1242,38 @@ const TikTokScrollView = ({
             setSavedPolls={setSavedPolls}
           />
         ))}
+        
+        {/* Loading indicator when preloading more content */}
+        {isLoadingMore && (
+          <div 
+            className="w-full h-screen flex items-center justify-center snap-start snap-always bg-black"
+            style={{ minHeight: '100vh' }}
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
+              <p className="text-white/70 text-sm">Cargando más contenido...</p>
+            </div>
+          </div>
+        )}
+        
+        {/* End of content indicator */}
+        {!hasMoreContent && polls.length > 0 && (
+          <div 
+            className="w-full h-screen flex items-center justify-center snap-start snap-always bg-black"
+            style={{ minHeight: '100vh' }}
+          >
+            <div className="flex flex-col items-center gap-4 text-center px-6">
+              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-white/60" />
+              </div>
+              <div>
+                <h3 className="text-white text-lg font-semibold mb-2">¡Ya viste todo!</h3>
+                <p className="text-white/70 text-sm">No hay más contenido por ahora</p>
+                <p className="text-white/50 text-xs mt-2">Desliza hacia arriba para revisar</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Enhanced CSS for ultra-smooth scroll behavior and optimal performance */}
