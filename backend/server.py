@@ -2102,22 +2102,22 @@ async def universal_search(
     
     try:
         # Search Users
-        if filter_type in ["all", "users"]:
-            users_results = await search_users_advanced(query, current_user.id, limit)
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][1]]:  # 'all' or 'users'
+            users_results = await search_users_advanced(query_lower, current_user.id, limit)
             results.extend(users_results)
         
         # Search Posts
-        if filter_type in ["all", "posts"]:
-            posts_results = await search_posts_advanced(query, current_user.id, limit)
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][2]]:  # 'all' or 'posts'
+            posts_results = await search_posts_advanced(query_lower, current_user.id, limit)
             results.extend(posts_results)
         
         # Search Hashtags
-        if filter_type in ["all", "hashtags"]:
-            hashtags_results = await search_hashtags_advanced(query, current_user.id, limit)
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][3]]:  # 'all' or 'hashtags'
+            hashtags_results = await search_hashtags_advanced(query_lower, current_user.id, limit)
             results.extend(hashtags_results)
         
         # Search Sounds/Music
-        if filter_type in ["all", "sounds"]:
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][4]]:  # 'all' or 'sounds'
             sounds_results = await search_sounds_advanced(query, current_user.id, limit)
             results.extend(sounds_results)
         
