@@ -322,39 +322,81 @@ const SearchPage = () => {
         </div>
       )}
 
-      {/* Futuristic Content Area */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8 relative z-10">
+      {/* Clean Content Area - TikTok Style */}
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {!searchQuery.trim() ? (
           <div className="space-y-8">
-            {/* Cyberpunk Welcome Section */}
+            {/* Clean Welcome Section */}
             <div className="text-center py-12">
-              <div className="relative inline-flex items-center justify-center w-24 h-24 mb-8">
-                {/* Glowing rings */}
-                <div className="absolute inset-0 rounded-full border-2 border-cyan-500/30 animate-ping"></div>
-                <div className="absolute inset-2 rounded-full border-2 border-purple-500/30 animate-ping delay-75"></div>
-                <div className="absolute inset-4 rounded-full border-2 border-pink-500/30 animate-ping delay-150"></div>
-                
-                {/* Central icon */}
-                <div className="relative w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/50">
-                  <Search size={28} className="text-white drop-shadow-lg" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
+                <Search size={24} className="text-gray-600" />
+              </div>
+              
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                Descubre contenido increíble
+              </h1>
+              <p className="text-gray-600 text-base mb-8 max-w-md mx-auto">
+                Busca usuarios, videos, sonidos y hashtags populares
+              </p>
+            </div>
+            
+            {/* Recent Searches Section */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">Búsquedas recientes</h3>
+                <button className="p-1 hover:bg-gray-100 rounded-full">
+                  <div className="w-5 h-5 border-2 border-gray-400 rounded-full relative">
+                    <div className="absolute inset-1 border-2 border-gray-400 rounded-full transform rotate-90">
+                      <div className="absolute top-0 left-1/2 w-0.5 h-1 bg-gray-400 transform -translate-x-1/2 -translate-y-0.5"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <div className="w-5 h-5 text-gray-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 flex-1">búsqueda anterior</span>
+                  <button className="w-4 h-4 text-gray-400 hover:text-gray-600">
+                    <X size={16} />
+                  </button>
                 </div>
               </div>
               
-              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
-                Explora el{' '}
-                <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
-                  metaverso
-                </span>
-              </h1>
-              <p className="text-slate-300 text-lg mb-8 max-w-md mx-auto leading-relaxed">
-                Descubre contenido épico, creadores innovadores y tendencias del futuro digital
-              </p>
+              <button className="text-gray-500 text-sm hover:text-gray-700 flex items-center space-x-1">
+                <span>Ver más</span>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* You may like Section */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">Te podría gustar</h3>
+                <button className="p-1 hover:bg-gray-100 rounded-full">
+                  <div className="w-5 h-5 border-2 border-gray-400 rounded-full relative">
+                    <div className="absolute inset-1 border-2 border-gray-400 rounded-full transform rotate-90">
+                      <div className="absolute top-0 left-1/2 w-0.5 h-1 bg-gray-400 transform -translate-x-1/2 -translate-y-0.5"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
               
-              {/* Floating particles effect */}
-              <div className="relative">
-                <div className="absolute top-0 left-0 w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
-                <div className="absolute top-4 right-8 w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
-                <div className="absolute -top-2 right-0 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce delay-500"></div>
+              <div className="space-y-2">
+                {['contenido viral', 'música trending', 'crear contenido', 'efectos populares'].map((suggestion, index) => (
+                  <div key={index} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <div className={`w-2 h-2 rounded-full ${index < 2 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className="text-gray-700">{suggestion}</span>
+                    {index === 0 && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Búsqueda reciente</span>}
+                  </div>
+                ))}
               </div>
             </div>
             
@@ -366,55 +408,25 @@ const SearchPage = () => {
           </div>
         ) : isLoading ? (
           <div className="text-center py-20">
-            <div className="relative inline-flex items-center justify-center w-20 h-20 mb-8">
-              {/* Animated scanning rings */}
-              <div className="absolute inset-0 rounded-full border-4 border-t-cyan-500 border-r-transparent border-b-purple-500 border-l-transparent animate-spin"></div>
-              <div className="absolute inset-2 rounded-full border-4 border-t-purple-500 border-r-transparent border-b-pink-500 border-l-transparent animate-spin-reverse"></div>
-              
-              <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl">
-                <Search size={20} className="text-white animate-pulse" />
-              </div>
-            </div>
-            
-            <h3 className="text-3xl font-bold text-white mb-4">Escaneando el cyber-espacio...</h3>
-            <p className="text-slate-400 text-lg mb-8">Procesando datos cuánticos para encontrar los mejores resultados</p>
-            
-            <div className="flex justify-center space-x-2 mb-6">
-              <div className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce shadow-lg shadow-cyan-500/50"></div>
-              <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce delay-75 shadow-lg shadow-purple-500/50"></div>
-              <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce delay-150 shadow-lg shadow-pink-500/50"></div>
-            </div>
-            
-            {/* Progress bar */}
-            <div className="w-64 h-1 bg-slate-800 rounded-full mx-auto overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 animate-pulse"></div>
-            </div>
+            <div className="inline-flex items-center justify-center w-12 h-12 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin mb-4"></div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Buscando...</h3>
+            <p className="text-gray-600">Encontrando los mejores resultados</p>
           </div>
         ) : searchResults.length > 0 ? (
-          /* Neon Search Results */
-          <div className="space-y-6">
-            <div className="flex items-center justify-between p-6 bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-xl">
+          /* Clean Search Results */
+          <div className="space-y-4">
+            <div className="flex items-center justify-between py-4">
               <div>
-                <h2 className="text-2xl font-bold text-white">Datos encontrados</h2>
-                <p className="text-slate-400 mt-1">
-                  {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "
-                  <span className="text-cyan-400 font-medium">{searchQuery}</span>"
+                <p className="text-gray-600">
+                  {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "{searchQuery}"
                 </p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-slate-500">Filtro activo:</span>
-                <div className={`px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg shadow-cyan-500/20`}>
-                  {tabs.find(t => t.id === activeTab)?.label}
-                </div>
               </div>
             </div>
             
-            <div className="bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden shadow-2xl">
+            {/* TikTok Style Results Grid */}
+            <div className="grid grid-cols-2 gap-4">
               {searchResults.map((result, index) => (
-                <div key={`${result.type}-${result.id}-${index}`} className="hover:bg-slate-800/50 transition-all duration-300 border-b border-slate-700/30 last:border-b-0 relative group">
-                  {/* Hover glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
+                <div key={`${result.type}-${result.id}-${index}`} className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200 group cursor-pointer">
                   <SearchResultItem
                     result={result}
                     onItemClick={handleResultClick}
@@ -424,28 +436,15 @@ const SearchPage = () => {
             </div>
           </div>
         ) : hasSearched ? (
-          /* Cyberpunk No Results */
+          /* Clean No Results */
           <div className="text-center py-20">
-            <div className="relative inline-flex items-center justify-center w-24 h-24 mb-8">
-              {/* Error/glitch effect */}
-              <div className="absolute inset-0 rounded-full border-2 border-red-500/30 animate-pulse"></div>
-              <div className="absolute inset-2 rounded-full border-2 border-slate-600/30"></div>
-              
-              <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center border border-slate-600">
-                <Search size={28} className="text-slate-500" />
-              </div>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
+              <Search size={24} className="text-gray-400" />
             </div>
-            
-            <h3 className="text-3xl font-bold text-white mb-4">404 • Datos no encontrados</h3>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto text-lg">
-              El archivo "<span className="text-red-400 font-mono">{searchQuery}</span>" no existe en nuestra base de datos. 
-              Intenta con otros parámetros de búsqueda.
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Sin resultados</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              No encontramos nada para "{searchQuery}". Intenta con otros términos.
             </p>
-            
-            <div className="inline-flex items-center space-x-2 text-slate-500 text-sm mb-12">
-              <Zap size={16} className="text-yellow-400" />
-              <span>Sugerencia: Explora el contenido trending más abajo</span>
-            </div>
             
             {/* Show discovery content */}
             <div className="mt-12">
