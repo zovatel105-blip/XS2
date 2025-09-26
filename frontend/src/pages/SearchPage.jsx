@@ -381,21 +381,40 @@ const SearchPage = () => {
         </div>
       )}
 
-      {/* Enhanced Content Area */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
+      {/* Futuristic Content Area */}
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8 relative z-10">
         {!searchQuery.trim() ? (
           <div className="space-y-8">
-            {/* Welcome Section */}
+            {/* Cyberpunk Welcome Section */}
             <div className="text-center py-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-xl">
-                <Search size={32} className="text-white" />
+              <div className="relative inline-flex items-center justify-center w-24 h-24 mb-8">
+                {/* Glowing rings */}
+                <div className="absolute inset-0 rounded-full border-2 border-cyan-500/30 animate-ping"></div>
+                <div className="absolute inset-2 rounded-full border-2 border-purple-500/30 animate-ping delay-75"></div>
+                <div className="absolute inset-4 rounded-full border-2 border-pink-500/30 animate-ping delay-150"></div>
+                
+                {/* Central icon */}
+                <div className="relative w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/50">
+                  <Search size={28} className="text-white drop-shadow-lg" />
+                </div>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Descubre lo <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">increíble</span>
+              
+              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
+                Explora el{' '}
+                <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
+                  metaverso
+                </span>
               </h1>
-              <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                Explora contenido trending, usuarios populares y los hashtags del momento
+              <p className="text-slate-300 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+                Descubre contenido épico, creadores innovadores y tendencias del futuro digital
               </p>
+              
+              {/* Floating particles effect */}
+              <div className="relative">
+                <div className="absolute top-0 left-0 w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                <div className="absolute top-4 right-8 w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
+                <div className="absolute -top-2 right-0 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce delay-500"></div>
+              </div>
             </div>
             
             <DiscoverySection
@@ -406,40 +425,55 @@ const SearchPage = () => {
           </div>
         ) : isLoading ? (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-xl animate-pulse">
-              <Search size={24} className="text-white animate-ping" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Buscando...</h3>
-            <p className="text-gray-600">Encontrando los mejores resultados para ti</p>
-            <div className="mt-6 flex justify-center">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-                <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </div>
-          </div>
-        ) : searchResults.length > 0 ? (
-          /* Enhanced Search Results */
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Resultados de búsqueda</h2>
-                <p className="text-gray-600 mt-1">
-                  {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "{searchQuery}"
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Filtrar por:</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${tabs.find(t => t.id === activeTab)?.color} text-white`}>
-                  {tabs.find(t => t.id === activeTab)?.label}
-                </span>
+            <div className="relative inline-flex items-center justify-center w-20 h-20 mb-8">
+              {/* Animated scanning rings */}
+              <div className="absolute inset-0 rounded-full border-4 border-t-cyan-500 border-r-transparent border-b-purple-500 border-l-transparent animate-spin"></div>
+              <div className="absolute inset-2 rounded-full border-4 border-t-purple-500 border-r-transparent border-b-pink-500 border-l-transparent animate-spin-reverse"></div>
+              
+              <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl">
+                <Search size={20} className="text-white animate-pulse" />
               </div>
             </div>
             
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/40 overflow-hidden shadow-xl">
+            <h3 className="text-3xl font-bold text-white mb-4">Escaneando el cyber-espacio...</h3>
+            <p className="text-slate-400 text-lg mb-8">Procesando datos cuánticos para encontrar los mejores resultados</p>
+            
+            <div className="flex justify-center space-x-2 mb-6">
+              <div className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce shadow-lg shadow-cyan-500/50"></div>
+              <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce delay-75 shadow-lg shadow-purple-500/50"></div>
+              <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce delay-150 shadow-lg shadow-pink-500/50"></div>
+            </div>
+            
+            {/* Progress bar */}
+            <div className="w-64 h-1 bg-slate-800 rounded-full mx-auto overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 animate-pulse"></div>
+            </div>
+          </div>
+        ) : searchResults.length > 0 ? (
+          /* Neon Search Results */
+          <div className="space-y-6">
+            <div className="flex items-center justify-between p-6 bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-xl">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Datos encontrados</h2>
+                <p className="text-slate-400 mt-1">
+                  {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "
+                  <span className="text-cyan-400 font-medium">{searchQuery}</span>"
+                </p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-slate-500">Filtro activo:</span>
+                <div className={`px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg shadow-cyan-500/20`}>
+                  {tabs.find(t => t.id === activeTab)?.label}
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 overflow-hidden shadow-2xl">
               {searchResults.map((result, index) => (
-                <div key={`${result.type}-${result.id}-${index}`} className="hover:bg-blue-50/50 transition-colors border-b border-gray-100/50 last:border-b-0">
+                <div key={`${result.type}-${result.id}-${index}`} className="hover:bg-slate-800/50 transition-all duration-300 border-b border-slate-700/30 last:border-b-0 relative group">
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
                   <SearchResultItem
                     result={result}
                     onItemClick={handleResultClick}
@@ -449,17 +483,30 @@ const SearchPage = () => {
             </div>
           </div>
         ) : hasSearched ? (
-          /* Enhanced No Results */
+          /* Cyberpunk No Results */}
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-2xl mb-6">
-              <Search size={32} className="text-gray-400" />
+            <div className="relative inline-flex items-center justify-center w-24 h-24 mb-8">
+              {/* Error/glitch effect */}
+              <div className="absolute inset-0 rounded-full border-2 border-red-500/30 animate-pulse"></div>
+              <div className="absolute inset-2 rounded-full border-2 border-slate-600/30"></div>
+              
+              <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center border border-slate-600">
+                <Search size={28} className="text-slate-500" />
+              </div>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No encontramos nada</h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              No pudimos encontrar resultados para "{searchQuery}". Intenta con otros términos o explora el contenido trending.
+            
+            <h3 className="text-3xl font-bold text-white mb-4">404 • Datos no encontrados</h3>
+            <p className="text-slate-400 mb-8 max-w-md mx-auto text-lg">
+              El archivo "<span className="text-red-400 font-mono">{searchQuery}</span>" no existe en nuestra base de datos. 
+              Intenta con otros parámetros de búsqueda.
             </p>
             
-            {/* Show discovery content even when no results */}
+            <div className="inline-flex items-center space-x-2 text-slate-500 text-sm mb-12">
+              <Zap size={16} className="text-yellow-400" />
+              <span>Sugerencia: Explora el contenido trending más abajo</span>
+            </div>
+            
+            {/* Show discovery content */}
             <div className="mt-12">
               <DiscoverySection
                 trendingContent={discoveryData.trending_posts || []}
