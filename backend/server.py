@@ -2205,10 +2205,10 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
     """Advanced posts search"""
     search_regex = {"$regex": query, "$options": "i"}
     
-    # Find posts matching query in content or title
+    # Find posts matching query in description or title  
     posts = await db.polls.find({
         "$or": [
-            {"content": search_regex},
+            {"description": search_regex},
             {"title": search_regex}
         ]
     }).limit(limit * config.SEARCH_CONFIG['FUZZY_SEARCH_MULTIPLIER']).to_list(limit * config.SEARCH_CONFIG['FUZZY_SEARCH_MULTIPLIER'])
@@ -2216,9 +2216,9 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
     results = []
     for post in posts:
         # Calculate relevance score with configurable multipliers
-        content_sim = calculate_similarity(query, post.get("content", "")) * config.SEARCH_CONFIG['MULTIPLIERS']['CONTENT_MATCH']
+        description_sim = calculate_similarity(query, post.get("description", "")) * config.SEARCH_CONFIG['MULTIPLIERS']['CONTENT_MATCH']
         title_sim = calculate_similarity(query, post.get("title", "")) * config.SEARCH_CONFIG['MULTIPLIERS']['TITLE_MATCH']
-        relevance_score = max(content_sim, title_sim)
+        relevance_score = max(description_sim, title_sim)
         
         # Get engagement metrics
         votes_count = len(post.get("votes", []))
@@ -2227,13 +2227,41 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
         # Get author info
         author = await db.users.find_one({"id": post["author_id"]})
         
+        # Extract media from options
+        options = post.get("options", [])
+        main_media_url = None
+        main_thumbnail_url = None
+        main_media_type = None
+        
+        # Find first option with media
+        for option in options:
+            if option.get("media_url"):
+                main_media_url = option.get("media_url")
+                main_thumbnail_url = option.get("thumbnail_url") or option.get("media_url")
+                main_media_type = option.get("media_type", "image")
+                break
+        
+        # Extract hashtags from description and title
+        hashtags = []
+        description_text = post.get("description", "")
+        title_text = post.get("title", "")
+        combined_text = f"{description_text} {title_text}"
+        
+        import re
+        hashtag_pattern = r'#(\w+)'
+        hashtags = re.findall(hashtag_pattern, combined_text)
+        
         results.append({
             "type": "post",
             "id": post["id"],
             "title": post.get("title", ""),
-            "content": post.get("content", "")[:150] + "..." if post.get("content", "") and len(post.get("content", "")) > 150 else post.get("content", ""),
-            "image_url": post.get("image_url"),
-            "video_url": post.get("video_url"),
+            "content": post.get("description", ""),
+            "image_url": main_media_url if main_media_type == "image" else main_thumbnail_url,
+            "video_url": main_media_url if main_media_type == "video" else None,
+            "media_type": main_media_type,
+            "thumbnail_url": main_thumbnail_url,
+            "hashtags": hashtags[:5],  # Limit to first 5 hashtags
+            "tags": post.get("tags", []),
             "votes_count": votes_count,
             "comments_count": comments_count,
             "author": {
