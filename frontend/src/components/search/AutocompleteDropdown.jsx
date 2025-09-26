@@ -30,51 +30,62 @@ const AutocompleteDropdown = ({
   };
 
   return (
-    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-80 overflow-y-auto z-50">
+    <div className="absolute top-full left-0 right-0 bg-slate-900/95 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-2xl mt-2 max-h-80 overflow-y-auto z-50 shadow-cyan-500/10">
+      {/* Neon top border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+      
       {suggestions.map((suggestion, index) => (
         <div
           key={`${suggestion.type}-${index}`}
           onClick={() => onSuggestionClick(suggestion)}
-          className={`flex items-center px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors ${
-            index === selectedIndex ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+          className={`group flex items-center px-4 py-3 hover:bg-slate-800/60 cursor-pointer transition-all duration-200 relative ${
+            index === selectedIndex ? 'bg-slate-800/80 border-l-2 border-cyan-500 shadow-lg shadow-cyan-500/10' : ''
           }`}
         >
-          <div className="flex-shrink-0 mr-3">
+          {index === selectedIndex && (
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-transparent"></div>
+          )}
+          
+          <div className="flex-shrink-0 mr-3 relative">
             {suggestion.avatar ? (
-              <img 
-                src={suggestion.avatar} 
-                alt="" 
-                className="w-8 h-8 rounded-full object-cover"
-              />
+              <div className="relative">
+                <img 
+                  src={suggestion.avatar} 
+                  alt="" 
+                  className="w-8 h-8 rounded-full object-cover ring-2 ring-slate-600/50"
+                />
+                {/* Glow effect for avatars */}
+                <div className="absolute inset-0 w-8 h-8 rounded-full ring-1 ring-cyan-400/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </div>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-slate-800/60 border border-slate-600/50 flex items-center justify-center group-hover:border-cyan-500/30 transition-colors">
                 {getIcon(suggestion.type)}
               </div>
             )}
           </div>
           
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 relative z-10">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-900 truncate">
+              <span className="text-sm font-medium text-white truncate group-hover:text-cyan-300 transition-colors">
                 {suggestion.display || suggestion.text}
               </span>
               {suggestion.type && (
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                <span className="text-xs text-slate-400 bg-slate-800/60 border border-slate-600/30 px-2 py-0.5 rounded-full flex-shrink-0 group-hover:border-cyan-500/30 group-hover:text-cyan-400 transition-colors">
                   {suggestion.type}
                 </span>
               )}
             </div>
             
             {suggestion.subtitle && (
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-slate-400 truncate group-hover:text-slate-300 transition-colors">
                 {suggestion.subtitle}
               </p>
             )}
           </div>
           
           {suggestion.count && (
-            <div className="flex-shrink-0 ml-2">
-              <span className="text-xs text-gray-400">
+            <div className="flex-shrink-0 ml-2 relative z-10">
+              <span className="text-xs text-slate-500 group-hover:text-slate-400 transition-colors">
                 {suggestion.count}
               </span>
             </div>
@@ -83,9 +94,9 @@ const AutocompleteDropdown = ({
       ))}
       
       {suggestions.length === 0 && (
-        <div className="px-4 py-6 text-center text-gray-500">
-          <Search size={24} className="mx-auto mb-2 text-gray-300" />
-          <p className="text-sm">No se encontraron sugerencias</p>
+        <div className="px-4 py-6 text-center text-slate-400">
+          <Search size={24} className="mx-auto mb-2 text-slate-600" />
+          <p className="text-sm">No se encontraron sugerencias en el cyber-espacio</p>
         </div>
       )}
     </div>
