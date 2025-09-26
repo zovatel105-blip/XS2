@@ -19,6 +19,7 @@ import { Plus } from 'lucide-react';
 
 const FeedPage = () => {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [polls, setPolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,6 +29,7 @@ const FeedPage = () => {
   const [selectedPollAuthor, setSelectedPollAuthor] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [preSelectedAudio, setPreSelectedAudio] = useState(null);
+  const [initialIndex, setInitialIndex] = useState(0); // Add initial index state
   const { toast } = useToast();
   const { trackAction } = useAddiction();
   const { enterTikTokMode, exitTikTokMode, isTikTokMode } = useTikTok();
