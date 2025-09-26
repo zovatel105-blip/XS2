@@ -465,6 +465,17 @@ const FeedPage = () => {
     }
   };
 
+  // DEBUG: Log component state at render start
+  console.log('🎬 FeedPage RENDER START:');
+  console.log('📊 Current polls.length:', polls.length);
+  console.log('💾 isLoading:', isLoading, 'error:', error);
+  console.log('🔍 First 2 polls:', polls.slice(0, 2).map(p => ({ 
+    id: p?.id, 
+    title: p?.title?.substring(0, 50), 
+    hasOptions: !!p?.options?.length,
+    hasAuthor: !!(p?.author || p?.authorUser)
+  })));
+
   if (isLoading) {
     return (
       <>
