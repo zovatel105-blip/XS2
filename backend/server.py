@@ -2461,10 +2461,18 @@ async def get_trending_content(current_user_id: str):
 @api_router.get("/search/autocomplete")
 async def search_autocomplete(
     q: str = "",
+    limit: int = config.SEARCH_CONFIG['DEFAULT_AUTOCOMPLETE_LIMIT'],
     current_user: UserResponse = Depends(get_current_user)
 ):
     """Real-time autocomplete suggestions"""
-    if not q or len(q.strip()) < 2:
+    # Validate parameters
+    if limit > config.SEARCH_CONFIG['MAX_AUTOCOMPLETE_LIMIT']:
+        limit = config.SEARCH_CONFIG['MAX_AUTOCOMPLETE_LIMIT']
+    
+    if not q or len(q.strip()) < config.SEARCH_CONFIG['MIN_AUTOCOMPLETE_LENGTH']:
+        return {"suggestions": []}
+    
+    if len(q.strip()) > config.SEARCH_CONFIG['MAX_QUERY_LENGTH']:
         return {"suggestions": []}
     
     query = q.lower().strip()
