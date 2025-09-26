@@ -2073,7 +2073,7 @@ async def universal_search(
         return {
             "success": True,
             "results": [],
-            "suggestions": await get_search_suggestions(current_user.id),
+            "suggestions": await get_search_suggestions_helper(current_user.id),
             "trending": await get_trending_content(current_user.id)
         }
     
