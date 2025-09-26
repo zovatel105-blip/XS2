@@ -2161,7 +2161,7 @@ async def search_users_advanced(query: str, current_user_id: str, limit: int):
                 ]
             }
         ]
-    }).limit(limit * 2).to_list(limit * 2)  # Get more for fuzzy filtering
+    }).limit(limit * config.SEARCH_CONFIG['FUZZY_SEARCH_MULTIPLIER']).to_list(limit * config.SEARCH_CONFIG['FUZZY_SEARCH_MULTIPLIER'])  # Get more for fuzzy filtering
     
     results = []
     for user in users:
