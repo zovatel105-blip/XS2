@@ -18,12 +18,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
         navigate(`/profile/${result.username}`);
         break;
       case 'post':
-        // Como no existe ruta /post/:id, navegar al feed y mostrar toast
-        navigate('/feed');
-        setTimeout(() => {
-          // Opcional: mostrar toast con info del post
-          console.log('Post seleccionado:', result.title);
-        }, 100);
+        navigate(`/post/${result.id}`);
         break;
       case 'hashtag':
         navigate(`/search?q=${encodeURIComponent(result.hashtag)}&filter=hashtags`);
