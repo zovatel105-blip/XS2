@@ -2050,7 +2050,9 @@ import re
 
 def calculate_similarity(a, b):
     """Calculate similarity between two strings for fuzzy search"""
-    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+    if not a or not b:
+        return 0.0
+    return SequenceMatcher(None, str(a).lower(), str(b).lower()).ratio()
 
 def extract_hashtags_from_text(text):
     """Extract hashtags from text content"""
