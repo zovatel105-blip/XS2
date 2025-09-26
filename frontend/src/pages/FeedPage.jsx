@@ -57,6 +57,40 @@ const FeedPage = () => {
           mentioned_users: p.mentioned_users ? p.mentioned_users.length : 0
         })));
         setPolls(pollsData);
+        
+        // Check if there's a specific post ID in the URL
+        const postId = searchParams.get('post');
+        if (postId) {
+          console.log('🎯 Looking for specific post:', postId);
+          
+          // Find the post in the loaded polls
+          const postIndex = pollsData.findIndex(poll => poll.id === postId);
+          
+          if (postIndex !== -1) {
+            console.log('✅ Found post at index:', postIndex);
+            setInitialIndex(postIndex);
+          } else {
+            console.log('⚠️ Post not found in feed, loading individual post...');
+            // If post not found in feed, load it individually
+            try {
+              const specificPost = await pollService.getPoll(postId);
+              if (specificPost) {
+                // Add the specific post to the beginning of the array
+                const updatedPolls = [specificPost, ...pollsData];
+                setPolls(updatedPolls);
+                setInitialIndex(0);
+                console.log('✅ Specific post loaded and added to feed');
+              }
+            } catch (err) {
+              console.error('Error loading specific post:', err);
+              toast({
+                title: "Post no encontrado",
+                description: "El post que buscas no está disponible.",
+                variant: "destructive",
+              });
+            }
+          }
+        }
       } catch (err) {
         console.error('Error loading polls:', err);
         setError(err.message);
