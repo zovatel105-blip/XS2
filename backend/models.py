@@ -80,7 +80,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     username: str
     display_name: str
-    password: str
+    password: str = Field(..., min_length=6, max_length=128, description="Password must be 6-128 characters")
     avatar_url: Optional[str] = None  # Permitir avatares durante el registro
 
 class UserLogin(BaseModel):
