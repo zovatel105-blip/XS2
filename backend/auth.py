@@ -9,8 +9,14 @@ from config import config
 
 load_dotenv()
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Password hashing with bcrypt length limit handling
+pwd_context = CryptContext(
+    schemes=["bcrypt"], 
+    deprecated="auto",
+    bcrypt__default_rounds=12,
+    bcrypt__max_rounds=15,
+    bcrypt__default_ident="2b"
+)
 
 # JWT settings from configuration
 SECRET_KEY = config.SECRET_KEY
