@@ -365,11 +365,12 @@ const SearchPage = () => {
             </div>
           </div>
 
-          {/* Stories Section - Matching reference design */}
-          <div className="space-y-4 px-3 sm:px-0">
-            <h3 className="text-2xl font-bold text-gray-900">Stories</h3>
+          {/* Stories Section - Horizontal Carousel matching reference */}
+          <div className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 px-4">Stories</h3>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {/* Horizontal Scrolling Carousel */}
+            <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2 px-4">
               {[
                 { 
                   name: 'Pink', 
@@ -400,32 +401,44 @@ const SearchPage = () => {
                   avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
                   background: 'bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-700',
                   decoration: '🎵'
+                },
+                { 
+                  name: 'Ana', 
+                  avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+                  background: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600',
+                  decoration: '🌟'
+                },
+                { 
+                  name: 'Luis', 
+                  avatar: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=400&h=400&fit=crop&crop=face',
+                  background: 'bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-700',
+                  decoration: '🎮'
                 }
               ].map((story, index) => (
-                <div key={index} className="cursor-pointer group relative">
-                  {/* Story Card - Large format matching reference */}
+                <div key={index} className="flex-shrink-0 cursor-pointer group relative">
+                  {/* Story Card - Carousel format matching reference */}
                   <div 
                     className={`relative rounded-2xl overflow-hidden shadow-xl group-hover:scale-[1.02] transition-all duration-300 ${story.background} flex items-center justify-center`}
                     style={{
-                      aspectRatio: '3/4',
-                      minHeight: '200px'
+                      width: '140px',
+                      height: '200px'
                     }}
                   >
                     {/* Background pattern overlay */}
                     <div className="absolute inset-0 bg-black/10"></div>
                     
                     {/* Decorative content in center */}
-                    <div className="text-6xl opacity-80 drop-shadow-lg">
+                    <div className="text-5xl opacity-80 drop-shadow-lg">
                       {story.decoration}
                     </div>
                     
                     {/* Bottom gradient for avatar area */}
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                     
                     {/* User avatar container */}
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                      <div className="relative mb-2">
-                        <div className="w-12 h-12 rounded-full bg-white p-0.5">
+                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                      <div className="relative mb-1.5">
+                        <div className="w-11 h-11 rounded-full bg-white p-0.5">
                           <img 
                             src={story.avatar}
                             alt={story.name}
@@ -434,14 +447,14 @@ const SearchPage = () => {
                         </div>
                         {/* Red plus icon for first story (matching reference) */}
                         {index === 0 && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
+                          <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
                             <span className="text-white text-xs font-bold leading-none">+</span>
                           </div>
                         )}
                       </div>
                       
                       {/* User name */}
-                      <p className="text-white text-sm font-semibold drop-shadow-lg">{story.name}</p>
+                      <p className="text-white text-sm font-semibold drop-shadow-lg text-center leading-tight">{story.name}</p>
                     </div>
                   </div>
                 </div>
