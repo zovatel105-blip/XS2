@@ -3,9 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
 
-const CarouselLayout = ({ poll, onVote, isActive }) => {
+const CarouselLayout = ({ 
+  poll, 
+  onVote, 
+  isActive,
+  currentSlide: externalCurrentSlide,
+  onSlideChange,
+  handleTouchStart: externalTouchStart,
+  handleTouchEnd: externalTouchEnd,
+  // 🚀 PERFORMANCE: Carousel optimization props
+  optimizeVideo = false,
+  renderPriority = 'medium',
+  shouldPreload = true,
+  isVisible = true,
+  shouldUnload = false
+}) => {
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // 🚀 PERFORMANCE: Use external slide control if provided, otherwise internal
+  const [internalCurrentSlide, setInternalCurrentSlide] = useState(0);
+  const currentSlide = externalCurrentSlide !== undefined ? externalCurrentSlide : internalCurrentSlide;
+  const setCurrentSlide = onSlideChange || setInternalCurrentSlide;
+  
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -113,23 +132,53 @@ const CarouselLayout = ({ poll, onVote, isActive }) => {
                 width: '100%'  // Each slide is full width
               }}
             >
-              {/* Background media */}
+              {/* 🚀 ULTRA-OPTIMIZED Background media for carousel */}
               <div className="absolute inset-0 w-full h-full">
                 {option.media?.url ? (
                   option.media?.type === 'video' ? (
                     <video 
                       src={option.media.url} 
                       className="w-full h-full object-cover object-center"
+                      // ✅ FIXED: Play video for current slide when active
                       autoPlay={isActive && currentSlide === optionIndex}
                       muted
                       loop
                       playsInline
+                      // 🚀 PERFORMANCE: Smart preloading for carousel
+                      preload={
+                        currentSlide === optionIndex ? "auto" : // Current slide: full preload
+                        Math.abs(currentSlide - optionIndex) <= 1 ? "metadata" : // Adjacent slides: metadata only
+                        "none" // Distant slides: no preload
+                      }
+                      // ✅ FIXED: Always show videos in carousel
+                      style={{
+                        display: 'block'
+                      }}
+                      loading={currentSlide === optionIndex ? "eager" : "lazy"}
+                      onLoadStart={() => {
+                        if (optimizeVideo && currentSlide === optionIndex) {
+                          console.log(`🎬 Carousel video loading: slide ${optionIndex} (Priority: ${renderPriority})`);
+                        }
+                      }}
+                      onCanPlay={() => {
+                        if (optimizeVideo) {
+                          console.log(`▶️ Carousel video ready: slide ${optionIndex}`);
+                        }
+                      }}
+                      onError={(e) => {
+                        console.warn(`❌ Carousel video load failed: ${option.media.url}`, e);
+                      }}
                     />
                   ) : (
                     <img 
                       src={option.media.url} 
                       alt={option.text || `Slide ${optionIndex + 1}`}
                       className="w-full h-full object-cover object-center"
+                      // 🚀 IMAGE OPTIMIZATION: Lazy load non-current slides
+                      loading={currentSlide === optionIndex ? "eager" : "lazy"}
+                      style={{
+                        display: shouldUnload ? 'none' : 'block'
+                      }}
                     />
                   )
                 ) : (

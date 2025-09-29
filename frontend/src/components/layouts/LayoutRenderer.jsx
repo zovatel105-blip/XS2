@@ -21,7 +21,24 @@ const layoutComponents = {
  * @param {boolean} isActive - Si el componente está activo
  * @returns {JSX.Element} - Componente de layout renderizado
  */
-const LayoutRenderer = ({ poll, onVote, isActive }) => {
+const LayoutRenderer = ({ 
+  poll, 
+  onVote, 
+  isActive,
+  currentSlide = 0,
+  onSlideChange,
+  handleTouchStart,
+  handleTouchEnd,
+  index,
+  showLogo,
+  // 🚀 PERFORMANCE: Layout optimization props
+  optimizeVideo = false,
+  renderPriority = 'medium',
+  shouldPreload = true,
+  isVisible = true,
+  shouldUnload = false,
+  layout = null
+}) => {
   // Obtener el layout type del poll, con fallback a 'vertical'
   const layoutType = poll.layout || 'vertical';
   
@@ -32,6 +49,16 @@ const LayoutRenderer = ({ poll, onVote, isActive }) => {
         poll={poll} 
         onVote={onVote} 
         isActive={isActive}
+        currentSlide={currentSlide}
+        onSlideChange={onSlideChange}
+        handleTouchStart={handleTouchStart}
+        handleTouchEnd={handleTouchEnd}
+        // 🚀 PERFORMANCE: Carousel optimization
+        optimizeVideo={optimizeVideo}
+        renderPriority={renderPriority}
+        shouldPreload={shouldPreload}
+        isVisible={isVisible}
+        shouldUnload={shouldUnload}
       />
     );
   }
@@ -52,6 +79,14 @@ const LayoutRenderer = ({ poll, onVote, isActive }) => {
       onVote={onVote} 
       isActive={isActive}
       gridType={gridType}
+      // 🚀 PERFORMANCE: Grid layout optimization (critical for 2x2 videos)
+      optimizeVideo={optimizeVideo}
+      renderPriority={renderPriority}
+      shouldPreload={shouldPreload}
+      isVisible={isVisible}
+      shouldUnload={shouldUnload}
+      layout={layout}
+      index={index}
     />
   );
 };

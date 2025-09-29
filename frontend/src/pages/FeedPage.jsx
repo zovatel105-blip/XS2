@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from 'react-router-dom';
 import TikTokScrollView from '../components/TikTokScrollView';
+import OptimizedTikTokScrollView from '../components/OptimizedTikTokScrollView';
 import PollCard from '../components/PollCard';
 import CommentsModal from '../components/CommentsModal';
 import ShareModal from '../components/ShareModal';
@@ -26,6 +27,9 @@ const FeedPage = () => {
   const [hasMoreContent, setHasMoreContent] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  
+  // 🚀 SPEED OPTIMIZATION: Simple cache for faster subsequent loads
+  const [pollsCache, setPollsCache] = useState(new Map());
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [selectedPollId, setSelectedPollId] = useState(null);
   const [selectedPollTitle, setSelectedPollTitle] = useState('');
@@ -56,7 +60,37 @@ const FeedPage = () => {
         setError(null);
         setCurrentPage(0);  // Reset pagination
         setHasMoreContent(true);  // Reset content availability
+        
+        // 🚀 SPEED: Check cache first for faster loads
+        const cacheKey = 'feed_initial_30';
+        const cachedPolls = pollsCache.get(cacheKey);
+        const cacheAge = Date.now() - (cachedPolls?.timestamp || 0);
+        
+        // Use cache if less than 2 minutes old
+        if (cachedPolls && cacheAge < 120000) {
+          console.log('⚡ Using cached polls (fast load)');
+          setPolls(cachedPolls.data);
+          setIsLoading(false);
+          
+          // Load fresh data in background
+          pollService.getPollsForFrontend({ limit: 30 }).then(freshData => {
+            setPollsCache(prev => new Map(prev.set(cacheKey, {
+              data: freshData,
+              timestamp: Date.now()
+            })));
+            setPolls(freshData);
+          }).catch(console.warn);
+          
+          return;
+        }
+        
         const pollsData = await pollService.getPollsForFrontend({ limit: 30 });
+        
+        // 🚀 CACHE: Store for next time
+        setPollsCache(prev => new Map(prev.set(cacheKey, {
+          data: pollsData,
+          timestamp: Date.now()
+        })));
         console.log('🔍 FeedPage loaded polls:', pollsData.map(p => ({
           title: p.title, 
           mentioned_users: p.mentioned_users ? p.mentioned_users.length : 0
@@ -698,6 +732,7 @@ const FeedPage = () => {
           </div>
         </div>
         
+        {/* 🚀 ALWAYS USE OPTIMIZED TikTokScrollView - No toggle needed */}
         <TikTokScrollView
           polls={polls}
           onVote={handleVote}

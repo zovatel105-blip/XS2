@@ -67,7 +67,32 @@ const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserCli
   </div>
 );
 
-const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCreatePoll, isActive, index, total, showLogo = true, shouldPreload = true, isVisible = true, onUpdatePoll, onDeletePoll, isOwnProfile, currentUser: authUser, savedPolls, setSavedPolls }) => {
+const TikTokPollCard = ({ 
+  poll, 
+  onVote, 
+  onLike, 
+  onShare, 
+  onComment, 
+  onSave, 
+  onCreatePoll, 
+  isActive, 
+  index, 
+  total, 
+  showLogo = true, 
+  shouldPreload = true, 
+  isVisible = true, 
+  onUpdatePoll, 
+  onDeletePoll, 
+  isOwnProfile, 
+  currentUser: authUser, 
+  savedPolls, 
+  setSavedPolls,
+  // 🚀 NEW: Performance optimization props
+  optimizeVideo = false,
+  renderPriority = 'medium',
+  shouldUnload = false,
+  layout = null
+}) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [audioContextActivated, setAudioContextActivated] = useState(false);
@@ -76,6 +101,31 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  
+  // Touch handlers for carousel navigation
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStart || !e.changedTouches[0]) return;
+    
+    const touchEnd = e.changedTouches[0].clientX;
+    const touchDiff = touchStart - touchEnd;
+    
+    // Minimum swipe distance
+    if (Math.abs(touchDiff) < 50) return;
+    
+    if (touchDiff > 0) {
+      // Swipe left - next slide
+      setCurrentSlide(prev => Math.min(prev + 1, (poll.options?.length || 1) - 1));
+    } else {
+      // Swipe right - previous slide
+      setCurrentSlide(prev => Math.max(prev - 1, 0));
+    }
+    
+    setTouchStart(null);
+  };
   
   // Feed menu state
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
@@ -455,6 +505,19 @@ const TikTokPollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, onCr
           poll={poll}
           onVote={(optionId) => handleVote(optionId)}
           isActive={isActive}
+          currentSlide={currentSlide}
+          onSlideChange={setCurrentSlide}
+          handleTouchStart={handleTouchStart}
+          handleTouchEnd={handleTouchEnd}
+          index={index}
+          showLogo={showLogo}
+          // 🚀 PERFORMANCE: Layout-specific optimization props
+          optimizeVideo={optimizeVideo}
+          renderPriority={renderPriority}
+          shouldPreload={shouldPreload}
+          isVisible={isVisible}
+          shouldUnload={shouldUnload}
+          layout={layout}
         />
       </div>
 
@@ -819,19 +882,29 @@ const TikTokScrollView = ({
     }
   }, [initialIndex]);
 
-  // Preload optimization - memoize expensive calculations
+  // ✅ SIMPLIFIED OPTIMIZATION - Less aggressive, more stable
   const preloadedPolls = useMemo(() => {
-    return polls.map((poll, index) => ({
-      ...poll,
-      isVisible: Math.abs(index - activeIndex) <= 2, // Only render nearby items
-      shouldPreload: Math.abs(index - activeIndex) <= 1 // Preload adjacent items
-    }));
+    return polls.map((poll, index) => {
+      const isActive = index === activeIndex;
+      const distanceFromActive = Math.abs(index - activeIndex);
+      const isVisible = distanceFromActive <= 2; // Simple visibility check
+      
+      return {
+        ...poll,
+        isVisible: true, // Always consider visible to ensure videos show
+        shouldPreload: true, // Always preload for smooth experience  
+        isActive,
+        shouldUnload: false, // Never unload, just manage playback
+        optimizeVideo: poll.options?.some(opt => opt.media_type === 'video'),
+        renderPriority: isActive ? 'high' : 'medium' // Less restrictive priorities
+      };
+    });
   }, [polls, activeIndex]);
 
   // Performance optimization - prevent unnecessary re-renders
   const memoizedActiveIndex = useMemo(() => activeIndex, [activeIndex]);
 
-  // MEJORADA detección de scroll para sincronización perfecta de audio
+  // 🚀 ULTRA-OPTIMIZED scroll detection with video performance focus
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -839,39 +912,50 @@ const TikTokScrollView = ({
     const scrollTop = container.scrollTop;
     const containerHeight = container.clientHeight;
     
-    // Cálculo más preciso del índice activo
+    // More precise index calculation
     const exactIndex = scrollTop / containerHeight;
     const newIndex = Math.round(exactIndex);
     
-    // Umbral más agresivo para cambios rápidos de audio
-    const threshold = 0.25; // 25% threshold para mejor sincronización de audio
+    // Optimized threshold for video content
+    const threshold = 0.3; // Slightly higher threshold for video stability
     const indexDifference = Math.abs(exactIndex - newIndex);
     
-    // Actualizar si hemos cruzado el umbral Y es un índice válido
+    // Update index with video optimization
     if (indexDifference < threshold && 
         newIndex !== activeIndex && 
         newIndex >= 0 && 
         newIndex < polls.length) {
       
-      console.log(`🔄 SCROLL SYNC: Changing active index from ${activeIndex} to ${newIndex}`);
-      console.log(`   📊 Exact index: ${exactIndex.toFixed(2)}, Threshold diff: ${indexDifference.toFixed(2)}`);
+      const currentPoll = polls[newIndex];
+      const hasVideo = currentPoll?.layout === '2x2' || currentPoll?.options?.some(opt => opt.media_type === 'video');
       
-      setActiveIndex(newIndex);
+      if (hasVideo) {
+        // For video content, add slight delay to prevent rapid switching
+        setTimeout(() => {
+          if (container.scrollTop === scrollTop) { // Only update if user stopped scrolling
+            setActiveIndex(newIndex);
+          }
+        }, 100);
+      } else {
+        // Immediate update for non-video content
+        setActiveIndex(newIndex);
+      }
     }
 
-    // PRELOAD LOGIC: Load more content when near the end
+    // 🚀 AGGRESSIVE PRELOAD LOGIC: Load more content early for seamless experience
     if (onLoadMore && hasMoreContent && !isLoadingMore) {
       const remainingItems = polls.length - newIndex;
-      const preloadThreshold = 5; // Start loading when 5 items remaining
+      // More aggressive preloading for video content
+      const preloadThreshold = 8; // Start loading when 8 items remaining (was 5)
 
       if (remainingItems <= preloadThreshold) {
-        console.log(`🔄 PRELOAD: ${remainingItems} items remaining, triggering preload`);
+        console.log(`⚡ SMART PRELOAD: ${remainingItems} items remaining, triggering early preload`);
         onLoadMore();
       }
     }
   }, [activeIndex, polls.length, onLoadMore, hasMoreContent, isLoadingMore]);
 
-  // Enhanced scroll listener with optimized debouncing
+  // 🚀 ULTRA-OPTIMIZED scroll listener with smart throttling
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -880,8 +964,12 @@ const TikTokScrollView = ({
     let rafId;
     let lastScrollTop = 0;
     let velocity = 0;
+    let isScrolling = false;
 
-    const optimizedScrollHandler = () => {
+    const ultraOptimizedScrollHandler = () => {
+      if (isScrolling) return; // Prevent overlapping calls
+      
+      isScrolling = true;
       const currentScrollTop = container.scrollTop;
       velocity = Math.abs(currentScrollTop - lastScrollTop);
       lastScrollTop = currentScrollTop;
@@ -921,13 +1009,13 @@ const TikTokScrollView = ({
     };
 
     // Use passive listeners for better performance
-    container.addEventListener('scroll', optimizedScrollHandler, { 
+    container.addEventListener('scroll', ultraOptimizedScrollHandler, { 
       passive: true,
       capture: false 
     });
     
     return () => {
-      container.removeEventListener('scroll', optimizedScrollHandler);
+      container.removeEventListener('scroll', ultraOptimizedScrollHandler);
       clearTimeout(scrollTimeout);
       if (rafId) {
         cancelAnimationFrame(rafId);
@@ -1240,6 +1328,11 @@ const TikTokScrollView = ({
             currentUser={currentUser}
             savedPolls={savedPolls}
             setSavedPolls={setSavedPolls}
+            // ✅ FIXED: Simplified optimization props (less restrictive)
+            optimizeVideo={poll.optimizeVideo}
+            renderPriority={poll.renderPriority || 'medium'}
+            shouldUnload={false}  // Never unload, just optimize
+            layout={poll.layout}
           />
         ))}
         

@@ -46,9 +46,31 @@ class PollService {
     if (featured !== null) params.append('featured', featured.toString());
 
     try {
-      const url = `${this.baseURL}/polls?${params}`;
       const headers = this.getAuthHeaders();
-      console.log('🌐 API Call:', url, 'Headers:', headers);
+      
+      // 🚀 TRY ULTRA-FAST ENDPOINT FIRST (fixed implementation)
+      try {
+        const ultraFastUrl = `${this.baseURL}/polls/ultra-fast?${params}`;
+        console.log('⚡ Trying ultra-fast endpoint:', ultraFastUrl);
+        
+        const ultraResponse = await fetch(ultraFastUrl, {
+          method: 'GET',
+          headers: headers,
+        });
+
+        if (ultraResponse.ok) {
+          const ultraResult = await this.handleResponse(ultraResponse);
+          const data = ultraResult.polls || ultraResult;
+          console.log('🚀 Ultra-fast success:', data.length, 'polls received');
+          return data;
+        }
+      } catch (ultraError) {
+        console.warn('⚠️ Ultra-fast failed, using standard:', ultraError.message);
+      }
+      
+      // FALLBACK: Standard endpoint
+      const url = `${this.baseURL}/polls?${params}`;
+      console.log('🌐 Using standard endpoint:', url);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -56,12 +78,7 @@ class PollService {
       });
 
       const data = await this.handleResponse(response);
-      console.log('📊 API Response:', data.length, 'polls received. First 3:', 
-        data.slice(0, 3).map(p => ({
-          title: p.title,
-          mentioned_users: p.mentioned_users ? p.mentioned_users.length : 0
-        }))
-      );
+      console.log('📊 Standard response:', data.length, 'polls received');
       
       return data;
     } catch (error) {

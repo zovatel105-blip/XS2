@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import searchService from '../services/searchService';
 import SearchResultsGrid from '../components/search/SearchResultsGrid';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
-import DiscoverySection from '../components/search/DiscoverySection';
+
 import PostsIcon from '../components/icons/PostsIcon';
 import LogoWithQuickActions from '../components/LogoWithQuickActions';
 import SEARCH_CONFIG from '../config/searchConfig';
@@ -15,7 +15,7 @@ const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [autocompleteResults, setAutocompleteResults] = useState([]);
-  const [discoveryData, setDiscoveryData] = useState({});
+
   const [isLoading, setIsLoading] = useState(false);
   const [isAutocompleteLoading, setIsAutocompleteLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(SEARCH_CONFIG.FILTERS.DEFAULT);
@@ -40,8 +40,6 @@ const SearchPage = () => {
     
     if (query) {
       handleSearch(query, filter);
-    } else {
-      loadDiscoveryContent();
     }
   }, []);
 
@@ -60,20 +58,12 @@ const SearchPage = () => {
     setSearchParams(params);
   };
 
-  const loadDiscoveryContent = async () => {
-    try {
-      const suggestions = await searchService.getSearchSuggestions();
-      setDiscoveryData(suggestions);
-    } catch (error) {
-      console.error('Error loading discovery content:', error);
-    }
-  };
+
 
   const handleSearch = async (query, filter = activeTab) => {
     if (!query.trim()) {
       setSearchResults([]);
       setHasSearched(false);
-      loadDiscoveryContent();
       return;
     }
 
@@ -89,10 +79,7 @@ const SearchPage = () => {
       );
       setSearchResults(response.results || []);
       
-      // Also load discovery content for empty states
-      if (!response.results || response.results.length === 0) {
-        await loadDiscoveryContent();
-      }
+
       
     } catch (error) {
       console.error('Error searching:', error);
@@ -207,7 +194,6 @@ const SearchPage = () => {
     setSearchQuery('');
     setSearchResults([]);
     setHasSearched(false);
-    loadDiscoveryContent();
     searchInputRef.current?.focus();
   };
 
@@ -221,23 +207,12 @@ const SearchPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Logo fijo SIEMPRE VISIBLE - Estilo TikTok */}
-      <div 
-        className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 hover:scale-110 transition-transform duration-300"
-        style={{ 
-          position: 'fixed',
-          top: '16px',
-          right: '16px',
-          zIndex: 9999,
-        }}
-      >
-        <LogoWithQuickActions size={32} />
-      </div>
+
 
       {/* TikTok Style Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => navigate(-1)}
               className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
@@ -251,10 +226,20 @@ const SearchPage = () => {
                 <div className="relative bg-gray-100 rounded-lg border-0 focus-within:bg-gray-50 transition-colors duration-200">
                   <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                   
+                  {/* Microphone Icon */}
+                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full transition-colors duration-200">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-500">
+                      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                      <line stroke="currentColor" strokeWidth="2" strokeLinecap="round" x1="12" y1="19" x2="12" y2="23"/>
+                      <line stroke="currentColor" strokeWidth="2" strokeLinecap="round" x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                  </button>
+                  
                   {searchQuery && (
                     <button
                       onClick={clearSearch}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-400 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors duration-200 group"
+                      className="absolute right-10 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-400 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors duration-200 group"
                     >
                       <X size={12} className="text-white" />
                     </button>
@@ -269,7 +254,7 @@ const SearchPage = () => {
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     onKeyDown={handleKeyDown}
-                    className="w-full pl-10 pr-10 py-3 bg-transparent text-gray-900 placeholder-gray-500 border-0 focus:ring-0 focus:outline-none text-base"
+                    className="w-full pl-10 pr-16 py-3 bg-transparent text-gray-900 placeholder-gray-500 border-0 focus:ring-0 focus:outline-none text-base"
                     autoFocus
                     maxLength={SEARCH_CONFIG.VALIDATION.MAX_QUERY_LENGTH}
                   />
@@ -306,7 +291,7 @@ const SearchPage = () => {
       {/* TikTok Style Tabs */}
       {hasSearched && (
         <div className="bg-white border-b border-gray-100">
-          <div className="max-w-6xl mx-auto px-4">
+          <div className="w-full px-4">
             {/* Mobile and Desktop unified layout */}
             <div className="flex space-x-6 overflow-x-auto scrollbar-hide py-3">
               {tabs.map((tab) => {
@@ -333,91 +318,201 @@ const SearchPage = () => {
         </div>
       )}
 
-      {/* Clean Content Area - TikTok Style */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        {!searchQuery.trim() ? (
-          <div className="space-y-8">
-            {/* Clean Welcome Section */}
-            <div className="text-center py-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
-                <Search size={24} className="text-gray-600" />
-              </div>
-              
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                {SEARCH_CONFIG.UI.EMPTY_STATE_TITLE}
-              </h1>
-              <p className="text-gray-600 text-base mb-8 max-w-md mx-auto">
-                {SEARCH_CONFIG.UI.EMPTY_STATE_SUBTITLE}
-              </p>
+      {/* Clean Content Area - TikTok Style - Full Width */}
+      <div className="w-full">
+        {/* Content Sections - Always visible - Mobile Optimized */}
+        <div className="flex-1 px-0 sm:px-2 py-6 space-y-6 sm:space-y-8 w-full">
+          {/* Recent Searches Section - Mobile Optimized */}
+          <div className="space-y-3 sm:space-y-4 px-3 sm:px-0">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">Búsquedas recientes</h3>
+              <button className="text-sm text-gray-500 hover:text-gray-700">Ver más</button>
             </div>
             
-            {/* Recent Searches Section */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">Búsquedas recientes</h3>
-                <button className="p-1 hover:bg-gray-100 rounded-full">
-                  <div className="w-5 h-5 border-2 border-gray-400 rounded-full relative">
-                    <div className="absolute inset-1 border-2 border-gray-400 rounded-full transform rotate-90">
-                      <div className="absolute top-0 left-1/2 w-0.5 h-1 bg-gray-400 transform -translate-x-1/2 -translate-y-0.5"></div>
-                    </div>
-                  </div>
-                </button>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                  <div className="w-5 h-5 text-gray-400">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <polyline points="12,6 12,12 16,14"/>
-                    </svg>
-                  </div>
-                  <span className="text-gray-700 flex-1">búsqueda anterior</span>
-                  <button className="w-4 h-4 text-gray-400 hover:text-gray-600">
-                    <X size={16} />
-                  </button>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-5 h-5 text-gray-400">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12,6 12,12 16,14"/>
+                  </svg>
                 </div>
-              </div>
-              
-              <button className="text-gray-500 text-sm hover:text-gray-700 flex items-center space-x-1">
-                <span>Ver más</span>
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M6 9l6 6 6-6"/>
-                </svg>
-              </button>
-            </div>
-
-            {/* You may like Section */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">Te podría gustar</h3>
-                <button className="p-1 hover:bg-gray-100 rounded-full">
-                  <div className="w-5 h-5 border-2 border-gray-400 rounded-full relative">
-                    <div className="absolute inset-1 border-2 border-gray-400 rounded-full transform rotate-90">
-                      <div className="absolute top-0 left-1/2 w-0.5 h-1 bg-gray-400 transform -translate-x-1/2 -translate-y-0.5"></div>
-                    </div>
-                  </div>
+                <span className="text-gray-700 flex-1">@usuario123</span>
+                <button className="w-4 h-4 text-gray-400 hover:text-gray-600">
+                  <X size={16} />
                 </button>
               </div>
               
-              <div className="space-y-2">
-                {['contenido viral', 'música trending', 'crear contenido', 'efectos populares'].map((suggestion, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                    <div className={`w-2 h-2 rounded-full ${index < 2 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                    <span className="text-gray-700">{suggestion}</span>
-                    {index === 0 && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Búsqueda reciente</span>}
-                  </div>
-                ))}
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-5 h-5 text-gray-400">
+                  <Music size={16} />
+                </div>
+                <span className="text-gray-700 flex-1">música viral</span>
+                <button className="w-4 h-4 text-gray-400 hover:text-gray-600">
+                  <X size={16} />
+                </button>
+              </div>
+              
+              <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-5 h-5 text-gray-400">
+                  <Hash size={16} />
+                </div>
+                <span className="text-gray-700 flex-1">#trending</span>
+                <button className="w-4 h-4 text-gray-400 hover:text-gray-600">
+                  <X size={16} />
+                </button>
               </div>
             </div>
-            
-            <DiscoverySection
-              trendingContent={discoveryData.trending_posts || []}
-              suggestedUsers={discoveryData.suggested_users || []}
-              trendingHashtags={discoveryData.trending_hashtags || []}
-            />
           </div>
-        ) : isLoading ? (
+
+          {/* Stories Section - Redesigned to match reference */}
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 px-3 sm:px-0">Stories</h3>
+            
+            <div className="flex space-x-3 sm:space-x-4 overflow-x-auto scrollbar-hide pb-2 w-full pl-3 sm:pl-0">
+              {[
+                { 
+                  name: 'Pink', 
+                  avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=400&h=400&fit=crop&crop=face',
+                  background: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=300&h=400&fit=crop'
+                },
+                { 
+                  name: 'Jessie', 
+                  avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+                  background: 'https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=300&h=400&fit=crop'
+                },
+                { 
+                  name: 'Alex', 
+                  avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+                  background: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=400&fit=crop'
+                },
+                { 
+                  name: 'Maria', 
+                  avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
+                  background: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=400&fit=crop'
+                },
+                { 
+                  name: 'Carlos', 
+                  avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+                  background: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=300&h=400&fit=crop'
+                }
+              ].map((story, index) => (
+                <div key={index} className="flex-shrink-0 cursor-pointer group relative">
+                  {/* Story Card - Large format like reference */}
+                  <div 
+                    className="relative rounded-2xl overflow-hidden shadow-lg group-hover:scale-105 transition-all duration-300"
+                    style={{
+                      width: '120px',
+                      height: '160px',
+                      backgroundImage: `url(${story.background})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    
+                    {/* User avatar at bottom */}
+                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2">
+                      <div className="relative">
+                        <img 
+                          src={story.avatar}
+                          alt={story.name}
+                          className="w-10 h-10 rounded-full border-2 border-white shadow-lg"
+                        />
+                        {/* Plus icon for first story */}
+                        {index === 0 && (
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
+                            <span className="text-white text-xs font-bold">+</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* User name */}
+                    <div className="absolute bottom-0 left-0 right-0 text-center pb-1">
+                      <p className="text-white text-xs font-semibold drop-shadow-lg">{story.name}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* You may like Section - Mobile Optimized Carousel */}
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 px-3 sm:px-0">You may like</h3>
+            
+            <div className="flex space-x-3 sm:space-x-4 overflow-x-auto scrollbar-hide pb-2 w-full pl-3 sm:pl-0">
+              {[
+                { 
+                  title: 'Baile viral', 
+                  views: '27.8M', 
+                  image: 'bg-gradient-to-br from-pink-500 to-purple-600',
+                  emoji: '💃'
+                },
+                { 
+                  title: 'Recetas fáciles', 
+                  views: '15.2M', 
+                  image: 'bg-gradient-to-br from-green-500 to-teal-600',
+                  emoji: '👩‍🍳'
+                },
+                { 
+                  title: 'Música trending', 
+                  views: '45.1M', 
+                  image: 'bg-gradient-to-br from-purple-500 to-pink-600',
+                  emoji: '🎵'
+                },
+                { 
+                  title: 'Arte digital', 
+                  views: '8.9M', 
+                  image: 'bg-gradient-to-br from-orange-500 to-red-600',
+                  emoji: '🎨'
+                },
+                { 
+                  title: 'Gaming', 
+                  views: '19.3M', 
+                  image: 'bg-gradient-to-br from-blue-500 to-cyan-600',
+                  emoji: '🎮'
+                },
+                { 
+                  title: 'Viajes', 
+                  views: '12.7M', 
+                  image: 'bg-gradient-to-br from-yellow-500 to-orange-600',
+                  emoji: '✈️'
+                }
+              ].map((content, index) => (
+                <div key={index} className="flex-shrink-0 cursor-pointer group">
+                  <div 
+                    className={`${content.image} rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-all duration-300 relative overflow-hidden`}
+                    style={{
+                      width: 'calc((100vw - 84px) / 2.8)', // Mobile responsive width
+                      height: 'calc(((100vw - 84px) / 2.8) * 1.77)', // Maintain aspect ratio
+                      minWidth: '100px',
+                      maxWidth: '129px',
+                      minHeight: '177px',
+                      maxHeight: '230px'
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-black/10"></div>
+                    <span className="relative z-10 drop-shadow-lg text-2xl sm:text-4xl">{content.emoji}</span>
+                    <div className="absolute bottom-1 sm:bottom-2 left-1 sm:left-2 bg-black/60 text-white text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
+                      {content.views}
+                    </div>
+                    <div className="absolute top-1 sm:top-2 right-1 sm:right-2">
+                      <div className="w-4 sm:w-5 h-4 sm:h-5 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-900 mt-1 sm:mt-2 text-center leading-tight truncate" style={{maxWidth: 'calc((100vw - 84px) / 2.8)', minWidth: '100px', maxWidth: '129px'}}>{content.title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {isLoading ? (
           <div className="text-center py-20">
             <div className="inline-flex items-center justify-center w-12 h-12 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin mb-4"></div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">{SEARCH_CONFIG.UI.LOADING_MESSAGE}</h3>
@@ -450,15 +545,7 @@ const SearchPage = () => {
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               No encontramos nada para "{searchQuery}". Intenta con otros términos.
             </p>
-            
-            {/* Show discovery content */}
-            <div className="mt-12">
-              <DiscoverySection
-                trendingContent={discoveryData.trending_posts || []}
-                suggestedUsers={discoveryData.suggested_users || []}
-                trendingHashtags={discoveryData.trending_hashtags || []}
-              />
-            </div>
+
           </div>
         ) : null}
       </div>

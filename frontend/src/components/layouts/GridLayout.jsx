@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
+import videoMemoryManager from '../../services/videoMemoryManager';
 
-const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
+const GridLayout = ({ 
+  poll, 
+  onVote, 
+  gridType, 
+  isActive = true,
+  // 🚀 PERFORMANCE: New optimization props
+  optimizeVideo = false,
+  renderPriority = 'medium',
+  shouldPreload = true,
+  isVisible = true,
+  shouldUnload = false,
+  layout = null,
+  index = 0
+}) => {
   const navigate = useNavigate();
   const getGridClasses = () => {
     switch (gridType) {
@@ -37,6 +51,50 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
     (prev.votes > current.votes) ? prev : current
   ) || {}) : {};
 
+  // 🚀 PERFORMANCE: Video refs for memory management
+  const videoRefs = useRef(new Map());
+
+  // ✅ SIMPLIFIED: Memory manager registration (non-blocking)
+  useEffect(() => {
+    // Only register for performance tracking, don't interfere with playback
+    poll.options?.forEach((option, optionIndex) => {
+      if (option.media?.type === 'video') {
+        const videoElement = videoRefs.current.get(option.id);
+        if (videoElement) {
+          // Register in a non-blocking way
+          setTimeout(() => {
+            try {
+              videoMemoryManager.registerVideo(videoElement, {
+                postId: poll.id,
+                optionId: option.id,
+                priority: renderPriority || 'medium',
+                layout: gridType,
+                isActive,
+                isVisible
+              });
+            } catch (error) {
+              console.warn('Video memory manager registration failed:', error);
+            }
+          }, 100);
+        }
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      poll.options?.forEach((option) => {
+        if (option.media?.type === 'video') {
+          const videoKey = `${poll.id}_${option.id}`;
+          try {
+            videoMemoryManager.unregisterVideo(videoKey);
+          } catch (error) {
+            console.warn('Video memory manager cleanup failed:', error);
+          }
+        }
+      });
+    };
+  }, [poll.id, gridType, isActive]);
+
   return (
     <div className={cn("w-full h-full", getGridClasses())}>
       {poll.options.map((option, optionIndex) => {
@@ -54,23 +112,53 @@ const GridLayout = ({ poll, onVote, gridType, isActive = true }) => {
               touchAction: 'manipulation'
             }}
           >
-            {/* Background media */}
+            {/* 🚀 OPTIMIZED Background media with performance controls */}
             <div className="absolute inset-0 w-full h-full">
               {option.media?.url ? (
                 option.media?.type === 'video' ? (
                   <video 
+                    ref={(el) => {
+                      if (el) videoRefs.current.set(option.id, el);
+                    }}
                     src={option.media.url} 
                     className="w-full h-full object-cover object-center"
-                    autoPlay={true}
+                    // ✅ FIXED: Show videos when active (less restrictive)
+                    autoPlay={isActive}
                     muted
                     loop
                     playsInline
+                    // ✅ FIXED: Always preload metadata, simpler logic
+                    preload="metadata"
+                    // ✅ FIXED: Always show videos
+                    style={{
+                      display: 'block'
+                    }}
+                    // 🚀 VIDEO OPTIMIZATION: Lazy loading for non-active posts
+                    loading={isActive ? "eager" : "lazy"}
+                    onLoadStart={() => {
+                      if (optimizeVideo) {
+                        console.log(`🎬 Video loading started: ${optionIndex} (Priority: ${renderPriority}) - Layout: ${gridType}`);
+                      }
+                    }}
+                    onCanPlay={() => {
+                      if (optimizeVideo) {
+                        console.log(`▶️ Video ready to play: ${optionIndex} - Layout: ${gridType}`);
+                      }
+                    }}
+                    onError={(e) => {
+                      console.warn(`❌ Video load failed: ${option.media.url}`, e);
+                    }}
                   />
                 ) : (
                   <img 
                     src={option.media.url} 
                     alt={option.text}
                     className="w-full h-full object-cover object-center"
+                    // 🚀 IMAGE OPTIMIZATION: Lazy loading
+                    loading={isActive ? "eager" : "lazy"}
+                    style={{
+                      display: shouldUnload ? 'none' : 'block'
+                    }}
                   />
                 )
               ) : (
