@@ -143,7 +143,17 @@ const SearchPage = () => {
       );
       setSearchResults(response.results || []);
       
-
+      // Save search to recent searches (only for authenticated users)
+      if (isAuthenticated && query.trim().length > 0) {
+        try {
+          await searchService.saveRecentSearch(query.trim(), filter);
+          // Optionally refresh recent searches to show the new one
+          setTimeout(() => loadRecentSearches(), 500);
+        } catch (error) {
+          console.error('Error saving recent search:', error);
+          // Fail silently for recent searches
+        }
+      }
       
     } catch (error) {
       console.error('Error searching:', error);
