@@ -416,29 +416,29 @@ const SearchPage = () => {
                 }
               ].map((story, index) => (
                 <div key={index} className="flex-shrink-0 cursor-pointer group relative">
-                  {/* Story Card - Carousel format matching reference */}
+                  {/* Story Card - Small size carousel format */}
                   <div 
-                    className={`relative rounded-2xl overflow-hidden shadow-xl group-hover:scale-[1.02] transition-all duration-300 ${story.background} flex items-center justify-center`}
+                    className={`relative rounded-2xl overflow-hidden shadow-lg group-hover:scale-105 transition-all duration-300 ${story.background} flex items-center justify-center`}
                     style={{
-                      width: '140px',
-                      height: '200px'
+                      width: '120px',
+                      height: '160px'
                     }}
                   >
                     {/* Background pattern overlay */}
                     <div className="absolute inset-0 bg-black/10"></div>
                     
                     {/* Decorative content in center */}
-                    <div className="text-5xl opacity-80 drop-shadow-lg">
+                    <div className="text-4xl opacity-80 drop-shadow-lg">
                       {story.decoration}
                     </div>
                     
                     {/* Bottom gradient for avatar area */}
-                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                     
                     {/* User avatar container */}
-                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                      <div className="relative mb-1.5">
-                        <div className="w-11 h-11 rounded-full bg-white p-0.5">
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                      <div className="relative mb-1">
+                        <div className="w-9 h-9 rounded-full bg-white p-0.5">
                           <img 
                             src={story.avatar}
                             alt={story.name}
@@ -447,14 +447,14 @@ const SearchPage = () => {
                         </div>
                         {/* Red plus icon for first story (matching reference) */}
                         {index === 0 && (
-                          <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
+                          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
                             <span className="text-white text-xs font-bold leading-none">+</span>
                           </div>
                         )}
                       </div>
                       
                       {/* User name */}
-                      <p className="text-white text-sm font-semibold drop-shadow-lg text-center leading-tight">{story.name}</p>
+                      <p className="text-white text-xs font-semibold drop-shadow-lg text-center leading-tight">{story.name}</p>
                     </div>
                   </div>
                 </div>
