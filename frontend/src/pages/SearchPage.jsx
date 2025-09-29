@@ -41,7 +41,7 @@ const SearchPage = () => {
   const { isAuthenticated } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Initialize from URL params
+  // Initialize from URL params and load real data
   useEffect(() => {
     const query = searchParams.get('q') || '';
     const filter = searchParams.get('filter') || 'all';
@@ -52,7 +52,60 @@ const SearchPage = () => {
     if (query) {
       handleSearch(query, filter);
     }
+
+    // Load real data on component mount
+    loadRecentSearches();
+    loadStories();
+    loadRecommendedContent();
   }, []);
+
+  // Load real recent searches
+  const loadRecentSearches = async () => {
+    if (!isAuthenticated) return;
+    
+    setLoadingStates(prev => ({ ...prev, recentSearches: true }));
+    try {
+      const response = await searchService.getRecentSearches(10);
+      setRecentSearches(response.recent_searches || []);
+    } catch (error) {
+      console.error('Error loading recent searches:', error);
+      // Keep empty array if error
+    } finally {
+      setLoadingStates(prev => ({ ...prev, recentSearches: false }));
+    }
+  };
+
+  // Load real stories
+  const loadStories = async () => {
+    if (!isAuthenticated) return;
+    
+    setLoadingStates(prev => ({ ...prev, stories: true }));
+    try {
+      const response = await storyService.getStories(20);
+      setStories(response.stories || []);
+    } catch (error) {
+      console.error('Error loading stories:', error);
+      // Keep empty array if error
+    } finally {
+      setLoadingStates(prev => ({ ...prev, stories: false }));
+    }
+  };
+
+  // Load recommended content  
+  const loadRecommendedContent = async () => {
+    if (!isAuthenticated) return;
+    
+    setLoadingStates(prev => ({ ...prev, recommendations: true }));
+    try {
+      const response = await searchService.getRecommendedContent(12);
+      setRecommendedContent(response.recommendations || []);
+    } catch (error) {
+      console.error('Error loading recommended content:', error);
+      // Keep empty array if error
+    } finally {
+      setLoadingStates(prev => ({ ...prev, recommendations: false }));
+    }
+  };
 
   const tabs = [
     { id: SEARCH_CONFIG.FILTERS.ALL, label: 'Todo', icon: Sparkles, description: 'Buscar en todo' },
