@@ -25,6 +25,16 @@ const SearchPage = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
+  // New states for real data
+  const [recentSearches, setRecentSearches] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [recommendedContent, setRecommendedContent] = useState([]);
+  const [loadingStates, setLoadingStates] = useState({
+    recentSearches: false,
+    stories: false,
+    recommendations: false
+  });
+  
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
