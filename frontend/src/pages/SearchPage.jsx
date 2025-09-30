@@ -827,7 +827,7 @@ const SearchPage = () => {
       {/* TikTokScrollView for search results */}
       {showTikTokView && tikTokViewPosts.length > 0 && (
         <TikTokScrollView
-          posts={tikTokViewPosts}
+          polls={tikTokViewPosts}
           initialIndex={currentTikTokIndex}
           onClose={handleCloseTikTokView}
           showBackButton={true}
