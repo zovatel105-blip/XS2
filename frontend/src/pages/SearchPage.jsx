@@ -362,7 +362,7 @@ const SearchPage = () => {
     setCurrentTikTokIndex(0);
   };
 
-  const handleTikTokVote = async (pollId, optionIndex) => {
+  const handleTikTokVote = useCallback(async (pollId, optionIndex) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${pollId}/vote`, {
         method: 'POST',
