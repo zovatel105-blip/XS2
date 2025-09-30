@@ -283,6 +283,30 @@ const SearchPage = () => {
 
   const handleResultClick = (result) => {
     console.log('Result clicked:', result);
+    
+    // Handle different result types
+    if (result.type === 'post') {
+      // Open TikTokScrollView with search results
+      const postResults = searchResults.filter(r => r.type === 'post');
+      const clickedIndex = postResults.findIndex(p => p.id === result.id);
+      
+      setTikTokViewPosts(postResults);
+      setCurrentTikTokIndex(clickedIndex >= 0 ? clickedIndex : 0);
+      setShowTikTokView(true);
+    } else if (result.type === 'user') {
+      navigate(`/profile/${result.username}`);
+    } else if (result.type === 'hashtag') {
+      navigate(`/search?q=${encodeURIComponent(result.hashtag)}&filter=hashtags`);
+    } else if (result.type === 'sound') {
+      navigate(`/audio/${result.id}`);
+    }
+  };
+
+  // Handle TikTokScrollView close
+  const handleCloseTikTokView = () => {
+    setShowTikTokView(false);
+    setTikTokViewPosts([]);
+    setCurrentTikTokIndex(0);
   };
 
   // Handle recent search click
