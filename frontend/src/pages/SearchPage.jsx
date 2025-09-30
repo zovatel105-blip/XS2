@@ -388,7 +388,7 @@ const SearchPage = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   const handleTikTokLike = async (pollId) => {
     try {
