@@ -489,7 +489,7 @@ const SearchPage = () => {
     ));
   };
 
-  const handleDeletePoll = (pollId) => {
+  const handleTikTokDeletePoll = (pollId) => {
     // Remove poll from the list
     setTikTokViewPosts(prev => prev.filter(poll => poll.id !== pollId));
   };
