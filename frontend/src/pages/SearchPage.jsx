@@ -726,7 +726,7 @@ const SearchPage = () => {
               )}
             </div>
           )}
-        </div>
+          </div>
         )}
 
         {isLoading ? (
