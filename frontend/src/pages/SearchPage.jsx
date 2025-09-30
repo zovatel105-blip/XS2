@@ -281,61 +281,63 @@ const SearchPage = () => {
     setActiveTab(tabId);
   };
 
-  const handleResultClick = (result) => {
+  const handleResultClick = async (result) => {
     console.log('Result clicked:', result);
     
     // Handle different result types
     if (result.type === 'post') {
-      // Open TikTokScrollView with search results
-      const postResults = searchResults.filter(r => r.type === 'post');
-      const clickedIndex = postResults.findIndex(p => p.id === result.id);
-      
-      // Transform posts to poll format that TikTokScrollView expects
-      const transformedPosts = postResults.map(post => ({
-        id: post.id,
-        title: post.title || 'Poll',
-        content: post.content || '',
-        description: post.description || post.content || '',
-        author: {
-          id: post.author?.id || post.user_id,
-          username: post.author?.username || post.username || 'user',
-          displayName: post.author?.display_name || post.author?.displayName || post.display_name || 'Usuario',
-          avatar: post.author?.avatar || post.author?.avatar_url || post.avatar_url || '/default-avatar.png',
-          verified: post.author?.verified || false
-        },
-        options: post.options || [
-          {
-            id: 1,
-            text: post.title || 'Ver más',
-            votes: post.likes_count || 0,
-            media_type: post.video_url ? 'video' : 'image',
-            media_url: post.video_url || post.image_url || post.thumbnail_url || post.media_url
+      // Get the complete poll data from backend
+      try {
+        setIsLoading(true);
+        
+        // Get all post IDs from search results
+        const postIds = searchResults.filter(r => r.type === 'post').map(p => p.id);
+        const clickedIndex = postIds.findIndex(id => id === result.id);
+        
+        // Fetch complete poll data for all posts
+        const completePolls = [];
+        for (const postId of postIds) {
+          try {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${postId}`, {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (response.ok) {
+              const pollData = await response.json();
+              completePolls.push(pollData);
+            } else {
+              console.warn(`Failed to fetch poll ${postId}:`, response.status);
+            }
+          } catch (error) {
+            console.error(`Error fetching poll ${postId}:`, error);
           }
-        ],
-        totalVotes: post.total_votes || post.likes_count || 0,
-        hasVoted: false,
-        selectedOption: null,
-        isLiked: post.is_liked || false,
-        likesCount: post.likes_count || 0,
-        commentsCount: post.comments_count || 0,
-        sharesCount: post.shares_count || 0,
-        savedCount: post.saved_count || 0,
-        viewsCount: post.views_count || 0,
-        createdAt: post.created_at || new Date().toISOString(),
-        updatedAt: post.updated_at || new Date().toISOString(),
-        hashtags: post.hashtags || [],
-        music: post.music || null,
-        layout: post.layout || 'simple',
-        isActive: false,
-        thumbnail_url: post.thumbnail_url || post.image_url,
-        video_url: post.video_url,
-        image_url: post.image_url,
-        media_url: post.media_url
-      }));
-      
-      setTikTokViewPosts(transformedPosts);
-      setCurrentTikTokIndex(clickedIndex >= 0 ? clickedIndex : 0);
-      setShowTikTokView(true);
+        }
+        
+        if (completePolls.length > 0) {
+          setTikTokViewPosts(completePolls);
+          setCurrentTikTokIndex(clickedIndex >= 0 ? clickedIndex : 0);
+          setShowTikTokView(true);
+        } else {
+          toast({
+            title: "Error",
+            description: "No se pudieron cargar las publicaciones.",
+            variant: "destructive",
+          });
+        }
+        
+      } catch (error) {
+        console.error('Error loading complete poll data:', error);
+        toast({
+          title: "Error",
+          description: "Error al cargar la publicación.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     } else if (result.type === 'user') {
       navigate(`/profile/${result.username}`);
     } else if (result.type === 'hashtag') {
