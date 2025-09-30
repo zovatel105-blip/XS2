@@ -36,6 +36,11 @@ const SearchPage = () => {
     recommendations: false
   });
   
+  // TikTokScrollView states
+  const [showTikTokView, setShowTikTokView] = useState(false);
+  const [tikTokViewPosts, setTikTokViewPosts] = useState([]);
+  const [currentTikTokIndex, setCurrentTikTokIndex] = useState(0);
+  
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
