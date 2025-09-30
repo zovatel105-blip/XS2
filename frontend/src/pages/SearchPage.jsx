@@ -823,6 +823,17 @@ const SearchPage = () => {
           animation: spin-reverse 1s linear infinite;
         }
       `}</style>
+
+      {/* TikTokScrollView for search results */}
+      {showTikTokView && tikTokViewPosts.length > 0 && (
+        <TikTokScrollView
+          posts={tikTokViewPosts}
+          initialIndex={currentTikTokIndex}
+          onClose={handleCloseTikTokView}
+          showBackButton={true}
+          backButtonText="Volver a búsqueda"
+        />
+      )}
     </div>
   );
 };
