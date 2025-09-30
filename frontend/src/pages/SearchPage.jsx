@@ -307,14 +307,19 @@ const SearchPage = () => {
             
             if (response.ok) {
               const pollData = await response.json();
+              console.log('Fetched poll data:', pollData);
               completePolls.push(pollData);
             } else {
               console.warn(`Failed to fetch poll ${postId}:`, response.status);
+              const errorText = await response.text();
+              console.warn(`Error response:`, errorText);
             }
           } catch (error) {
             console.error(`Error fetching poll ${postId}:`, error);
           }
         }
+        
+        console.log('Complete polls fetched:', completePolls.length);
         
         if (completePolls.length > 0) {
           setTikTokViewPosts(completePolls);
