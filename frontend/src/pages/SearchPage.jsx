@@ -283,6 +283,7 @@ const SearchPage = () => {
 
   const handleResultClick = async (result) => {
     console.log('Result clicked:', result);
+    console.log('All search results:', searchResults);
     
     // Handle different result types
     if (result.type === 'post') {
