@@ -444,10 +444,10 @@ const SearchPage = () => {
     }
   }, [toast]);
 
-  const handleTikTokComment = (pollId) => {
+  const handleTikTokComment = useCallback((pollId) => {
     // For now, just log - comment modal would be handled by TikTokScrollView
     console.log('Opening comments for poll:', pollId);
-  };
+  }, []);
 
   const handleTikTokSave = async (pollId) => {
     try {
