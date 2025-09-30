@@ -355,14 +355,13 @@ const SearchPage = () => {
     }
   };
 
-  // Handle TikTokScrollView close
+  // TikTokScrollView functions - defined early to avoid hoisting issues
   const handleCloseTikTokView = () => {
     setShowTikTokView(false);
     setTikTokViewPosts([]);
     setCurrentTikTokIndex(0);
   };
 
-  // TikTokScrollView callbacks
   const handleTikTokVote = async (pollId, optionIndex) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${pollId}/vote`, {
