@@ -1032,17 +1032,14 @@ const SearchPage = () => {
           <TikTokScrollView
             polls={tikTokViewPosts}
             initialIndex={currentTikTokIndex}
-            onVote={handleVote}
-            onLike={handleLike}
-            onShare={handleShare}
-            onComment={handleComment}
-            onSave={handleSave}
-            onCreatePoll={handleCreatePoll}
-            onUpdatePoll={handleUpdatePoll}
-            onDeletePoll={handleDeletePoll}
-            currentUser={user}
-            savedPolls={[]}
-            setSavedPolls={() => {}}
+            onVote={handleTikTokVote}
+            onLike={handleTikTokLike}
+            onShare={handleTikTokShare}
+            onComment={handleTikTokComment}
+            onSave={handleTikTokSave}
+            onCreatePoll={handleTikTokCreatePoll}
+            onUpdatePoll={handleTikTokUpdatePoll}
+            onDeletePoll={handleTikTokDeletePoll}
           />
         </div>
       )}
