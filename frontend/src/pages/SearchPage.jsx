@@ -737,8 +737,8 @@ const SearchPage = () => {
           </div>
         ) : searchResults.length > 0 ? (
           /* Clean Search Results */
-          <div className="space-y-4">
-            <div className="flex items-center justify-between py-4">
+          <div className="space-y-4 px-4 py-6">
+            <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600">
                   {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} para "{searchQuery}"
