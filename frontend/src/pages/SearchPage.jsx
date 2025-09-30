@@ -727,6 +727,7 @@ const SearchPage = () => {
             </div>
           )}
         </div>
+        )}
 
         {isLoading ? (
           <div className="text-center py-20">
