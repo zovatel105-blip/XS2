@@ -417,7 +417,7 @@ const SearchPage = () => {
     }
   }, [toast]);
 
-  const handleTikTokShare = async (pollId) => {
+  const handleTikTokShare = useCallback(async (pollId) => {
     try {
       // Simple share functionality
       if (navigator.share) {
