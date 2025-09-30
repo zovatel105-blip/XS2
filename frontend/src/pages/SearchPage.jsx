@@ -442,7 +442,7 @@ const SearchPage = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
   const handleTikTokComment = (pollId) => {
     // For now, just log - comment modal would be handled by TikTokScrollView
