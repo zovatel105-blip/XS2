@@ -476,10 +476,10 @@ const SearchPage = () => {
     }
   }, [toast]);
 
-  const handleTikTokCreatePoll = () => {
+  const handleTikTokCreatePoll = useCallback(() => {
     // Navigate to create poll page
     navigate('/create');
-  };
+  }, [navigate]);
 
   const handleTikTokUpdatePoll = (pollId, updates) => {
     // Update poll in the list
