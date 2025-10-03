@@ -315,8 +315,8 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {results.map((result, index) => {
-        const key = `${result.type}-${result.id}-${index}`;
+      {results.map((result) => {
+        const key = `${result.type}-${result.id}`;
         
         switch (result.type) {
           case 'post':
