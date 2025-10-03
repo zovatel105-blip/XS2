@@ -1175,12 +1175,19 @@ const MessagesMainPage = () => {
                             src={message.sender.avatar_url} 
                             alt="Avatar" 
                             className="w-full h-full rounded-full object-cover"
+                            onError={(e) => {
+                              // Fallback to initials on image error
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
                           />
-                        ) : (
-                          <span className="text-sm font-semibold text-gray-600">
-                            {message.sender?.display_name?.charAt(0) || '👤'}
-                          </span>
-                        )}
+                        ) : null}
+                        <span 
+                          className="text-sm font-semibold text-gray-600 w-full h-full flex items-center justify-center"
+                          style={{ display: message.sender?.avatar_url ? 'none' : 'flex' }}
+                        >
+                          {message.sender?.display_name?.charAt(0) || message.sender?.username?.charAt(0) || '👤'}
+                        </span>
                       </div>
                     )}
                     
