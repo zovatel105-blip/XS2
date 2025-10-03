@@ -89,9 +89,15 @@ const SettingsPage = () => {
   }, [user]);
 
   const handleSettingsChange = async (field, value) => {
+    // Prevent multiple simultaneous updates to the same field
+    if (savingField === field) {
+      return;
+    }
+
     // Optimistic update - update UI immediately
     const previousValue = settings[field];
     setSettings(prev => ({ ...prev, [field]: value }));
+    setSavingField(field);
     
     try {
       // Use PUT for settings updates (backend endpoint)
@@ -108,7 +114,7 @@ const SettingsPage = () => {
       
       toast({
         title: "Configuración actualizada",
-        description: "Los cambios se han guardado exitosamente",
+        description: `${getFieldDisplayName(field)} se ha guardado exitosamente`,
         variant: "default"
       });
       
@@ -123,7 +129,26 @@ const SettingsPage = () => {
         description: error.message || "No se pudo actualizar la configuración. Intenta de nuevo.",
         variant: "destructive"
       });
+    } finally {
+      setSavingField(null);
     }
+  };
+
+  // Helper function to get display name for field
+  const getFieldDisplayName = (field) => {
+    const fieldNames = {
+      is_public: 'Privacidad de perfil',
+      allow_messages: 'Mensajes',
+      notifications_enabled: 'Notificaciones',
+      email_notifications: 'Notificaciones por email',
+      push_notifications: 'Notificaciones push',
+      dark_mode: 'Modo oscuro',
+      large_text: 'Texto grande',
+      video_quality: 'Calidad de video',
+      wifi_only: 'Solo WiFi',
+      battery_saver: 'Ahorro de batería'
+    };
+    return fieldNames[field] || field;
   };
 
   const handleLogout = () => {
