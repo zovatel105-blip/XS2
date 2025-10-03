@@ -424,6 +424,25 @@ const Immersive3DCard = ({
         transition={{ duration: 0.3 }}
         style={{ translateZ: "-10px" }}
       />
+      
+      {/* React-based particle system */}
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full pointer-events-none"
+          style={{
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+            zIndex: 1000,
+          }}
+          initial={{ scale: 0, y: 0, opacity: 1 }}
+          animate={{ scale: 1, y: -100, opacity: 0 }}
+          transition={{
+            duration: 1,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
+        />
+      ))}
     </motion.div>
   );
 };
