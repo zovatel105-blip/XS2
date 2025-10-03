@@ -15,10 +15,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'react-hooks',
-  ],
+  plugins: [],
   rules: {
     // Prevent duplicate variable declarations in the same scope
     'no-redeclare': 'error',
