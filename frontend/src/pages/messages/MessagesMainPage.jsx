@@ -30,6 +30,20 @@ const MessagesMainPage = () => {
     messages: { count: 0, loading: true }
   });
 
+  // Debug: Track message state changes
+  useEffect(() => {
+    console.log('📊 Message state updated:', {
+      messageCount: messages.length,
+      selectedConversation: selectedConversation?.id,
+      messages: messages.map(m => ({ 
+        id: m.id, 
+        content: m.content.substring(0, 30) + '...', 
+        sender: m.sender?.username,
+        status: m.status 
+      }))
+    });
+  }, [messages, selectedConversation]);
+
   // Función para hacer peticiones autenticadas
   const apiRequest = async (endpoint, options = {}) => {
     const token = localStorage.getItem('token');
