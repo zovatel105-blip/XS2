@@ -175,7 +175,7 @@ const SearchResultItem = ({ result, onItemClick }) => {
               {result.recent_posts.slice(0, 3).map((post, index) => (
                 post.image_url && (
                   <img
-                    key={index}
+                    key={post.id || `post-${index}`}
                     src={post.image_url}
                     alt="Recent post"
                     className="w-8 h-8 rounded object-cover"
