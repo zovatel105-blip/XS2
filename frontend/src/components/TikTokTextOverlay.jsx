@@ -3,7 +3,7 @@
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Type, Palette, AlignCenter, AlignLeft, AlignRight, Bold, Italic } from 'lucide-react';
+import { Type, Palette, AlignCenter, AlignLeft, AlignRight, Bold, Italic, X } from 'lucide-react';
 import { Button } from './ui/button';
 
 const TikTokTextOverlay = ({
