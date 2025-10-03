@@ -314,7 +314,7 @@ const SettingsPage = () => {
                   <Switch
                     checked={settings.email_notifications}
                     onCheckedChange={(value) => handleSettingsChange('email_notifications', value)}
-                    disabled={loading}
+                    disabled={savingField === 'email_notifications'}
                     className="data-[state=checked]:bg-blue-600"
                   />
                 }
