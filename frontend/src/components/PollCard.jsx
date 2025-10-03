@@ -484,6 +484,26 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
     return `${percentage}%`;
   };
 
+  // Extract hashtags from title
+  const extractHashtags = (text) => {
+    if (!text) return [];
+    const hashtagRegex = /#[\w\u00c0-\u024f\u1e00-\u1eff]+/gi;
+    return text.match(hashtagRegex) || [];
+  };
+
+  // Remove hashtags from title for clean display
+  const getCleanTitle = (text) => {
+    if (!text) return '';
+    return text.replace(/#[\w\u00c0-\u024f\u1e00-\u1eff]+/gi, '').trim();
+  };
+
+  const hashtags = extractHashtags(poll.title);
+  const cleanTitle = getCleanTitle(poll.title);
+
+  const toggleHashtags = () => {
+    setShowHashtags(!showHashtags);
+  };
+
   const getWinningOption = () => {
     if (!poll.options || poll.options.length === 0) {
       return null;
