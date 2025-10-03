@@ -126,6 +126,13 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
               </motion.div>
             </div>
 
+            {/* Video indicator - top right */}
+            {hasVideoContent(poll) && (
+              <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-full text-white text-xs font-medium pointer-events-none">
+                <Video className="w-3 h-3" />
+              </div>
+            )}
+
             {/* Vote count overlay - bottom left */}
             {voteCount > 0 && (
               <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-full text-white text-xs font-medium pointer-events-none">
