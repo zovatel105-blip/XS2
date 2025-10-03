@@ -827,9 +827,31 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
 
           {/* Poll Title */}
           <div className="px-4 pb-4">
-            <h2 className="text-xl font-bold text-gray-900 leading-tight">
-              {poll.title}
+            <h2 
+              className="text-xl font-bold text-gray-900 leading-tight cursor-pointer hover:text-blue-600 transition-colors"
+              onClick={toggleHashtags}
+            >
+              {cleanTitle || poll.title}
             </h2>
+            
+            {/* Hashtags that appear when title is clicked */}
+            {showHashtags && hashtags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {hashtags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="inline-block px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium rounded-full cursor-pointer transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Navigate to hashtag search
+                      navigate(`/search?q=${encodeURIComponent(tag)}&filter=hashtags`);
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Mentioned Users Banners - Positioned after title, before content */}
