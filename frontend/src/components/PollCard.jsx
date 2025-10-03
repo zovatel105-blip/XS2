@@ -311,6 +311,9 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
   const navigate = useNavigate();
   const { getSocialProof, socialProofData } = useAddiction();
   const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [socialProof, setSocialProof] = useState(null);
+  const [showHashtags, setShowHashtags] = useState(false);
   const { shareModal, sharePoll, closeShareModal } = useShare();
   
   // Convert layout ID to CSS grid classes for feed
