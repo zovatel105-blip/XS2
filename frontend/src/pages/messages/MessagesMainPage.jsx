@@ -601,7 +601,12 @@ const MessagesMainPage = () => {
           setMessages(prevMessages =>
             prevMessages.map(msg =>
               msg.id === tempMessageId
-                ? { ...response, status: 'sent', id: response.message_id }
+                ? { 
+                    ...msg, // Keep original temp message data (includes sender info)
+                    ...response, // Merge server response
+                    id: response.message_id, // Use server-provided ID
+                    status: 'sent' // Mark as sent
+                  }
                 : msg
             )
           );
