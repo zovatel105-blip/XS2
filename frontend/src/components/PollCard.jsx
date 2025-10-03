@@ -381,8 +381,8 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
     }
   };
   
-  // Get social proof for this poll
-  const socialProof = socialProofData[poll.id] || null;
+  // Get social proof for this poll from socialProofData
+  const currentSocialProof = socialProofData[poll.id] || socialProof;
 
   const handleVote = async (optionId) => {
     if (!poll.userVote) {
