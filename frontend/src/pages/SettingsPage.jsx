@@ -327,7 +327,7 @@ const SettingsPage = () => {
                   <Switch
                     checked={settings.push_notifications}
                     onCheckedChange={(value) => handleSettingsChange('push_notifications', value)}
-                    disabled={loading}
+                    disabled={savingField === 'push_notifications'}
                     className="data-[state=checked]:bg-blue-600"
                   />
                 }
