@@ -24,6 +24,7 @@ const Immersive3DCard = ({
   const [isHovered, setIsHovered] = useState(false);
   const [selectedOption, setSelectedOption] = useState(poll.userVote || null);
   const [showResults, setShowResults] = useState(poll.userVote !== null);
+  const [particles, setParticles] = useState([]);
   
   // Mouse tracking for 3D effect
   const mouseX = useMotionValue(0);
