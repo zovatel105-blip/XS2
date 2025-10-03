@@ -5,9 +5,8 @@ module.exports = {
     node: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
+    'react-app',
+    'react-app/jest',
   ],
   parserOptions: {
     ecmaFeatures: {
