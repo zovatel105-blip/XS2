@@ -468,6 +468,16 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
       roundedPercentages[maxIndex] = Math.max(0, roundedPercentages[maxIndex] + difference);
     }
     
+    // Validation: Ensure total is exactly 100% (for debugging)
+    const finalTotal = roundedPercentages.reduce((sum, p) => sum + p, 0);
+    if (process.env.NODE_ENV === 'development' && finalTotal !== 100 && poll.totalVotes > 0) {
+      console.warn(`Poll ${poll.id} percentages don't sum to 100%: ${finalTotal}%`, {
+        roundedPercentages,
+        rawPercentages,
+        totalVotes: poll.totalVotes
+      });
+    }
+    
     return roundedPercentages;
   };
 
