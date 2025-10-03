@@ -52,7 +52,7 @@ const VirtualizedContainer = ({ children, totalItems, itemHeight = window.innerH
       <div style={{ height: totalItems * itemHeight, position: 'relative' }}>
         {children.slice(visibleRange.start, visibleRange.end).map((child, index) =>
           React.cloneElement(child, {
-            key: `${visibleRange.start + index}`,
+            key: child.key || `virtualized-${visibleRange.start + index}`,
             style: {
               position: 'absolute',
               top: (visibleRange.start + index) * itemHeight,
