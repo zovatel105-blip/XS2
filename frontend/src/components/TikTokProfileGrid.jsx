@@ -6,6 +6,8 @@ import PostManagementMenu from './PostManagementMenu';
 import uploadService from '../services/uploadService';
 
 const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, currentUser, isOwnProfile = false }) => {
+  const [thumbnails, setThumbnails] = useState({});
+
   // Function to format vote count
   const formatViewCount = (votes) => {
     if (votes >= 1000000) {
@@ -25,6 +27,38 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
   const handleDummyVote = (optionId) => {
     // This is just for rendering purposes, actual voting happens in TikTokScrollView
     console.log('Profile grid vote click (no action):', optionId);
+  };
+
+  // Check if poll has video content
+  const hasVideoContent = (poll) => {
+    return poll.options?.some(option => 
+      option.media_url && (
+        option.media_url.includes('.mp4') || 
+        option.media_url.includes('.webm') ||
+        option.media_type === 'video'
+      )
+    );
+  };
+
+  // Get thumbnail for the poll
+  const getPostThumbnail = (poll) => {
+    // First, check if we have a dedicated thumbnail
+    if (poll.thumbnail_url) {
+      return poll.thumbnail_url;
+    }
+
+    // For video content, use generated thumbnail or first frame
+    if (hasVideoContent(poll)) {
+      const videoOption = poll.options?.find(opt => opt.media_type === 'video' || opt.media_url?.includes('.mp4'));
+      return videoOption?.thumbnail_url || null;
+    }
+
+    // For image content, use the first image
+    const imageOption = poll.options?.find(opt => 
+      opt.media_url && (opt.media_type === 'image' || opt.media_url.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+    );
+    
+    return imageOption?.media_url || null;
   };
 
   return (
