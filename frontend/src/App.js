@@ -66,8 +66,8 @@ function AppContent() {
   }, [navigate, window.location.pathname]);
 
   const handleCreatePoll = async (pollData) => {
-    const newPoll = createPoll(pollData);
-    console.log('Nueva votación creada:', newPoll);
+    // Poll creation now handled by backend services in ContentCreationPage
+    console.log('Poll creation triggered:', pollData);
     
     toast({
       title: "¡Votación creada!",
