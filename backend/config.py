@@ -47,12 +47,15 @@ class Config:
     # Upload subdirectories
     UPLOAD_SUBDIRS: List[str] = ["avatars", "poll_options", "poll_backgrounds", "general"]
     
-    # Frontend Configuration
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:3000")
-    CORS_ORIGINS: List[str] = os.getenv(
-        "CORS_ORIGINS", 
-        "http://localhost:3000"
-    ).split(",")
+    # Frontend Configuration - Detección automática
+    @property
+    def FRONTEND_URL(self) -> str:
+        return get_config_value("FRONTEND_URL", "http://localhost:3000")
+    
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        origins_str = get_config_value("CORS_ORIGINS", "http://localhost:3000")
+        return origins_str.split(",")
     
     # Session Configuration
     REFRESH_INTERVAL_MINUTES: int = int(os.getenv("REFRESH_INTERVAL_MINUTES", "60"))
