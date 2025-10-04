@@ -10,7 +10,7 @@ import { cn } from '../lib/utils';
 const TrendingPanel = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock trending data (in real app, this would come from API)
+  // Fallback trending data (should be replaced with API data)
   const trendingTopics = [
     {
       id: 1,
