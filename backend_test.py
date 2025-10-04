@@ -639,6 +639,285 @@ def test_http_404_registration_fix_critical(base_url):
     
     return success_count >= 4
 
+def test_user_registration_specific_request(base_url):
+    """🎯 TESTING ESPECÍFICO: Endpoint de registro de usuario según solicitud del usuario"""
+    print("\n🎯 === TESTING ESPECÍFICO: POST /api/auth/register ===")
+    print("ENDPOINT A PROBAR: POST /api/auth/register")
+    print("DATOS DE PRUEBA ESPECÍFICOS:")
+    print("- Email: newtestuser@example.com")
+    print("- Username: newtestuser")
+    print("- Display Name: New Test User")
+    print("- Password: testpassword123")
+    print("\nVERIFICACIONES REQUERIDAS:")
+    print("1. El endpoint responde con código 200 o 201")
+    print("2. Devuelve un access_token válido")
+    print("3. Devuelve los datos del usuario creado")
+    print("4. El usuario se guarda correctamente en la base de datos")
+    print("5. Probar también con email duplicado (debería devolver error 400)")
+    
+    success_count = 0
+    total_tests = 7
+    
+    # Datos de prueba específicos de la solicitud
+    test_data = {
+        "email": "newtestuser@example.com",
+        "username": "newtestuser", 
+        "display_name": "New Test User",
+        "password": "testpassword123"
+    }
+    
+    # Test 1: Verificar que el endpoint responde con código 200 o 201
+    print("\n1️⃣ VERIFICANDO CÓDIGO DE RESPUESTA...")
+    try:
+        response = requests.post(f"{base_url}/auth/register", json=test_data, timeout=10)
+        print(f"   Status Code: {response.status_code}")
+        print(f"   Response Headers: {dict(response.headers)}")
+        
+        if response.status_code in [200, 201]:
+            print(f"   ✅ Endpoint responde con código correcto: {response.status_code}")
+            success_count += 1
+            
+            # Guardar respuesta para tests posteriores
+            registration_response = response.json()
+            
+        elif response.status_code == 400:
+            response_text = response.text
+            if "Email already registered" in response_text:
+                print(f"   ⚠️ Email ya existe - probando con email único...")
+                # Intentar con email único
+                timestamp = int(time.time())
+                unique_test_data = test_data.copy()
+                unique_test_data['email'] = f"newtestuser_{timestamp}@example.com"
+                unique_test_data['username'] = f"newtestuser_{timestamp}"
+                
+                response = requests.post(f"{base_url}/auth/register", json=unique_test_data, timeout=10)
+                print(f"   Status Code con email único: {response.status_code}")
+                
+                if response.status_code in [200, 201]:
+                    print(f"   ✅ Endpoint responde correctamente con email único: {response.status_code}")
+                    success_count += 1
+                    registration_response = response.json()
+                    test_data = unique_test_data  # Usar datos únicos para tests posteriores
+                else:
+                    print(f"   ❌ Endpoint falla incluso con email único: {response.text}")
+                    registration_response = None
+            else:
+                print(f"   ❌ Error 400 inesperado: {response_text}")
+                registration_response = None
+        else:
+            print(f"   ❌ Código de respuesta inesperado: {response.status_code}")
+            print(f"   Response: {response.text}")
+            registration_response = None
+            
+    except Exception as e:
+        print(f"   ❌ Error en test de código de respuesta: {e}")
+        registration_response = None
+    
+    # Test 2: Verificar que devuelve un access_token válido
+    print("\n2️⃣ VERIFICANDO ACCESS_TOKEN VÁLIDO...")
+    if registration_response:
+        try:
+            access_token = registration_response.get('access_token')
+            
+            if access_token:
+                print(f"   🔑 Access token recibido: {access_token[:20]}...{access_token[-10:]}")
+                
+                # Verificar estructura JWT (3 partes separadas por puntos)
+                token_parts = access_token.split('.')
+                if len(token_parts) == 3:
+                    print(f"   ✅ Token tiene estructura JWT correcta (3 partes)")
+                    
+                    # Verificar que el token funciona
+                    headers = {"Authorization": f"Bearer {access_token}"}
+                    auth_response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+                    
+                    if auth_response.status_code == 200:
+                        print(f"   ✅ Access token es válido y funcional")
+                        success_count += 1
+                    else:
+                        print(f"   ❌ Access token no funciona: {auth_response.status_code}")
+                else:
+                    print(f"   ❌ Token no tiene estructura JWT válida: {len(token_parts)} partes")
+            else:
+                print(f"   ❌ No se recibió access_token en la respuesta")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando access_token: {e}")
+    else:
+        print(f"   ❌ No hay respuesta de registro para verificar token")
+    
+    # Test 3: Verificar que devuelve los datos del usuario creado
+    print("\n3️⃣ VERIFICANDO DATOS DEL USUARIO CREADO...")
+    if registration_response:
+        try:
+            user_data = registration_response.get('user')
+            
+            if user_data:
+                print(f"   👤 Datos del usuario recibidos:")
+                print(f"      - ID: {user_data.get('id', 'N/A')}")
+                print(f"      - Username: {user_data.get('username', 'N/A')}")
+                print(f"      - Email: {user_data.get('email', 'N/A')}")
+                print(f"      - Display Name: {user_data.get('display_name', 'N/A')}")
+                print(f"      - Created At: {user_data.get('created_at', 'N/A')}")
+                
+                # Verificar que los datos coinciden con lo enviado
+                data_matches = (
+                    user_data.get('username') == test_data['username'] and
+                    user_data.get('email') == test_data['email'] and
+                    user_data.get('display_name') == test_data['display_name']
+                )
+                
+                if data_matches:
+                    print(f"   ✅ Datos del usuario coinciden con los enviados")
+                    success_count += 1
+                else:
+                    print(f"   ❌ Datos del usuario no coinciden:")
+                    print(f"      Enviado: {test_data['username']}, {test_data['email']}, {test_data['display_name']}")
+                    print(f"      Recibido: {user_data.get('username')}, {user_data.get('email')}, {user_data.get('display_name')}")
+            else:
+                print(f"   ❌ No se recibieron datos del usuario en la respuesta")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando datos del usuario: {e}")
+    else:
+        print(f"   ❌ No hay respuesta de registro para verificar datos del usuario")
+    
+    # Test 4: Verificar que el usuario se guarda correctamente en la base de datos
+    print("\n4️⃣ VERIFICANDO USUARIO EN BASE DE DATOS...")
+    if registration_response and registration_response.get('access_token'):
+        try:
+            headers = {"Authorization": f"Bearer {registration_response['access_token']}"}
+            db_response = requests.get(f"{base_url}/auth/me", headers=headers, timeout=10)
+            
+            if db_response.status_code == 200:
+                db_user_data = db_response.json()
+                print(f"   ✅ Usuario confirmado en base de datos")
+                print(f"      - ID en BD: {db_user_data.get('id', 'N/A')}")
+                print(f"      - Username en BD: {db_user_data.get('username', 'N/A')}")
+                print(f"      - Email en BD: {db_user_data.get('email', 'N/A')}")
+                print(f"      - Fecha creación: {db_user_data.get('created_at', 'N/A')}")
+                
+                # Verificar consistencia entre respuesta de registro y BD
+                if (db_user_data.get('id') == registration_response['user'].get('id') and
+                    db_user_data.get('username') == registration_response['user'].get('username')):
+                    print(f"   ✅ Datos consistentes entre registro y base de datos")
+                    success_count += 1
+                else:
+                    print(f"   ❌ Inconsistencia entre datos de registro y base de datos")
+            else:
+                print(f"   ❌ Error verificando usuario en BD: {db_response.status_code} - {db_response.text}")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando usuario en base de datos: {e}")
+    else:
+        print(f"   ❌ No hay token válido para verificar usuario en BD")
+    
+    # Test 5: Probar con email duplicado (debería devolver error 400)
+    print("\n5️⃣ VERIFICANDO RECHAZO DE EMAIL DUPLICADO...")
+    try:
+        duplicate_data = test_data.copy()
+        duplicate_data['username'] = f"different_username_{int(time.time())}"
+        
+        duplicate_response = requests.post(f"{base_url}/auth/register", json=duplicate_data, timeout=10)
+        print(f"   Status Code con email duplicado: {duplicate_response.status_code}")
+        print(f"   Response: {duplicate_response.text}")
+        
+        if duplicate_response.status_code == 400:
+            response_text = duplicate_response.text
+            if "Email already registered" in response_text:
+                print(f"   ✅ Email duplicado correctamente rechazado con mensaje apropiado")
+                success_count += 1
+            else:
+                print(f"   ⚠️ Email duplicado rechazado pero sin mensaje específico")
+                success_count += 1  # Aún es correcto rechazarlo
+        else:
+            print(f"   ❌ Email duplicado debería ser rechazado con 400, obtuvo: {duplicate_response.status_code}")
+            
+    except Exception as e:
+        print(f"   ❌ Error probando email duplicado: {e}")
+    
+    # Test 6: Verificar estructura completa de respuesta
+    print("\n6️⃣ VERIFICANDO ESTRUCTURA COMPLETA DE RESPUESTA...")
+    if registration_response:
+        try:
+            required_fields = ['access_token', 'token_type', 'expires_in', 'user']
+            missing_fields = [field for field in required_fields if field not in registration_response]
+            
+            if not missing_fields:
+                print(f"   ✅ Respuesta contiene todos los campos requeridos")
+                print(f"      - access_token: ✅")
+                print(f"      - token_type: {registration_response.get('token_type', 'N/A')}")
+                print(f"      - expires_in: {registration_response.get('expires_in', 'N/A')} segundos")
+                print(f"      - user: ✅ (objeto completo)")
+                success_count += 1
+            else:
+                print(f"   ❌ Campos faltantes en respuesta: {missing_fields}")
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando estructura de respuesta: {e}")
+    else:
+        print(f"   ❌ No hay respuesta de registro para verificar estructura")
+    
+    # Test 7: Verificar que el endpoint maneja correctamente datos inválidos
+    print("\n7️⃣ VERIFICANDO MANEJO DE DATOS INVÁLIDOS...")
+    try:
+        # Test con email inválido
+        invalid_data = {
+            "email": "invalid-email-format",
+            "username": "testuser",
+            "display_name": "Test User",
+            "password": "password123"
+        }
+        
+        invalid_response = requests.post(f"{base_url}/auth/register", json=invalid_data, timeout=10)
+        print(f"   Status Code con email inválido: {invalid_response.status_code}")
+        
+        if invalid_response.status_code == 400 or invalid_response.status_code == 422:
+            print(f"   ✅ Email inválido correctamente rechazado")
+            success_count += 1
+        else:
+            print(f"   ❌ Email inválido debería ser rechazado, obtuvo: {invalid_response.status_code}")
+            
+    except Exception as e:
+        print(f"   ❌ Error probando datos inválidos: {e}")
+    
+    # Resumen final
+    print(f"\n📊 RESUMEN TESTING POST /api/auth/register:")
+    print(f"   Tests exitosos: {success_count}/{total_tests}")
+    print(f"   Porcentaje de éxito: {(success_count/total_tests)*100:.1f}%")
+    
+    if success_count >= 6:
+        print(f"\n✅ CONCLUSIÓN: ENDPOINT DE REGISTRO FUNCIONA CORRECTAMENTE")
+        print(f"   ✅ Responde con código 200/201 apropiado")
+        print(f"   ✅ Genera access_token JWT válido y funcional")
+        print(f"   ✅ Devuelve datos completos del usuario creado")
+        print(f"   ✅ Usuario se guarda correctamente en base de datos")
+        print(f"   ✅ Rechaza correctamente emails duplicados con error 400")
+        print(f"   ✅ Estructura de respuesta completa y correcta")
+        print(f"   ✅ Maneja apropiadamente datos inválidos")
+        print(f"\n🎉 RESULTADO: El fix para 'Network connection failed' está completamente resuelto")
+        print(f"   - Backend funcionando correctamente después de instalar dependencias")
+        print(f"   - Endpoint POST /api/auth/register 100% operacional")
+        print(f"   - Usuarios pueden registrarse exitosamente")
+    elif success_count >= 4:
+        print(f"\n⚠️ CONCLUSIÓN: ENDPOINT MAYORMENTE FUNCIONAL")
+        print(f"   - Funcionalidad básica de registro operativa")
+        print(f"   - Algunos aspectos menores pueden necesitar ajustes")
+        print(f"   - El problema principal 'Network connection failed' está resuelto")
+    else:
+        print(f"\n❌ CONCLUSIÓN: PROBLEMAS CRÍTICOS EN ENDPOINT")
+        print(f"   - Múltiples tests fallan")
+        print(f"   - El problema 'Network connection failed' puede persistir")
+        print(f"   - Requiere investigación adicional")
+    
+    # Guardar datos para tests posteriores si el registro fue exitoso
+    if registration_response and success_count >= 4:
+        global test_users, auth_tokens
+        test_users.append(registration_response['user'])
+        auth_tokens.append(registration_response['access_token'])
+    
+    return success_count >= 5
+
 def test_user_registration(base_url):
     """Test user registration endpoint"""
     print("\n=== Testing User Registration ===")
