@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import NeuralNavigation from './components/NeuralNavigation';
@@ -31,6 +31,9 @@ import { TikTokProvider, useTikTok } from './contexts/TikTokContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AddictionProvider } from './contexts/AddictionContext';
 import { FollowProvider } from './contexts/FollowContext';
+
+// ✅ Configuración automática de entorno
+import AppConfig from './config/config';
 
 function AppContent() {
   const { toast } = useToast();
