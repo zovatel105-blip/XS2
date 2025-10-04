@@ -15279,16 +15279,20 @@ def main():
     # Test results tracking
     test_results = {}
     
-    # Run the critical HTTP 404 registration fix test first
-    print("\n🎯 TESTING CRÍTICO: Verificación de solución HTTP 404 en registro")
-    test_results["http_404_registration_fix"] = test_http_404_registration_fix_critical(base_url)
-    
-    # Run basic health check
+    # Run basic health check first
     print("\n🏥 TESTING: Health Check")
     test_results["health_check"] = test_health_check(base_url)
     
-    # Run user registration tests
-    print("\n👥 TESTING: User Registration")
+    # Run the SPECIFIC user registration test as requested
+    print("\n🎯 TESTING ESPECÍFICO: Endpoint de registro de usuario según solicitud")
+    test_results["user_registration_specific"] = test_user_registration_specific_request(base_url)
+    
+    # Run the critical HTTP 404 registration fix test
+    print("\n🎯 TESTING CRÍTICO: Verificación de solución HTTP 404 en registro")
+    test_results["http_404_registration_fix"] = test_http_404_registration_fix_critical(base_url)
+    
+    # Run general user registration tests
+    print("\n👥 TESTING: User Registration (General)")
     test_results["user_registration"] = test_user_registration(base_url)
     
     # Run user login tests
