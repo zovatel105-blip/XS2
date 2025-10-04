@@ -139,11 +139,20 @@ class EnvironmentDetector:
             account = self.environment.get('account', 'default')
             subdomain = self.environment.get('subdomain', account)
             
+            # Usar variables de entorno existentes si están disponibles
+            mongo_url = (os.getenv('MONGO_URL') or 
+                        f'mongodb://mongo.{subdomain}.emergent.sh:27017' if subdomain != 'default' 
+                        else 'mongodb://localhost:27017')
+            
+            frontend_url = (os.getenv('FRONTEND_URL') or 
+                           f'https://{subdomain}.emergent.sh' if subdomain != 'default'
+                           else 'http://localhost:3000')
+            
             config.update({
-                'MONGO_URL': os.getenv('MONGO_URL', f'mongodb://mongo.{subdomain}.emergent.sh:27017'),
+                'MONGO_URL': mongo_url,
                 'DB_NAME': os.getenv('DB_NAME', f'{account}_social_media'),
-                'FRONTEND_URL': os.getenv('FRONTEND_URL', f'https://{subdomain}.emergent.sh'),
-                'CORS_ORIGINS': os.getenv('CORS_ORIGINS', f'https://{subdomain}.emergent.sh'),
+                'FRONTEND_URL': frontend_url,
+                'CORS_ORIGINS': os.getenv('CORS_ORIGINS', frontend_url),
                 'SECRET_KEY': os.getenv('SECRET_KEY') or self._generate_secret_key(account)
             })
             
