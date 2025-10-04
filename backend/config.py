@@ -1,20 +1,27 @@
 """
 Centralized configuration management for the social media application
+✅ Configuración automática de entorno para proyectos Emergent.sh
 """
 import os
 from pathlib import Path
 from typing import List
 from dotenv import load_dotenv
+from .env_detector import get_config_value, get_environment_detector
 
 # Load environment variables
 load_dotenv()
 
 class Config:
-    """Application configuration"""
+    """Application configuration with automatic environment detection"""
     
-    # Database Configuration
-    MONGO_URL: str = os.getenv("MONGO_URL", "mongodb://localhost:27017")
-    DB_NAME: str = os.getenv("DB_NAME", "social_media_app")
+    # Database Configuration - Detección automática
+    @property
+    def MONGO_URL(self) -> str:
+        return get_config_value("MONGO_URL", "mongodb://localhost:27017")
+    
+    @property 
+    def DB_NAME(self) -> str:
+        return get_config_value("DB_NAME", "social_media_app")
     
     # Security Configuration
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-secret-key-for-development-only")
