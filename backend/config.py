@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from typing import List
 from dotenv import load_dotenv
-from .env_detector import get_config_value, get_environment_detector
+from env_detector import get_config_value, get_environment_detector
 
 # Load environment variables
 load_dotenv()
