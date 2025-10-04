@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Script - Authentication & Messaging System
-Tests complete authentication and messaging system with addiction integration.
+Backend API Testing Script - Automatic Environment Configuration System
+Tests the new automatic environment detection and configuration system.
 """
 
 import requests
@@ -9,11 +9,26 @@ import json
 import sys
 import time
 import random
+import os
 from datetime import datetime, timedelta
 
-# Get backend URL - use external URL from frontend/.env
+# Get backend URL - use external URL from frontend/.env or auto-detection
 def get_backend_url():
-    # Read the actual backend URL from frontend/.env
+    # Try to get from environment detector first
+    try:
+        sys.path.append('/app/backend')
+        from env_detector import get_config_value
+        frontend_url = get_config_value("FRONTEND_URL", "http://localhost:3000")
+        # Convert frontend URL to backend URL
+        if "localhost:3000" in frontend_url:
+            return "http://localhost:8001/api"
+        else:
+            # For production environments, backend is typically on same domain with /api prefix
+            return f"{frontend_url.rstrip('/')}/api"
+    except Exception as e:
+        print(f"⚠️ Could not use environment detector: {e}")
+    
+    # Fallback: Read the actual backend URL from frontend/.env
     try:
         with open('/app/frontend/.env', 'r') as f:
             content = f.read()
@@ -23,7 +38,7 @@ def get_backend_url():
                     return f"{backend_url}/api"
     except:
         pass
-    # Fallback to localhost
+    # Final fallback to localhost
     return "http://localhost:8001/api"
 
 def get_mobile_headers():
