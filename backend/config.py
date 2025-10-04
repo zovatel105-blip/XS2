@@ -168,5 +168,13 @@ class Config:
         for subdir in cls.UPLOAD_SUBDIRS:
             (cls.UPLOAD_BASE_DIR / subdir).mkdir(exist_ok=True)
 
+    @classmethod
+    def initialize_environment(cls):
+        """Inicializa el sistema de detección automática de entorno"""
+        print("🚀 Inicializando configuración automática de entorno (Backend)...")
+        detector = get_environment_detector()
+        print("✅ Backend: Configuración de entorno inicializada")
+        return detector
+
 # Global config instance
 config = Config()
