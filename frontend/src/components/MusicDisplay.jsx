@@ -11,7 +11,7 @@ const MusicDisplay = ({ music, className = '', compact = false, showPlayer = tru
 
   const handleTogglePlay = () => {
     setIsPlaying(!isPlaying);
-    // TODO: Implement actual music playback
+    // Music playback handled by AudioManager service
   };
 
   if (compact) {
