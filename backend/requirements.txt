@@ -39,6 +39,7 @@ emergentintegrations
 
 # User agent parsing
 user-agents
+ua-parser>=0.18.0
 
 # Utilities
 tzdata>=2024.2
