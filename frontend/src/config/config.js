@@ -1,16 +1,42 @@
 /**
  * Centralized frontend configuration management
+ * ✅ Configuración automática de entorno para proyectos Emergent.sh
  */
+import { getEnvironment, initializeEnvironment } from './env.js';
 
 class AppConfig {
-  // API Configuration
+  // API Configuration - Detección automática de entorno
   static get BACKEND_URL() {
-    // Fix for container environment - ensure backend URL is always correct
-    const envUrl = process.env.REACT_APP_BACKEND_URL;
-    const defaultUrl = 'http://localhost:8001';
-    console.log('🔧 CONFIG: REACT_APP_BACKEND_URL =', envUrl);
-    console.log('🔧 CONFIG: Using backend URL =', envUrl || defaultUrl);
-    return envUrl || defaultUrl;
+    try {
+      const env = getEnvironment();
+      console.log('🚀 CONFIG: Entorno detectado automáticamente =', env.HOSTNAME);
+      console.log('🚀 CONFIG: Backend URL =', env.API_URL);
+      return env.API_URL;
+    } catch (error) {
+      // Fallback para casos donde no se ha inicializado
+      const fallbackUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      console.warn('⚠️ CONFIG: Usando fallback URL =', fallbackUrl);
+      return fallbackUrl;
+    }
+  }
+
+  // Método para inicializar configuración (llamar al inicio de la app)
+  static async initialize() {
+    try {
+      const env = await initializeEnvironment();
+      console.log('✅ CONFIG: Configuración de entorno inicializada exitosamente');
+      console.log('📊 CONFIG: Detalles del entorno:', {
+        hostname: env.HOSTNAME,
+        apiUrl: env.API_URL,
+        isLocal: env.IS_LOCAL,
+        isEmergent: env.IS_EMERGENT,
+        subdomain: env.SUBDOMAIN
+      });
+      return env;
+    } catch (error) {
+      console.error('❌ CONFIG: Error inicializando configuración de entorno:', error);
+      throw error;
+    }
   }
 
   // UI Timeouts and Intervals
