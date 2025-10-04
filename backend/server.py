@@ -75,10 +75,16 @@ logger = logging.getLogger(__name__)
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection using config
+# ✅ Inicializar configuración automática de entorno
+config.initialize_environment()
+
+# MongoDB connection using config with automatic detection
 mongo_url = config.MONGO_URL
 client = AsyncIOMotorClient(mongo_url)
 db = client[config.DB_NAME]
+
+print(f"🔗 MongoDB: Conectando a {mongo_url}")
+print(f"🗄️ Database: Usando '{config.DB_NAME}'")
 
 # Initialize Feed Optimizer
 try:
