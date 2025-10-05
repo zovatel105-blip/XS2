@@ -189,9 +189,9 @@ const ContentPublishPage = () => {
 
         {/* Content Preview - How it will look */}
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Vista previa de tu publicación:</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Vista previa:</h3>
           
-          <div className="bg-black rounded-2xl overflow-hidden shadow-lg" style={{ aspectRatio: '9/16', maxHeight: '400px' }}>
+          <div className="bg-black rounded-lg overflow-hidden shadow-md w-32 h-40 mx-auto">
             {contentData && contentData.options && contentData.options.length > 0 ? (
               <div className="relative w-full h-full">
                 {/* Main content based on layout */}
@@ -203,7 +203,7 @@ const ContentPublishPage = () => {
                         {option.media_type?.startsWith('image') ? (
                           <img 
                             src={option.media_url} 
-                            alt={`Option ${index + 1}`}
+                            alt="Preview"
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -214,16 +214,12 @@ const ContentPublishPage = () => {
                               muted
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                                <div className="w-0 h-0 border-l-[10px] border-l-white border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+                              <div className="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
+                                <div className="w-0 h-0 border-l-[4px] border-l-white border-t-[2px] border-t-transparent border-b-[2px] border-b-transparent ml-0.5"></div>
                               </div>
                             </div>
                           </div>
                         )}
-                        {/* Option text overlay */}
-                        <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-2">
-                          <p className="text-white text-sm font-medium">{option.text || `Opción ${index + 1}`}</p>
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -233,7 +229,7 @@ const ContentPublishPage = () => {
                     {contentData.options[0].media_type?.startsWith('image') ? (
                       <img 
                         src={contentData.options[0].media_url} 
-                        alt="Main content"
+                        alt="Preview"
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -244,32 +240,32 @@ const ContentPublishPage = () => {
                           muted
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                            <div className="w-0 h-0 border-l-[10px] border-l-white border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+                          <div className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-[6px] border-l-white border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent ml-0.5"></div>
                           </div>
                         </div>
                       </div>
                     )}
                     
-                    {/* Title overlay */}
+                    {/* Title overlay - smaller */}
                     {title && (
-                      <div className="absolute bottom-20 left-4 right-4">
-                        <p className="text-white text-lg font-semibold leading-tight drop-shadow-lg">{title}</p>
+                      <div className="absolute bottom-8 left-1 right-1">
+                        <p className="text-white text-xs font-medium leading-tight drop-shadow-lg truncate">{title}</p>
                       </div>
                     )}
                     
-                    {/* Hashtags overlay */}
+                    {/* Hashtags overlay - smaller */}
                     {hashtagsList.length > 0 && (
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="flex flex-wrap gap-1">
-                          {hashtagsList.slice(0, 3).map((hashtag, index) => (
-                            <span key={index} className="text-white text-sm opacity-90">
+                      <div className="absolute bottom-1 left-1 right-1">
+                        <div className="flex flex-wrap gap-0.5">
+                          {hashtagsList.slice(0, 2).map((hashtag, index) => (
+                            <span key={index} className="text-white text-xs opacity-80 truncate">
                               #{hashtag}
                             </span>
                           ))}
-                          {hashtagsList.length > 3 && (
-                            <span className="text-white text-sm opacity-90">
-                              +{hashtagsList.length - 3} más
+                          {hashtagsList.length > 2 && (
+                            <span className="text-white text-xs opacity-80">
+                              +{hashtagsList.length - 2}
                             </span>
                           )}
                         </div>
@@ -277,23 +273,18 @@ const ContentPublishPage = () => {
                     )}
                   </div>
                 )}
-                
-                {/* Cover label */}
-                <div className="absolute top-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded-md font-medium">
-                  Cover
-                </div>
               </div>
             ) : (
               <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                 <div className="text-center text-gray-400">
-                  <div className="text-4xl mb-2">📱</div>
-                  <p className="text-sm">Vista previa de contenido</p>
+                  <div className="text-2xl mb-1">📱</div>
+                  <p className="text-xs">Preview</p>
                 </div>
               </div>
             )}
           </div>
           
-          <p className="text-xs text-gray-500 text-center">Así se verá tu publicación en el feed</p>
+          <p className="text-xs text-gray-500 text-center">Así se verá en el feed</p>
         </div>
 
         {/* Title Input with Hashtags and Mentions */}
