@@ -384,7 +384,7 @@ const InlineCrop = ({
         onMouseDown={handleStart}
         onWheel={handleWheel}
         onDoubleClick={handleDoubleClick}
-        style={{ touchAction: 'pan-x pan-y', pointerEvents: 'auto' }}
+        style={{ touchAction: 'none', pointerEvents: 'auto' }}
       >
         <img
           src={imageSrc}
