@@ -162,7 +162,16 @@ const InlineCrop = ({
         
         setLastTouch({ x: touch.clientX, y: touch.clientY });
         setHasChanges(true);
-        console.log('✅ hasChanges set to true');
+        
+        // 🔥 NUEVO: Programar auto-guardado después de 1.5 segundos de inactividad
+        if (autoSaveTimeoutRef.current) {
+          clearTimeout(autoSaveTimeoutRef.current);
+        }
+        autoSaveTimeoutRef.current = setTimeout(() => {
+          autoSave();
+        }, 1500); // Auto-guardar después de 1.5 segundos sin movimiento
+        
+        console.log('✅ hasChanges set to true - auto-save programado en 1.5s');
         
       } else if (touches.length === 2) {
         // Pinch zoom
