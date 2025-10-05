@@ -510,7 +510,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
-  }, [getBackendUrl, setAuthData, clearAuthData, verifyToken]);
+  }, [getBackendUrl, setAuthData, clearAuthData, verifyToken, createDemoUserSession]);
 
   // Logout function
   const logout = useCallback(() => {
