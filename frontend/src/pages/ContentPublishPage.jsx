@@ -163,110 +163,74 @@ const ContentPublishPage = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 z-50 flex items-center justify-center">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-black/30 backdrop-blur-sm">
+      <div className="flex items-center justify-between p-4 border-b border-gray-100">
         <button
           onClick={handleBack}
-          className="w-10 h-10 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg hover:bg-black/70 transition-colors"
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
         >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        
-        <h1 className="text-white text-lg font-semibold">Publicar Contenido</h1>
-        
-        <button
-          onClick={handleClose}
-          className="w-10 h-10 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg hover:bg-black/70 transition-colors"
-        >
-          <X className="w-6 h-6" />
+          <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-md mx-auto px-4 py-20 space-y-6">
-        
-        {/* Content Preview */}
-        <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-          <h3 className="text-white text-sm font-medium mb-3">Vista previa del contenido</h3>
-          <div className="flex gap-2 overflow-x-auto">
-            {contentData.options.map((option, index) => (
-              <div key={index} className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-800">
-                {option.media_type?.startsWith('image') ? (
-                  <img 
-                    src={option.media_url} 
-                    alt={`Option ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <video 
-                    src={option.media_url}
-                    className="w-full h-full object-cover"
-                    muted
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          {contentData.music && (
-            <p className="text-white/70 text-xs mt-2">
-              🎵 {contentData.music.title} - {contentData.music.artist}
-            </p>
-          )}
-        </div>
+      <div className="max-w-lg mx-auto px-4 py-8 space-y-8">
 
         {/* Title Input */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium flex items-center gap-2">
-            <span>Título</span>
-            <span className="text-red-400">*</span>
-          </label>
+        <div className="space-y-3">
           <input
             type="text"
-            placeholder="Escribe el título de tu publicación..."
+            placeholder="Add a catchy title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-black/50 backdrop-blur-sm text-white px-4 py-3 rounded-xl border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300"
+            className="w-full text-xl font-medium text-gray-900 placeholder-gray-400 border-0 outline-none resize-none bg-transparent"
             maxLength={200}
           />
-          <p className="text-white/50 text-xs">{title.length}/200 caracteres</p>
+          <div className="h-px bg-gray-200"></div>
         </div>
 
-        {/* Hashtags Input */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium flex items-center gap-2">
-            <Hash className="w-4 h-4" />
-            <span>Hashtags</span>
-          </label>
-          <input
-            type="text"
-            placeholder="#hashtag1 #hashtag2 #hashtag3"
-            value={hashtags}
-            onChange={(e) => setHashtags(e.target.value)}
-            className="w-full bg-black/50 backdrop-blur-sm text-white px-4 py-3 rounded-xl border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300"
-          />
-          <p className="text-white/50 text-xs">Separa los hashtags con espacios o comas</p>
+        {/* Hashtags */}
+        <div className="flex items-center gap-4 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2 flex-1">
+            <Hash className="w-5 h-5 text-gray-600" />
+            <input
+              type="text"
+              placeholder="Hashtags"
+              value={hashtags}
+              onChange={(e) => setHashtags(e.target.value)}
+              className="flex-1 text-gray-900 placeholder-gray-600 border-0 outline-none bg-transparent"
+            />
+          </div>
         </div>
 
-        {/* Mentions in Title */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium flex items-center gap-2">
-            <AtSign className="w-4 h-4" />
-            <span>Mencionar en el título</span>
-          </label>
+        {/* Mentions */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-4 py-4 border-b border-gray-100">
+            <div className="flex items-center gap-2 flex-1">
+              <AtSign className="w-5 h-5 text-gray-600" />
+              <input
+                type="text"
+                placeholder="Mention"
+                value={mentionInputValue}
+                onChange={setMentionInputValue}
+                className="flex-1 text-gray-900 placeholder-gray-600 border-0 outline-none bg-transparent"
+              />
+            </div>
+          </div>
           
-          {/* Mentioned Users Display */}
+          {/* Display mentioned users */}
           {mentionedUsers.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="flex flex-wrap gap-2 px-9">
               {mentionedUsers.map((user) => (
                 <span
                   key={user.id}
-                  className="bg-blue-500/30 text-blue-200 px-3 py-1 rounded-full text-sm flex items-center gap-1"
+                  className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm flex items-center gap-1"
                 >
                   @{user.username}
                   <button
                     onClick={() => handleRemoveMention(user.id)}
-                    className="text-blue-200 hover:text-white"
+                    className="text-gray-500 hover:text-gray-700 ml-1"
                   >
                     ×
                   </button>
@@ -279,65 +243,56 @@ const ContentPublishPage = () => {
             value={mentionInputValue}
             onChange={setMentionInputValue}
             onMentionSelect={handleMentionSelect}
-            placeholder="Buscar usuarios para mencionar..."
-            className="w-full bg-black/50 backdrop-blur-sm text-white px-4 py-3 rounded-xl border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-300"
+            placeholder=""
+            className="hidden"
           />
         </div>
 
         {/* Comments Toggle */}
-        <div className="space-y-2">
-          <label className="text-white text-sm font-medium flex items-center gap-2">
-            {commentsEnabled ? (
-              <MessageCircle className="w-4 h-4" />
-            ) : (
-              <MessageCircleOff className="w-4 h-4" />
-            )}
-            <span>Configuración de comentarios</span>
-          </label>
-          
-          <div className="flex items-center justify-between bg-black/50 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-            <span className="text-white">
-              {commentsEnabled ? 'Comentarios activados' : 'Comentarios desactivados'}
-            </span>
-            <button
-              onClick={() => setCommentsEnabled(!commentsEnabled)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${
-                commentsEnabled ? 'bg-green-500' : 'bg-gray-600'
-              }`}
-            >
-              <div
-                className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-                  commentsEnabled ? 'translate-x-6' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
+        <div className="flex items-center justify-between py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-gray-600" />
+            <span className="text-gray-900">Allow comments</span>
           </div>
+          <button
+            onClick={() => setCommentsEnabled(!commentsEnabled)}
+            className={`relative w-12 h-7 rounded-full transition-colors ${
+              commentsEnabled ? 'bg-blue-500' : 'bg-gray-300'
+            }`}
+          >
+            <div
+              className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
+                commentsEnabled ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
         </div>
 
-        {/* Publish Button */}
-        <button
-          onClick={handleFinalPublish}
-          disabled={isPublishing || !title.trim()}
-          className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {isPublishing ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Publicando...
-            </>
-          ) : (
-            <>
-              <Send className="w-5 h-5" />
-              PUBLICAR
-            </>
-          )}
-        </button>
-
-        <p className="text-white/70 text-center text-sm">
-          Una vez publicado, tu contenido será visible para todos los usuarios
-        </p>
-
       </div>
+
+      {/* Bottom Action Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+        <div className="max-w-lg mx-auto flex items-center justify-between">
+          <button className="px-6 py-2 text-gray-600 bg-gray-100 rounded-full font-medium">
+            Drafts
+          </button>
+          <button
+            onClick={handleFinalPublish}
+            disabled={isPublishing || !title.trim()}
+            className="px-8 py-3 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white rounded-full font-semibold transition-colors disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isPublishing ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Publishing...
+              </>
+            ) : (
+              "Post"
+            )}
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 };
