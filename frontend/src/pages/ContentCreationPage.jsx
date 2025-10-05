@@ -1001,11 +1001,20 @@ const ContentCreationPage = () => {
     try {
       // Prepare poll data exactly like CreatePollModal
       const allMentionedUsers = [];
-      const processedOptions = validOptions.map((opt) => {
+      const processedOptions = validOptions.map((opt, index) => {
         // Collect mentioned users from this option
         if (opt.mentionedUsers) {
           allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
         }
+        
+        // 📱 MOBILE DEBUG: Log transform data for debugging
+        console.log(`🔍 [MOBILE CROP DEBUG] Option ${index}:`, {
+          hasMedia: !!opt.media,
+          hasTransform: !!opt.media?.transform,
+          transform: opt.media?.transform,
+          userAgent: navigator.userAgent,
+          isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        });
         
         return {
           text: opt.text.trim() || '', // Use provided text or empty string
