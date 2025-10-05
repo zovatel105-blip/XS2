@@ -14,7 +14,6 @@ import FollowersPage from './pages/messages/FollowersPage';
 import ActivityPage from './pages/messages/ActivityPage';
 import RequestsPage from './pages/messages/RequestsPage';
 import SettingsPage from './pages/SettingsPage';
-import ModernAuthPage from './pages/ModernAuthPage';
 import AudioDetailPage from './pages/AudioDetailPage';
 import SearchPage from './pages/SearchPage';
 import MomentsPage from './pages/MomentsPage';
