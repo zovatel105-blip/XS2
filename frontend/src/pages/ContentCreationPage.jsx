@@ -474,9 +474,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                           
                           {/* Large + button for adding carousel item */}
                           <div className="text-center z-10">
-                            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300">
-                              <Plus className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
-                            </div>
+                            <Plus className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                             
                             {/* Title removed for cleaner UI */}
                             {/* Description removed for cleaner UI */}
