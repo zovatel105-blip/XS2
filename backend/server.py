@@ -2218,6 +2218,274 @@ async def universal_search(
         logger.error(f"Error in universal search: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")
 
+# =============  OPTIMIZED SEARCH FUNCTIONS =============
+
+async def search_posts_optimized(query: str, current_user_id: str, limit: int):
+    """Optimized post search with minimal database operations"""
+    try:
+        # Use aggregation pipeline for better performance
+        pipeline = [
+            {
+                "$match": {
+                    "$or": [
+                        {"title": {"$regex": query, "$options": "i"}},
+                        {"content": {"$regex": query, "$options": "i"}}
+                    ]
+                }
+            },
+            {
+                "$limit": limit * 2  # Get more to ensure we have enough after processing
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "author_id", 
+                    "foreignField": "id",
+                    "as": "author_info"
+                }
+            },
+            {
+                "$addFields": {
+                    "author": {"$arrayElemAt": ["$author_info", 0]}
+                }
+            },
+            {
+                "$project": {
+                    "id": 1,
+                    "title": 1,
+                    "content": 1,
+                    "images": 1,
+                    "image_url": 1,
+                    "thumbnail_url": 1,
+                    "video_url": 1,
+                    "created_at": 1,
+                    "votes_count": {"$ifNull": ["$votes_count", 0]},
+                    "comments_count": {"$ifNull": ["$comments_count", 0]},
+                    "author.username": 1,
+                    "author.avatar_url": 1,
+                    "hashtags": 1
+                }
+            }
+        ]
+        
+        posts = await db.polls.aggregate(pipeline).to_list(limit * 2)
+        
+        results = []
+        for post in posts[:limit]:  # Limit results after processing
+            # Calculate simple relevance score
+            title_score = 2 if query in post.get("title", "").lower() else 0
+            content_score = 1 if query in post.get("content", "").lower() else 0
+            relevance_score = title_score + content_score
+            
+            # Get first image for thumbnail
+            image_url = None
+            if post.get("images") and len(post["images"]) > 0:
+                image_url = post["images"][0].get("url")
+            elif post.get("image_url"):
+                image_url = post["image_url"]
+            elif post.get("thumbnail_url"):
+                image_url = post["thumbnail_url"]
+                
+            results.append({
+                "type": "post",
+                "id": post["id"],
+                "title": post.get("title", ""),
+                "content": post.get("content", ""),
+                "image_url": image_url,
+                "thumbnail_url": image_url,
+                "video_url": post.get("video_url"),
+                "author": {
+                    "username": post.get("author", {}).get("username", ""),
+                    "avatar": post.get("author", {}).get("avatar_url", "")
+                },
+                "created_at": post.get("created_at", ""),
+                "votes_count": post.get("votes_count", 0),
+                "comments_count": post.get("comments_count", 0),
+                "hashtags": post.get("hashtags", []),
+                "relevance_score": relevance_score,
+                "popularity_score": post.get("votes_count", 0) + post.get("comments_count", 0)
+            })
+        
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error in optimized post search: {str(e)}")
+        return []
+
+async def search_users_optimized(query: str, current_user_id: str, limit: int):
+    """Optimized user search with minimal database operations"""
+    try:
+        # Use aggregation pipeline for better performance
+        pipeline = [
+            {
+                "$match": {
+                    "$and": [
+                        {"id": {"$ne": current_user_id}},
+                        {
+                            "$or": [
+                                {"username": {"$regex": query, "$options": "i"}},
+                                {"display_name": {"$regex": query, "$options": "i"}}
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "$limit": limit
+            },
+            {
+                "$lookup": {
+                    "from": "user_profiles",
+                    "localField": "id",
+                    "foreignField": "id", 
+                    "as": "profile_info"
+                }
+            },
+            {
+                "$addFields": {
+                    "profile": {"$arrayElemAt": ["$profile_info", 0]}
+                }
+            },
+            {
+                "$project": {
+                    "id": 1,
+                    "username": 1,
+                    "display_name": 1,
+                    "avatar_url": 1,
+                    "bio": 1,
+                    "followers_count": {"$ifNull": ["$profile.followers_count", 0]}
+                }
+            }
+        ]
+        
+        users = await db.users.aggregate(pipeline).to_list(limit)
+        
+        results = []
+        for user in users:
+            # Calculate simple relevance score
+            username_score = 2 if query in user.get("username", "").lower() else 0
+            display_name_score = 1.5 if query in user.get("display_name", "").lower() else 0
+            relevance_score = username_score + display_name_score
+            
+            results.append({
+                "type": "user",
+                "id": user["id"],
+                "username": user.get("username", ""),
+                "display_name": user.get("display_name", ""),
+                "bio": user.get("bio", ""),
+                "avatar": user.get("avatar_url", ""),
+                "followers_count": user.get("followers_count", 0),
+                "relevance_score": relevance_score,
+                "popularity_score": user.get("followers_count", 0)
+            })
+        
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error in optimized user search: {str(e)}")
+        return []
+
+async def search_hashtags_optimized(query: str, current_user_id: str, limit: int):
+    """Optimized hashtag search with minimal database operations"""
+    try:
+        # Search for hashtags in post content
+        hashtag_query = query if query.startswith("#") else f"#{query}"
+        
+        pipeline = [
+            {
+                "$match": {
+                    "content": {"$regex": hashtag_query, "$options": "i"}
+                }
+            },
+            {
+                "$group": {
+                    "_id": None,
+                    "posts": {"$push": "$$ROOT"},
+                    "count": {"$sum": 1}
+                }
+            }
+        ]
+        
+        result = await db.polls.aggregate(pipeline).to_list(1)
+        
+        if result and result[0]["count"] > 0:
+            hashtag_result = {
+                "type": "hashtag",
+                "id": f"hashtag_{query}",
+                "hashtag": hashtag_query,
+                "posts_count": result[0]["count"],
+                "relevance_score": 1.0,
+                "popularity_score": result[0]["count"]
+            }
+            return [hashtag_result]
+        
+        return []
+        
+    except Exception as e:
+        logger.error(f"Error in optimized hashtag search: {str(e)}")
+        return []
+
+async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
+    """Optimized sound search with minimal database operations"""
+    try:
+        # Search in user_audio collection
+        pipeline = [
+            {
+                "$match": {
+                    "$or": [
+                        {"title": {"$regex": query, "$options": "i"}},
+                        {"artist": {"$regex": query, "$options": "i"}}
+                    ]
+                }
+            },
+            {
+                "$limit": limit
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "user_id",
+                    "foreignField": "id",
+                    "as": "user_info"
+                }
+            },
+            {
+                "$addFields": {
+                    "author": {"$arrayElemAt": ["$user_info", 0]}
+                }
+            }
+        ]
+        
+        sounds = await db.user_audio.aggregate(pipeline).to_list(limit)
+        
+        results = []
+        for sound in sounds:
+            # Calculate relevance score
+            title_score = 2 if query in sound.get("title", "").lower() else 0
+            artist_score = 1.5 if query in sound.get("artist", "").lower() else 0
+            relevance_score = title_score + artist_score
+            
+            results.append({
+                "type": "sound",
+                "id": sound["id"],
+                "title": sound.get("title", ""),
+                "artist": sound.get("artist", ""),
+                "duration": sound.get("duration", 0),
+                "cover_image": sound.get("cover_image", ""),
+                "author": {
+                    "username": sound.get("author", {}).get("username", "")
+                },
+                "posts_using_count": 0,  # Could be calculated with another query if needed
+                "relevance_score": relevance_score,
+                "popularity_score": 0
+            })
+        
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error in optimized sound search: {str(e)}")
+        return []
+
 async def search_users_advanced(query: str, current_user_id: str, limit: int):
     """Advanced user search with fuzzy matching"""
     search_regex = {"$regex": query, "$options": "i"}
