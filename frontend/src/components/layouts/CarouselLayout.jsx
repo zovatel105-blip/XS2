@@ -20,6 +20,18 @@ const CarouselLayout = ({
 }) => {
   const navigate = useNavigate();
   
+  // Detect mobile device with window resize handling
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   // 🚀 PERFORMANCE: Use external slide control if provided, otherwise internal
   const [internalCurrentSlide, setInternalCurrentSlide] = useState(0);
   const currentSlide = externalCurrentSlide !== undefined ? externalCurrentSlide : internalCurrentSlide;
