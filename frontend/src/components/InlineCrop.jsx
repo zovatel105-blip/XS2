@@ -399,9 +399,13 @@ const InlineCrop = ({
           <p className="mb-1 font-medium">✋ Ajusta la imagen</p>
           <p className="text-xs opacity-80">
             • Arrastra para mover • Pellizca/rueda para zoom
-            {hasChanges && (
+            {hasChanges ? (
+              <span className="block mt-1 text-yellow-300 font-medium">
+                🔄 Guardando automáticamente...
+              </span>
+            ) : (
               <span className="block mt-1 text-green-300 font-medium">
-                • Doble click para guardar cambios
+                ✅ Cambios guardados
               </span>
             )}
           </p>
