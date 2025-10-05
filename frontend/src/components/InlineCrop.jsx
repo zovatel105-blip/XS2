@@ -189,7 +189,16 @@ const InlineCrop = ({
           
           setLastDistance(distance);
           setHasChanges(true);
-          console.log('✅ pinch hasChanges set to true');
+          
+          // 🔥 NUEVO: Programar auto-guardado para zoom
+          if (autoSaveTimeoutRef.current) {
+            clearTimeout(autoSaveTimeoutRef.current);
+          }
+          autoSaveTimeoutRef.current = setTimeout(() => {
+            autoSave();
+          }, 1500);
+          
+          console.log('✅ pinch hasChanges set to true - auto-save programado');
         }
       }
     } else if (isDragging) {
