@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://survey-results-1.preview.emergentagent.com',
-        'Referer': 'https://survey-results-1.preview.emergentagent.com/',
+        'Origin': 'https://mobile-first-6.preview.emergentagent.com',
+        'Referer': 'https://mobile-first-6.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
