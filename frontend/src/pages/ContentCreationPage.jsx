@@ -208,10 +208,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                   className="relative bg-black overflow-hidden group flex-shrink-0 h-full"
                   style={{ width: `${100 / slots.length}%` }} // Each slot takes equal width
                 >
-                  {/* Letter identifier */}
-                  <div className="absolute top-4 left-4 w-8 h-8 bg-gray-900/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
-                    {String.fromCharCode(65 + slotIndex)}
-                  </div>
+                  {/* Letter identifier removed for cleaner UI */}
                   
                   
                   {/* Horizontal carousel content */}
