@@ -160,8 +160,7 @@ const InlineCrop = ({
         setPosition(prev => {
           const newPos = {
             x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
-            // 📱 MOBILE FIX: Restrict vertical movement on mobile devices (only horizontal adjustment)
-            y: isMobile() ? prev.y : Math.max(10, Math.min(90, prev.y + deltaPercentY))
+            y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
           };
           console.log('🎯 New position calculated:', newPos, '(isMobile:', isMobile(), ')');
           return newPos;
