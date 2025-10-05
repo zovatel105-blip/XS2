@@ -60,11 +60,29 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     if (!canvas || !img) return;
 
     const ctx = canvas.getContext('2d');
-    canvas.width = CANVAS_SIZE;
-    canvas.height = CANVAS_SIZE;
+    
+    // Configurar alta resolución para evitar difuminación
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const canvasSize = CANVAS_SIZE;
+    const displaySize = canvasSize;
+    
+    // Configurar tamaño real del canvas para alta resolución
+    canvas.width = canvasSize * devicePixelRatio;
+    canvas.height = canvasSize * devicePixelRatio;
+    
+    // Configurar tamaño de display
+    canvas.style.width = displaySize + 'px';
+    canvas.style.height = displaySize + 'px';
+    
+    // Escalar el contexto para alta resolución
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    
+    // Configurar calidad de renderizado para imágenes nítidas
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Limpiar canvas completamente
-    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
 
     // Calcular dimensiones de la imagen escalada
     const scaledWidth = img.width * currentScale;
