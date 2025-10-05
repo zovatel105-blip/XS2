@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import DesktopSidebar from './DesktopSidebar';
 import RightSideNavigation from './RightSideNavigation';
+import ComingSoon from './ComingSoon';
 import { useTikTok } from '../contexts/TikTokContext';
 import { useAuth } from '../contexts/AuthContext';
 
