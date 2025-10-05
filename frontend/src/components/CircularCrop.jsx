@@ -285,7 +285,7 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
       onImageCropped(croppedImageUrl, blob);
       setLoading(false);
       onClose();
-    }, 'image/png', 1.0); // Calidad máxima 100% para evitar difuminación
+    }, 'image/jpeg', 0.98); // JPEG con 98% de calidad para mejor balance calidad/tamaño
   };
 
   const handleFileChange = (e) => {
