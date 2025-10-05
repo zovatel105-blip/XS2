@@ -89,6 +89,17 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
                       src={uploadService.getPublicUrl(thumbnail, { width: 300, height: 400, quality: 70 })}
                       alt={poll.title || 'Post thumbnail'}
                       className="w-full h-full object-cover"
+                      style={(() => {
+                        // Find the option with media to get transform
+                        const imageOption = poll.options?.find(opt => 
+                          opt.media_url && (opt.media_url.includes('.jpg') || opt.media_url.includes('.png') || opt.media_url.includes('.gif'))
+                        );
+                        return imageOption?.transform ? {
+                          objectPosition: `${imageOption.transform.position?.x || 50}% ${imageOption.transform.position?.y || 50}%`,
+                          transform: `scale(${imageOption.transform.scale || 1})`,
+                          transformOrigin: 'center center'
+                        } : {};
+                      })()}
                       onError={(e) => {
                         // Fallback to layout renderer if thumbnail fails
                         e.target.style.display = 'none';
