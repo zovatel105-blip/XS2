@@ -249,7 +249,7 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         />
       )}
       
-      {/* Percentage Display - FORCE SHOW on ALL options with debug */}
+      {/* Percentage Display - Only show when user has voted on mobile */}
       {shouldShowBars && (
         <motion.div 
           className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-bold z-10"
@@ -258,6 +258,18 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
           transition={{ delay: 0.5, duration: 0.3 }}
         >
           {Math.round(displayPercentage)}%
+        </motion.div>
+      )}
+      
+      {/* COMING SOON message for desktop images */}
+      {!isMobile && totalVotes > 0 && (
+        <motion.div 
+          className="absolute top-2 right-2 bg-gray-800/80 text-white px-3 py-1 rounded-full text-xs font-semibold z-10"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
+        >
+          COMING SOON
         </motion.div>
       )}
 
