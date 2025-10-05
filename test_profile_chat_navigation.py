@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 # Get backend URL - use external URL from frontend/.env
 def get_backend_url():
     # Use external URL as configured in frontend/.env
-    return "https://post-builder.preview.emergentagent.com/api"
+    return "https://mobile-publish-1.preview.emergentagent.com/api"
 
 def get_mobile_headers():
     """Get headers that simulate mobile device requests"""
@@ -25,8 +25,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://post-builder.preview.emergentagent.com',
-        'Referer': 'https://post-builder.preview.emergentagent.com/',
+        'Origin': 'https://mobile-publish-1.preview.emergentagent.com',
+        'Referer': 'https://mobile-publish-1.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'

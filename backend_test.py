@@ -50,8 +50,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://post-builder.preview.emergentagent.com',
-        'Referer': 'https://post-builder.preview.emergentagent.com/',
+        'Origin': 'https://mobile-publish-1.preview.emergentagent.com',
+        'Referer': 'https://mobile-publish-1.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
@@ -753,7 +753,7 @@ def test_http_404_registration_fix_critical(base_url):
             'User-Agent': 'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
-            'Origin': 'https://post-builder.preview.emergentagent.com'
+            'Origin': 'https://mobile-publish-1.preview.emergentagent.com'
         }
         response = requests.post(f"{base_url}/auth/register", json=test_data, headers=android_headers, timeout=10)
         print(f"   Status Code: {response.status_code}")
@@ -795,7 +795,7 @@ def test_http_404_registration_fix_critical(base_url):
         endpoints_to_test = [
             f"{base_url}/auth/register",
             f"{base_url.replace('/api', '')}/api/auth/register",
-            f"https://post-builder.preview.emergentagent.com/auth/register"
+            f"https://mobile-publish-1.preview.emergentagent.com/auth/register"
         ]
         
         for endpoint in endpoints_to_test:
