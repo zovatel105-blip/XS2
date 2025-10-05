@@ -150,8 +150,9 @@ const InlineCrop = ({
         console.log('👆 Single finger drag - deltaX:', deltaX, 'deltaY:', deltaY, 'lastTouch:', lastTouch);
         
         // Better sensitivity for drag - INVERTED for intuitive movement
-        const sensitivity = 0.3;
-        const deltaPercentX = -deltaX * sensitivity; // NEGATIVE for correct direction
+        // 📱 MOBILE FIX: Increased sensitivity for better mobile response
+        const sensitivity = isMobile() ? 0.5 : 0.3;
+        const deltaPercentX = -deltaX * sensitivity; // NEGATIVE for correct direction  
         const deltaPercentY = -deltaY * sensitivity; // NEGATIVE for correct direction
         
         console.log('📊 Calculated deltas - deltaPercentX:', deltaPercentX, 'deltaPercentY:', deltaPercentY);
