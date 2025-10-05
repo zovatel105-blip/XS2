@@ -13,8 +13,17 @@ import ShareModal from './ShareModal';
 import { useShare } from '../hooks/useShare';
 
 const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, userVote, fullScreen = false }) => {
-  // Detect mobile device
-  const isMobile = window.innerWidth <= 768;
+  // Detect mobile device with window resize handling
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // YouTube-style percentage bars: ONLY show when user has voted AND on mobile
   const shouldShowBars = isMobile && userVote !== null;
