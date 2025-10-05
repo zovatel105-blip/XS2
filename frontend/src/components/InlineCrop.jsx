@@ -163,7 +163,14 @@ const InlineCrop = ({
             x: Math.max(10, Math.min(90, prev.x + deltaPercentX)),
             y: Math.max(10, Math.min(90, prev.y + deltaPercentY))
           };
-          console.log('🎯 New position calculated:', newPos, '(isMobile:', isMobile(), ')');
+          console.log('📱 CROP DEBUG:', {
+            isMobile: isMobile(),
+            deltaX, deltaY,
+            deltaPercentX, deltaPercentY,
+            prevPosition: prev,
+            newPosition: newPos,
+            sensitivity
+          });
           return newPos;
         });
         
