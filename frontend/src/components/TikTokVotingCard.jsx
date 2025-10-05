@@ -299,6 +299,11 @@ const TikTokVotingCard = ({
                         src={option.media.url} 
                         alt={`Option ${optionNumber}`}
                         className="w-full h-full object-cover"
+                        style={option.media.transform ? {
+                          objectPosition: `${option.media.transform.position?.x || 50}% ${option.media.transform.position?.y || 50}%`,
+                          transform: `scale(${option.media.transform.scale || 1})`,
+                          transformOrigin: 'center center'
+                        } : {}}
                       />
                     ) : (
                       // Default background when no media (matching ContentCreationPage)
