@@ -2056,7 +2056,7 @@ const ProfilePage = () => {
                           className="w-full flex items-center justify-center gap-2 py-4 px-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-purple-400 hover:text-purple-600 transition-colors"
                         >
                           <Plus className="w-5 h-5" />
-                          Agregar red social
+                          Agregar enlace
                         </button>
 
                         {/* Enlaces Guardados - Como tarjetas coloridas similar a la referencia */}
