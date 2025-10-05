@@ -428,46 +428,8 @@ const ContentPublishPage = () => {
       </div>
 
       {/* Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-        {/* Hashtags and Mentions Row */}
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-          <button 
-            onClick={() => setShowHashtagModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium text-gray-700 transition-colors"
-          >
-            <Hash className="w-4 h-4" />
-            Hashtags
-            {hashtagsList.length > 0 && (
-              <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">
-                {hashtagsList.length}
-              </span>
-            )}
-          </button>
-          
-          <button 
-            onClick={() => setShowMentionModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium text-gray-700 transition-colors"
-          >
-            <AtSign className="w-4 h-4" />
-            Mention
-            {mentionedUsers.length > 0 && (
-              <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">
-                {mentionedUsers.length}
-              </span>
-            )}
-          </button>
-
-          <div className="flex-1"></div>
-
-          <button className="p-2 text-gray-500 hover:text-gray-700 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Main Action Buttons */}
-        <div className="max-w-lg mx-auto px-4 pb-4 flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+        <div className="max-w-lg mx-auto flex items-center justify-between">
           <button className="px-6 py-2 text-gray-600 bg-gray-100 rounded-full font-medium">
             Drafts
           </button>
