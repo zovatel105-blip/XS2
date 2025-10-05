@@ -203,41 +203,33 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
   const HashtagCard = ({ hashtag }) => (
     <div 
       onClick={() => handleItemClick(hashtag)}
-      className="relative bg-gradient-to-br from-green-500 to-blue-600 rounded-lg overflow-hidden cursor-pointer group aspect-[3/4] shadow-lg hover:shadow-xl transition-all duration-300"
+      className="relative bg-white rounded-xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
+      style={{ aspectRatio: '9/16' }} // Consistent rectangular vertical format
     >
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full p-4 text-center text-white">
-        {/* Hashtag icon */}
-        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-          <Hash size={28} />
+      {/* Background - clean gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
+      
+      {/* Content - centered and minimal */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full p-4 text-center">
+        {/* Hashtag icon - clean circle */}
+        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
+          <Hash size={20} className="text-blue-600" />
         </div>
         
-        {/* Hashtag */}
-        <h3 className="text-lg font-bold mb-2 line-clamp-1">
+        {/* Hashtag - clean typography */}
+        <h3 className="text-sm font-semibold mb-2 line-clamp-1 text-gray-900">
           {hashtag.hashtag}
         </h3>
         
-        {/* Post count */}
-        <p className="text-sm opacity-90 mb-4">
+        {/* Post count - subtle */}
+        <p className="text-xs text-gray-500 mb-4">
           {hashtag.posts_count || 0} publicaciones
         </p>
         
-        {/* Recent posts preview */}
-        {hashtag.recent_posts && hashtag.recent_posts.length > 0 && (
-          <div className="flex space-x-1 justify-center">
-            {hashtag.recent_posts.slice(0, 3).map((post, index) => (
-              post.image_url && (
-                <div key={index} className="w-8 h-8 rounded bg-white/20 overflow-hidden">
-                  <img
-                    src={post.image_url}
-                    alt="Recent post"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )
-            ))}
-          </div>
-        )}
+        {/* Trending indicator */}
+        <div className="px-3 py-1 bg-blue-100 rounded-full">
+          <span className="text-xs font-medium text-blue-700">Trending</span>
+        </div>
       </div>
     </div>
   );
