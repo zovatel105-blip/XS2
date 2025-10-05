@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Badge } from '../components/ui/badge';
 import PollCard from '../components/PollCard';
 import EditProfileModal from '../components/EditProfileModal';
-import CircularCrop from '../components/CircularCrop';
 import CommentsModal from '../components/CommentsModal';
 import ShareModal from '../components/ShareModal';
 import StatisticsModal from '../components/StatisticsModal';
