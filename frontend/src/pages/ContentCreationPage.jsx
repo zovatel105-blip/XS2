@@ -486,12 +486,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                                 : '🎠 Añadir al carrusel'
                               }
                             </h3>
-                            <p className="text-gray-300 text-sm sm:text-base">
-                              {slotIndex < options.filter(opt => opt && opt.media).length 
-                                ? 'Toca para subir imagen o video'
-                                : 'Añade más contenido al carrusel'
-                              }
-                            </p>
+                            {/* Description removed for cleaner UI */}
                           </div>
 
                           {/* Carousel indicator removed */}
