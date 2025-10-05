@@ -1994,10 +1994,7 @@ const ProfilePage = () => {
                         <UserCircle className="w-8 h-8 text-gray-400" strokeWidth={1.5} />
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-lg font-semibold text-gray-900">Sin menciones aún</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed max-w-sm mx-auto">
-                          Aquí aparecerán las menciones
-                        </p>
+                        <h3 className="text-lg font-semibold text-gray-900">Sin menciones</h3>
                       </div>
                     </div>
                   ) : (
