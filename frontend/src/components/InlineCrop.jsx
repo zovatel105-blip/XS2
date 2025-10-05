@@ -39,6 +39,12 @@ const InlineCrop = ({
 
   const containerRef = useRef(null);
   const autoSaveTimeoutRef = useRef(null);
+  
+  // 📱 Mobile detection for restricting vertical movement
+  const isMobile = useCallback(() => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+           window.innerWidth < 768; // Also consider small screens as mobile
+  }, []);
 
   // Get distance between touches for pinch gesture
   const getDistance = (touches) => {
