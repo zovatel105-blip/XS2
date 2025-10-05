@@ -47,11 +47,8 @@ const InlineCrop = ({
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // Handle double click/tap to save
-  const handleDoubleClick = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  // Auto-save function for saving changes automatically
+  const autoSave = useCallback(() => {
     if (!isActive || !hasChanges) return;
     
     const transformData = {
@@ -62,9 +59,26 @@ const InlineCrop = ({
       originalImageSrc: imageSrc
     };
     
+    console.log('💾 Auto-guardando cambios de crop...', transformData.transform);
     onSave(transformData);
     setHasChanges(false);
   }, [isActive, hasChanges, position, scale, imageSrc, onSave]);
+
+  // Handle double click/tap to save (mantener como opción inmediata)
+  const handleDoubleClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isActive || !hasChanges) return;
+    
+    // Cancelar auto-save pendiente y guardar inmediatamente
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+      autoSaveTimeoutRef.current = null;
+    }
+    
+    autoSave();
+  }, [isActive, hasChanges, autoSave]);
 
   // Alternative save method - keyboard shortcut
   const handleKeyDown = useCallback((e) => {
