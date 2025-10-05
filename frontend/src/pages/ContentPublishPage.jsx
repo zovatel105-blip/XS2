@@ -38,8 +38,21 @@ const ContentPublishPage = () => {
   useEffect(() => {
     const data = location.state?.contentData;
     if (!data) {
-      // No content data, redirect back to creation
-      navigate('/content-creation');
+      // Temporary mock data for testing
+      const mockContentData = {
+        options: [{
+          id: 'option1',
+          text: 'Opción 1',
+          media_type: 'image/jpeg',
+          media_url: 'https://images.unsplash.com/photo-1555212697-194d092e3b8f?w=300&h=400&fit=crop',
+          description: 'Test description'
+        }],
+        layout: 'vertical',
+        mentioned_users: [],
+        music_id: null,
+        music: null
+      };
+      setContentData(mockContentData);
       return;
     }
     setContentData(data);
