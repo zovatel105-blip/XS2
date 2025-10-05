@@ -240,8 +240,8 @@ const CarouselLayout = ({
                 </div>
               )}
 
-              {/* Selection indicator - Only show when active and user has voted */}
-              {isActive && isSelected && poll.userVote && (
+              {/* Selection indicator - Only show when active and user has voted on mobile */}
+              {isActive && isMobile && isSelected && poll.userVote && (
                 <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>
               )}
 
