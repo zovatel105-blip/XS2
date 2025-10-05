@@ -14,12 +14,17 @@ const ContentPublishPage = () => {
 
   // States
   const [title, setTitle] = useState('');
-  const [hashtags, setHashtags] = useState('');
+  const [hashtagsList, setHashtagsList] = useState([]);
   const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionInputValue, setMentionInputValue] = useState('');
   const [commentsEnabled, setCommentsEnabled] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
   const [contentData, setContentData] = useState(null);
+  
+  // Modal states
+  const [showHashtagModal, setShowHashtagModal] = useState(false);
+  const [showMentionModal, setShowMentionModal] = useState(false);
+  const [hashtagInput, setHashtagInput] = useState('');
+  const [mentionInput, setMentionInput] = useState('');
 
   // Redirect if not authenticated
   useEffect(() => {
