@@ -35,8 +35,8 @@ def get_mobile_headers():
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Content-Type': 'application/json',
-        'Origin': 'https://profile-crop-modal.preview.emergentagent.com',
-        'Referer': 'https://profile-crop-modal.preview.emergentagent.com/',
+        'Origin': 'https://camera-profile-edit.preview.emergentagent.com',
+        'Referer': 'https://camera-profile-edit.preview.emergentagent.com/',
         'Sec-Fetch-Dest': 'empty',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin'
