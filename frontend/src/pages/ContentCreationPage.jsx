@@ -480,12 +480,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                               <Plus className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                             </div>
                             
-                            <h3 className="text-white text-2xl sm:text-3xl font-bold mb-2">
-                              {slotIndex < options.filter(opt => opt && opt.media).length 
-                                ? `Opción ${String.fromCharCode(65 + slotIndex)}`
-                                : '🎠 Añadir al carrusel'
-                              }
-                            </h3>
+                            {/* Title removed for cleaner UI */}
                             {/* Description removed for cleaner UI */}
                           </div>
 
