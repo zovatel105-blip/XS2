@@ -113,10 +113,7 @@ function AppContent() {
   const location = window.location.pathname;
   const isDemoPage = location.startsWith('/test-crop');
 
-  // Show auth page if not authenticated and not on demo page
-  if (!isAuthenticated && !isDemoPage) {
-    return <ModernAuthPage />;
-  }
+  // Auth page removed - app now functions with automatic demo user authentication
 
   return (
     <ResponsiveLayout onCreatePoll={handleCreatePoll}>
