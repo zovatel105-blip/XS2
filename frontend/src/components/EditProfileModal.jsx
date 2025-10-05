@@ -14,6 +14,8 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
   const { user, updateUser, apiRequest } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [tempImageForCrop, setTempImageForCrop] = useState(null);
   const [formData, setFormData] = useState({
     display_name: '',
     bio: '',
