@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Hash, AtSign, MessageCircle, MessageCircleOff, Send, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Hash, AtSign, MessageCircle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
-import { useTikTok } from '../contexts/TikTokContext';
 import UserMentionInput from '../components/UserMentionInput';
 import pollService from '../services/pollService';
 
@@ -12,7 +11,6 @@ const ContentPublishPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { isAuthenticated, user } = useAuth();
-  const { enterTikTokMode, exitTikTokMode, hideRightNavigationBar, showRightNavigationBar } = useTikTok();
 
   // States
   const [title, setTitle] = useState('');
@@ -42,30 +40,8 @@ const ContentPublishPage = () => {
     setContentData(data);
   }, [location.state, navigate]);
 
-  // Enter TikTok mode when on publish page
-  useEffect(() => {
-    enterTikTokMode();
-    hideRightNavigationBar();
-    
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.documentElement.style.margin = '0';
-    document.documentElement.style.padding = '0';
-    document.body.style.overflow = 'hidden';
-    
-    return () => {
-      exitTikTokMode();
-      showRightNavigationBar();
-      document.body.style.overflow = 'auto';
-    };
-  }, [enterTikTokMode, exitTikTokMode, hideRightNavigationBar, showRightNavigationBar]);
-
   const handleBack = () => {
     navigate('/content-creation');
-  };
-
-  const handleClose = () => {
-    navigate(location.state?.returnTo || '/feed');
   };
 
   const handleMentionSelect = (user) => {
