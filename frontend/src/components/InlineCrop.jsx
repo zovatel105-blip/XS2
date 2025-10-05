@@ -226,7 +226,16 @@ const InlineCrop = ({
       
       setLastTouch({ x: e.clientX, y: e.clientY });
       setHasChanges(true);
-      console.log('✅ Mouse hasChanges set to true');
+      
+      // 🔥 NUEVO: Programar auto-guardado para mouse drag
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      autoSaveTimeoutRef.current = setTimeout(() => {
+        autoSave();
+      }, 1500);
+      
+      console.log('✅ Mouse hasChanges set to true - auto-save programado');
     }
   }, [isActive, isInteracting, isDragging, lastTouch, lastDistance]);
 
