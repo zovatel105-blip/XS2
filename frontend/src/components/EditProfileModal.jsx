@@ -230,11 +230,10 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
                 />
               </div>
               
-              {/* Texto inspiracional más grande */}
+              {/* Texto minimalista */}
               <div className="text-center">
-                <h2 className="text-xl font-medium text-gray-900 mb-2">Tu historia visual</h2>
-                <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
-                  Toca tu foto de perfil para cambiarla. Es tu primera oportunidad de causar una impresión memorable
+                <p className="text-sm text-gray-500">
+                  Toca para cambiar foto
                 </p>
               </div>
             </div>
