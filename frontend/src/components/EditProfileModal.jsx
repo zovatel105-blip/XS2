@@ -203,7 +203,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
                 {/* Botón circular flotante más grande */}
                 <button
                   type="button"
-                  onClick={() => document.getElementById('avatar-upload-input')?.click()}
+                  onClick={handleCameraClick}
                   className="absolute -bottom-3 -right-3 w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
                 >
                   <Camera className="w-6 h-6 text-white" />
