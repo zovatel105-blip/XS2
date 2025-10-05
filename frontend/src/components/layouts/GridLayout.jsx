@@ -19,6 +19,18 @@ const GridLayout = ({
   index = 0
 }) => {
   const navigate = useNavigate();
+  
+  // Detect mobile device with window resize handling
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const getGridClasses = () => {
     switch (gridType) {
       case 'vertical': // 2 columnas lado a lado
