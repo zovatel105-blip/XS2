@@ -30,17 +30,16 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     img.crossOrigin = 'anonymous';
     img.onload = () => {
       setImage(img);
-      // Calcular escala inicial para que la imagen llene el círculo
+      // Calcular escala inicial para que la imagen llene el círculo completo
       const imageAspect = img.width / img.height;
-      const cropAspect = 1; // círculo es 1:1
       let initialScale;
       
-      if (imageAspect > cropAspect) {
-        // Imagen más ancha que el círculo
-        initialScale = CROP_SIZE / img.height;
+      if (imageAspect > 1) {
+        // Imagen más ancha que alta - escalar por altura
+        initialScale = CANVAS_SIZE / img.height;
       } else {
-        // Imagen más alta que el círculo
-        initialScale = CROP_SIZE / img.width;
+        // Imagen más alta que ancha - escalar por ancho
+        initialScale = CANVAS_SIZE / img.width;
       }
       
       setScale(Math.max(initialScale, MIN_SCALE));
