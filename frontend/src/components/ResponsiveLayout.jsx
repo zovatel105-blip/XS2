@@ -11,6 +11,25 @@ const ResponsiveLayout = ({ children, onCreatePoll }) => {
   const { isTikTokMode, hideRightNavigation } = useTikTok();
   const { isAuthenticated } = useAuth();
   
+  // Desktop detection state
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  
+  // Listen for window resize to update desktop detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // If desktop, show Coming Soon message
+  if (isDesktop) {
+    return <ComingSoon />;
+  }
+  
+  // Mobile functionality continues below (existing logic)
   // Check if we're on a page that should use the TikTok-style layout
   const isFeedPage = location.pathname === '/feed';
   const isExplorePage = location.pathname === '/explore';
