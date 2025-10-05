@@ -47,7 +47,7 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
       >
-        {/* Background Progress Bar - FORCE SHOW on ALL options with debug */}
+        {/* Background Progress Bar - Only show when user has voted on mobile */}
         {shouldShowBars && (
           <motion.div 
             className={cn(
