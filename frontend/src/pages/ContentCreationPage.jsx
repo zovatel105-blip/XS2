@@ -479,7 +479,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       ) : (
                         /* Grid layout style */
                         <>
-                          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800"></div>
                           
                           <div className="text-center z-10 px-4">
                             <Plus className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
