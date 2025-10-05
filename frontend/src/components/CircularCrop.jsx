@@ -109,13 +109,12 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
   const handleReset = () => {
     if (image) {
       const imageAspect = image.width / image.height;
-      const cropAspect = 1;
       let initialScale;
       
-      if (imageAspect > cropAspect) {
-        initialScale = CROP_SIZE / image.height;
+      if (imageAspect > 1) {
+        initialScale = CANVAS_SIZE / image.height;
       } else {
-        initialScale = CROP_SIZE / image.width;
+        initialScale = CANVAS_SIZE / image.width;
       }
       
       const newScale = Math.max(initialScale, MIN_SCALE);
