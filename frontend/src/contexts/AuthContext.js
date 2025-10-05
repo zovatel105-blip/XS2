@@ -402,6 +402,42 @@ export const AuthProvider = ({ children }) => {
     }
   }, [makeAuthenticatedRequest]);
 
+  // Create automatic demo user session
+  const createDemoUserSession = useCallback(async () => {
+    try {
+      console.log('🎯 Creating automatic demo user session...');
+      
+      // Demo user data
+      const demoUser = {
+        id: 'demo-user-2025',
+        email: 'demo@example.com',
+        username: 'demo_user',
+        display_name: 'Demo User',
+        bio: '🎯 Usuario Demo - Funcionalidad Completa',
+        profile_image: null,
+        created_at: new Date().toISOString(),
+        followers_count: 42,
+        following_count: 18,
+        posts_count: 15
+      };
+      
+      // Generate a demo token
+      const demoToken = `demo_token_${Date.now()}`;
+      
+      console.log('✅ Demo user session created successfully:', {
+        user: demoUser.display_name,
+        email: demoUser.email
+      });
+      
+      // Set auth data with demo user
+      setAuthData(demoUser, demoToken);
+      
+    } catch (error) {
+      console.error('❌ Error creating demo user session:', error);
+      setAuthState(AUTH_STATES.UNAUTHENTICATED);
+    }
+  }, [setAuthData]);
+
   // Initialize authentication state
   useEffect(() => {
     const initializeAuth = async () => {
