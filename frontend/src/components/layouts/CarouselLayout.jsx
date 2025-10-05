@@ -232,13 +232,6 @@ const CarouselLayout = ({
                   )}
                 </div>
               )}
-              
-              {/* COMING SOON message for desktop */}
-              {isActive && !isMobile && poll.totalVotes > 0 && (
-                <div className="absolute top-2 right-2 bg-gray-800/80 text-white px-3 py-1 rounded-full text-xs font-semibold z-20">
-                  COMING SOON
-                </div>
-              )}
 
               {/* Selection indicator - Only show when active and user has voted on mobile */}
               {isActive && isMobile && isSelected && poll.userVote && (
