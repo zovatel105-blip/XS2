@@ -987,100 +987,39 @@ const ContentCreationPage = () => {
       }
     }
 
-    setIsCreating(true);
-
-    try {
-      // Prepare poll data exactly like CreatePollModal
-      const allMentionedUsers = [];
-      const processedOptions = validOptions.map((opt, index) => {
-        // Collect mentioned users from this option
-        if (opt.mentionedUsers) {
-          allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
-        }
-        
-        // 📱 MOBILE DEBUG: Log transform data for debugging
-        console.log(`🔍 [MOBILE CROP DEBUG] Option ${index}:`, {
-          hasMedia: !!opt.media,
-          hasTransform: !!opt.media?.transform,
-          transform: opt.media?.transform,
-          userAgent: navigator.userAgent,
-          isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-        });
-        
-        return {
-          text: opt.text.trim() || '', // Use provided text or empty string
-          media_type: opt.media.type, // Use the actual media type (image or video)
-          media_url: opt.media.url,
-          thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
-          media_transform: opt.media.transform || null, // ✅ Include crop transform data
-          mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
-        };
-      });
-
-      const pollData = {
-        title: title.trim(),
-        description: null, // No general description - use option descriptions instead
-        options: processedOptions,
-        music_id: selectedMusic?.id || null, // Use music_id format
-        tags: [], // No tags
-        category: 'general', // Default category
-        mentioned_users: [...new Set(allMentionedUsers)], // All mentioned users from all options (remove duplicates)
-        video_playbook_settings: null, // No video settings
-        layout: selectedLayout.id // Custom field for layout
-      };
-
-      console.log('Creating poll with data:', pollData);
-
-      // Create poll using API
-      const newPoll = await pollService.createPoll(pollData);
-
-      toast({
-        title: "🎉 ¡Publicación creada!",
-        description: "Tu contenido ha sido publicado exitosamente",
-      });
-
-      // Navigate to feed FIRST, then reset form data to avoid interfering with crop state
-      setTimeout(() => {
-        navigate('/feed');
-        
-        // Reset form data AFTER navigation starts (to avoid crop state interference)
-        setTimeout(() => {
-          setTitle('');
-          setOptions([]);
-          setMentionInputValues({}); // Reset mention input values
-          setSelectedMusic(null);
-          setSelectedLayout(LAYOUT_OPTIONS[0]);
-          setShowMusicSelector(false);
-          setShowLayoutMenu(false);
-        }, 100);
-      }, 1500);
-
-    } catch (error) {
-      console.error('Error creating content:', error);
-      
-      // Enhanced error handling
-      let errorMessage = "No se pudo crear la publicación. Inténtalo de nuevo.";
-      
-      if (error.message) {
-        if (error.message.includes('Not authenticated')) {
-          errorMessage = "Tu sesión ha expirado. Inicia sesión nuevamente.";
-          // Redirect to login if token expired
-          setTimeout(() => navigate('/'), 2000);
-        } else if (error.message.includes('validation')) {
-          errorMessage = "Error en los datos. Verifica que todos los campos estén correctos.";
-        } else {
-          errorMessage = error.message;
-        }
+    // Prepare content data for publication page
+    const allMentionedUsers = [];
+    const processedOptions = validOptions.map((opt, index) => {
+      // Collect mentioned users from this option
+      if (opt.mentionedUsers) {
+        allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
       }
+      
+      return {
+        text: opt.text.trim() || '', // Use provided text or empty string
+        media_type: opt.media.type, // Use the actual media type (image or video)
+        media_url: opt.media.url,
+        thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
+        media_transform: opt.media.transform || null, // ✅ Include crop transform data
+        mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
+      };
+    });
 
-      toast({
-        title: "Error al crear publicación",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsCreating(false);
-    }
+    const contentData = {
+      options: processedOptions,
+      music_id: selectedMusic?.id || null,
+      music: selectedMusic,
+      mentioned_users: [...new Set(allMentionedUsers)], // All mentioned users from all options (remove duplicates)
+      layout: selectedLayout.id
+    };
+
+    // Navigate to publication page with content data
+    navigate('/content-publish', { 
+      state: { 
+        contentData,
+        returnTo: '/feed'
+      } 
+    });
   };
 
   // Show loading screen if not authenticated
