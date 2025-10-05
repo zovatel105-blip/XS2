@@ -265,24 +265,27 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-90 z-[60] flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-4 bg-black text-white">
-        <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-full">
-          <X className="w-6 h-6" />
+    <div className="fixed inset-0 bg-white z-[60] flex flex-col">
+      {/* Header - Nuevo diseño blanco */}
+      <div className="flex items-center justify-between px-4 py-4 bg-white border-b border-gray-200 safe-area-top">
+        <button 
+          onClick={onClose} 
+          className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200"
+        >
+          <X className="w-5 h-5 text-gray-700" />
         </button>
-        <h2 className="text-lg font-semibold">Ajustar foto de perfil</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Ajustar foto de perfil</h2>
         <button
           onClick={handleCropImage}
           disabled={!image || loading}
-          className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 px-4 py-2 rounded-full text-sm font-medium"
+          className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 px-4 py-2 rounded-full text-sm font-medium text-white shadow-sm"
         >
           {loading ? 'Procesando...' : 'Guardar'}
         </button>
       </div>
 
-      {/* Canvas Container */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      {/* Canvas Container - Fondo blanco limpio */}
+      <div className="flex-1 flex items-center justify-center p-4 bg-gray-50">
         {!image ? (
           <div className="text-center">
             <label className="cursor-pointer">
@@ -292,78 +295,83 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <div className="bg-gray-800 hover:bg-gray-700 px-8 py-6 rounded-xl border-2 border-dashed border-gray-600">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-white text-lg">Selecciona una foto</p>
-                <p className="text-gray-400 text-sm mt-2">JPG, PNG o GIF hasta 10MB</p>
+              <div className="bg-white hover:bg-gray-50 px-8 py-12 rounded-2xl border-2 border-dashed border-gray-300 hover:border-gray-400 transition-all duration-200 shadow-sm">
+                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+                <p className="text-gray-900 text-xl font-medium mb-2">Selecciona una foto</p>
+                <p className="text-gray-500 text-sm">JPG, PNG o GIF hasta 10MB</p>
               </div>
             </label>
           </div>
         ) : (
           <div className="relative">
-            <canvas
-              ref={canvasRef}
-              width={CANVAS_SIZE}
-              height={CANVAS_SIZE}
-              className="cursor-move touch-none rounded-full"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              style={{ 
-                maxWidth: '90vw', 
-                maxHeight: '60vh',
-                aspectRatio: '1/1'
-              }}
-            />
+            {/* Canvas con sombra elegante */}
+            <div className="bg-white rounded-full p-4 shadow-2xl">
+              <canvas
+                ref={canvasRef}
+                width={CANVAS_SIZE}
+                height={CANVAS_SIZE}
+                className="cursor-move touch-none rounded-full ring-4 ring-white"
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                style={{ 
+                  maxWidth: '80vw', 
+                  maxHeight: '50vh',
+                  aspectRatio: '1/1'
+                }}
+              />
+            </div>
             
-            {/* Instrucciones */}
-            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center text-white">
-              <p className="text-sm opacity-75">
-                Arrastra para mover • Pellizca para hacer zoom
-              </p>
+            {/* Instrucciones en diseño blanco */}
+            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
+              <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Arrastra para mover • Pellizca para hacer zoom
+                </p>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Controls */}
+      {/* Controls - Diseño blanco moderno */}
       {image && (
-        <div className="bg-black px-4 py-6">
+        <div className="bg-white border-t border-gray-200 px-4 py-6 safe-area-bottom">
           <div className="flex justify-center items-center space-x-6">
             <button
               onClick={handleZoomOut}
-              className="bg-gray-800 hover:bg-gray-700 p-3 rounded-full"
+              className="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition-all duration-200 shadow-sm"
             >
-              <ZoomOut className="w-6 h-6 text-white" />
+              <ZoomOut className="w-6 h-6 text-gray-700" />
             </button>
             
-            <div className="text-white text-center">
-              <p className="text-xs opacity-75 mb-1">ZOOM</p>
-              <p className="text-sm font-medium">{Math.round(scale * 100)}%</p>
+            <div className="text-gray-700 text-center bg-gray-50 px-4 py-2 rounded-lg">
+              <p className="text-xs text-gray-500 mb-1 font-medium">ZOOM</p>
+              <p className="text-sm font-semibold">{Math.round(scale * 100)}%</p>
             </div>
             
             <button
               onClick={handleZoomIn}
-              className="bg-gray-800 hover:bg-gray-700 p-3 rounded-full"
+              className="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition-all duration-200 shadow-sm"
             >
-              <ZoomIn className="w-6 h-6 text-white" />
+              <ZoomIn className="w-6 h-6 text-gray-700" />
             </button>
             
-            <div className="w-px h-8 bg-gray-600"></div>
+            <div className="w-px h-8 bg-gray-300"></div>
             
             <button
               onClick={handleReset}
-              className="bg-gray-800 hover:bg-gray-700 p-3 rounded-full"
+              className="bg-gray-100 hover:bg-gray-200 p-3 rounded-xl transition-all duration-200 shadow-sm"
             >
-              <RotateCcw className="w-6 h-6 text-white" />
+              <RotateCcw className="w-6 h-6 text-gray-700" />
             </button>
             
-            <label className="bg-gray-800 hover:bg-gray-700 p-3 rounded-full cursor-pointer">
-              <Upload className="w-6 h-6 text-white" />
+            <label className="bg-blue-50 hover:bg-blue-100 p-3 rounded-xl cursor-pointer transition-all duration-200 shadow-sm border border-blue-200">
+              <Upload className="w-6 h-6 text-blue-600" />
               <input
                 type="file"
                 accept="image/*"
@@ -371,6 +379,27 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
                 className="hidden"
               />
             </label>
+          </div>
+          
+          {/* Botón adicional de confirmación más prominente */}
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={handleCropImage}
+              disabled={!image || loading}
+              className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 px-8 py-3 rounded-2xl text-base font-medium text-white shadow-lg shadow-blue-500/25 transition-all duration-200 active:scale-95"
+            >
+              {loading ? (
+                <div className="flex items-center">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Procesando imagen...
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Aplicar recorte
+                </div>
+              )}
+            </button>
           </div>
         </div>
       )}
