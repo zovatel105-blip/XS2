@@ -247,11 +247,18 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     
     setLoading(true);
     
-    // Crear canvas temporal para el crop circular
+    // Crear canvas temporal para el crop circular con alta resolución
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = CANVAS_SIZE;
-    tempCanvas.height = CANVAS_SIZE;
+    
+    // Usar alta resolución para el crop final (2x para mejor calidad)
+    const outputSize = CANVAS_SIZE * 2; // Doble resolución para mejor calidad
+    tempCanvas.width = outputSize;
+    tempCanvas.height = outputSize;
+    
+    // Configurar alta calidad de renderizado
+    tempCtx.imageSmoothingEnabled = true;
+    tempCtx.imageSmoothingQuality = 'high';
 
     // Calcular dimensiones de la imagen escalada
     const scaledWidth = image.width * scale;
