@@ -58,12 +58,8 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     canvas.width = CANVAS_SIZE;
     canvas.height = CANVAS_SIZE;
 
-    // Limpiar canvas
+    // Limpiar canvas completamente
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-    // Fondo oscuro semi-transparente
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
     // Calcular dimensiones de la imagen escalada
     const scaledWidth = img.width * currentScale;
@@ -75,10 +71,10 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     const imageX = centerX - scaledWidth / 2 + currentPosition.x;
     const imageY = centerY - scaledHeight / 2 + currentPosition.y;
 
-    // Crear clipping path circular
+    // Crear clipping path circular que ocupa todo el canvas
     ctx.save();
     ctx.beginPath();
-    ctx.arc(centerX, centerY, CROP_SIZE / 2, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, CANVAS_SIZE / 2, 0, 2 * Math.PI);
     ctx.clip();
 
     // Dibujar imagen dentro del círculo
@@ -86,24 +82,12 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
     
     ctx.restore();
 
-    // Dibujar borde del círculo
+    // Dibujar borde del círculo (opcional, más sutil)
     ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, CROP_SIZE / 2, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, CANVAS_SIZE / 2 - 1, 0, 2 * Math.PI);
     ctx.stroke();
-
-    // Overlay con círculo transparente
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, CROP_SIZE / 2, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    ctx.globalCompositeOperation = 'source-over';
   }, [image, scale, position]);
 
   useEffect(() => {
