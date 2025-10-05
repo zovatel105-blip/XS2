@@ -2133,7 +2133,7 @@ async def universal_search(
     limit: int = config.SEARCH_CONFIG['DEFAULT_SEARCH_LIMIT'],
     current_user: UserResponse = Depends(get_current_user)
 ):
-    """Universal search across all content types"""
+    """Universal search across all content types - OPTIMIZED VERSION"""
     # Validate query parameters
     if limit > config.SEARCH_CONFIG['MAX_SEARCH_LIMIT']:
         limit = config.SEARCH_CONFIG['MAX_SEARCH_LIMIT']
@@ -2164,25 +2164,35 @@ async def universal_search(
     results = []
     
     try:
-        # Search Users
-        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][1]]:  # 'all' or 'users'
-            users_results = await search_users_advanced(query_lower, current_user.id, limit)
-            results.extend(users_results)
+        # OPTIMIZATION: Run searches concurrently for better performance
+        import asyncio
         
-        # Search Posts
-        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][2]]:  # 'all' or 'posts'
-            posts_results = await search_posts_advanced(query_lower, current_user.id, limit)
-            results.extend(posts_results)
+        tasks = []
+        
+        # Search Users
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][1]]:
+            tasks.append(search_users_optimized(query_lower, current_user.id, limit))
+        
+        # Search Posts  
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][2]]:
+            tasks.append(search_posts_optimized(query_lower, current_user.id, limit))
         
         # Search Hashtags
-        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][3]]:  # 'all' or 'hashtags'
-            hashtags_results = await search_hashtags_advanced(query_lower, current_user.id, limit)
-            results.extend(hashtags_results)
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][3]]:
+            tasks.append(search_hashtags_optimized(query_lower, current_user.id, limit))
         
         # Search Sounds/Music
-        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][4]]:  # 'all' or 'sounds'
-            sounds_results = await search_sounds_advanced(query, current_user.id, limit)
-            results.extend(sounds_results)
+        if filter_type in [config.SEARCH_CONFIG['DEFAULT_FILTER'], config.SEARCH_CONFIG['AVAILABLE_FILTERS'][4]]:
+            tasks.append(search_sounds_optimized(query, current_user.id, limit))
+        
+        # Execute all searches concurrently
+        if tasks:
+            search_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Combine results from all successful searches
+            for result in search_results:
+                if isinstance(result, list):  # Only process successful results
+                    results.extend(result)
         
         # Sort results
         if sort_by == "popularity":
