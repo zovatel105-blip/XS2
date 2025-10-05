@@ -237,18 +237,25 @@ const ContentPublishPage = () => {
         </div>
 
         {/* Title Input */}
-        <div className="space-y-3">
-          <input
-            type="text"
-            placeholder="Add a catchy title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-xl font-medium text-gray-900 placeholder-gray-400 border-0 outline-none resize-none bg-transparent"
-            maxLength={200}
-          />
-          <p className="text-sm text-gray-500">
-            Writing a long description can help get 3x more views on average.
-          </p>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <input
+              type="text"
+              placeholder="Add a catchy title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full text-xl font-medium text-gray-900 placeholder-gray-400 border-0 outline-none resize-none bg-transparent leading-relaxed"
+              maxLength={200}
+            />
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-500">
+                Writing a long description can help get 3x more views on average.
+              </p>
+              <span className="text-xs text-gray-400">
+                {title.length}/200
+              </span>
+            </div>
+          </div>
           <div className="h-px bg-gray-200"></div>
         </div>
 
