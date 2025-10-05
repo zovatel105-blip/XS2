@@ -8,6 +8,7 @@ import { X, Save, User, Camera, Loader2, ArrowLeft } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import AvatarUpload from './AvatarUpload';
+import CircularCrop from './CircularCrop';
 
 const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
   const { user, updateUser, apiRequest } = useAuth();
