@@ -8006,6 +8006,110 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# =============  SEARCH HISTORY ENDPOINTS =============
+
+@api_router.get("/search/recent")
+async def get_recent_searches(
+    limit: int = 10, 
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get recent search history for current user"""
+    try:
+        # Get recent searches for the current user, sorted by most recent
+        recent_searches = await db.search_history.find({
+            "user_id": current_user.id
+        }).sort("created_at", -1).limit(limit).to_list(limit)
+        
+        return {"recent_searches": recent_searches}
+        
+    except Exception as e:
+        logger.error(f"Error getting recent searches: {str(e)}")
+        return {"recent_searches": []}
+
+@api_router.post("/search/recent")
+async def save_recent_search(
+    search_data: dict,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Save a search query to recent searches history"""
+    try:
+        query = search_data.get("query", "").strip()
+        search_type = search_data.get("search_type", "general")
+        
+        if not query:
+            raise HTTPException(status_code=400, detail="Query cannot be empty")
+        
+        # Check if this exact search already exists recently (last 24 hours)
+        recent_time = (datetime.utcnow() - timedelta(hours=24)).isoformat()
+        existing_search = await db.search_history.find_one({
+            "user_id": current_user.id,
+            "query": query,
+            "search_type": search_type,
+            "created_at": {"$gte": recent_time}
+        })
+        
+        if existing_search:
+            # Update timestamp of existing search to move it to top
+            await db.search_history.update_one(
+                {"_id": existing_search["_id"]},
+                {"$set": {"created_at": datetime.utcnow().isoformat()}}
+            )
+            return {"message": "Search updated", "search_id": str(existing_search["_id"])}
+        
+        # Create new search history entry
+        search_entry = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user.id,
+            "query": query,
+            "search_type": search_type,
+            "created_at": datetime.utcnow().isoformat()
+        }
+        
+        result = await db.search_history.insert_one(search_entry)
+        
+        # Keep only the most recent 20 searches per user to avoid cluttering
+        user_searches = await db.search_history.find({
+            "user_id": current_user.id
+        }).sort("created_at", -1).to_list(25)  # Get 25 to delete the excess
+        
+        if len(user_searches) > 20:
+            # Delete older searches beyond the limit
+            searches_to_delete = user_searches[20:]
+            delete_ids = [s["_id"] for s in searches_to_delete]
+            await db.search_history.delete_many({"_id": {"$in": delete_ids}})
+        
+        return {"message": "Search saved", "search_id": search_entry["id"]}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error saving recent search: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to save search")
+
+@api_router.delete("/search/recent/{search_id}")
+async def delete_recent_search(
+    search_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Delete a specific search from history"""
+    try:
+        # Delete search entry (ensure it belongs to current user)
+        result = await db.search_history.delete_one({
+            "id": search_id,
+            "user_id": current_user.id
+        })
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Search not found")
+        
+        return {"message": "Search deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting recent search: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete search")
+
 # Incluir el router en la aplicación
 app.include_router(api_router)
 
