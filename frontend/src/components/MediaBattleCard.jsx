@@ -602,6 +602,11 @@ const BattleOptionCard = ({
             src={option.media?.url} 
             alt={option.text}
             className="w-full h-full object-cover"
+            style={option.media?.transform ? {
+              objectPosition: `${option.media.transform.position?.x || 50}% ${option.media.transform.position?.y || 50}%`,
+              transform: `scale(${option.media.transform.scale || 1})`,
+              transformOrigin: 'center center'
+            } : {}}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
