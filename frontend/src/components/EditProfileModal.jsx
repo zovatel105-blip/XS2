@@ -202,27 +202,28 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
           <div className="bg-gradient-to-b from-blue-50 to-white px-6 py-12">
             <div className="flex flex-col items-center">
               <div className="relative group mb-6">
-                <div className="w-36 h-36 rounded-full overflow-hidden bg-white ring-4 ring-white shadow-xl transition-all duration-300 group-hover:shadow-2xl">
+                {/* Avatar clickeable con overlay de cámara */}
+                <button
+                  type="button"
+                  onClick={handleCameraClick}
+                  className="relative w-36 h-36 rounded-full overflow-hidden bg-white ring-4 ring-white shadow-xl transition-all duration-300 group-hover:shadow-2xl hover:ring-blue-200 cursor-pointer group"
+                >
                   {formData.avatar_url ? (
                     <img
                       src={formData.avatar_url}
                       alt="Foto de perfil"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-all duration-300 group-hover:brightness-75"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center transition-all duration-300 group-hover:from-gray-300 group-hover:to-gray-400">
                       <User className="w-16 h-16 text-gray-400" />
                     </div>
                   )}
-                </div>
-                
-                {/* Botón circular flotante más grande */}
-                <button
-                  type="button"
-                  onClick={handleCameraClick}
-                  className="absolute -bottom-3 -right-3 w-12 h-12 bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  <Camera className="w-6 h-6 text-white" />
+                  
+                  {/* Overlay de cámara que aparece en hover */}
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-full">
+                    <Camera className="w-8 h-8 text-white" />
+                  </div>
                 </button>
                 
                 {/* Input file oculto para selección directa */}
