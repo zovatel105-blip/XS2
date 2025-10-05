@@ -945,15 +945,6 @@ const ContentCreationPage = () => {
       return;
     }
 
-    if (!title.trim()) {
-      toast({
-        title: "Error",
-        description: "Necesitas escribir una pregunta o descripción",
-        variant: "destructive"
-      });
-      return;
-    }
-
     const validOptions = options.filter(opt => opt && opt.media);
     if (validOptions.length === 0) {
       toast({
