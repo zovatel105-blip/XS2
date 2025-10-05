@@ -1681,38 +1681,14 @@ const ProfilePage = () => {
                       </div>
                     )}
                     
-                    {/* Botón y menú de opciones - solo perfil propio */}
+                    {/* Botón sutil de editar - solo perfil propio */}
                     {isOwnProfile && (
-                      <div className="relative">
-                        <button 
-                          onClick={handleAvatarButtonClick}
-                          className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
-                        >
-                          <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" strokeWidth={2} />
-                        </button>
-                        
-                        {/* Menú desplegable */}
-                        {showAvatarMenu && (
-                          <div className="absolute -bottom-2 -right-2 transform translate-y-full z-50">
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 py-2 min-w-[200px] mt-2">
-                              <button
-                                onClick={handleChangeAvatar}
-                                className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors"
-                              >
-                                <Camera className="w-4 h-4 text-blue-500" />
-                                Cambiar foto de perfil
-                              </button>
-                              <button
-                                onClick={handleCreateStory}
-                                className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors"
-                              >
-                                <Plus className="w-4 h-4 text-green-500" />
-                                Crear story
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      <button 
+                        onClick={() => setShowCreateStoryModal(true)}
+                        className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+                      >
+                        <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" strokeWidth={2} />
+                      </button>
                     )}
                   </div>
                 </div>
