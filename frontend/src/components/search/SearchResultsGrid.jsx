@@ -44,7 +44,8 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
   const PostCard = ({ post }) => (
     <div 
       onClick={() => handleItemClick(post)}
-      className="relative bg-black rounded-lg overflow-hidden cursor-pointer group aspect-[3/4] shadow-lg hover:shadow-xl transition-all duration-300"
+      className="relative bg-white rounded-xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
+      style={{ aspectRatio: '9/16' }} // Rectangular vertical format like TikTok
     >
       {/* Background Image or Video Thumbnail */}
       {(post.image_url || post.thumbnail_url || post.images?.[0]?.url || post.media_url) ? (
@@ -62,42 +63,41 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
       
       {/* Fallback gradient background */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-teal-600"
+        className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300"
         style={{ display: (post.image_url || post.thumbnail_url || post.images?.[0]?.url || post.media_url) ? 'none' : 'block' }}
-      ></div>
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
+            <Play size={20} className="text-white ml-0.5" />
+          </div>
+        </div>
+      </div>
       
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
+      {/* Minimal overlay for better readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
       
-      {/* Play button overlay for videos */}
+      {/* Play button overlay for videos - minimalist style */}
       {(post.video_url || post.image_url) && (
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <Play size={24} className="text-white ml-1" fill="currentColor" />
+          <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+            <Play size={16} className="text-gray-800 ml-0.5" fill="currentColor" />
           </div>
         </div>
       )}
       
-      {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end p-3 text-white">
-        {/* Title and content */}
-        <div className="mb-3">
-          {post.title && (
-            <h3 className="text-sm font-bold leading-tight mb-1 line-clamp-2 drop-shadow-lg">
-              {post.title}
-            </h3>
-          )}
-          {post.content && post.content.trim() && (
-            <p className="text-xs leading-tight line-clamp-2 opacity-90 drop-shadow-md">
-              {post.content}
-            </p>
-          )}
-        </div>
+      {/* Content overlay - minimalist bottom bar */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+        {/* Title - single line only */}
+        {post.title && (
+          <h3 className="text-sm font-semibold leading-tight mb-1 truncate">
+            {post.title}
+          </h3>
+        )}
         
-        {/* Author and date */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center overflow-hidden">
+        {/* Author info - compact */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 min-w-0 flex-1">
+            <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
               {post.author?.avatar ? (
                 <img 
                   src={post.author.avatar} 
@@ -105,45 +105,36 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User size={12} />
+                <User size={8} />
               )}
             </div>
-            <span className="text-xs font-medium drop-shadow-md">
+            <span className="text-xs font-medium truncate">
               {post.author?.username || 'Usuario'}
             </span>
           </div>
           
-          {post.created_at && (
-            <span className="text-xs opacity-75 drop-shadow-md">
-              {formatTimeAgo(post.created_at)}
-            </span>
-          )}
+          {/* Engagement metrics - compact */}
+          <div className="flex items-center space-x-2 text-xs flex-shrink-0">
+            <div className="flex items-center space-x-1">
+              <Heart size={10} />
+              <span>{post.votes_count || 0}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <MessageCircle size={10} />
+              <span>{post.comments_count || 0}</span>
+            </div>
+          </div>
         </div>
-        
-        {/* Hashtags */}
-        {(post.hashtags && post.hashtags.length > 0) && (
-          <div className="flex flex-wrap gap-1 mb-2">
-            {post.hashtags.slice(0, 3).map((hashtag, index) => (
-              <span key={index} className="text-xs font-medium opacity-90 drop-shadow-md">
-                #{hashtag}
-              </span>
-            ))}
-            {post.hashtags.length > 3 && (
-              <span className="text-xs opacity-75">+{post.hashtags.length - 3}</span>
-            )}
-          </div>
-        )}
-        
-        {/* Engagement metrics */}
-        <div className="flex items-center space-x-3 text-xs">
-          <div className="flex items-center space-x-1">
-            <Heart size={12} className="drop-shadow-sm" />
-            <span className="drop-shadow-md">{post.votes_count || 0}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <MessageCircle size={12} className="drop-shadow-sm" />
-            <span className="drop-shadow-md">{post.comments_count || 0}</span>
-          </div>
+      </div>
+      
+      {/* Post type indicator */}
+      <div className="absolute top-2 right-2">
+        <div className="w-6 h-6 bg-black/30 rounded-full flex items-center justify-center backdrop-blur-sm">
+          {post.video_url ? (
+            <Play size={12} className="text-white" fill="currentColor" />
+          ) : (
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+          )}
         </div>
       </div>
     </div>
