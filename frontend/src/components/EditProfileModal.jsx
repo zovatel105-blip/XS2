@@ -220,26 +220,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
             </div>
           </div>
 
-          {/* Input oculto para avatar */}
-          <input
-            id="avatar-upload-input"
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    avatar_url: e.target.result
-                  }));
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
-            className="hidden"
-          />
+          {/* Input oculto removido - ahora se usa CircularCrop */}
 
           {/* Formulario principal */}
           <div className="px-6 py-8 space-y-10">
