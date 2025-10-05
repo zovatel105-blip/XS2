@@ -15,7 +15,7 @@ const CircularCrop = ({ isOpen, onClose, onImageCropped, initialImage = null }) 
 
   // Configuración del crop circular
   const CANVAS_SIZE = 300;
-  const CROP_SIZE = 250;
+  const CROP_SIZE = 300; // Círculo del mismo tamaño que el canvas
   const MIN_SCALE = 0.5;
   const MAX_SCALE = 3;
 
