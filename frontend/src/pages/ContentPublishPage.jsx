@@ -252,65 +252,49 @@ const ContentPublishPage = () => {
           <div className="h-px bg-gray-200"></div>
         </div>
 
-        {/* Hashtags Button */}
-        <button 
-          onClick={() => setShowHashtagModal(true)}
-          className="flex items-center gap-4 py-4 border-b border-gray-100 w-full text-left hover:bg-gray-50"
-        >
-          <Hash className="w-5 h-5 text-gray-600" />
-          <span className="flex-1 text-gray-900">
-            {hashtagsList.length > 0 
-              ? `${hashtagsList.length} hashtag${hashtagsList.length > 1 ? 's' : ''} selected`
-              : 'Hashtags'
-            }
-          </span>
-          <div className="text-gray-400">›</div>
-        </button>
-
         {/* Display selected hashtags */}
         {hashtagsList.length > 0 && (
-          <div className="flex flex-wrap gap-2 px-9 -mt-2">
-            {hashtagsList.slice(0, 3).map((hashtag, index) => (
-              <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                #{hashtag}
-              </span>
-            ))}
-            {hashtagsList.length > 3 && (
-              <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                +{hashtagsList.length - 3} more
-              </span>
-            )}
+          <div className="space-y-2">
+            <p className="text-sm text-gray-600 font-medium">Hashtags:</p>
+            <div className="flex flex-wrap gap-2">
+              {hashtagsList.map((hashtag, index) => (
+                <span 
+                  key={index} 
+                  className="bg-blue-50 text-blue-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                >
+                  #{hashtag}
+                  <button
+                    onClick={() => handleRemoveHashtag(hashtag)}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Mentions Button */}
-        <button 
-          onClick={() => setShowMentionModal(true)}
-          className="flex items-center gap-4 py-4 border-b border-gray-100 w-full text-left hover:bg-gray-50"
-        >
-          <AtSign className="w-5 h-5 text-gray-600" />
-          <span className="flex-1 text-gray-900">
-            {mentionedUsers.length > 0 
-              ? `${mentionedUsers.length} user${mentionedUsers.length > 1 ? 's' : ''} mentioned`
-              : 'Mention'
-            }
-          </span>
-          <div className="text-gray-400">›</div>
-        </button>
-
         {/* Display mentioned users */}
         {mentionedUsers.length > 0 && (
-          <div className="flex flex-wrap gap-2 px-9 -mt-2">
-            {mentionedUsers.slice(0, 3).map((user) => (
-              <span key={user.id} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                @{user.username}
-              </span>
-            ))}
-            {mentionedUsers.length > 3 && (
-              <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                +{mentionedUsers.length - 3} more
-              </span>
-            )}
+          <div className="space-y-2">
+            <p className="text-sm text-gray-600 font-medium">Menciones:</p>
+            <div className="flex flex-wrap gap-2">
+              {mentionedUsers.map((user) => (
+                <span 
+                  key={user.id} 
+                  className="bg-green-50 text-green-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                >
+                  @{user.username}
+                  <button
+                    onClick={() => handleRemoveMention(user.id)}
+                    className="text-green-500 hover:text-green-700"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
