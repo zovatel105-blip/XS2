@@ -488,9 +488,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                           <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
                           
                           <div className="text-center z-10 px-4">
-                            <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mb-4 sm:mb-6 lg:mb-8 mx-auto shadow-2xl">
-                              <Plus className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
-                            </div>
+                            <Plus className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
                             
                             {/* Title removed for cleaner UI */}
                           </div>
