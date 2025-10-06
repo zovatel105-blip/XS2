@@ -782,8 +782,8 @@ const SearchPage = () => {
                           
                           {/* Decorative content in center (if no image) */}
                           {!story.thumbnail_url && (
-                            <div className="text-4xl opacity-80 drop-shadow-lg">
-                              {emojis[index % emojis.length]}
+                            <div className="opacity-80 drop-shadow-lg">
+                              <StoryIcon size={48} className="text-white" strokeWidth={2} />
                             </div>
                           )}
                           
