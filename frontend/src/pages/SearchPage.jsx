@@ -909,9 +909,9 @@ const SearchPage = () => {
                           )}
                           
                           <div className="absolute inset-0 bg-black/10"></div>
-                          <span className="relative z-10 drop-shadow-lg text-2xl sm:text-4xl">
-                            {getContentEmoji(content)}
-                          </span>
+                          <div className="relative z-10 drop-shadow-lg">
+                            <ContentIcon size={48} className="text-white" strokeWidth={2} />
+                          </div>
                           
                           {/* View count or engagement metrics */}
                           <div className="absolute bottom-1 sm:bottom-2 left-1 sm:left-2 bg-black/60 text-white text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
