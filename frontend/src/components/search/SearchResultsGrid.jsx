@@ -137,71 +137,45 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
   const SoundCard = ({ sound }) => (
     <div 
       onClick={() => handleItemClick(sound)}
-      className="relative bg-white rounded-xl overflow-hidden cursor-pointer group shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
-      style={{ aspectRatio: '9/16' }} // Consistent rectangular vertical format
+      className="relative bg-gradient-to-br from-pink-50 to-purple-50 overflow-hidden cursor-pointer group"
+      style={{ aspectRatio: '9/16' }}
     >
       {/* Background */}
-      {sound.cover_image ? (
+      {sound.cover_image && (
         <img 
           src={sound.cover_image} 
           alt={sound.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50 to-purple-50"></div>
       )}
       
-      {/* Subtle overlay for readability */}
+      {/* Overlay si hay imagen */}
       {sound.cover_image && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       )}
       
-      {/* Content - centered and clean */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full p-4 text-center">
-        {/* Music icon - clean design */}
-        <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300 ${
+      {/* Content centrado */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full p-2 text-center">
+        {/* Music icon */}
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
           sound.cover_image ? 'bg-white/20 backdrop-blur-sm' : 'bg-pink-100'
         }`}>
-          <Music size={20} className={sound.cover_image ? 'text-white' : 'text-pink-600'} />
+          <Music size={16} className={sound.cover_image ? 'text-white' : 'text-pink-600'} />
         </div>
         
-        {/* Sound info - clean typography */}
-        <h3 className={`text-sm font-semibold mb-1 line-clamp-2 ${
+        {/* Sound title */}
+        <h3 className={`text-xs font-semibold truncate w-full px-1 ${
           sound.cover_image ? 'text-white' : 'text-gray-900'
         }`}>
           {sound.title}
         </h3>
         
-        <p className={`text-xs mb-2 ${
-          sound.cover_image ? 'text-white/90' : 'text-gray-500'
-        }`}>
-          {sound.author?.username || 'Artista'}
-        </p>
-        
-        <p className={`text-xs mb-4 ${
-          sound.cover_image ? 'text-white/75' : 'text-gray-400'
+        {/* Duration */}
+        <p className={`text-[10px] ${
+          sound.cover_image ? 'text-white/75' : 'text-gray-500'
         }`}>
           {sound.duration || 0}s
         </p>
-        
-        {/* Play button - minimalist */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            // Handle play
-          }}
-          className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-            sound.cover_image 
-              ? 'bg-white/20 hover:bg-white/30 backdrop-blur-sm' 
-              : 'bg-pink-100 hover:bg-pink-200'
-          }`}
-        >
-          <Play 
-            size={14} 
-            className={`ml-0.5 ${sound.cover_image ? 'text-white' : 'text-pink-600'}`} 
-            fill="currentColor" 
-          />
-        </button>
       </div>
     </div>
   );
