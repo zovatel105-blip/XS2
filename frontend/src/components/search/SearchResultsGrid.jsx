@@ -45,7 +45,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
     <div 
       onClick={() => handleItemClick(post)}
       className="relative bg-gray-100 overflow-hidden cursor-pointer group"
-      style={{ aspectRatio: '9/16' }}
+      style={{ aspectRatio: '6/13' }}
     >
       {/* Background Image or Video Thumbnail */}
       {(post.image_url || post.thumbnail_url || post.images?.[0]?.url || post.media_url) ? (
@@ -78,7 +78,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
     <div 
       onClick={() => handleItemClick(user)}
       className="relative bg-gray-50 overflow-hidden cursor-pointer group"
-      style={{ aspectRatio: '9/16' }}
+      style={{ aspectRatio: '6/13' }}
     >
       {/* Content centrado */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full p-2 text-center">
@@ -112,7 +112,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
     <div 
       onClick={() => handleItemClick(hashtag)}
       className="relative bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden cursor-pointer group"
-      style={{ aspectRatio: '9/16' }}
+      style={{ aspectRatio: '6/13' }}
     >
       {/* Content centrado */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full p-2 text-center">
@@ -138,7 +138,7 @@ const SearchResultsGrid = ({ results = [], onItemClick }) => {
     <div 
       onClick={() => handleItemClick(sound)}
       className="relative bg-gradient-to-br from-pink-50 to-purple-50 overflow-hidden cursor-pointer group"
-      style={{ aspectRatio: '9/16' }}
+      style={{ aspectRatio: '6/13' }}
     >
       {/* Background */}
       {sound.cover_image && (
