@@ -557,7 +557,7 @@ const SearchPage = () => {
       {/* Header Section - Minimalist Design */}
       <div className="bg-white sticky top-0 z-50 shadow-sm">
         {/* Top Row - Back Button + Search Bar */}
-        <div className="px-4 lg:px-6 xl:px-8 py-3 border-b border-gray-100 max-w-7xl mx-auto">
+        <div className="px-4 py-3 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
