@@ -1073,7 +1073,6 @@ const SearchPage = () => {
                   </div>
                 </div>
               ))}
-              </div>
             </div>
           </div>
         ) : hasSearched ? (
