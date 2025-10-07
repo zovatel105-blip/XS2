@@ -835,8 +835,8 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
             </Button>
           </div>
 
-          {/* Social Proof Badge */}
-          {currentSocialProof && (
+          {/* Social Proof Badge - REMOVED: Component deleted during cleanup */}
+          {/* {currentSocialProof && (
             <div className="px-4 pb-3">
               <SocialProofBadge 
                 pollId={poll.id}
@@ -844,7 +844,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 onLoadProof={getSocialProof}
               />
             </div>
-          )}
+          )} */}
 
           {/* Poll Title */}
           <div className="px-4 pb-4">
