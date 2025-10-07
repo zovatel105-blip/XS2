@@ -1191,7 +1191,7 @@ const ContentCreationPage = () => {
               <MusicSelector
                 onSelectMusic={handleMusicSelect}
                 selectedMusic={selectedMusic}
-                pollTitle={title}
+                pollTitle=""
               />
             </div>
           </div>
