@@ -553,117 +553,87 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-
-
-      {/* TikTok Style Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3">
-          <div className="flex items-center gap-2 sm:gap-4">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section - Minimalist Design */}
+      <div className="bg-white sticky top-0 z-50 shadow-sm">
+        {/* Top Row - Back Button + Search Bar */}
+        <div className="px-4 py-3 border-b border-gray-100">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200"
+              className="p-1"
             >
-              <ArrowLeft size={20} className="text-gray-900" />
+              <ArrowLeft size={24} className="text-gray-900" />
             </button>
             
             <div className="flex-1 relative">
-              {/* TikTok Style Search Input */}
+              {/* Search Input - Clean Design */}
               <div className="relative">
-                <div className="relative bg-gray-100 rounded-lg border-0 focus-within:bg-gray-50 transition-colors duration-200">
-                  <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                  
-                  {/* Microphone Icon */}
-                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full transition-colors duration-200">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-500">
-                      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                      <line stroke="currentColor" strokeWidth="2" strokeLinecap="round" x1="12" y1="19" x2="12" y2="23"/>
-                      <line stroke="currentColor" strokeWidth="2" strokeLinecap="round" x1="8" y1="23" x2="16" y2="23"/>
-                    </svg>
-                  </button>
-                  
-                  {searchQuery && (
-                    <button
-                      onClick={clearSearch}
-                      className="absolute right-10 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-gray-400 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors duration-200 group"
-                    >
-                      <X size={12} className="text-white" />
-                    </button>
-                  )}
-                  
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder={SEARCH_CONFIG.UI.SEARCH_PLACEHOLDER}
-                    value={searchQuery}
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
-                    onKeyDown={handleKeyDown}
-                    className="w-full pl-10 pr-16 py-3 bg-transparent text-gray-900 placeholder-gray-500 border-0 focus:ring-0 focus:outline-none text-base"
-                    autoFocus
-                    maxLength={SEARCH_CONFIG.VALIDATION.MAX_QUERY_LENGTH}
-                  />
-                </div>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                  onKeyDown={handleKeyDown}
+                  className="w-full px-4 py-2 bg-gray-100 rounded-full text-gray-900 placeholder-gray-500 border-0 focus:ring-0 focus:outline-none text-base focus:bg-gray-50"
+                  autoFocus
+                  maxLength={SEARCH_CONFIG.VALIDATION.MAX_QUERY_LENGTH}
+                />
+                
+                {isAutocompleteLoading && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
+                  </div>
+                )}
+                
+                <AutocompleteDropdown
+                  suggestions={autocompleteResults}
+                  isVisible={showAutocomplete}
+                  onSuggestionClick={handleSuggestionClick}
+                  selectedIndex={selectedSuggestionIndex}
+                  onClose={() => setShowAutocomplete(false)}
+                />
               </div>
-              
-              {isAutocompleteLoading && (
-                <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
-                  <div className="w-4 h-4 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
-                </div>
-              )}
-              
-              <AutocompleteDropdown
-                suggestions={autocompleteResults}
-                isVisible={showAutocomplete}
-                onSuggestionClick={handleSuggestionClick}
-                selectedIndex={selectedSuggestionIndex}
-                onClose={() => setShowAutocomplete(false)}
-              />
             </div>
-
-            {/* More options (three dots) */}
-            <button className="p-2 hover:bg-gray-50 rounded-full transition-colors duration-200">
-              <div className="flex flex-col space-y-0.5">
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-              </div>
-            </button>
           </div>
         </div>
+
+        {/* Filter Pills - Horizontal Scrollable */}
+        {hasSearched && (
+          <div className="px-4 py-3 bg-white">
+            <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
+              {/* Special category pills for different content types */}
+              {[
+                { id: 'disney', label: 'De disney', active: false },
+                { id: 'animated', label: 'Animados', active: false },
+                { id: 'characters', label: 'Personajes', active: true },
+                { id: 'art', label: 'Arte', active: false },
+                { id: 'drawings', label: 'Dibujos', active: false },
+                { id: 'anime', label: 'Anime', active: false },
+                { id: 'manga', label: 'Manga', active: false },
+              ].map((filter) => (
+                <button
+                  key={filter.id}
+                  onClick={() => {
+                    // Handle filter logic here
+                    setSearchQuery(prev => `${prev} ${filter.label.toLowerCase()}`);
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                    filter.active
+                      ? 'bg-gray-900 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* TikTok Style Tabs */}
-      {hasSearched && (
-        <div className="bg-white border-b border-gray-100">
-          <div className="w-full px-4">
-            {/* Mobile and Desktop unified layout */}
-            <div className="flex space-x-6 overflow-x-auto scrollbar-hide py-3">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleTabChange(tab.id)}
-                    className={`flex items-center space-x-2 px-1 py-2 text-sm font-semibold transition-all duration-200 whitespace-nowrap flex-shrink-0 relative ${
-                      activeTab === tab.id
-                        ? 'text-black'
-                        : 'text-gray-500 hover:text-gray-700'
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                    {activeTab === tab.id && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black rounded-full"></div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Clean Content Area - TikTok Style - Full Width */}
       <div className="w-full">
