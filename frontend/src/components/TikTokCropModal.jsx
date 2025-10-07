@@ -59,7 +59,7 @@ const TikTokCropModal = ({
     if (imageFile) {
       const reader = new FileReader();
       reader.onload = () => {
-        setImageSrc(reader.result);
+        setMediaSrc(reader.result);
         // Reset transform when new image loads
         setTransform({
           scale: 1,
