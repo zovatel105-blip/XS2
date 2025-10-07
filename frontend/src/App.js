@@ -114,6 +114,7 @@ function AppContent() {
       <div className="App relative">
         <Routes>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/search-demo" element={<SearchPageDemo />} />
           <Route path="*" element={<Navigate to="/auth" replace />} />
         </Routes>
         <Toaster />
