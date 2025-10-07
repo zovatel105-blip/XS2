@@ -323,7 +323,7 @@ const TikTokCropModal = ({
 
   // Handle close
   const handleClose = () => {
-    setImageSrc('');
+    setMediaSrc('');
     setTransform({
       scale: 1,
       translateX: 0,
