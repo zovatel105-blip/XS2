@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import NeuralNavigation from './components/NeuralNavigation';
 import ResponsiveLayout from './components/ResponsiveLayout';
 import FeedPage from './pages/FeedPage';
 import ExplorePage from './pages/ExplorePage';
@@ -19,9 +18,7 @@ import SearchPage from './pages/SearchPage';
 import MomentsPage from './pages/MomentsPage';
 import ContentCreationPage from './pages/ContentCreationPage';
 import ContentPublishPage from './pages/ContentPublishPage';
-import TestSupabasePage from './pages/TestSupabasePage';
 import FollowingPage from './pages/FollowingPage';
-import InlineCropTest from './components/InlineCropTest';
 import { Toaster } from './components/ui/toaster';
 // Mock data imports removed - using real backend services
 import { useToast } from './hooks/use-toast';
