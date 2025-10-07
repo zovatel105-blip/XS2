@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, validator
 from typing import List, Dict, Optional, Any
 from datetime import datetime, date, timedelta
 from enum import Enum
 import uuid
+from constants import VALID_LAYOUTS, DEFAULT_LAYOUT
 
 class NotificationType(str, Enum):
     NEW_POLL = "new_poll"
