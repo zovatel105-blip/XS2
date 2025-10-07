@@ -719,7 +719,7 @@ const SearchPage = () => {
                 </div>
               ) : stories.length > 0 ? (
                 /* Horizontal Scrolling Carousel with Real Data */
-                <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2 px-4">
+                <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2 px-4 lg:px-6 xl:px-8">
                   {stories.map((story, index) => {
                     // Generate gradient colors based on story content or user
                     const gradients = [
