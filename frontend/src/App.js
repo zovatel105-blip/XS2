@@ -106,9 +106,9 @@ function AppContent() {
     );
   }
 
-  // Check if we're on a test page that doesn't require auth
+  // Check if we're on a page that doesn't require auth
   const location = window.location.pathname;
-  const isDemoPage = location.startsWith('/test-crop');
+  const isDemoPage = false; // No more test pages
 
   // Auth page removed - app now functions with automatic demo user authentication
 
