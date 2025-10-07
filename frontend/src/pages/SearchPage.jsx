@@ -958,7 +958,7 @@ const SearchPage = () => {
                   className="relative bg-white rounded-xl overflow-hidden cursor-pointer group transform transition-transform duration-200 hover:scale-[1.02]"
                 >
                   {/* Image Container */}
-                  <div className="relative aspect-[7/13] bg-gray-100">
+                  <div className="relative aspect-[6/13] bg-gray-100">
                     {/* Main Image */}
                     {(result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url) ? (
                       <img 
