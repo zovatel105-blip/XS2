@@ -387,10 +387,10 @@ const TikTokCropModal = ({
             onMouseUp={handleMouseUp}
             onWheel={handleWheel}
           >
-            {imageSrc && (
+            {mediaSrc && (
               <img
                 ref={imageRef}
-                src={imageSrc}
+                src={mediaSrc}
                 alt="Crop preview"
                 className="absolute inset-0 w-full h-full object-cover select-none"
                 style={{
