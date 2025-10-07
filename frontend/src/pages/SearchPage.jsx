@@ -1093,8 +1093,8 @@ const SearchPage = () => {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        .aspect-\[3\/4\] {
-          aspect-ratio: 3 / 4;
+        .aspect-\[7\/14\] {
+          aspect-ratio: 7 / 14;
         }
         .group:hover .group-hover\:opacity-100 {
           opacity: 1;
