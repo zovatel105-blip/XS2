@@ -538,6 +538,13 @@ class PollCreate(BaseModel):
     mentioned_users: List[str] = []  # List of user IDs mentioned in the poll
     video_playback_settings: Optional[dict] = None  # Video playback configuration
     layout: Optional[str] = None  # Layout configuration (e.g., 'grid-3x2', 'vertical', etc.)
+    
+    @validator('layout')
+    def validate_layout(cls, v):
+        """Validate that layout is one of the allowed values"""
+        if v is not None and v not in VALID_LAYOUTS:
+            raise ValueError(f'Invalid layout. Must be one of: {", ".join(VALID_LAYOUTS)}')
+        return v or DEFAULT_LAYOUT
 
 # Simple user model for mentions
 class MentionedUser(BaseModel):
