@@ -7,7 +7,7 @@ import { Heart, MessageCircle, Send, MoreHorizontal, Play, CheckCircle, Bookmark
 import { cn } from '../lib/utils';
 import { motion } from 'framer-motion';
 import { useAddiction } from '../contexts/AddictionContext';
-import SocialProofBadge from './AddictionUI_backup/SocialProofBadge';
+// import SocialProofBadge from './AddictionUI_backup/SocialProofBadge'; // REMOVED: Component deleted during cleanup
 import CommentsModal from './CommentsModal';
 import ShareModal from './ShareModal';
 import { useShare } from '../hooks/useShare';
