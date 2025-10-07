@@ -642,6 +642,7 @@ const SearchPage = () => {
                   </button>
                 );
               })}
+              </div>
             </div>
           </div>
         )}
