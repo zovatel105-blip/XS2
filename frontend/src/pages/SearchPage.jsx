@@ -1031,11 +1031,17 @@ const SearchPage = () => {
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        .hover\\:scale-102:hover {
-          transform: scale(1.02);
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
-        .drop-shadow-glow {
-          filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.6));
+        .aspect-\[3\/4\] {
+          aspect-ratio: 3 / 4;
+        }
+        .group:hover .group-hover\:opacity-100 {
+          opacity: 1;
         }
         @keyframes spin-reverse {
           from {
