@@ -1018,71 +1018,23 @@ const SearchPage = () => {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center justify-between px-1 py-1">
-                    <div className="flex items-center space-x-4">
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Like clicked for:', result.id);
-                        }}
-                        className="flex items-center space-x-1 text-gray-700 hover:text-red-500 transition-colors"
-                      >
-                        <Heart size={20} className="hover:fill-current" />
-                        <span className="text-sm">{result.likes_count || 0}</span>
-                      </button>
-                      
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Comment clicked for:', result.id);
-                        }}
-                        className="flex items-center space-x-1 text-gray-700 hover:text-blue-500 transition-colors"
-                      >
-                        <MessageCircle size={20} />
-                        <span className="text-sm">{result.comments_count || 0}</span>
-                      </button>
-                      
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Share clicked for:', result.id);
-                        }}
-                        className="text-gray-700 hover:text-green-500 transition-colors"
-                      >
-                        <Share size={20} />
-                      </button>
-                    </div>
-                    
-                    {/* Views count for posts */}
-                    {result.type === 'post' && (
-                      <div className="flex items-center text-gray-500">
-                        <Play size={12} className="mr-1" />
-                        <span className="text-xs">{result.votes_count || result.views_count || '0'}</span>
-                      </div>
-                    )}
-                  </div>
-
                   {/* Description with hashtags */}
-                  <div className="px-1 pb-0">
+                  <div className="px-0 pb-1">
                     <p className="text-sm text-gray-900">
-                      <span className="font-semibold mr-2">{result.username || result.author?.username || 'usuario'}</span>
                       {result.title || result.content || result.description || 'Contenido interesante'}
-                    </p>
-                    
-                    {/* Hashtags */}
-                    <div className="flex flex-wrap gap-1">
+                      {' '}
+                      {/* Hashtags inline */}
                       {result.hashtags ? result.hashtags.slice(0, 2).map((hashtag, idx) => (
-                        <span key={idx} className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">
-                          #{hashtag}
+                        <span key={idx} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
+                          #{hashtag}{' '}
                         </span>
                       )) : (
                         <>
-                          <span className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">#arte</span>
-                          <span className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">#creativo</span>
+                          <span className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">#arte </span>
+                          <span className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">#creativo</span>
                         </>
                       )}
-                    </div>
+                    </p>
                   </div>
                 </div>
               ))}
