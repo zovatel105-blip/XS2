@@ -982,7 +982,7 @@ const SearchPage = () => {
                   {/* Image Container */}
                   <div 
                     onClick={() => handleResultClick(result)}
-                    className="relative aspect-[6/11] bg-gray-100 cursor-pointer"
+                    className="relative aspect-[6/11] bg-gray-100 cursor-pointer rounded-xl overflow-hidden"
                   >
                     {/* Main Image */}
                     {(result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url) ? (
