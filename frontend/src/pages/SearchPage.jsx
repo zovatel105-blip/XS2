@@ -954,11 +954,46 @@ const SearchPage = () => {
               ]).map((result, index) => (
                 <div
                   key={`${result.type}-${result.id}-${index}`}
-                  onClick={() => handleResultClick(result)}
-                  className="relative bg-white rounded-xl overflow-hidden cursor-pointer group transform transition-transform duration-200 hover:scale-[1.02]"
+                  className="bg-white rounded-xl overflow-hidden group"
                 >
+                  {/* Header: Avatar + Username + Follow Button */}
+                  <div className="flex items-center justify-between p-3 pb-2">
+                    <div className="flex items-center space-x-2">
+                      {/* Avatar */}
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center overflow-hidden">
+                        {result.avatar_url || result.author?.avatar_url ? (
+                          <img 
+                            src={result.avatar_url || result.author?.avatar_url} 
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User size={16} className="text-white" />
+                        )}
+                      </div>
+                      {/* Username */}
+                      <span className="text-sm font-semibold text-gray-900 truncate">
+                        {result.username || result.author?.username || result.display_name || 'usuario'}
+                      </span>
+                    </div>
+                    {/* Follow Button */}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Follow clicked for:', result.id);
+                      }}
+                      className="flex items-center space-x-1 px-3 py-1 bg-black text-white text-xs font-medium rounded-full hover:bg-gray-800 transition-colors"
+                    >
+                      <UserPlus size={12} />
+                      <span>Seguir</span>
+                    </button>
+                  </div>
+
                   {/* Image Container */}
-                  <div className="relative aspect-[6/11] bg-gray-100">
+                  <div 
+                    onClick={() => handleResultClick(result)}
+                    className="relative aspect-[6/11] bg-gray-100 cursor-pointer"
+                  >
                     {/* Main Image */}
                     {(result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url) ? (
                       <img 
@@ -966,13 +1001,6 @@ const SearchPage = () => {
                         alt={result.title || result.content || 'Result'}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          // Create a colored placeholder based on result type
-                          const placeholderColors = {
-                            post: 'bg-gradient-to-br from-blue-400 to-purple-500',
-                            user: 'bg-gradient-to-br from-green-400 to-blue-500',
-                            hashtag: 'bg-gradient-to-br from-pink-400 to-red-500',
-                            sound: 'bg-gradient-to-br from-yellow-400 to-orange-500'
-                          };
                           e.target.style.display = 'none';
                           const placeholder = e.target.parentElement.querySelector('.placeholder-div');
                           if (placeholder) {
@@ -996,80 +1024,75 @@ const SearchPage = () => {
                         {result.type === 'hashtag' && <Hash size={32} className="mx-auto mb-2" />}
                         {result.type === 'sound' && <Music size={32} className="mx-auto mb-2" />}
                         {result.type === 'post' && <Play size={32} className="mx-auto mb-2" />}
-                        <p className="text-xs font-medium px-2">
-                          {result.title || result.content || result.username || result.hashtag || 'Contenido'}
-                        </p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-between px-3 py-2">
+                    <div className="flex items-center space-x-4">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Like clicked for:', result.id);
+                        }}
+                        className="flex items-center space-x-1 text-gray-700 hover:text-red-500 transition-colors"
+                      >
+                        <Heart size={20} className="hover:fill-current" />
+                        <span className="text-sm">{result.likes_count || 0}</span>
+                      </button>
+                      
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Comment clicked for:', result.id);
+                        }}
+                        className="flex items-center space-x-1 text-gray-700 hover:text-blue-500 transition-colors"
+                      >
+                        <MessageCircle size={20} />
+                        <span className="text-sm">{result.comments_count || 0}</span>
+                      </button>
+                      
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Share clicked for:', result.id);
+                        }}
+                        className="text-gray-700 hover:text-green-500 transition-colors"
+                      >
+                        <Share size={20} />
+                      </button>
+                    </div>
                     
-                    {/* Three dots menu button - Always visible on mobile, hover on desktop */}
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Menu clicked for:', result.id);
-                        // TODO: Implement menu dropdown with options like Save, Share, Report, etc.
-                      }}
-                      className="absolute top-3 right-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200 hover:bg-black/60 md:opacity-0 md:group-hover:opacity-100"
-                    >
-                      <div className="flex flex-col space-y-0.5">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                      </div>
-                    </button>
-                    
-                    {/* Content overlay for posts - Stats at bottom */}
+                    {/* Views count for posts */}
                     {result.type === 'post' && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3">
-                        <div className="flex items-center justify-between text-white">
-                          <div className="flex items-center space-x-2 text-sm">
-                            <div className="flex items-center">
-                              <Play size={12} className="mr-1" fill="currentColor" />
-                              <span>{result.votes_count || result.views_count || '0'}</span>
-                            </div>
-                            {result.likes_count && (
-                              <div className="flex items-center">
-                                <Heart size={12} className="mr-1" fill="currentColor" />
-                                <span>{result.likes_count}</span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="text-xs opacity-75">
-                            {result.created_at && new Date(result.created_at).toLocaleDateString()}
-                          </div>
-                        </div>
+                      <div className="flex items-center text-gray-500">
+                        <Play size={12} className="mr-1" />
+                        <span className="text-xs">{result.votes_count || result.views_count || '0'}</span>
                       </div>
                     )}
+                  </div>
+
+                  {/* Description with hashtags */}
+                  <div className="px-3 pb-3">
+                    <p className="text-sm text-gray-900 mb-1">
+                      <span className="font-semibold mr-2">{result.username || result.author?.username || 'usuario'}</span>
+                      {result.title || result.content || result.description || 'Contenido interesante'}
+                    </p>
                     
-                    {/* User info for user results */}
-                    {result.type === 'user' && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                        <div className="text-white">
-                          <p className="font-medium text-sm">{result.display_name || result.username}</p>
-                          <p className="text-xs opacity-75">{result.followers_count || 0} seguidores</p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Hashtag info */}
-                    {result.type === 'hashtag' && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                        <div className="text-white">
-                          <p className="font-medium text-sm">{result.hashtag}</p>
-                          <p className="text-xs opacity-75">{result.posts_count || 0} publicaciones</p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Sound info */}
-                    {result.type === 'sound' && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                        <div className="text-white">
-                          <p className="font-medium text-sm">{result.title}</p>
-                          <p className="text-xs opacity-75">{result.artist || 'Sonido original'}</p>
-                        </div>
-                      </div>
-                    )}
+                    {/* Hashtags */}
+                    <div className="flex flex-wrap gap-1">
+                      {result.hashtags ? result.hashtags.slice(0, 2).map((hashtag, idx) => (
+                        <span key={idx} className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">
+                          #{hashtag}
+                        </span>
+                      )) : (
+                        <>
+                          <span className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">#arte</span>
+                          <span className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer">#creativo</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
