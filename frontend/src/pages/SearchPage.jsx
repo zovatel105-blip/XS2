@@ -5,7 +5,6 @@ import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import searchService from '../services/searchService';
 import storyService from '../services/storyService';
-import SearchResultsGrid from '../components/search/SearchResultsGrid';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
 import TikTokScrollView from '../components/TikTokScrollView';
 
