@@ -26,7 +26,6 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/use-toast';
-import CreatePollModal from './CreatePollModal';
 import TrendingPanel from './TrendingPanel';
 import SuggestionsPanel from './SuggestionsPanel';
 import { cn } from '../lib/utils';
