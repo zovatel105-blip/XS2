@@ -225,18 +225,7 @@ const DesktopLayout = ({ children }) => {
         </div>
       </div>
 
-      {/* Create Poll Modal */}
-      <CreatePollModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onPollCreated={(poll) => {
-          // Handle new poll creation
-          toast({
-            title: "¡Votación creada!",
-            description: "Tu votación ha sido publicada"
-          });
-        }}
-      />
+      {/* Create Poll Modal - REMOVED */}
     </div>
   );
 };
