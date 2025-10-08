@@ -1561,7 +1561,7 @@ const ProfilePage = () => {
           {/* Header minimalista */}
           <header className="bg-white border-b border-gray-100/50 sticky top-0 z-40">
             <div className="px-3 sm:px-6 py-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between relative">
                 {/* Botón atrás (izquierda) */}
                 {!isOwnProfile && (
                   <Button 
@@ -1573,9 +1573,10 @@ const ProfilePage = () => {
                     <ArrowLeft className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
                   </Button>
                 )}
+                {isOwnProfile && <div className="w-10"></div>}
                 
                 {/* Username centrado */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
                   <h1 className="text-lg font-semibold text-gray-900">@{displayUser?.username || 'usuario'}</h1>
                   {displayUser?.verified && (
                     <Check className="w-4 h-4 text-blue-500" strokeWidth={2} />
