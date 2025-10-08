@@ -1676,15 +1676,7 @@ const ProfilePage = () => {
                       </div>
                     )}
                     
-                    {/* Botón sutil de editar - solo perfil propio */}
-                    {isOwnProfile && (
-                      <button 
-                        onClick={() => setShowCreateStoryModal(true)}
-                        className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
-                      >
-                        <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" strokeWidth={2} />
-                      </button>
-                    )}
+                    {/* Botón de crear story - REMOVED */}
                   </div>
                 </div>
                 
