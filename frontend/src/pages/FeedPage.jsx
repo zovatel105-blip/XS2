@@ -538,8 +538,6 @@ const FeedPage = () => {
       
       // Trigger addiction system
       await trackAction('create');
-      
-      // No mostramos toast aquí porque ya se muestra en CreatePollModal
     } catch (error) {
       console.error('Error handling new poll:', error);
       toast({
