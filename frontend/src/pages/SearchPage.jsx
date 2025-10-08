@@ -646,6 +646,34 @@ const SearchPage = () => {
             </div>
           </div>
         )}
+
+        {/* Main Filter Tabs - Principal Navigation */}
+        {hasSearched && (
+          <div className="px-4 lg:px-6 xl:px-8 pt-0 pb-2 bg-white">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+                {tabs.map((tab) => {
+                  const IconComponent = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => handleTabChange(tab.id)}
+                      className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap flex-shrink-0 transition-all duration-200 border ${
+                        isActive
+                          ? 'bg-black text-white border-black shadow-sm'
+                          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                      }`}
+                    >
+                      <IconComponent size={16} />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Clean Content Area - TikTok Style - Full Width */}
