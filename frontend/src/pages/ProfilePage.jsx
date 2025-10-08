@@ -92,7 +92,6 @@ const ProfilePage = () => {
   const [userHasStories, setUserHasStories] = useState(false);
   const [userStories, setUserStories] = useState([]);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
-  const [showCreateStoryModal, setShowCreateStoryModal] = useState(false);
   const [socialLinks, setSocialLinks] = useState({});
   const [savingSocialLinks, setSavingSocialLinks] = useState(false);
   const [showAddSocialModal, setShowAddSocialModal] = useState(false);
