@@ -8,7 +8,6 @@ import MusicSelector from '../components/MusicSelector';
 import UserMentionInput from '../components/UserMentionInput';
 import { fileToBase64 } from '../services/mockData';
 import pollService from '../services/pollService';
-import UploadWidget from '../components/UploadWidget';
 import InlineCrop from '../components/InlineCrop';
 import config from '../config/config';
 
