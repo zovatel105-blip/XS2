@@ -2465,14 +2465,7 @@ const ProfilePage = () => {
         />
       )}
 
-      {/* Create Story Modal - Solo para perfil propio */}
-      {isOwnProfile && (
-        <CreateStoryModal
-          isOpen={showCreateStoryModal}
-          onClose={() => setShowCreateStoryModal(false)}
-          onStoryCreated={handleStoryCreated}
-        />
-      )}
+      {/* Create Story Modal - REMOVED */}
     </>
   );
 };
