@@ -821,20 +821,7 @@ const FeedPage = () => {
         content={shareModal.content}
       />
 
-      {/* Create Poll Modal */}
-      <CreatePollModal
-        isOpen={showCreateModal}
-        onClose={() => {
-          setShowCreateModal(false);
-          setPreSelectedAudio(null); // Clear pre-selected audio when closing
-        }}
-        preSelectedAudio={preSelectedAudio}
-        onCreatePoll={(newPoll) => {
-          // Add the new poll to the beginning of the list
-          const transformedPoll = pollService.transformPollData(newPoll);
-          setPolls(prev => [transformedPoll, ...prev]);
-        }}
-      />
+      {/* Create Poll Modal - REMOVED */}
 
       {/* Floating Create Button */}
       {isAuthenticated && !isLoading && (
