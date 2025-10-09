@@ -3,8 +3,9 @@ import React from 'react';
 /**
  * Componente de miniatura de poll que replica el layout completo del poll
  * Muestra todas las opciones con su layout original (grid, carousel, etc.)
+ * @param {boolean} hideBadge - Si es true, oculta el badge de layout
  */
-const PollThumbnail = ({ result, className = "", onClick }) => {
+const PollThumbnail = ({ result, className = "", onClick, hideBadge = false }) => {
   if (!result || result.type !== 'post') {
     return null;
   }
