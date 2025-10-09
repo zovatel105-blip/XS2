@@ -143,7 +143,13 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
   return (
     <div 
       className={`relative aspect-[6/11] bg-black cursor-pointer rounded-xl overflow-hidden ${className}`}
-      onClick={onClick}
+      onClick={showQuickVote ? undefined : onClick}
+      onMouseDown={handleLongPressStart}
+      onMouseUp={handleLongPressEnd}
+      onMouseLeave={handleLongPressEnd}
+      onTouchStart={handleLongPressStart}
+      onTouchEnd={handleLongPressEnd}
+      onTouchCancel={handleLongPressEnd}
     >
       <div className={`w-full h-full ${getGridClasses()}`}>
         {optionsWithMedia.map((option, index) => (
