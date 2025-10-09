@@ -2404,10 +2404,11 @@ async def search_users_optimized(query: str, current_user_id: str, limit: int):
             results.append({
                 "type": "user",
                 "id": user["id"],
+                "user_id": user["id"],  # Add user_id for follow functionality
                 "username": user.get("username", ""),
                 "display_name": user.get("display_name", ""),
                 "bio": user.get("bio", ""),
-                "avatar": user.get("avatar_url", ""),
+                "avatar_url": user.get("avatar_url", ""),  # Changed 'avatar' to 'avatar_url' for consistency
                 "followers_count": user.get("followers_count", 0),
                 "relevance_score": relevance_score,
                 "popularity_score": user.get("followers_count", 0)
