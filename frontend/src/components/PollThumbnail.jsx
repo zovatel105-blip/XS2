@@ -120,7 +120,13 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
     return (
       <div 
         className={`relative aspect-[6/11] bg-gray-100 cursor-pointer rounded-xl overflow-hidden ${className}`}
-        onClick={onClick}
+        onClick={showQuickVote ? undefined : onClick}
+        onMouseDown={handleLongPressStart}
+        onMouseUp={handleLongPressEnd}
+        onMouseLeave={handleLongPressEnd}
+        onTouchStart={handleLongPressStart}
+        onTouchEnd={handleLongPressEnd}
+        onTouchCancel={handleLongPressEnd}
       >
         <img
           src={firstOption.media_url || firstOption.thumbnail_url}
@@ -135,6 +141,85 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
           <span>🎠</span>
           <span>{options.length}</span>
         </div>
+        
+        {/* Modal de votación rápida */}
+        {showQuickVote && (
+          <div 
+            className="absolute inset-0 bg-black/95 backdrop-blur-sm z-50 flex flex-col justify-center items-center p-4 animate-fadeIn"
+            onClick={handleCloseQuickVote}
+          >
+            <div className="w-full max-w-sm space-y-2" onClick={(e) => e.stopPropagation()}>
+              <div className="text-white text-center mb-4">
+                <h3 className="font-semibold text-sm mb-1">Votación Rápida</h3>
+                <p className="text-xs text-gray-300">Selecciona una opción</p>
+              </div>
+              
+              {options.map((option, index) => {
+                const isVoted = result.user_vote === index;
+                const votePercentage = result.total_votes > 0 
+                  ? Math.round((option.votes / result.total_votes) * 100) 
+                  : 0;
+                
+                return (
+                  <button
+                    key={index}
+                    onClick={(e) => handleQuickVoteClick(index, e)}
+                    className={`w-full relative overflow-hidden rounded-lg transition-all duration-200 ${
+                      isVoted 
+                        ? 'bg-blue-500/90 ring-2 ring-blue-400' 
+                        : 'bg-white/10 hover:bg-white/20'
+                    }`}
+                  >
+                    {/* Progress bar */}
+                    <div 
+                      className="absolute inset-0 bg-blue-500/30 transition-all duration-500"
+                      style={{ width: `${votePercentage}%` }}
+                    />
+                    
+                    <div className="relative flex items-center justify-between px-4 py-3">
+                      <div className="flex items-center space-x-3 flex-1">
+                        {/* Thumbnail */}
+                        {(option.media_url || option.thumbnail_url) && (
+                          <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0">
+                            <img 
+                              src={option.media_url || option.thumbnail_url}
+                              alt={option.text || `Option ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Text */}
+                        <span className="text-white text-sm font-medium text-left">
+                          {option.text || `Opción ${index + 1}`}
+                        </span>
+                      </div>
+                      
+                      {/* Vote indicator and percentage */}
+                      <div className="flex items-center space-x-2">
+                        {isVoted && (
+                          <div className="bg-white rounded-full p-1">
+                            <Check size={12} className="text-blue-500" />
+                          </div>
+                        )}
+                        <span className="text-white text-xs font-semibold">
+                          {votePercentage}%
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+              
+              <button
+                onClick={handleCloseQuickVote}
+                className="w-full mt-4 py-2 text-white text-sm bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
