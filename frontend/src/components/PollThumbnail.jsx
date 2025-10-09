@@ -145,7 +145,7 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false }) =
         {Array.from({ length: Math.max(0, getMaxOptions() - optionsWithMedia.length) }).map((_, index) => (
           <div
             key={`empty-${index}`}
-            className="bg-gray-200 flex items-center justify-center text-gray-400 text-xs"
+            className="bg-gray-800 flex items-center justify-center text-gray-400 text-xs"
           >
             <span>Empty</span>
           </div>
