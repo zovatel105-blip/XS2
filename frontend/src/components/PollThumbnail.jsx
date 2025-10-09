@@ -18,6 +18,42 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
 
   const options = result.options || [];
   const layout = result.layout || 'vertical';
+  
+  // Long press handlers
+  const handleLongPressStart = (e) => {
+    longPressStarted.current = true;
+    longPressTimer.current = setTimeout(() => {
+      if (longPressStarted.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        setShowQuickVote(true);
+      }
+    }, 500); // 500ms para activar long press
+  };
+  
+  const handleLongPressEnd = (e) => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+    longPressStarted.current = false;
+  };
+  
+  const handleQuickVoteClick = async (optionIndex, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (onQuickVote) {
+      await onQuickVote(result.id, optionIndex);
+    }
+    
+    setShowQuickVote(false);
+  };
+  
+  const handleCloseQuickVote = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowQuickVote(false);
+  };
 
   // Función para obtener las clases CSS del grid basado en el layout
   const getGridClasses = () => {
