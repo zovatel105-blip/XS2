@@ -183,81 +183,90 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
           <span>{options.length}</span>
         </div>
         
-        {/* Modal de votación rápida */}
+        {/* Modal de votación rápida - Estilo Instagram */}
         {showQuickVote && (
           <div 
-            className="absolute inset-0 bg-black/95 backdrop-blur-sm z-50 flex flex-col justify-center items-center p-4 animate-fadeIn"
-            onClick={handleCloseQuickVote}
+            className="absolute inset-0 bg-black/90 z-50 flex items-center justify-center p-2"
+            style={{ touchAction: 'none' }}
           >
-            <div className="w-full max-w-sm space-y-2" onClick={(e) => e.stopPropagation()}>
-              <div className="text-white text-center mb-4">
-                <h3 className="font-semibold text-sm mb-1">Votación Rápida</h3>
-                <p className="text-xs text-gray-300">Selecciona una opción</p>
+            <div className="w-full h-full flex flex-col gap-1">
+              <div className="text-white text-center mb-1 text-xs font-medium">
+                Mantén presionado para votar
               </div>
               
-              {options.map((option, index) => {
-                const isVoted = result.user_vote === index;
-                const votePercentage = result.total_votes > 0 
-                  ? Math.round((option.votes / result.total_votes) * 100) 
-                  : 0;
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={(e) => handleQuickVoteClick(index, e)}
-                    className={`w-full relative overflow-hidden rounded-lg transition-all duration-200 ${
-                      isVoted 
-                        ? 'bg-blue-500/90 ring-2 ring-blue-400' 
-                        : 'bg-white/10 hover:bg-white/20'
-                    }`}
-                  >
-                    {/* Progress bar */}
-                    <div 
-                      className="absolute inset-0 bg-blue-500/30 transition-all duration-500"
-                      style={{ width: `${votePercentage}%` }}
-                    />
-                    
-                    <div className="relative flex items-center justify-between px-4 py-3">
-                      <div className="flex items-center space-x-3 flex-1">
-                        {/* Thumbnail */}
-                        {(option.media_url || option.thumbnail_url) && (
-                          <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0">
-                            <img 
-                              src={option.media_url || option.thumbnail_url}
-                              alt={option.text || `Option ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
+              <div className="flex-1 flex flex-col gap-1">
+                {options.map((option, index) => {
+                  const isSelected = selectedOption === index;
+                  const isVoted = result.user_vote === index;
+                  const votePercentage = result.total_votes > 0 
+                    ? Math.round((option.votes / result.total_votes) * 100) 
+                    : 0;
+                  
+                  return (
+                    <div
+                      key={index}
+                      data-option-index={index}
+                      className={`relative flex-1 rounded-lg overflow-hidden transition-all duration-150 ${
+                        isSelected 
+                          ? 'ring-4 ring-blue-400 scale-105' 
+                          : 'scale-100'
+                      }`}
+                      style={{ minHeight: '60px' }}
+                    >
+                      {/* Background Image */}
+                      {(option.media_url || option.thumbnail_url) && (
+                        <img 
+                          src={option.media_url || option.thumbnail_url}
+                          alt={option.text || `Option ${index + 1}`}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      )}
+                      
+                      {/* Overlay */}
+                      <div className={`absolute inset-0 transition-all duration-150 ${
+                        isSelected 
+                          ? 'bg-blue-500/40' 
+                          : 'bg-black/30'
+                      }`} />
+                      
+                      {/* Content */}
+                      <div className="relative h-full flex items-center justify-between px-3 py-2">
+                        <div className="flex-1">
+                          <span className="text-white text-sm font-semibold drop-shadow-lg">
+                            {option.text || `Opción ${index + 1}`}
+                          </span>
+                        </div>
                         
-                        {/* Text */}
-                        <span className="text-white text-sm font-medium text-left">
-                          {option.text || `Opción ${index + 1}`}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          {isVoted && (
+                            <div className="bg-white/90 rounded-full p-1">
+                              <Check size={14} className="text-blue-500" />
+                            </div>
+                          )}
+                          {isSelected && (
+                            <div className="bg-blue-500 rounded-full p-2 animate-pulse">
+                              <Check size={16} className="text-white" />
+                            </div>
+                          )}
+                          <span className="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded-full">
+                            {votePercentage}%
+                          </span>
+                        </div>
                       </div>
                       
-                      {/* Vote indicator and percentage */}
-                      <div className="flex items-center space-x-2">
-                        {isVoted && (
-                          <div className="bg-white rounded-full p-1">
-                            <Check size={12} className="text-blue-500" />
-                          </div>
-                        )}
-                        <span className="text-white text-xs font-semibold">
-                          {votePercentage}%
-                        </span>
-                      </div>
+                      {/* Progress bar */}
+                      <div 
+                        className="absolute bottom-0 left-0 h-1 bg-blue-500 transition-all duration-500"
+                        style={{ width: `${votePercentage}%` }}
+                      />
                     </div>
-                  </button>
-                );
-              })}
+                  );
+                })}
+              </div>
               
-              <button
-                onClick={handleCloseQuickVote}
-                className="w-full mt-4 py-2 text-white text-sm bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-              >
-                Cancelar
-              </button>
+              <div className="text-center text-white text-xs opacity-70 mt-1">
+                {selectedOption !== null ? '✓ Suelta para votar' : 'Desliza para seleccionar'}
+              </div>
             </div>
           </div>
         )}
