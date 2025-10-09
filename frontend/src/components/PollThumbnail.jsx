@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Check } from 'lucide-react';
 
 /**
@@ -9,8 +9,10 @@ import { Check } from 'lucide-react';
  */
 const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQuickVote }) => {
   const [showQuickVote, setShowQuickVote] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [isHolding, setIsHolding] = useState(false);
   const longPressTimer = useRef(null);
-  const longPressStarted = useRef(false);
+  const containerRef = useRef(null);
   
   if (!result || result.type !== 'post') {
     return null;
@@ -19,40 +21,77 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
   const options = result.options || [];
   const layout = result.layout || 'vertical';
   
-  // Long press handlers
-  const handleLongPressStart = (e) => {
-    longPressStarted.current = true;
+  // Long press handlers - Nueva lógica
+  const handlePressStart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsHolding(true);
     longPressTimer.current = setTimeout(() => {
-      if (longPressStarted.current) {
-        e.preventDefault();
-        e.stopPropagation();
-        setShowQuickVote(true);
-      }
-    }, 500); // 500ms para activar long press
+      setShowQuickVote(true);
+    }, 300); // 300ms para mostrar opciones
   };
   
-  const handleLongPressEnd = (e) => {
+  const handlePressMove = useCallback((e) => {
+    if (!showQuickVote || !containerRef.current) return;
+    
+    // Obtener posición del touch/mouse
+    let clientX, clientY;
+    if (e.type.includes('touch')) {
+      if (e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        return;
+      }
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    
+    // Encontrar elemento bajo el cursor
+    const elements = document.elementsFromPoint(clientX, clientY);
+    const optionElement = elements.find(el => el.dataset.optionIndex !== undefined);
+    
+    if (optionElement) {
+      const optionIndex = parseInt(optionElement.dataset.optionIndex);
+      setSelectedOption(optionIndex);
+    } else {
+      setSelectedOption(null);
+    }
+  }, [showQuickVote]);
+  
+  const handlePressEnd = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
     }
-    longPressStarted.current = false;
-  };
-  
-  const handleQuickVoteClick = async (optionIndex, e) => {
-    e.preventDefault();
-    e.stopPropagation();
     
-    if (onQuickVote) {
-      await onQuickVote(result.id, optionIndex);
+    // Si se mostró el menú y hay una opción seleccionada, votar
+    if (showQuickVote && selectedOption !== null && onQuickVote) {
+      await onQuickVote(result.id, selectedOption);
     }
     
+    // Resetear estado
     setShowQuickVote(false);
+    setSelectedOption(null);
+    setIsHolding(false);
+    
+    // Si no se mostró el menú, permitir click normal
+    if (!showQuickVote && onClick) {
+      onClick();
+    }
   };
   
-  const handleCloseQuickVote = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handlePressCancel = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
     setShowQuickVote(false);
+    setSelectedOption(null);
+    setIsHolding(false);
   };
 
   // Función para obtener las clases CSS del grid basado en el layout
