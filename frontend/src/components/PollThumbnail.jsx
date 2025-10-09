@@ -52,7 +52,7 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
     }
   }, [showQuickVote]);
   
-  const handlePressEnd = async (e) => {
+  const handlePressEnd = useCallback(async (e) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -61,29 +61,35 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
     }
     
     // Si se mostró el menú y hay una opción seleccionada, votar
-    if (showQuickVote && selectedOption !== null && onQuickVote) {
+    if (showQuickVote && selectedOption !== null && onQuickVote && result) {
       await onQuickVote(result.id, selectedOption);
     }
     
     // Resetear estado
     setShowQuickVote(false);
     setSelectedOption(null);
-    setIsHolding(false);
     
     // Si no se mostró el menú, permitir click normal
     if (!showQuickVote && onClick) {
       onClick();
     }
-  };
+  }, [showQuickVote, selectedOption, onQuickVote, result, onClick]);
   
-  const handlePressCancel = () => {
+  const handlePressCancel = useCallback(() => {
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
     }
     setShowQuickVote(false);
     setSelectedOption(null);
-    setIsHolding(false);
-  };
+  }, []);
+  
+  // Early return after hooks
+  if (!result || result.type !== 'post') {
+    return null;
+  }
+
+  const options = result.options || [];
+  const layout = result.layout || 'vertical';
 
   // Función para obtener las clases CSS del grid basado en el layout
   const getGridClasses = () => {
