@@ -2255,6 +2255,7 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                     "title": 1,
                     "content": 1,
                     "options": 1,  # Include options to extract media_url and thumbnail_url
+                    "layout": 1,   # Include layout for frontend grid rendering
                     "images": 1,
                     "image_url": 1,
                     "thumbnail_url": 1,
