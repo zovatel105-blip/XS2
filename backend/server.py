@@ -2278,14 +2278,31 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
             content_score = 1 if query in post.get("content", "").lower() else 0
             relevance_score = title_score + content_score
             
-            # Get first image for thumbnail
+            # Get first image for thumbnail from poll options
             image_url = None
-            if post.get("images") and len(post["images"]) > 0:
-                image_url = post["images"][0].get("url")
-            elif post.get("image_url"):
-                image_url = post["image_url"]
-            elif post.get("thumbnail_url"):
-                image_url = post["thumbnail_url"]
+            media_url = None
+            thumbnail_url = None
+            
+            # Extract images from poll options (where they actually are stored)
+            if post.get("options") and len(post["options"]) > 0:
+                for option in post["options"]:
+                    if option.get("media_url"):
+                        image_url = option["media_url"]
+                        media_url = option["media_url"]
+                        break
+                    elif option.get("thumbnail_url"):
+                        thumbnail_url = option["thumbnail_url"]
+                        if not image_url:  # Use thumbnail as fallback if no media_url found
+                            image_url = thumbnail_url
+            
+            # Fallback to legacy fields if they exist
+            if not image_url:
+                if post.get("images") and len(post["images"]) > 0:
+                    image_url = post["images"][0].get("url")
+                elif post.get("image_url"):
+                    image_url = post["image_url"]
+                elif post.get("thumbnail_url"):
+                    image_url = post["thumbnail_url"]
                 
             results.append({
                 "type": "post",
