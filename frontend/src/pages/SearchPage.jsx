@@ -7,6 +7,7 @@ import searchService from '../services/searchService';
 import storyService from '../services/storyService';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
 import TikTokScrollView from '../components/TikTokScrollView';
+import PollThumbnail from '../components/PollThumbnail';
 
 import PostsIcon from '../components/icons/PostsIcon';
 import LogoWithQuickActions from '../components/LogoWithQuickActions';
