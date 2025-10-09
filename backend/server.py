@@ -2260,9 +2260,11 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                     "image_url": 1,
                     "thumbnail_url": 1,
                     "video_url": 1,
+                    "author_id": 1,  # Include author_id for follow functionality
                     "created_at": 1,
                     "votes_count": {"$ifNull": ["$votes_count", 0]},
                     "comments_count": {"$ifNull": ["$comments_count", 0]},
+                    "author.id": 1,  # Include author id
                     "author.username": 1,
                     "author.avatar_url": 1,
                     "hashtags": 1
