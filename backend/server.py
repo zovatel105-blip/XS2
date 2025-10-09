@@ -2619,6 +2619,12 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
         hashtag_pattern = r'#(\w+)'
         hashtags = re.findall(hashtag_pattern, combined_text)
         
+        # Build images array for frontend compatibility
+        images_array = []
+        for option in options:
+            if option.get("media_url"):
+                images_array.append({"url": option["media_url"]})
+
         results.append({
             "type": "post",
             "id": post["id"],
@@ -2627,7 +2633,9 @@ async def search_posts_advanced(query: str, current_user_id: str, limit: int):
             "image_url": main_media_url if main_media_type == "image" else main_thumbnail_url,
             "video_url": main_media_url if main_media_type == "video" else None,
             "media_type": main_media_type,
+            "media_url": main_media_url,  # Add media_url field for frontend compatibility
             "thumbnail_url": main_thumbnail_url,
+            "images": images_array,  # Add images array for frontend compatibility (result.images?.[0]?.url)
             "hashtags": hashtags[:5],  # Limit to first 5 hashtags
             "tags": post.get("tags", []),
             "votes_count": votes_count,
