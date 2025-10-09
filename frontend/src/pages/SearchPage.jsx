@@ -375,65 +375,102 @@ const SearchPage = () => {
     
     // Handle different result types
     if (result.type === 'post') {
-      // Get the complete poll data from backend
-      try {
-        setIsLoading(true);
-        
-        // Get all post IDs from search results
-        const postIds = searchResults.filter(r => r.type === 'post').map(p => p.id);
-        const clickedIndex = postIds.findIndex(id => id === result.id);
-        
-        // Fetch complete poll data for all posts
-        const completePolls = [];
-        for (const postId of postIds) {
-          try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${postId}`, {
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
+      // Get all post IDs from search results
+      const postResults = searchResults.filter(r => r.type === 'post');
+      const clickedIndex = postResults.findIndex(p => p.id === result.id);
+      
+      // Create temporary polls from search results for instant display
+      const tempPolls = postResults.map(r => ({
+        id: r.id,
+        title: r.title || r.content || '',
+        description: r.description || '',
+        content: r.content || '',
+        author: r.author || { 
+          id: r.author_id,
+          username: r.author_username || r.username,
+          display_name: r.author_display_name || r.display_name,
+          avatar_url: r.author_avatar_url || r.avatar_url
+        },
+        authorUser: r.author || {
+          id: r.author_id,
+          username: r.author_username || r.username,
+          display_name: r.author_display_name || r.display_name,
+          avatar_url: r.author_avatar_url || r.avatar_url
+        },
+        images: r.images || [],
+        videos: r.videos || [],
+        layout: r.layout || 'single',
+        options: r.options || [],
+        hashtags: r.hashtags || [],
+        music: r.music,
+        likesCount: r.likes_count || 0,
+        commentsCount: r.comments_count || 0,
+        sharesCount: r.shares_count || 0,
+        totalVotes: r.total_votes || 0,
+        userVote: r.user_vote,
+        isLiked: r.is_liked || false,
+        createdAt: r.created_at,
+        // Mark as loading so we can show indicator if needed
+        _isLoadingComplete: false
+      }));
+      
+      console.log('Opening TikTokScrollView immediately with temporary polls:', tempPolls);
+      
+      // Open TikTokScrollView immediately with temporary data
+      setTikTokViewPosts(tempPolls);
+      setCurrentTikTokIndex(clickedIndex >= 0 ? clickedIndex : 0);
+      setShowTikTokView(true);
+      
+      // Fetch complete poll data in background and update
+      (async () => {
+        try {
+          const completePolls = [];
+          for (const postResult of postResults) {
+            try {
+              const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${postResult.id}`, {
+                headers: {
+                  'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                  'Content-Type': 'application/json'
+                }
+              });
+              
+              if (response.ok) {
+                const pollData = await response.json();
+                pollData._isLoadingComplete = true;
+                completePolls.push(pollData);
+              } else {
+                console.warn(`Failed to fetch poll ${postResult.id}:`, response.status);
+                // Keep temporary data if fetch fails
+                const tempPoll = tempPolls.find(p => p.id === postResult.id);
+                if (tempPoll) {
+                  tempPoll._isLoadingComplete = true;
+                  completePolls.push(tempPoll);
+                }
               }
-            });
-            
-            if (response.ok) {
-              const pollData = await response.json();
-              console.log('Fetched poll data:', pollData);
-              completePolls.push(pollData);
-            } else {
-              console.warn(`Failed to fetch poll ${postId}:`, response.status);
-              const errorText = await response.text();
-              console.warn(`Error response:`, errorText);
+            } catch (error) {
+              console.error(`Error fetching poll ${postResult.id}:`, error);
+              // Keep temporary data if fetch fails
+              const tempPoll = tempPolls.find(p => p.id === postResult.id);
+              if (tempPoll) {
+                tempPoll._isLoadingComplete = true;
+                completePolls.push(tempPoll);
+              }
             }
-          } catch (error) {
-            console.error(`Error fetching poll ${postId}:`, error);
           }
+          
+          console.log('Complete polls fetched:', completePolls.length);
+          
+          // Update with complete data
+          if (completePolls.length > 0) {
+            setTikTokViewPosts(completePolls);
+          }
+          
+        } catch (error) {
+          console.error('Error loading complete poll data:', error);
+          // Silently fail - user already has temporary data displayed
         }
-        
-        console.log('Complete polls fetched:', completePolls.length);
-        
-        if (completePolls.length > 0) {
-          console.log('Opening TikTokScrollView with polls:', completePolls);
-          setTikTokViewPosts(completePolls);
-          setCurrentTikTokIndex(clickedIndex >= 0 ? clickedIndex : 0);
-          setShowTikTokView(true);
-        } else {
-          console.error('No complete polls fetched. Post IDs were:', postIds);
-          toast({
-            title: "Error",
-            description: "No se pudieron cargar las publicaciones completas.",
-            variant: "destructive",
-          });
-        }
-        
-      } catch (error) {
-        console.error('Error loading complete poll data:', error);
-        toast({
-          title: "Error",
-          description: "Error al cargar la publicación.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
+      })();
+      
     } else if (result.type === 'user') {
       navigate(`/profile/${result.username}`);
     } else if (result.type === 'hashtag') {
