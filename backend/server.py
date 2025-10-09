@@ -2321,6 +2321,8 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                 "thumbnail_url": thumbnail_url or image_url,  # Use specific thumbnail if available
                 "media_url": media_url or image_url,  # Add media_url field for frontend compatibility
                 "images": images_array,  # Add images array for frontend compatibility (result.images?.[0]?.url)
+                "layout": post.get("layout", "vertical"),  # Include layout for frontend grid rendering
+                "options": post.get("options", []),  # Include all options for complete poll rendering
                 "video_url": post.get("video_url"),
                 "author": {
                     "username": post.get("author", {}).get("username", ""),
