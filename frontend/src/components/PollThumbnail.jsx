@@ -310,27 +310,44 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
             className="relative bg-gray-200 overflow-hidden"
             style={{ minHeight: '30px' }}
           >
-            {(option.media_url || option.thumbnail_url) ? (
-              <img
-                src={option.media_type === 'video' ? option.thumbnail_url : (option.media_url || option.thumbnail_url)}
-                alt={option.text || `Option ${index + 1}`}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  // Si falla la imagen, mostrar placeholder con texto
-                  e.target.style.display = 'none';
-                  const parent = e.target.parentElement;
-                  const placeholder = document.createElement('div');
-                  placeholder.className = 'absolute inset-0 bg-gray-300 flex items-center justify-center text-xs text-gray-600';
-                  placeholder.textContent = option.text || `Option ${index + 1}`;
-                  parent.appendChild(placeholder);
-                }}
-              />
-            ) : (
-              // Placeholder para opciones sin imagen
-              <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-xs text-gray-600 p-1 text-center">
-                {option.text || `Option ${index + 1}`}
-              </div>
-            )}
+            {(() => {
+              // Determinar la URL correcta a usar
+              let imageUrl = null;
+              if (option.media_type === 'video') {
+                // Para videos, SOLO usar thumbnail_url
+                imageUrl = option.thumbnail_url;
+              } else {
+                // Para imágenes, priorizar media_url
+                imageUrl = option.media_url || option.thumbnail_url;
+              }
+
+              // Si tenemos una URL válida, renderizar imagen
+              if (imageUrl) {
+                return (
+                  <img
+                    src={imageUrl}
+                    alt={option.text || `Option ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Si falla la imagen, mostrar placeholder con texto
+                      e.target.style.display = 'none';
+                      const parent = e.target.parentElement;
+                      const placeholder = document.createElement('div');
+                      placeholder.className = 'absolute inset-0 bg-gray-300 flex items-center justify-center text-xs text-gray-600';
+                      placeholder.textContent = option.text || `Option ${index + 1}`;
+                      parent.appendChild(placeholder);
+                    }}
+                  />
+                );
+              } else {
+                // Placeholder para opciones sin imagen válida
+                return (
+                  <div className="absolute inset-0 bg-gray-300 flex items-center justify-center text-xs text-gray-600 p-1 text-center">
+                    {option.text || `Option ${index + 1}`}
+                  </div>
+                );
+              }
+            })()}
             
             {/* Overlay con texto de la opción si existe */}
             {option.text && (option.media_url || option.thumbnail_url) && (
