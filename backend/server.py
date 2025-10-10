@@ -2322,12 +2322,24 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                 elif post.get("thumbnail_url"):
                     image_url = post["thumbnail_url"]
                 
-            # Build images array for frontend compatibility
+            # Build images array for frontend compatibility and process options with thumbnails
             images_array = []
+            processed_options = []
             if post.get("options"):
                 for option in post["options"]:
+                    option_copy = option.copy()
+                    
                     if option.get("media_url"):
                         images_array.append({"url": option["media_url"]})
+                        
+                        # If it's a video, ensure thumbnail_url is set
+                        if option.get("media_type") == "video":
+                            if not option_copy.get("thumbnail_url"):
+                                video_thumbnail = await get_thumbnail_for_media_url(option["media_url"])
+                                if video_thumbnail:
+                                    option_copy["thumbnail_url"] = video_thumbnail
+                    
+                    processed_options.append(option_copy)
             
             results.append({
                 "type": "post",
@@ -2339,7 +2351,7 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                 "media_url": media_url or image_url,  # Add media_url field for frontend compatibility
                 "images": images_array,  # Add images array for frontend compatibility (result.images?.[0]?.url)
                 "layout": post.get("layout", "vertical"),  # Include layout for frontend grid rendering
-                "options": post.get("options", []),  # Include all options for complete poll rendering
+                "options": processed_options,  # Include all options with thumbnails for complete poll rendering
                 "video_url": post.get("video_url"),
                 "author_id": post.get("author_id"),  # Add author_id for follow functionality
                 "author": {
