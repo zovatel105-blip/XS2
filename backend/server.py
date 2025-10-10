@@ -2290,8 +2290,23 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
             if post.get("options") and len(post["options"]) > 0:
                 for option in post["options"]:
                     if option.get("media_url"):
-                        image_url = option["media_url"]
                         media_url = option["media_url"]
+                        # Check if it's a video and get thumbnail
+                        if option.get("media_type") == "video":
+                            # Try to get existing thumbnail_url
+                            option_thumbnail = option.get("thumbnail_url")
+                            if not option_thumbnail:
+                                # Generate thumbnail URL for video
+                                option_thumbnail = await get_thumbnail_for_media_url(media_url)
+                            if option_thumbnail:
+                                thumbnail_url = option_thumbnail
+                                image_url = option_thumbnail  # Use thumbnail for display
+                            else:
+                                # Fallback to media_url if thumbnail not available
+                                image_url = media_url
+                        else:
+                            # For images, use media_url directly
+                            image_url = media_url
                         break
                     elif option.get("thumbnail_url"):
                         thumbnail_url = option["thumbnail_url"]
