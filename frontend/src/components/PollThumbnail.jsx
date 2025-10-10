@@ -130,10 +130,27 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
     }
   };
 
+  // Debug logging
+  console.log('🔍 PollThumbnail Debug:', {
+    pollId: result?.id,
+    layout: layout,
+    optionsCount: options.length,
+    options: options.map(opt => ({
+      text: opt.text,
+      media_type: opt.media_type,
+      has_media_url: !!opt.media_url,
+      has_thumbnail_url: !!opt.thumbnail_url,
+      media_url_preview: opt.media_url?.substring(0, 50),
+      thumbnail_url_preview: opt.thumbnail_url?.substring(0, 50)
+    }))
+  });
+
   // Filtrar opciones que tienen media y limitar según layout
   const optionsWithMedia = options.filter(option => 
     option.media_url || option.thumbnail_url
   ).slice(0, getMaxOptions());
+
+  console.log('✅ Options with media:', optionsWithMedia.length);
 
   // Si no hay opciones con media, usar fallback
   if (optionsWithMedia.length === 0) {
