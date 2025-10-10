@@ -212,7 +212,7 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
                       {/* Background Image */}
                       {(option.media_url || option.thumbnail_url) && (
                         <img 
-                          src={option.media_url || option.thumbnail_url}
+                          src={option.media_type === 'video' ? option.thumbnail_url : (option.media_url || option.thumbnail_url)}
                           alt={option.text || `Option ${index + 1}`}
                           className="absolute inset-0 w-full h-full object-cover"
                         />
