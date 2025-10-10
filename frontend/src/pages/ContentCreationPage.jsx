@@ -875,38 +875,49 @@ const ContentCreationPage = () => {
       console.log('🎥 Processing video with base64...');
       const base64 = await fileToBase64(file);
         
-      // Create thumbnail like the original modal
+      // Create a video element to generate real thumbnail
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.muted = true;
+      video.playsInline = true;
+      
+      // Create object URL for the video file
+      const videoURL = URL.createObjectURL(file);
+      video.src = videoURL;
+      
+      // Wait for video to load metadata
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = resolve;
+        video.onerror = reject;
+      });
+      
+      // Seek to 0.1 seconds to get a frame (avoid black frames at start)
+      video.currentTime = Math.min(0.1, video.duration / 10);
+      
+      // Wait for seeked event
+      await new Promise((resolve) => {
+        video.onseeked = resolve;
+      });
+      
+      // Create canvas and draw video frame
       const canvas = document.createElement('canvas');
-      canvas.width = 400;
-      canvas.height = 600;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       
-      // Fondo degradado
-      const gradient = ctx.createLinearGradient(0, 0, 0, 600);
-      gradient.addColorStop(0, '#1f2937');
-      gradient.addColorStop(1, '#111827');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 400, 600);
+      // Draw the video frame
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      // Ícono de play
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.moveTo(160, 250);
-      ctx.lineTo(160, 350);
-      ctx.lineTo(240, 300);
-      ctx.closePath();
-      ctx.fill();
+      // Get thumbnail as data URL
+      const thumbnail = canvas.toDataURL('image/jpeg', 0.8);
       
-      // Agregar texto
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
-      ctx.textAlign = 'center';
-      ctx.fillText('Video Preview', 200, 380);
+      // Clean up
+      URL.revokeObjectURL(videoURL);
       
       const mediaData = {
         type: 'video',
         url: base64,
-        thumbnail: canvas.toDataURL('image/png'),
+        thumbnail: thumbnail,
         file: file,
         name: file.name,
         size: file.size
