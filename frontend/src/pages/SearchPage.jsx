@@ -1090,7 +1090,7 @@ const SearchPage = () => {
                 >
                   {/* Header: Avatar + Username + Follow Button */}
                   <div className="flex items-center justify-between px-0 py-2">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1.5">
                       {/* Avatar */}
                       <div 
                         className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden cursor-pointer"
