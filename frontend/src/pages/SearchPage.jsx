@@ -1119,7 +1119,7 @@ const SearchPage = () => {
                         </span>
                       </div>
                       {/* Display Name */}
-                      <span className="text-sm text-gray-900 truncate">
+                      <span className="text-sm text-gray-500 truncate">
                         {result.display_name || result.author?.display_name || result.author_display_name || result.username || result.author?.username || result.author_username || 'usuario'}
                       </span>
                     </div>
