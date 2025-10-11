@@ -2266,6 +2266,7 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                     "comments_count": {"$ifNull": ["$comments_count", 0]},
                     "author.id": 1,  # Include author id
                     "author.username": 1,
+                    "author.display_name": 1,
                     "author.avatar_url": 1,
                     "hashtags": 1
                 }
