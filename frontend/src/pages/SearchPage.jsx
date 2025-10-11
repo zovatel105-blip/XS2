@@ -385,10 +385,15 @@ const SearchPage = () => {
       
       console.log('Post results:', postResults.length, 'Clicked index:', clickedIndex);
       
+      // Store original search posts and current position for dynamic loading
+      setOriginalSearchPosts(postResults);
+      setCurrentSearchIndex(clickedIndex);
+      
       // ABRIR VISTA INMEDIATAMENTE con la publicación seleccionada
       setTikTokViewPosts([]);
       setCurrentTikTokIndex(0);
       setShowTikTokView(true);
+      setLoadingAdjacentPosts(new Set());
       
       try {
         // 1. Cargar INMEDIATAMENTE la publicación seleccionada
@@ -407,62 +412,8 @@ const SearchPage = () => {
           setTikTokViewPosts([selectedPollData]);
           setCurrentTikTokIndex(0);
           
-          // 2. Cargar en SEGUNDO PLANO las publicaciones anterior y siguiente
-          const loadAdjacentPosts = async () => {
-            const finalPolls = [selectedPollData]; // Empezar con la publicación actual
-            let finalIndex = 0; // Índice de la publicación seleccionada en el array final
-            
-            // Cargar publicación ANTERIOR (si existe)
-            if (clickedIndex > 0) {
-              try {
-                const prevPost = postResults[clickedIndex - 1];
-                const prevResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${prevPost.id}`, {
-                  headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                  }
-                });
-                
-                if (prevResponse.ok) {
-                  const prevPollData = await prevResponse.json();
-                  console.log('📥 Loaded previous poll in background:', prevPollData.id);
-                  finalPolls.unshift(prevPollData); // Agregar al inicio
-                  finalIndex = 1; // La publicación seleccionada ahora está en índice 1
-                }
-              } catch (error) {
-                console.warn('Error loading previous post:', error);
-              }
-            }
-            
-            // Cargar publicación SIGUIENTE (si existe)
-            if (clickedIndex < postResults.length - 1) {
-              try {
-                const nextPost = postResults[clickedIndex + 1];
-                const nextResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${nextPost.id}`, {
-                  headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                  }
-                });
-                
-                if (nextResponse.ok) {
-                  const nextPollData = await nextResponse.json();
-                  console.log('📤 Loaded next poll in background:', nextPollData.id);
-                  finalPolls.push(nextPollData); // Agregar al final
-                }
-              } catch (error) {
-                console.warn('Error loading next post:', error);
-              }
-            }
-            
-            // Actualizar con todas las publicaciones cargadas
-            console.log('🔄 Final polls loaded:', finalPolls.length, 'Selected index:', finalIndex);
-            setTikTokViewPosts(finalPolls);
-            setCurrentTikTokIndex(finalIndex);
-          };
-          
-          // Ejecutar carga en segundo plano (sin bloquear la UI)
-          loadAdjacentPosts();
+          // 2. Cargar inicial: anterior y siguiente
+          loadAdjacentPostsInitial(postResults, clickedIndex, selectedPollData);
           
         } else {
           console.warn(`Failed to fetch selected poll ${result.id}:`, selectedResponse.status);
@@ -490,6 +441,142 @@ const SearchPage = () => {
       navigate(`/search?q=${encodeURIComponent(result.hashtag)}&filter=hashtags`);
     } else if (result.type === 'sound') {
       navigate(`/audio/${result.id}`);
+    }
+  };
+
+  // Function to load adjacent posts initially (previous and next)
+  const loadAdjacentPostsInitial = async (postResults, clickedIndex, selectedPollData) => {
+    const finalPolls = [selectedPollData];
+    let finalIndex = 0;
+    
+    // Cargar publicación ANTERIOR (si existe)
+    if (clickedIndex > 0) {
+      try {
+        const prevPost = postResults[clickedIndex - 1];
+        const prevResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${prevPost.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (prevResponse.ok) {
+          const prevPollData = await prevResponse.json();
+          console.log('📥 Loaded previous poll in background:', prevPollData.id);
+          finalPolls.unshift(prevPollData);
+          finalIndex = 1;
+        }
+      } catch (error) {
+        console.warn('Error loading previous post:', error);
+      }
+    }
+    
+    // Cargar publicación SIGUIENTE (si existe)
+    if (clickedIndex < postResults.length - 1) {
+      try {
+        const nextPost = postResults[clickedIndex + 1];
+        const nextResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${nextPost.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (nextResponse.ok) {
+          const nextPollData = await nextResponse.json();
+          console.log('📤 Loaded next poll in background:', nextPollData.id);
+          finalPolls.push(nextPollData);
+        }
+      } catch (error) {
+        console.warn('Error loading next post:', error);
+      }
+    }
+    
+    console.log('🔄 Initial polls loaded:', finalPolls.length, 'Selected index:', finalIndex);
+    setTikTokViewPosts(finalPolls);
+    setCurrentTikTokIndex(finalIndex);
+  };
+
+  // Function to dynamically load more posts as user navigates
+  const loadMorePostsDynamic = async (direction, currentViewIndex) => {
+    if (originalSearchPosts.length === 0) return;
+    
+    console.log('🚀 Loading more posts dynamically, direction:', direction, 'currentViewIndex:', currentViewIndex);
+    
+    // Calculate current position in original search results
+    let targetSearchIndex;
+    
+    if (direction === 'previous') {
+      // User swiped to previous post, we need to load even more previous posts
+      const firstPostId = tikTokViewPosts[0]?.id;
+      const firstPostSearchIndex = originalSearchPosts.findIndex(p => p.id === firstPostId);
+      targetSearchIndex = firstPostSearchIndex - 1;
+      
+      if (targetSearchIndex >= 0 && !loadingAdjacentPosts.has(targetSearchIndex)) {
+        setLoadingAdjacentPosts(prev => new Set(prev).add(targetSearchIndex));
+        
+        try {
+          const postToLoad = originalSearchPosts[targetSearchIndex];
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${postToLoad.id}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const pollData = await response.json();
+            console.log('📥 Dynamically loaded previous poll:', pollData.id);
+            
+            setTikTokViewPosts(prev => [pollData, ...prev]);
+            setCurrentTikTokIndex(prev => prev + 1); // Adjust index since we added to beginning
+          }
+        } catch (error) {
+          console.warn('Error dynamically loading previous post:', error);
+        } finally {
+          setLoadingAdjacentPosts(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(targetSearchIndex);
+            return newSet;
+          });
+        }
+      }
+      
+    } else if (direction === 'next') {
+      // User swiped to next post, we need to load even more next posts
+      const lastPostId = tikTokViewPosts[tikTokViewPosts.length - 1]?.id;
+      const lastPostSearchIndex = originalSearchPosts.findIndex(p => p.id === lastPostId);
+      targetSearchIndex = lastPostSearchIndex + 1;
+      
+      if (targetSearchIndex < originalSearchPosts.length && !loadingAdjacentPosts.has(targetSearchIndex)) {
+        setLoadingAdjacentPosts(prev => new Set(prev).add(targetSearchIndex));
+        
+        try {
+          const postToLoad = originalSearchPosts[targetSearchIndex];
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${postToLoad.id}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const pollData = await response.json();
+            console.log('📤 Dynamically loaded next poll:', pollData.id);
+            
+            setTikTokViewPosts(prev => [...prev, pollData]);
+            // No need to adjust index for next posts
+          }
+        } catch (error) {
+          console.warn('Error dynamically loading next post:', error);
+        } finally {
+          setLoadingAdjacentPosts(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(targetSearchIndex);
+            return newSet;
+          });
+        }
+      }
     }
   };
 
