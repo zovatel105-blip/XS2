@@ -778,6 +778,7 @@ const TikTokScrollView = ({
   const [isScrolling, setIsScrolling] = useState(false);
   const [savedPolls, setSavedPolls] = useState(new Set()); // Track saved polls locally
   const { user: currentUser } = useAuth();
+  const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
 
   // Load user's saved polls on component mount
   useEffect(() => {
