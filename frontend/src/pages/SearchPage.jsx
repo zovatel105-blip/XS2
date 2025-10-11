@@ -1090,7 +1090,7 @@ const SearchPage = () => {
                 >
                   {/* Header: Avatar + Username + Follow Button */}
                   <div className="flex items-center justify-between px-0 py-2">
-                    <div className="flex items-center space-x-1.5">
+                    <div className="flex items-center space-x-1">
                       {/* Avatar */}
                       <div 
                         className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden cursor-pointer"
@@ -1119,7 +1119,7 @@ const SearchPage = () => {
                         </span>
                       </div>
                       {/* Display Name */}
-                      <span className="text-sm font-semibold text-gray-900 truncate">
+                      <span className="text-sm text-gray-900 truncate">
                         {result.display_name || result.author?.display_name || result.author_display_name || result.username || result.author?.username || result.author_username || 'usuario'}
                       </span>
                     </div>
