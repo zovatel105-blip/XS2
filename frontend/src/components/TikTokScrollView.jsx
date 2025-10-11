@@ -875,12 +875,23 @@ const TikTokScrollView = ({
   useEffect(() => {
     if (initialIndex > 0 && containerRef.current) {
       setTimeout(() => {
-        containerRef.current.scrollTo({
-          top: initialIndex * containerRef.current.clientHeight,
-          behavior: 'auto'
-        });
-      }, 100);
+        if (containerRef.current) {
+          const targetScroll = initialIndex * window.innerHeight;
+          containerRef.current.scrollTo({
+            top: targetScroll,
+            behavior: 'auto' // Use 'auto' for instant positioning on mount
+          });
+          setActiveIndex(initialIndex);
+          setLastActiveIndex(initialIndex);
+        }
+      }, 100); // Small delay to ensure component is fully rendered
     }
+  }, [initialIndex]);
+
+  // Update active index when initialIndex changes (Search Page dynamic loading)
+  useEffect(() => {
+    setActiveIndex(initialIndex);
+    setLastActiveIndex(initialIndex);
   }, [initialIndex]);
 
   // ✅ SIMPLIFIED OPTIMIZATION - Less aggressive, more stable
