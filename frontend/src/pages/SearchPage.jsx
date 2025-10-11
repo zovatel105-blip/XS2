@@ -1434,6 +1434,7 @@ const SearchPage = () => {
             onCreatePoll={handleTikTokCreatePoll}
             onUpdatePoll={handleTikTokUpdatePoll}
             onDeletePoll={handleTikTokDeletePoll}
+            onIndexChange={loadMorePostsDynamic}
           />
         </div>
       )}
