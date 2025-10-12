@@ -750,6 +750,19 @@ const SearchPage = () => {
       return;
     }
 
+    // Find the poll in search results to get the option_id
+    const poll = searchResults.find(r => r.id === pollId && r.type === 'post');
+    if (!poll || !poll.options || !poll.options[optionIndex]) {
+      toast({
+        title: "Error",
+        description: "No se pudo encontrar la opción seleccionada",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const optionId = poll.options[optionIndex].id;
+
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'}/api/polls/${pollId}/vote`, {
         method: 'POST',
@@ -757,7 +770,7 @@ const SearchPage = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ option_index: optionIndex })
+        body: JSON.stringify({ option_id: optionId })
       });
 
       if (response.ok) {
@@ -811,7 +824,7 @@ const SearchPage = () => {
         variant: "destructive",
       });
     }
-  }, [isAuthenticated, toast]);
+  }, [isAuthenticated, toast, searchResults]);
 
   // Handle recent search click
   const handleRecentSearchClick = async (recentSearch) => {
