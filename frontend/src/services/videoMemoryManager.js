@@ -141,12 +141,18 @@ class VideoMemoryManager {
       element.pause();
     }
 
-    // For low priority videos, reduce preloading
-    if (priority === 'low' && this.performanceMode === 'performance') {
-      element.preload = 'none';
+    // ✅ FIXED: NO cambiar preload a 'none' - mantener metadata para que pueda recargar
+    // Esto previene que el video no cargue cuando vuelves después de scroll
+    // if (priority === 'low' && this.performanceMode === 'performance') {
+    //   element.preload = 'none';  // COMENTADO - Esto causaba problemas de carga
+    // }
+    
+    // Mantener al menos 'metadata' para poder recargar el video rápidamente
+    if (element.preload === 'none') {
+      element.preload = 'metadata';
     }
 
-    console.log(`⏸️ Video deactivated: ${videoKey}`);
+    console.log(`⏸️ Video deactivated: ${videoKey} (preload preservado)`);
   }
 
   /**
