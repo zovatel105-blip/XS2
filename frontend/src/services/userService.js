@@ -60,7 +60,8 @@ class UserService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || `Error ${response.status}`);
+        const errorMessage = formatApiError(errorData, response.status);
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -101,7 +102,8 @@ class UserService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || `Error ${response.status}`);
+        const errorMessage = formatApiError(errorData, response.status);
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -120,7 +122,8 @@ class UserService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || `Error ${response.status}`);
+        const errorMessage = formatApiError(errorData, response.status);
+        throw new Error(errorMessage);
       }
 
       return await response.json();
