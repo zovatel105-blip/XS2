@@ -8448,6 +8448,97 @@ async def save_recent_search(
         raise
     except Exception as e:
         logger.error(f"Error saving recent search: {str(e)}")
+
+
+@api_router.get("/search/recommendations")
+async def get_search_recommendations(
+    limit: int = 12,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get recommended content for the search page"""
+    try:
+        # Get trending polls from last 7 days
+        trending_date = (datetime.utcnow() - timedelta(days=7)).isoformat()
+        
+        # Aggregate popular polls based on votes and likes
+        pipeline = [
+            {
+                "$match": {
+                    "created_at": {"$gte": trending_date}
+                }
+            },
+            {
+                "$addFields": {
+                    "engagement_count": {
+                        "$add": [
+                            {"$ifNull": ["$votes_count", 0]},
+                            {"$multiply": [{"$ifNull": ["$likes_count", 0]}, 2]},
+                            {"$ifNull": ["$comments_count", 0]}
+                        ]
+                    }
+                }
+            },
+            {
+                "$sort": {"engagement_count": -1}
+            },
+            {
+                "$limit": limit
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "author_id",
+                    "foreignField": "id",
+                    "as": "author_info"
+                }
+            },
+            {
+                "$addFields": {
+                    "author": {"$arrayElemAt": ["$author_info", 0]}
+                }
+            },
+            {
+                "$project": {
+                    "id": 1,
+                    "title": 1,
+                    "content": 1,
+                    "thumbnail_url": 1,
+                    "image_url": 1,
+                    "options": 1,
+                    "engagement_count": 1,
+                    "votes_count": 1,
+                    "likes_count": 1,
+                    "comments_count": 1,
+                    "hashtags": 1,
+                    "created_at": 1,
+                    "type": {"$literal": "poll"},
+                    "author.username": 1,
+                    "author.display_name": 1,
+                    "author.avatar_url": 1
+                }
+            }
+        ]
+        
+        recommendations = await db.polls.aggregate(pipeline).to_list(limit)
+        
+        # Add thumbnail_url from first option if not present
+        for rec in recommendations:
+            if not rec.get("thumbnail_url") and rec.get("options"):
+                for option in rec["options"]:
+                    if option.get("thumbnail_url"):
+                        rec["thumbnail_url"] = option["thumbnail_url"]
+                        break
+                    elif option.get("media_url"):
+                        rec["thumbnail_url"] = option["media_url"]
+                        break
+        
+        return {"recommendations": recommendations, "total": len(recommendations)}
+        
+    except Exception as e:
+        logger.error(f"Error getting search recommendations: {str(e)}")
+        # Return empty array on error instead of raising exception
+        return {"recommendations": [], "total": 0}
+
         raise HTTPException(status_code=500, detail="Failed to save search")
 
 @api_router.delete("/search/recent/{search_id}")
