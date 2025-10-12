@@ -176,6 +176,9 @@ const CarouselLayout = ({
                 {option.media?.url ? (
                   option.media?.type === 'video' ? (
                     <video 
+                      ref={(el) => {
+                        if (el) videoRefs.current.set(option.id, el);
+                      }}
                       src={option.media.url} 
                       className="w-full h-full object-cover object-center"
                       // ✅ FIXED: Play video for current slide when active
