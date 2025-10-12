@@ -9,6 +9,13 @@ import userService from '../services/userService';
 import AutocompleteDropdown from '../components/search/AutocompleteDropdown';
 import TikTokScrollView from '../components/TikTokScrollView';
 import PollThumbnail from '../components/PollThumbnail';
+import LazyImage from '../components/search/LazyImage';
+import { 
+  SearchResultsGridSkeleton, 
+  StoriesSectionSkeleton, 
+  RecommendationsSectionSkeleton,
+  RecentSearchesSkeleton 
+} from '../components/search/SearchSkeletons';
 
 import PostsIcon from '../components/icons/PostsIcon';
 import LogoWithQuickActions from '../components/LogoWithQuickActions';
