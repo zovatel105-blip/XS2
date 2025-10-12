@@ -5789,7 +5789,25 @@ async def vote_on_poll(
     except Exception as e:
         print(f"Error updating profiles after vote: {e}")
     
-    return {"message": "Vote recorded successfully"}
+    # Fetch updated poll data to return
+    updated_poll = await db.polls.find_one({"id": poll_id})
+    if not updated_poll:
+        return {"message": "Vote recorded successfully"}
+    
+    # Find which option index the user voted for
+    user_vote_index = None
+    for idx, option in enumerate(updated_poll.get("options", [])):
+        if option.get("id") == vote_data.option_id:
+            user_vote_index = idx
+            break
+    
+    return {
+        "message": "Vote recorded successfully",
+        "poll_id": poll_id,
+        "user_vote": user_vote_index,
+        "total_votes": updated_poll.get("total_votes", 0),
+        "options": updated_poll.get("options", [])
+    }
 
 @api_router.post("/polls/{poll_id}/like")
 async def toggle_poll_like(
