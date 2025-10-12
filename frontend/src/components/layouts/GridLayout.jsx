@@ -107,6 +107,28 @@ const GridLayout = ({
     };
   }, [poll.id, gridType, isActive]);
 
+  // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive cambia
+  useEffect(() => {
+    if (!poll.options) return;
+    
+    poll.options.forEach((option) => {
+      if (option.media?.type === 'video') {
+        const videoElement = videoRefs.current.get(option.id);
+        if (videoElement) {
+          if (isActive) {
+            // Cuando el post se vuelve activo, reproducir el video
+            videoElement.play().catch(err => {
+              console.warn(`⚠️ No se pudo reproducir video automáticamente:`, err);
+            });
+          } else {
+            // Cuando el post se vuelve inactivo, pausar el video
+            videoElement.pause();
+          }
+        }
+      }
+    });
+  }, [isActive, poll.options]);
+
   // 🔍 DEBUG: Log poll structure for video debugging
   useEffect(() => {
     if (poll.options && poll.options.length > 0) {
