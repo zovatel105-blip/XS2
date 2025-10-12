@@ -891,9 +891,9 @@ const SearchPage = () => {
 
         {/* Main Filter Tabs - Principal Navigation */}
         {hasSearched && (
-          <div className="px-3 pt-0 pb-3 bg-white">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
+          <div className="px-0 pt-0 pb-3 bg-white">
+            <div className="w-full">
+              <div className="flex space-x-2 overflow-x-auto scrollbar-hide px-2">
                 {/* Filter Icon Button */}
                 <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
