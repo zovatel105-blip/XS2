@@ -66,14 +66,16 @@ const GridLayout = ({
   // 🚀 PERFORMANCE: Video refs for memory management
   const videoRefs = useRef(new Map());
 
-  // ✅ SIMPLIFIED: Memory manager registration (non-blocking)
+  // ✅ DISABLED: Memory manager registration deshabilitado para evitar interferencias
+  // El videoMemoryManager estaba causando que los videos se limpiaran incorrectamente
+  // Ahora controlamos la reproducción directamente con useEffect más abajo
   useEffect(() => {
-    // Only register for performance tracking, don't interfere with playback
+    // COMENTADO - El memory manager estaba interfiriendo con la reproducción
+    /*
     poll.options?.forEach((option, optionIndex) => {
       if (option.media?.type === 'video') {
         const videoElement = videoRefs.current.get(option.id);
         if (videoElement) {
-          // Register in a non-blocking way
           setTimeout(() => {
             try {
               videoMemoryManager.registerVideo(videoElement, {
@@ -91,8 +93,10 @@ const GridLayout = ({
         }
       }
     });
+    */
 
-    // Cleanup on unmount
+    // Cleanup comentado también para evitar que se limpie el src del video
+    /*
     return () => {
       poll.options?.forEach((option) => {
         if (option.media?.type === 'video') {
@@ -105,6 +109,7 @@ const GridLayout = ({
         }
       });
     };
+    */
   }, [poll.id, gridType, isActive]);
 
   // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive cambia
