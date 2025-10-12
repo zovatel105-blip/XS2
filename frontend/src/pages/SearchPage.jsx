@@ -407,6 +407,14 @@ const SearchPage = () => {
         if (selectedResponse.ok) {
           const selectedPollData = await selectedResponse.json();
           console.log('✅ Loaded selected poll immediately:', selectedPollData.id);
+          console.log('📊 Poll data structure:', {
+            layout: selectedPollData.layout,
+            hasOptions: !!selectedPollData.options,
+            optionsCount: selectedPollData.options?.length,
+            firstOptionType: selectedPollData.options?.[0]?.media_type,
+            hasImages: !!selectedPollData.images,
+            imagesCount: selectedPollData.images?.length
+          });
           
           // Mostrar inmediatamente SOLO la publicación seleccionada
           setTikTokViewPosts([selectedPollData]);
