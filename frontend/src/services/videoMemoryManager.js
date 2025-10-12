@@ -220,17 +220,19 @@ class VideoMemoryManager {
       this.observers.delete(videoKey);
     }
 
-    // Cleanup video element
+    // ✅ FIXED: Solo pausar el video, NO eliminar el src
+    // Esto previene que el video desaparezca cuando vuelves después de scroll
     if (element) {
       element.pause();
-      element.src = '';
-      element.load(); // Force cleanup
+      // NO limpiamos el src para que el video pueda reproducirse cuando vuelvas
+      // element.src = '';  // COMENTADO - Esto causaba que el video desapareciera
+      // element.load();    // COMENTADO - Esto forzaba la recarga y pérdida de datos
     }
 
     // Remove from tracking
     this.activeVideos.delete(videoKey);
     
-    console.log(`🗑️ Video unregistered: ${videoKey}`);
+    console.log(`🗑️ Video unregistered: ${videoKey} (src preservado para scroll)`);
   }
 
   /**
