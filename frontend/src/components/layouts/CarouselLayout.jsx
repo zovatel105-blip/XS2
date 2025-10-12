@@ -94,6 +94,30 @@ const CarouselLayout = ({
     setCurrentSlide(0);
   }, [poll.id]);
 
+  // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive o currentSlide cambian
+  useEffect(() => {
+    if (!poll.options) return;
+    
+    poll.options.forEach((option, optionIndex) => {
+      if (option.media?.type === 'video') {
+        const videoElement = videoRefs.current.get(option.id);
+        if (videoElement) {
+          const shouldPlay = isActive && currentSlide === optionIndex;
+          
+          if (shouldPlay) {
+            // Reproducir video si es el slide actual y el post está activo
+            videoElement.play().catch(err => {
+              console.warn(`⚠️ No se pudo reproducir video del carrusel automáticamente:`, err);
+            });
+          } else {
+            // Pausar video si no es el slide actual o el post no está activo
+            videoElement.pause();
+          }
+        }
+      }
+    });
+  }, [isActive, currentSlide, poll.options]);
+
   // Auto-advance carousel every 5 seconds when active (fixed dependencies)
   useEffect(() => {
     if (!isActive || totalSlides <= 1) return;
