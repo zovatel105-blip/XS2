@@ -22,6 +22,7 @@ const LazyImage = ({
 
   useEffect(() => {
     // Create Intersection Observer
+    const currentImg = imgRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -38,14 +39,14 @@ const LazyImage = ({
     );
 
     // Start observing
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    if (currentImg) {
+      observer.observe(currentImg);
     }
 
     // Cleanup
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
+      if (currentImg) {
+        observer.unobserve(currentImg);
       }
     };
   }, [threshold, rootMargin]);
