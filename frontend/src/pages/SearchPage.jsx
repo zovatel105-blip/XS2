@@ -503,8 +503,15 @@ const SearchPage = () => {
     }
     
     console.log('🔄 Initial polls loaded:', finalPolls.length, 'Selected index:', finalIndex);
-    setTikTokViewPosts(finalPolls);
-    setCurrentTikTokIndex(finalIndex);
+    // ✅ FIX: Update posts and index together in a batch to prevent race condition
+    setTikTokViewPosts(prev => {
+      // Only update if we haven't already loaded adjacent posts
+      if (prev.length === 1) {
+        setCurrentTikTokIndex(finalIndex);
+        return finalPolls;
+      }
+      return prev;
+    });
   };
 
   // Function to dynamically load more posts as user navigates
