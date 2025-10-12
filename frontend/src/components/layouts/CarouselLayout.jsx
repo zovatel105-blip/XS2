@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
@@ -19,6 +19,9 @@ const CarouselLayout = ({
   shouldUnload = false
 }) => {
   const navigate = useNavigate();
+  
+  // 🎥 Video refs para controlar reproducción
+  const videoRefs = useRef(new Map());
   
   // Detect mobile device with window resize handling
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
