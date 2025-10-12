@@ -1011,9 +1011,7 @@ const SearchPage = () => {
               <h3 className="text-2xl font-bold text-gray-900 px-4">Stories</h3>
               
               {loadingStates.stories ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                </div>
+                <StoriesSectionSkeleton count={5} />
               ) : stories.length > 0 ? (
                 /* Horizontal Scrolling Carousel with Real Data */
                 <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2 px-4 lg:px-6 xl:px-8">
@@ -1036,7 +1034,8 @@ const SearchPage = () => {
                       <div 
                         key={story.id} 
                         onClick={() => handleStoryClick(story)}
-                        className="flex-shrink-0 cursor-pointer group relative"
+                        className="flex-shrink-0 cursor-pointer group relative animate-slide-up"
+                        style={{ animationDelay: `${index * 50}ms` }}
                       >
                         {/* Story Card - Small size carousel format */}
                         <div 
@@ -1046,9 +1045,9 @@ const SearchPage = () => {
                             height: '160px'
                           }}
                         >
-                          {/* Background image if available */}
+                          {/* Background image if available - with lazy loading */}
                           {story.thumbnail_url && (
-                            <img 
+                            <LazyImage 
                               src={story.thumbnail_url}
                               alt={story.user?.display_name || 'Story'}
                               className="absolute inset-0 w-full h-full object-cover"
@@ -1077,7 +1076,7 @@ const SearchPage = () => {
                           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
                             <div className="relative mb-1">
                               <div className="w-9 h-9 rounded-full bg-white p-0.5">
-                                <img 
+                                <LazyImage 
                                   src={story.user?.avatar_url || '/default-avatar.png'}
                                   alt={story.user?.display_name || 'User'}
                                   className="w-full h-full rounded-full object-cover"
