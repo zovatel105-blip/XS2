@@ -116,15 +116,42 @@ const GridLayout = ({
   useEffect(() => {
     if (!poll.options) return;
     
-    poll.options.forEach((option) => {
+    poll.options.forEach((option, optionIndex) => {
       if (option.media?.type === 'video') {
         const videoElement = videoRefs.current.get(option.id);
         if (videoElement) {
           if (isActive) {
-            // Cuando el post se vuelve activo, reproducir el video
-            videoElement.play().catch(err => {
-              console.warn(`⚠️ No se pudo reproducir video automáticamente:`, err);
-            });
+            // ✅ MEJORADO: Asegurar que el video tenga src antes de reproducir
+            if (!videoElement.src || videoElement.src === '') {
+              console.log(`🔄 Restaurando src del video ${optionIndex}:`, option.media.url.substring(0, 50));
+              videoElement.src = option.media.url;
+              videoElement.load();
+            }
+            
+            // Esperar un momento para que el video cargue si es necesario
+            const tryPlay = () => {
+              if (videoElement.readyState >= 2) { // HAVE_CURRENT_DATA o superior
+                videoElement.play().catch(err => {
+                  console.warn(`⚠️ No se pudo reproducir video automáticamente:`, err);
+                  // Intentar con muted como fallback
+                  videoElement.muted = true;
+                  videoElement.play().catch(err2 => {
+                    console.error(`❌ Falló reproducción con muted:`, err2);
+                  });
+                });
+              } else {
+                // Si no está listo, esperar el evento canplay
+                videoElement.addEventListener('canplay', function onCanPlay() {
+                  videoElement.play().catch(err => {
+                    console.warn(`⚠️ No se pudo reproducir después de canplay:`, err);
+                  });
+                  videoElement.removeEventListener('canplay', onCanPlay);
+                }, { once: true });
+              }
+            };
+            
+            tryPlay();
+            
           } else {
             // Cuando el post se vuelve inactivo, pausar el video
             videoElement.pause();
