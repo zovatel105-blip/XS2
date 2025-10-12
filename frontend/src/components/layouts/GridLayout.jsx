@@ -110,16 +110,20 @@ const GridLayout = ({
   // 🔍 DEBUG: Log poll structure for video debugging
   useEffect(() => {
     if (poll.options && poll.options.length > 0) {
+      const debugInfo = poll.options.map((opt, idx) => ({
+        index: idx,
+        hasMedia: !!opt.media,
+        mediaType: opt.media?.type,
+        mediaUrlLength: opt.media?.url?.length,
+        mediaUrlStart: opt.media?.url?.substring(0, 100),
+        hasThumbnail: !!opt.media?.thumbnail,
+        thumbnailUrl: opt.media?.thumbnail?.substring(0, 100)
+      }));
       console.log('🔍 GridLayout Poll Debug:', {
         pollId: poll.id,
         layout: poll.layout,
         optionsCount: poll.options.length,
-        firstOption: {
-          hasMedia: !!poll.options[0].media,
-          mediaType: poll.options[0].media?.type,
-          mediaUrl: poll.options[0].media?.url?.substring(0, 50),
-          hasThumbnail: !!poll.options[0].media?.thumbnail
-        }
+        options: debugInfo
       });
     }
   }, [poll]);
