@@ -201,7 +201,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
   const actions = [
     {
       id: 'moments',
-      icon: CirclePlus,
+      icon: StoryPlusIcon,
       label: 'Historias',
       color: 'bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
       borderColor: 'border-orange-300',
