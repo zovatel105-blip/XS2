@@ -157,17 +157,9 @@ class StoryService {
 
   // Helper method to get time elapsed since story was created (shows only hours)
   getStoryTimeAgo(story) {
-    // Parse the created_at timestamp (comes as UTC from backend)
+    // Parse the created_at timestamp (now comes with 'Z' suffix from backend)
     const now = new Date();
-    
-    // Handle the UTC string properly by ensuring it has 'Z' suffix
-    let createdAtStr = story.created_at;
-    if (typeof createdAtStr === 'string' && !createdAtStr.endsWith('Z') && !createdAtStr.includes('+')) {
-      // If no timezone info, assume it's UTC and add 'Z'
-      createdAtStr = createdAtStr + 'Z';
-    }
-    
-    const createdAt = new Date(createdAtStr);
+    const createdAt = new Date(story.created_at);
     const elapsedMs = now - createdAt;
     
     if (elapsedMs < 0) return "justo ahora";
