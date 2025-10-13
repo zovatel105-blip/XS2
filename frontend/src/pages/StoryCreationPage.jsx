@@ -5,13 +5,8 @@ import {
   Camera, 
   Video, 
   Type, 
-  Palette, 
-  Upload, 
   Send,
-  Loader2,
-  Image as ImageIcon,
-  Music,
-  Smile
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
