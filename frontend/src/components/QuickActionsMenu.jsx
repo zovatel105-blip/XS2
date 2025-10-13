@@ -69,7 +69,7 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
         x2="32"
         y2="5"
         stroke="currentColor"
-        strokeWidth="8"
+        strokeWidth="5"
         strokeLinecap="round"
       />
       
@@ -80,7 +80,7 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
         x2="68"
         y2="5"
         stroke="currentColor"
-        strokeWidth="8"
+        strokeWidth="5"
         strokeLinecap="round"
       />
       
@@ -88,7 +88,7 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
       <path
         d="M 20 30 Q 20 20 30 20 L 70 20 Q 80 20 80 30"
         stroke="currentColor"
-        strokeWidth="8"
+        strokeWidth="5"
         strokeLinecap="round"
         fill="none"
       />
@@ -97,15 +97,15 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
       <path
         d="M 20 70 Q 20 80 30 80 L 70 80 Q 80 80 80 70"
         stroke="currentColor"
-        strokeWidth="8"
+        strokeWidth="5"
         strokeLinecap="round"
         fill="none"
       />
       
-      {/* Texto LIVE centrado entre los dos arcos */}
+      {/* Texto LIVE centrado entre los dos arcos - un poco más abajo */}
       <text
         x="50"
-        y="56"
+        y="58"
         textAnchor="middle"
         fill="currentColor"
         fontSize="24"
