@@ -381,6 +381,21 @@ const SearchPage = () => {
     }
   };
 
+  // Transform backend poll data to frontend format (snake_case to camelCase)
+  const transformPollData = (pollData) => {
+    return {
+      ...pollData,
+      userVote: pollData.user_vote,
+      userLiked: pollData.user_liked,
+      totalVotes: pollData.total_votes,
+      commentsCount: pollData.comments_count,
+      timeAgo: pollData.time_ago,
+      isFeatured: pollData.is_featured,
+      createdAt: pollData.created_at,
+      mentionedUsers: pollData.mentioned_users
+    };
+  };
+
   const handleResultClick = async (result) => {
     console.log('Result clicked:', result);
     
@@ -420,11 +435,17 @@ const SearchPage = () => {
             optionsCount: selectedPollData.options?.length,
             firstOptionType: selectedPollData.options?.[0]?.media_type,
             hasImages: !!selectedPollData.images,
-            imagesCount: selectedPollData.images?.length
+            imagesCount: selectedPollData.images?.length,
+            user_vote: selectedPollData.user_vote,
+            userVote: selectedPollData.userVote
           });
           
+          // Transform poll data to frontend format
+          const transformedPollData = transformPollData(selectedPollData);
+          console.log('🔄 Transformed poll data - userVote:', transformedPollData.userVote);
+          
           // Mostrar inmediatamente SOLO la publicación seleccionada
-          setTikTokViewPosts([selectedPollData]);
+          setTikTokViewPosts([transformedPollData]);
           setCurrentTikTokIndex(0);
           
           // 2. Cargar inicial: anterior y siguiente SIN cambiar el índice de la vista
