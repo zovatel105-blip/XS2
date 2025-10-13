@@ -83,62 +83,51 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
     }
   }, [currentIndex]);
 
-  const toggleLike = async () => {
-    if (isLoading || !currentStory) return;
+  const sendMessageToUser = async () => {
+    if (!message.trim() || sendingMessage || !currentStory) return;
     
-    setIsLoading(true);
-    const wasLiked = isLiked;
-    
-    // Optimistic update
-    setIsLiked(!wasLiked);
-    setLikesCount(prev => wasLiked ? prev - 1 : prev + 1);
+    setSendingMessage(true);
+    const messageContent = message.trim();
     
     try {
-      const response = await storyService.toggleStoryLike(currentStory.id);
+      console.log('📤 Sending message to story author:', currentStory.user_id);
       
-      // Update with real values from server
-      setIsLiked(response.liked);
+      const messagePayload = {
+        recipient_id: currentStory.user_id,
+        content: messageContent
+      };
       
-      toast.success(response.message, {
-        duration: 1500,
+      const response = await apiRequest('/api/messages', {
+        method: 'POST',
+        body: messagePayload
       });
-    } catch (error) {
-      // Revert optimistic update
-      setIsLiked(wasLiked);
-      setLikesCount(prev => wasLiked ? prev + 1 : prev - 1);
+
+      console.log('✅ Message sent successfully:', response);
       
-      toast.error('Error al dar like a la historia', {
+      // Clear message input
+      setMessage('');
+      setShowEmojiPicker(false);
+      
+      // Show success toast
+      toast.success('Mensaje enviado', {
+        duration: 2000,
+      });
+      
+    } catch (error) {
+      console.error('❌ Error sending message:', error);
+      
+      toast.error('Error al enviar mensaje', {
         duration: 2000,
       });
     } finally {
-      setIsLoading(false);
+      setSendingMessage(false);
     }
   };
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleShare = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: `Historia de ${currentStory.display_name}`,
-          text: currentStory.text_content || 'Mira esta historia increíble',
-          url: window.location.href,
-        });
-      } else {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success('Enlace copiado al portapapeles', {
-          duration: 2000,
-        });
-      }
-    } catch (error) {
-      toast.error('Error al compartir historia', {
-        duration: 2000,
-      });
-    }
+  const handleEmojiClick = (emojiData) => {
+    setMessage(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+    inputRef.current?.focus();
   };
 
   // Touch handlers
