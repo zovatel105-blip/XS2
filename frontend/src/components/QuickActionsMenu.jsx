@@ -22,30 +22,30 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
       strokeWidth="2"
       fill="none"
     />
-    {/* Círculo pequeño con + en esquina inferior derecha */}
+    {/* Círculo más grande con + en esquina inferior derecha */}
     <circle
       cx="18"
       cy="18"
-      r="4"
+      r="5.5"
       fill="currentColor"
     />
-    {/* Cruz del + */}
+    {/* Cruz del + más grande y gruesa */}
     <line
       x1="18"
-      y1="16"
+      y1="15"
       x2="18"
-      y2="20"
+      y2="21"
       stroke="white"
-      strokeWidth="1.5"
+      strokeWidth="2.5"
       strokeLinecap="round"
     />
     <line
-      x1="16"
+      x1="15"
       y1="18"
-      x2="20"
+      x2="21"
       y2="18"
       stroke="white"
-      strokeWidth="1.5"
+      strokeWidth="2.5"
       strokeLinecap="round"
     />
   </svg>
