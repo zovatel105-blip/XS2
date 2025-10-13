@@ -235,14 +235,26 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
         {/* Header - Simple Instagram style */}
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between z-20">
           <div className="flex items-center space-x-3">
-            <img
-              src={currentStory.avatar_url || '/default-avatar.png'}
-              alt={currentStory.display_name}
-              className="w-10 h-10 rounded-full object-cover border-2 border-white"
-            />
+            <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              {currentStory.avatar_url ? (
+                <img
+                  src={currentStory.avatar_url}
+                  alt={currentStory.display_name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = `<span class="text-white text-lg font-bold">${(currentStory.display_name || currentStory.username || 'U')[0].toUpperCase()}</span>`;
+                  }}
+                />
+              ) : (
+                <span className="text-white text-lg font-bold">
+                  {(currentStory.display_name || currentStory.username || 'U')[0].toUpperCase()}
+                </span>
+              )}
+            </div>
             <div>
               <p className="text-white font-semibold text-sm">
-                {currentStory.display_name}
+                {currentStory.display_name || currentStory.username}
               </p>
               <p className="text-white/70 text-xs">
                 {storyService.getStoryRemainingTime(currentStory)}
