@@ -43,17 +43,17 @@ const LogoWithQuickActions = ({ size = 32, className = "" }) => {
     
     switch (actionType) {
       case 'search':
-        // Aquí se puede implementar navegación a página de búsqueda
         console.log('🔍 Navigating to search...');
+        navigate('/search');
         break;
       case 'moments':
-        // Historias - Próximamente
-        console.log('📸 Stories feature - Coming soon...');
+        console.log('📸 Navigating to story creation...');
+        navigate('/story-creation');
         break;
       default:
         console.log('❓ Unknown action:', actionType);
     }
-  }, []);
+  }, [navigate]);
 
   const longPressProps = useLongPress(
     handleLongPress,
