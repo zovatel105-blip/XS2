@@ -232,13 +232,13 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
           ))}
         </div>
 
-        {/* Header */}
+        {/* Header - Simple Instagram style */}
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between z-20">
           <div className="flex items-center space-x-3">
             <img
               src={currentStory.avatar_url || '/default-avatar.png'}
               alt={currentStory.display_name}
-              className="w-8 h-8 rounded-full object-cover border-2 border-white"
+              className="w-10 h-10 rounded-full object-cover border-2 border-white"
             />
             <div>
               <p className="text-white font-semibold text-sm">
@@ -250,26 +250,23 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={togglePlay}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-            </button>
+          <div className="flex items-center space-x-3">
+            {/* Mute button - only show if video/audio */}
+            {hasAudio && (
+              <button
+                onClick={() => setIsMuted(!isMuted)}
+                className="text-white/90 hover:text-white transition-colors"
+              >
+                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+              </button>
+            )}
             
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-            </button>
-            
+            {/* Close button */}
             <button
               onClick={onClose}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-white/90 hover:text-white transition-colors"
             >
-              <X size={24} />
+              <X size={28} />
             </button>
           </div>
         </div>
@@ -317,7 +314,7 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
           
           {/* Text overlay for image/video stories */}
           {currentStory.text_content && currentStory.story_type !== 'text' && (
-            <div className="absolute bottom-24 left-4 right-4">
+            <div className="absolute bottom-32 left-4 right-4">
               <p className="text-white text-lg font-medium text-center bg-black/50 rounded-lg p-3">
                 {currentStory.text_content}
               </p>
@@ -325,50 +322,74 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
           )}
         </div>
 
-        {/* Action buttons */}
-        <div className="absolute bottom-8 right-4 flex flex-col items-center space-y-4 z-20">
-          <motion.button
-            whileTap={{ scale: 0.8 }}
-            onClick={toggleLike}
-            disabled={isLoading}
-            className={`p-3 rounded-full transition-all duration-200 ${
-              isLiked 
-                ? 'bg-red-500 text-white' 
-                : 'bg-white/20 text-white hover:bg-white/30'
-            }`}
-          >
-            <Heart size={24} fill={isLiked ? 'currentColor' : 'none'} />
-          </motion.button>
-          
-          {likesCount > 0 && (
-            <p className="text-white text-xs font-semibold">
-              {likesCount}
-            </p>
-          )}
-          
-          <motion.button
-            whileTap={{ scale: 0.8 }}
-            onClick={handleShare}
-            className="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
-          >
-            <Send size={24} />
-          </motion.button>
-          
-          <motion.button
-            whileTap={{ scale: 0.8 }}
-            className="p-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
-          >
-            <MoreHorizontal size={24} />
-          </motion.button>
+        {/* Send Message section - Instagram style */}
+        <div className="absolute bottom-8 left-4 right-4 z-20">
+          <div className="flex items-center space-x-2">
+            {/* Message input with emoji button */}
+            <div className="flex-1 relative">
+              <input
+                ref={inputRef}
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessageToUser();
+                  }
+                }}
+                placeholder="Send Message"
+                className="w-full bg-white/10 backdrop-blur-md border-2 border-white/20 text-white placeholder-white/60 rounded-full px-5 py-3 pr-12 outline-none focus:border-white/40 transition-all"
+                disabled={sendingMessage}
+              />
+              
+              {/* Emoji button inside input */}
+              <button
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+              >
+                <Smile size={22} />
+              </button>
+              
+              {/* Emoji Picker */}
+              {showEmojiPicker && (
+                <div className="absolute bottom-full mb-2 right-0">
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiClick}
+                    theme="dark"
+                    width={300}
+                    height={400}
+                  />
+                </div>
+              )}
+            </div>
+            
+            {/* Send button */}
+            <button
+              onClick={sendMessageToUser}
+              disabled={!message.trim() || sendingMessage}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                message.trim() && !sendingMessage
+                  ? 'bg-white text-black hover:scale-105'
+                  : 'bg-white/20 text-white/40 cursor-not-allowed'
+              }`}
+            >
+              {sendingMessage ? (
+                <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Send size={20} />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Navigation hints (subtle) */}
         <div className="absolute inset-0 pointer-events-none z-10">
           <div className="absolute left-0 top-0 w-1/3 h-full flex items-center justify-start pl-8">
-            <div className="text-white/20 text-6xl font-thin">‹</div>
+            <div className="text-white/10 text-6xl font-thin">‹</div>
           </div>
           <div className="absolute right-0 top-0 w-1/3 h-full flex items-center justify-end pr-8">
-            <div className="text-white/20 text-6xl font-thin">›</div>
+            <div className="text-white/10 text-6xl font-thin">›</div>
           </div>
         </div>
       </motion.div>
