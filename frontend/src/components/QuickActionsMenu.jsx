@@ -62,22 +62,22 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Antena izquierda */}
+      {/* Antena izquierda - más cerca del centro */}
       <line
-        x1="35"
+        x1="42"
         y1="20"
-        x2="20"
+        x2="32"
         y2="5"
         stroke="currentColor"
         strokeWidth="8"
         strokeLinecap="round"
       />
       
-      {/* Antena derecha */}
+      {/* Antena derecha - más cerca del centro */}
       <line
-        x1="65"
+        x1="58"
         y1="20"
-        x2="80"
+        x2="68"
         y2="5"
         stroke="currentColor"
         strokeWidth="8"
@@ -102,10 +102,10 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
         fill="none"
       />
       
-      {/* Texto LIVE centrado */}
+      {/* Texto LIVE centrado entre los dos arcos */}
       <text
         x="50"
-        y="62"
+        y="56"
         textAnchor="middle"
         fill="currentColor"
         fontSize="24"
