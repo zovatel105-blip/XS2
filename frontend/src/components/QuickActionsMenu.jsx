@@ -51,6 +51,69 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
   </svg>
 );
 
+// Ícono personalizado de LIVE estilo TikTok
+const TikTokLiveIcon = ({ size = 16, className = "" }) => (
+  <svg
+    width={size * 2.2}
+    height={size}
+    viewBox="0 0 44 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Rectángulo con bordes redondeados - estilo TikTok */}
+    <rect
+      x="2"
+      y="2"
+      width="40"
+      height="16"
+      rx="3"
+      fill="#FF004F"
+      stroke="#FF004F"
+      strokeWidth="1.5"
+    />
+    {/* Borde interno blanco para efecto */}
+    <rect
+      x="3"
+      y="3"
+      width="38"
+      height="14"
+      rx="2"
+      fill="none"
+      stroke="rgba(255, 255, 255, 0.3)"
+      strokeWidth="0.5"
+    />
+    {/* Texto LIVE */}
+    <text
+      x="22"
+      y="13.5"
+      textAnchor="middle"
+      fill="white"
+      fontSize="9"
+      fontWeight="900"
+      fontFamily="Arial, sans-serif"
+      letterSpacing="0.5"
+    >
+      LIVE
+    </text>
+    {/* Punto rojo parpadeante */}
+    <circle
+      cx="7"
+      cy="10"
+      r="2"
+      fill="white"
+      opacity="0.9"
+    >
+      <animate
+        attributeName="opacity"
+        values="0.9;0.3;0.9"
+        dur="1.5s"
+        repeatCount="indefinite"
+      />
+    </circle>
+  </svg>
+);
+
 const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
