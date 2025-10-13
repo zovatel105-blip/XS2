@@ -54,76 +54,38 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
 // Ícono personalizado de LIVE estilo TikTok
 const TikTokLiveIcon = ({ size = 16, className = "" }) => (
   <svg
-    width={size * 2.5}
-    height={size * 2}
-    viewBox="0 0 50 40"
+    width={size * 2.2}
+    height={size}
+    viewBox="0 0 44 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    {/* Marco superior del TV (arco superior) */}
-    <path
-      d="M 8 12 Q 8 8 12 8 L 38 8 Q 42 8 42 12"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      fill="none"
-    />
-    
-    {/* Antenas del TV */}
-    <line
-      x1="18"
-      y1="8"
-      x2="12"
-      y2="2"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-    <line
-      x1="32"
-      y1="8"
-      x2="38"
-      y2="2"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-    
-    {/* Pantalla del TV - rectángulo redondeado */}
+    {/* Rectángulo redondeado - estilo TikTok LIVE */}
     <rect
-      x="8"
-      y="12"
-      width="34"
-      height="22"
-      rx="4"
+      x="2"
+      y="2"
+      width="40"
+      height="16"
+      rx="3"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2.5"
+      strokeWidth="2"
     />
     
     {/* Texto LIVE en negrita */}
     <text
-      x="25"
-      y="26"
+      x="22"
+      y="13"
       textAnchor="middle"
       fill="currentColor"
-      fontSize="11"
+      fontSize="8"
       fontWeight="900"
       fontFamily="Arial, sans-serif"
-      letterSpacing="0.5"
+      letterSpacing="0.8"
     >
       LIVE
     </text>
-    
-    {/* Base del TV (arco inferior) */}
-    <path
-      d="M 10 34 Q 15 38 25 38 Q 35 38 40 34"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      fill="none"
-    />
   </svg>
 );
 
