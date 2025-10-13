@@ -53,9 +53,6 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
 
 // Ícono personalizado de LIVE estilo TikTok
 const TikTokLiveIcon = ({ size = 16, className = "" }) => {
-  const scale = size / 16; // Factor de escala basado en el tamaño deseado
-  const viewBoxSize = 100; // Tamaño del viewBox para trabajar con proporciones
-  
   return (
     <svg
       width={size * 2.2}
@@ -94,19 +91,6 @@ const TikTokLiveIcon = ({ size = 16, className = "" }) => {
         strokeWidth="8"
         strokeLinecap="round"
         fill="none"
-      />
-      
-      {/* Rectángulo principal con esquinas muy redondeadas */}
-      <rect
-        x="20"
-        y="30"
-        width="60"
-        height="50"
-        rx="20"
-        ry="20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="8"
       />
       
       {/* Arco inferior del TV (base) */}
