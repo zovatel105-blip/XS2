@@ -235,7 +235,7 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
         {/* Header - Simple Instagram style */}
         <div className="absolute top-12 left-4 right-4 flex items-center justify-between z-20">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
               {currentStory.avatar_url ? (
                 <img
                   src={currentStory.avatar_url}
@@ -243,11 +243,11 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = 'none';
-                    e.target.parentElement.innerHTML = `<span class="text-white text-lg font-bold">${(currentStory.display_name || currentStory.username || 'U')[0].toUpperCase()}</span>`;
+                    e.target.parentElement.innerHTML = `<span class="text-gray-600 text-lg font-medium">${(currentStory.display_name || currentStory.username || 'U')[0].toUpperCase()}</span>`;
                   }}
                 />
               ) : (
-                <span className="text-white text-lg font-bold">
+                <span className="text-gray-600 text-lg font-medium">
                   {(currentStory.display_name || currentStory.username || 'U')[0].toUpperCase()}
                 </span>
               )}
