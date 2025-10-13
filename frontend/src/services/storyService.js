@@ -155,7 +155,7 @@ class StoryService {
     }
   }
 
-  // Helper method to get time elapsed since story was created (shows only hours)
+  // Helper method to get time elapsed since story was created (shows minutes in first hour, then hours)
   getStoryTimeAgo(story) {
     // Parse the created_at timestamp (now comes with 'Z' suffix from backend)
     const now = new Date();
@@ -164,15 +164,19 @@ class StoryService {
     
     if (elapsedMs < 0) return "justo ahora";
     
+    const minutes = Math.floor(elapsedMs / (1000 * 60));
     const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
     
-    // Show only hours
-    if (hours > 0) {
-      return `hace ${hours}h`;
-    } else {
-      // If less than 1 hour, show "justo ahora"
-      return "justo ahora";
+    // If less than 1 hour, show minutes
+    if (hours < 1) {
+      if (minutes < 1) {
+        return "justo ahora";
+      }
+      return `hace ${minutes}m`;
     }
+    
+    // If 1 hour or more, show hours
+    return `hace ${hours}h`;
   }
 
   // Helper method to create story data for API
