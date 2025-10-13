@@ -1002,30 +1002,25 @@ const SearchPage = () => {
               {loadingStates.recentSearches ? (
                 <RecentSearchesSkeleton count={5} />
               ) : recentSearches.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-0">
                   {recentSearches.map((recentSearch, index) => {
-                    const IconComponent = getSearchTypeIcon(recentSearch.search_type);
                     return (
                       <div 
                         key={recentSearch.id}
                         onClick={() => handleRecentSearchClick(recentSearch)}
-                        className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer group animate-slide-up"
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        className="flex items-center gap-3 py-3 px-2 hover:bg-gray-50 cursor-pointer transition-colors"
                       >
-                        <div className="w-5 h-5 text-gray-400">
-                          <IconComponent size={16} />
+                        <div className="w-5 h-5 text-gray-400 flex-shrink-0">
+                          <Clock size={20} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-gray-700 truncate block">{recentSearch.query}</span>
-                          <span className="text-xs text-gray-400">
-                            {new Date(recentSearch.created_at).toLocaleDateString()}
-                          </span>
+                          <span className="text-gray-900 text-base truncate block font-normal">{recentSearch.query}</span>
                         </div>
                         <button 
                           onClick={(e) => handleDeleteRecentSearch(recentSearch.id, e)}
-                          className="w-4 h-4 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="w-5 h-5 text-gray-400 hover:text-gray-600 flex-shrink-0"
                         >
-                          <X size={16} />
+                          <X size={20} />
                         </button>
                       </div>
                     );
