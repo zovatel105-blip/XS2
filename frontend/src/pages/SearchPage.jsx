@@ -1010,7 +1010,7 @@ const SearchPage = () => {
                         <div 
                           key={recentSearch.id}
                           onClick={() => handleRecentSearchClick(recentSearch)}
-                          className="flex items-center gap-3 py-3 px-2 hover:bg-gray-50 cursor-pointer transition-colors"
+                          className="flex items-center gap-3 py-3 px-4 hover:bg-gray-50 cursor-pointer transition-colors"
                         >
                           <div className="w-5 h-5 text-gray-400 flex-shrink-0">
                             <Clock size={20} />
