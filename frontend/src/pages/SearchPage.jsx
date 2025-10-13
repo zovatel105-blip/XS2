@@ -571,9 +571,10 @@ const SearchPage = () => {
           
           if (response.ok) {
             const pollData = await response.json();
-            console.log('📥 Dynamically loaded previous poll:', pollData.id);
+            const transformedPoll = transformPollData(pollData);
+            console.log('📥 Dynamically loaded previous poll:', transformedPoll.id, 'userVote:', transformedPoll.userVote);
             
-            setTikTokViewPosts(prev => [pollData, ...prev]);
+            setTikTokViewPosts(prev => [transformedPoll, ...prev]);
             setCurrentTikTokIndex(prev => prev + 1); // Adjust index since we added to beginning
           }
         } catch (error) {
