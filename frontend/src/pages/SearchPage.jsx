@@ -523,8 +523,9 @@ const SearchPage = () => {
         
         if (nextResponse.ok) {
           const nextPollData = await nextResponse.json();
-          console.log('📤 Loaded next poll in background:', nextPollData.id);
-          finalPolls.push(nextPollData);
+          const transformedNextPoll = transformPollData(nextPollData);
+          console.log('📤 Loaded next poll in background:', transformedNextPoll.id, 'userVote:', transformedNextPoll.userVote);
+          finalPolls.push(transformedNextPoll);
         }
       } catch (error) {
         console.warn('Error loading next post:', error);
