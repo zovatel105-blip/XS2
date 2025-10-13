@@ -5,15 +5,17 @@ import {
   Camera, 
   Video, 
   Type, 
-  Send,
-  Loader2
+  Upload,
+  Palette,
+  Search
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
 import storyService from '../services/storyService';
+import { useAuth } from '../contexts/AuthContext';
 
 const StoryCreationPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
   const [storyType, setStoryType] = useState(null); // 'image', 'video', 'text'
   const [contentUrl, setContentUrl] = useState(null);
