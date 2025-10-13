@@ -21,11 +21,10 @@ const StoryCreationPage = () => {
   const [backgroundColor, setBackgroundColor] = useState('#8B5CF6');
   const [textColor, setTextColor] = useState('#FFFFFF');
   const [fontStyle, setFontStyle] = useState('default');
-  const [privacy, setPrivacy] = useState('public');
-  const [duration, setDuration] = useState(15);
+  const [privacy] = useState('public');
+  const [duration] = useState(15);
   const [isUploading, setIsUploading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
