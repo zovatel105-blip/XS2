@@ -335,7 +335,7 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
                 group absolute rounded-full shadow-lg transition-all duration-500 transform
                 ${action.color} ${action.borderColor} ${action.shadowColor}
                 ${isSelected ? 'scale-125 ring-4 ring-black/50' : 'hover:scale-110 active:scale-95'}
-                flex flex-col items-center justify-center border-2 w-10 h-10
+                flex items-center justify-center border-2 w-10 h-10
               `}
               style={{
                 left: `${action.position.x}px`,
@@ -347,23 +347,11 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
               }}
             >
               <Icon 
-                size={16} 
+                size={isLiveAction ? 14 : 16} 
                 className={`text-white transition-all duration-200 ${
                   isSelected ? 'scale-125' : 'group-hover:scale-110'
-                } ${isLiveAction ? 'mb-0.5' : ''}`} 
+                }`} 
               />
-              
-              {/* Texto LIVE dentro del botón */}
-              {isLiveAction && (
-                <span 
-                  className="text-[8px] font-bold text-white leading-none"
-                  style={{
-                    textShadow: '0 1px 1px rgba(0,0,0,0.8)'
-                  }}
-                >
-                  LIVE
-                </span>
-              )}
             </button>
           );
         })}
