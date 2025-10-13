@@ -30,8 +30,6 @@ const StoryViewer = ({ stories = [], initialIndex = 0, onClose, onStoryEnd }) =>
   // Initialize story state
   useEffect(() => {
     if (currentStory) {
-      setIsLiked(currentStory.is_liked);
-      setLikesCount(currentStory.likes_count);
       setProgress(0);
       
       // Mark story as viewed
