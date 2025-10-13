@@ -196,10 +196,11 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
 
   const handleMoments = () => {
     toast({
-      title: "📸 Historias - Próximamente",
-      description: "Esta función estará disponible muy pronto. ¡Mantente atento!",
-      duration: 3000,
+      title: "📸 Abriendo creador de historias...",
+      description: "Navegando a la página de creación",
     });
+    
+    navigate('/story-creation');
     
     if (onActionSelect) {
       onActionSelect('moments');
