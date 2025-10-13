@@ -1159,12 +1159,12 @@ const SearchPage = () => {
           {/* You may like Section - Real Data */}
           {isAuthenticated && (
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 px-3 sm:px-0">You may like</h3>
+              <h3 className="text-lg font-semibold text-gray-900 px-4">You may like</h3>
               
               {loadingStates.recommendations ? (
                 <RecommendationsSectionSkeleton count={6} />
               ) : recommendedContent.length > 0 ? (
-                <div className="flex space-x-3 sm:space-x-4 overflow-x-auto scrollbar-hide pb-2 w-full pl-3 sm:pl-0 lg:pl-6 xl:pl-8">
+                <div className="flex space-x-3 sm:space-x-4 overflow-x-auto scrollbar-hide pb-2 w-full px-4">
                   {recommendedContent.map((content, index) => {
                     // Dynamic gradient colors
                     const gradients = [
