@@ -1016,7 +1016,7 @@ const SearchPage = () => {
                             <Clock size={20} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className="text-gray-900 text-sm truncate block font-normal">{recentSearch.query}</span>
+                            <span className="text-sm font-semibold text-gray-900 truncate block">{recentSearch.query}</span>
                           </div>
                           <button 
                             onClick={(e) => handleDeleteRecentSearch(recentSearch.id, e)}
