@@ -13,13 +13,13 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    {/* Círculo principal */}
+    {/* Círculo principal más grande */}
     <circle
       cx="12"
       cy="12"
-      r="9"
+      r="10.5"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="2.2"
       fill="none"
     />
     {/* Círculo blanco en esquina inferior derecha */}
