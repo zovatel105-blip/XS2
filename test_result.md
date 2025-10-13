@@ -1044,8 +1044,61 @@ Layout "off" - Carrusel Horizontal:
 ✅ Hover sutil con `bg-gray-50`
 ✅ Texto truncado con ellipsis cuando es muy largo
 
+✅ **MEJORAS ADICIONALES IMPLEMENTADAS:**
+
+**LÍMITE DE 3 BÚSQUEDAS CON "SEE MORE":**
+1. ✅ **Mostrar solo 3 búsquedas**: Por defecto solo se muestran las 3 búsquedas más recientes
+2. ✅ **Botón "See more"**: Agregado debajo de las búsquedas cuando hay más de 3
+3. ✅ **Toggle funcional**: Permite expandir/contraer la lista completa
+4. ✅ **Estado manejado**: Nuevo estado `showAllRecentSearches` para controlar visibilidad
+5. ✅ **Indicador visual**: Flecha ▼/▲ para mostrar estado expandido/contraído
+
+**AJUSTE DE FUENTE SEGÚN REFERENCIA:**
+1. ✅ **Tamaño reducido**: Cambiado de `text-base` (16px) a `text-sm` (14px)
+2. ✅ **Sans-serif**: Mantiene fuente del sistema (sans-serif por defecto)
+3. ✅ **Peso regular**: `font-normal` para peso estándar
+4. ✅ **Legibilidad optimizada**: Tamaño apropiado para listas compactas
+
+**CÓDIGO IMPLEMENTADO:**
+```javascript
+// Estado para controlar expansión
+const [showAllRecentSearches, setShowAllRecentSearches] = useState(false);
+
+// Mostrar solo 3 o todas las búsquedas
+{(showAllRecentSearches ? recentSearches : recentSearches.slice(0, 3)).map(...)}
+
+// Botón See more
+{recentSearches.length > 3 && (
+  <button onClick={() => setShowAllRecentSearches(!showAllRecentSearches)}>
+    <span>{showAllRecentSearches ? 'See less' : 'See more'}</span>
+    <span>{showAllRecentSearches ? '▲' : '▼'}</span>
+  </button>
+)}
+```
+
+**DISEÑO FINAL CON LÍMITE:**
+```
+┌─────────────────────────────────────────┐
+│ Búsquedas recientes                     │
+├─────────────────────────────────────────┤
+│ 🕐  elpasodelzopilote              ✕   │ ← 1
+├─────────────────────────────────────────┤
+│ 🕐  sueños en el islam signifi...  ✕   │ ← 2
+├─────────────────────────────────────────┤
+│ 🕐  torenza                        ✕   │ ← 3
+├─────────────────────────────────────────┤
+│           See more ▼                    │ ← Botón expandir
+└─────────────────────────────────────────┘
+```
+
 ✅ **RESULTADO FINAL:**
-🎯 **HISTORIAL DE BÚSQUEDA CON DISEÑO MINIMALISTA** - El historial de búsquedas recientes ahora coincide exactamente con la imagen de referencia proporcionada: diseño limpio, sin fechas, ícono de reloj consistente, y botón X siempre visible para una mejor experiencia de usuario.
+🎯 **HISTORIAL DE BÚSQUEDA COMPLETO SEGÚN REFERENCIA** - El historial ahora:
+- ✅ Muestra solo 3 búsquedas recientes por defecto
+- ✅ Tiene botón "See more" para expandir/contraer
+- ✅ Usa fuente pequeña (text-sm) como en la referencia
+- ✅ Diseño limpio sin fechas con ícono de reloj consistente
+- ✅ Botón X siempre visible de 20px
+- ✅ Coincide exactamente con la imagen de referencia proporcionada
 
 
 **🚨 ERROR CRÍTICO DE VOTACIÓN RÁPIDA EN BÚSQUEDA RESUELTO COMPLETAMENTE (2025-01-27): El error "Objects are not valid as a React child" y el error "field required" al votar con acciones rápidas en la página de búsqueda han sido completamente corregidos.**
