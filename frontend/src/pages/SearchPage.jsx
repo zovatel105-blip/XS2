@@ -450,7 +450,7 @@ const SearchPage = () => {
           
           // 2. Cargar inicial: anterior y siguiente SIN cambiar el índice de la vista
           setTimeout(() => {
-            loadAdjacentPostsInitial(postResults, clickedIndex, selectedPollData);
+            loadAdjacentPostsInitial(postResults, clickedIndex, transformedPollData);
           }, 300); // Dar tiempo para que se renderice la publicación seleccionada primero
           
         } else {
