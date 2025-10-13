@@ -78,7 +78,6 @@ const StoryCreationPage = () => {
     }
 
     setIsUploading(true);
-    setSelectedFile(file);
 
     try {
       // Convert to base64 for preview
