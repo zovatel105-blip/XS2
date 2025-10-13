@@ -54,63 +54,76 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
 // Ícono personalizado de LIVE estilo TikTok
 const TikTokLiveIcon = ({ size = 16, className = "" }) => (
   <svg
-    width={size * 2.2}
-    height={size}
-    viewBox="0 0 44 20"
+    width={size * 2.5}
+    height={size * 2}
+    viewBox="0 0 50 40"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    {/* Rectángulo con bordes redondeados - estilo TikTok */}
-    <rect
-      x="2"
-      y="2"
-      width="40"
-      height="16"
-      rx="3"
-      fill="#FF004F"
-      stroke="#FF004F"
-      strokeWidth="1.5"
-    />
-    {/* Borde interno blanco para efecto */}
-    <rect
-      x="3"
-      y="3"
-      width="38"
-      height="14"
-      rx="2"
+    {/* Marco superior del TV (arco superior) */}
+    <path
+      d="M 8 12 Q 8 8 12 8 L 38 8 Q 42 8 42 12"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
       fill="none"
-      stroke="rgba(255, 255, 255, 0.3)"
-      strokeWidth="0.5"
     />
-    {/* Texto LIVE */}
+    
+    {/* Antenas del TV */}
+    <line
+      x1="18"
+      y1="8"
+      x2="12"
+      y2="2"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+    <line
+      x1="32"
+      y1="8"
+      x2="38"
+      y2="2"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+    
+    {/* Pantalla del TV - rectángulo redondeado */}
+    <rect
+      x="8"
+      y="12"
+      width="34"
+      height="22"
+      rx="4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+    />
+    
+    {/* Texto LIVE en negrita */}
     <text
-      x="22"
-      y="13.5"
+      x="25"
+      y="26"
       textAnchor="middle"
-      fill="white"
-      fontSize="9"
+      fill="currentColor"
+      fontSize="11"
       fontWeight="900"
       fontFamily="Arial, sans-serif"
       letterSpacing="0.5"
     >
       LIVE
     </text>
-    {/* Punto rojo parpadeante */}
-    <circle
-      cx="7"
-      cy="10"
-      r="2"
-      fill="white"
-      opacity="0.9"
-    >
-      <animate
-        attributeName="opacity"
-        values="0.9;0.3;0.9"
-        dur="1.5s"
-        repeatCount="indefinite"
-      />
-    </circle>
+    
+    {/* Base del TV (arco inferior) */}
+    <path
+      d="M 10 34 Q 15 38 25 38 Q 35 38 40 34"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      fill="none"
+    />
   </svg>
 );
 
