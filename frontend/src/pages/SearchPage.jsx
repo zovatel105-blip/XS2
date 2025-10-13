@@ -988,16 +988,8 @@ const SearchPage = () => {
             {/* Recent Searches Section - Real Data */}
             {isAuthenticated && (
             <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between px-4">
                 <h3 className="text-lg font-semibold text-gray-900">Búsquedas recientes</h3>
-                {recentSearches.length > 0 && (
-                  <button 
-                    onClick={loadRecentSearches}
-                    className="text-sm text-gray-500 hover:text-gray-700"
-                  >
-                    Actualizar
-                  </button>
-                )}
               </div>
               
               {loadingStates.recentSearches ? (
@@ -1033,10 +1025,10 @@ const SearchPage = () => {
                   {recentSearches.length > 3 && (
                     <button
                       onClick={() => setShowAllRecentSearches(!showAllRecentSearches)}
-                      className="w-full py-3 text-center text-gray-500 text-sm hover:text-gray-700 transition-colors flex items-center justify-center gap-1"
+                      className="w-full py-3 text-center text-gray-500 text-sm hover:text-gray-700 transition-colors flex items-center justify-center gap-2"
                     >
                       <span>{showAllRecentSearches ? 'See less' : 'See more'}</span>
-                      <span className="text-xs">{showAllRecentSearches ? '▲' : '▼'}</span>
+                      {showAllRecentSearches ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
                   )}
                 </>
