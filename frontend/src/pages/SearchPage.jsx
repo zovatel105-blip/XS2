@@ -1003,30 +1003,43 @@ const SearchPage = () => {
               {loadingStates.recentSearches ? (
                 <RecentSearchesSkeleton count={5} />
               ) : recentSearches.length > 0 ? (
-                <div className="space-y-0">
-                  {recentSearches.map((recentSearch, index) => {
-                    return (
-                      <div 
-                        key={recentSearch.id}
-                        onClick={() => handleRecentSearchClick(recentSearch)}
-                        className="flex items-center gap-3 py-3 px-2 hover:bg-gray-50 cursor-pointer transition-colors"
-                      >
-                        <div className="w-5 h-5 text-gray-400 flex-shrink-0">
-                          <Clock size={20} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-gray-900 text-base truncate block font-normal">{recentSearch.query}</span>
-                        </div>
-                        <button 
-                          onClick={(e) => handleDeleteRecentSearch(recentSearch.id, e)}
-                          className="w-5 h-5 text-gray-400 hover:text-gray-600 flex-shrink-0"
+                <>
+                  <div className="space-y-0">
+                    {(showAllRecentSearches ? recentSearches : recentSearches.slice(0, 3)).map((recentSearch, index) => {
+                      return (
+                        <div 
+                          key={recentSearch.id}
+                          onClick={() => handleRecentSearchClick(recentSearch)}
+                          className="flex items-center gap-3 py-3 px-2 hover:bg-gray-50 cursor-pointer transition-colors"
                         >
-                          <X size={20} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+                          <div className="w-5 h-5 text-gray-400 flex-shrink-0">
+                            <Clock size={20} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-gray-900 text-sm truncate block font-normal">{recentSearch.query}</span>
+                          </div>
+                          <button 
+                            onClick={(e) => handleDeleteRecentSearch(recentSearch.id, e)}
+                            className="w-5 h-5 text-gray-400 hover:text-gray-600 flex-shrink-0"
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* See more button */}
+                  {recentSearches.length > 3 && (
+                    <button
+                      onClick={() => setShowAllRecentSearches(!showAllRecentSearches)}
+                      className="w-full py-3 text-center text-gray-500 text-sm hover:text-gray-700 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <span>{showAllRecentSearches ? 'See less' : 'See more'}</span>
+                      <span className="text-xs">{showAllRecentSearches ? '▲' : '▼'}</span>
+                    </button>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-4 text-gray-500">
                   <Clock size={24} className="mx-auto mb-2 opacity-50" />
