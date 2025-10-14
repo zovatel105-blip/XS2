@@ -89,9 +89,9 @@ const ProfilePage = () => {
   const [followingLoading, setFollowingLoading] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
-  const [userHasStories, setUserHasStories] = useState(false);
-  const [userStories, setUserStories] = useState([]);
-  const [showStoryViewer, setShowStoryViewer] = useState(false);
+  // const [userHasStories, setUserHasStories] = useState(false); // Removed - Stories feature disabled
+  // const [userStories, setUserStories] = useState([]); // Removed - Stories feature disabled
+  // const [showStoryViewer, setShowStoryViewer] = useState(false); // Removed - Stories feature disabled
   const [socialLinks, setSocialLinks] = useState({});
   const [savingSocialLinks, setSavingSocialLinks] = useState(false);
   const [showAddSocialModal, setShowAddSocialModal] = useState(false);
