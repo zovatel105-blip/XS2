@@ -7317,44 +7317,8 @@ async def check_audio_in_favorites(
         logger.error(f"Error checking audio in favorites: {str(e)}")
         raise HTTPException(status_code=500, detail="Error checking favorites")
 
-# =============  STORY ENDPOINTS =============
-
-@api_router.post("/stories", response_model=StoryResponse)
-async def create_story(
-    story_data: StoryCreate,
-    current_user: UserResponse = Depends(get_current_user)
-):
-    """Create a new story"""
-    try:
-        # Create story
-        story = Story(
-            user_id=current_user.id,
-            content_url=story_data.content_url,
-            text_content=story_data.text_content,
-            story_type=story_data.story_type,
-            privacy=story_data.privacy,
-            background_color=story_data.background_color,
-            text_color=story_data.text_color,
-            font_style=story_data.font_style,
-            duration=story_data.duration or 15
-        )
-        
-        # Insert into database
-        await db.stories.insert_one(story.dict())
-        
-        # Return story response
-        return StoryResponse(
-            **story.dict(),
-            username=current_user.username,
-            display_name=current_user.display_name,
-            avatar_url=current_user.avatar_url,
-            is_viewed=False,
-            is_liked=False
-        )
-        
-    except Exception as e:
-        logger.error(f"Error creating story: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error creating story: {str(e)}")
+# =============  STORY ENDPOINTS ============= (DISABLED - Feature removed)
+# All story endpoints have been removed as the stories feature is disabled
 
 @api_router.get("/stories")
 async def get_stories(
