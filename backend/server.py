@@ -55,8 +55,8 @@ from models import (
     UserAudio, UserAudioCreate, UserAudioUpdate, UserAudioResponse, UserAudioUse, AudioPrivacy,
     # Audio Favorites Models
     AudioFavorite, AudioFavoriteCreate, AudioFavoriteResponse,
-    # Story Models
-    Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy,
+    # Story Models - REMOVED (Stories feature disabled)
+    # Story, StoryCreate, StoryResponse, StoryView, StoryLike, StoryViewCreate, StoryLikeCreate, StoryType, StoryPrivacy,
     # Chat Request Models
     ChatRequest, ChatRequestCreate, ChatRequestResponse, ChatRequestAction, ChatRequestStatus
 )
