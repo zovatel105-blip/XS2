@@ -766,12 +766,7 @@ const FeedPage = () => {
           <p className="text-gray-600">Descubre las votaciones más populares</p>
         </div>
 
-        {/* Stories Section */}
-        <div className="mb-8 max-w-6xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <StoriesContainer className="py-2" />
-          </div>
-        </div>
+        {/* Stories Section - REMOVED (Stories feature disabled) */}
 
         {/* Feed Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
