@@ -2491,7 +2491,7 @@ async def search_hashtags_optimized(query: str, current_user_id: str, limit: int
     """Optimized hashtag search with minimal database operations"""
     try:
         # Search for hashtags in post tags, title, and content
-        hashtag_query = query if query.startsWith("#") else f"#{query}"
+        hashtag_query = query if query.startswith("#") else f"#{query}"
         query_without_hash = query.replace("#", "").strip()
         
         pipeline = [
