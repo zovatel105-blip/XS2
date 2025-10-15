@@ -880,7 +880,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
               className="text-xl font-bold text-gray-900 leading-tight cursor-pointer hover:text-blue-600 transition-colors"
               onClick={toggleHashtags}
             >
-              {cleanTitle || poll.title}
+              {renderTextWithHashtags(cleanTitle || poll.title, navigate)}
             </h2>
             
             {/* Hashtags that appear when title is clicked */}
