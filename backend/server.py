@@ -2490,13 +2490,21 @@ async def search_users_optimized(query: str, current_user_id: str, limit: int):
 async def search_hashtags_optimized(query: str, current_user_id: str, limit: int):
     """Optimized hashtag search with minimal database operations"""
     try:
-        # Search for hashtags in post content
-        hashtag_query = query if query.startswith("#") else f"#{query}"
+        # Search for hashtags in post tags, title, and content
+        hashtag_query = query if query.startsWith("#") else f"#{query}"
+        query_without_hash = query.replace("#", "").strip()
         
         pipeline = [
             {
                 "$match": {
-                    "content": {"$regex": hashtag_query, "$options": "i"}
+                    "$or": [
+                        # Search in tags array (exact or partial match)
+                        {"tags": {"$regex": query_without_hash, "$options": "i"}},
+                        # Search in title for hashtags
+                        {"title": {"$regex": hashtag_query, "$options": "i"}},
+                        # Search in content field if exists
+                        {"content": {"$regex": hashtag_query, "$options": "i"}}
+                    ]
                 }
             },
             {
@@ -2513,11 +2521,13 @@ async def search_hashtags_optimized(query: str, current_user_id: str, limit: int
         if result and result[0]["count"] > 0:
             hashtag_result = {
                 "type": "hashtag",
-                "id": f"hashtag_{query}",
+                "id": f"hashtag_{query_without_hash}",
                 "hashtag": hashtag_query,
                 "posts_count": result[0]["count"],
                 "relevance_score": 1.0,
-                "popularity_score": result[0]["count"]
+                "popularity_score": result[0]["count"],
+                # Add sample posts for preview
+                "sample_posts": result[0]["posts"][:3] if len(result[0]["posts"]) > 0 else []
             }
             return [hashtag_result]
         
