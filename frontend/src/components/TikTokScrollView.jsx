@@ -22,6 +22,34 @@ import realMusicService from '../services/realMusicService';
 import LayoutRenderer from './layouts/LayoutRenderer';
 import feedMenuService from '../services/feedMenuService';
 
+// Helper function to render text with clickable hashtags
+const renderTextWithHashtags = (text, navigate) => {
+  if (!text) return null;
+  
+  // Split text by hashtags while keeping the hashtags
+  const parts = text.split(/(#\w+)/g);
+  
+  return parts.map((part, index) => {
+    if (part.startsWith('#')) {
+      // This is a hashtag, make it clickable
+      return (
+        <span
+          key={index}
+          className="text-blue-400 hover:text-blue-300 cursor-pointer underline"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/search?q=${encodeURIComponent(part.substring(1))}&filter=hashtags`);
+          }}
+        >
+          {part}
+        </span>
+      );
+    }
+    // Regular text
+    return <span key={index}>{part}</span>;
+  });
+};
+
 // Componente UserButton clickeable
 const UserButton = ({ user, percentage, isSelected, isWinner, onClick, onUserClick, optionIndex }) => (
   <div className="absolute flex flex-col items-center gap-2 z-20 bottom-4 right-4">
