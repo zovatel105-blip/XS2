@@ -83,7 +83,7 @@ const ContentPublishPage = () => {
     setTitle(prev => prev + '#');
     // Focus on the title input
     setTimeout(() => {
-      const titleInput = document.querySelector('input[type="text"]');
+      const titleInput = document.getElementById('title-input');
       if (titleInput) {
         titleInput.focus();
         // Move cursor to end
@@ -97,7 +97,7 @@ const ContentPublishPage = () => {
     setTitle(prev => prev + '@');
     // Focus on the title input
     setTimeout(() => {
-      const titleInput = document.querySelector('input[type="text"]');
+      const titleInput = document.getElementById('title-input');
       if (titleInput) {
         titleInput.focus();
         // Move cursor to end
