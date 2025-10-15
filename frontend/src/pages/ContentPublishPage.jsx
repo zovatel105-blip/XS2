@@ -319,6 +319,7 @@ const ContentPublishPage = () => {
         <div className="space-y-4">
           <div className="space-y-3">
             <input
+              id="title-input"
               type="text"
               placeholder="Add a catchy title"
               value={title}
