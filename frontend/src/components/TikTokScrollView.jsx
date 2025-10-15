@@ -513,7 +513,7 @@ const TikTokPollCard = ({
         
         <div className="mt-3">
           <h2 className="text-white font-bold text-xl leading-tight text-left">
-            {poll.title}
+            {renderTextWithHashtags(poll.title, navigate)}
           </h2>
         </div>
 
