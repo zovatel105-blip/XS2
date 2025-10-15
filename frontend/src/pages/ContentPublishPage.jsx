@@ -372,7 +372,7 @@ const ContentPublishPage = () => {
               {/* Add buttons for hashtags and mentions */}
               <div className="flex gap-2">
                 <button 
-                  onClick={() => setShowHashtagModal(true)}
+                  onClick={handleAddHashtagSymbol}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors"
                 >
                   <Hash className="w-4 h-4" />
@@ -385,11 +385,11 @@ const ContentPublishPage = () => {
                 </button>
                 
                 <button 
-                  onClick={() => setShowMentionModal(true)}
+                  onClick={handleAddMentionSymbol}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors"
                 >
                   <AtSign className="w-4 h-4" />
-                  Mention
+                  Etiquetar personas
                   {mentionedUsers.length > 0 && (
                     <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full">
                       {mentionedUsers.length}
