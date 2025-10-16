@@ -268,16 +268,16 @@ const CarouselLayout = ({
               {isActive && isMobile && poll.userVote && percentage > 0 && (
                 <div 
                   className={cn(
-                    "absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out",
+                    "absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out rounded-t-lg",
                     isWinner 
-                      ? "bg-gradient-to-t from-green-500/40 via-green-500/20 to-transparent"
+                      ? "bg-gradient-to-t from-green-500/70 via-green-500/50 to-green-500/20"
                       : isSelected 
-                        ? "bg-gradient-to-t from-blue-500/40 via-blue-500/20 to-transparent"
-                        : "bg-gradient-to-t from-white/25 via-white/10 to-transparent"
+                        ? "bg-gradient-to-t from-blue-500/70 via-blue-500/50 to-blue-500/20"
+                        : "bg-gradient-to-t from-white/60 via-white/40 to-white/20"
                   )}
                   style={{ 
                     height: `${Math.max(percentage, 15)}%`,
-                    minHeight: '48px',
+                    minHeight: '60px',
                     transform: `translateY(${100 - Math.max(percentage, 15)}%)`,
                     transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
