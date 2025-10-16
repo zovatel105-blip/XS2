@@ -1888,7 +1888,7 @@ const ProfilePage = () => {
 
               {/* Contenido de tabs - Con padding lateral mínimo */}
               <div className="mt-0">
-                <TabsContent value="polls" className="space-y-6">
+                <TabsContent value="polls" className="space-y-6 mt-0">
                   {polls.length === 0 ? (
                     <div className="text-center py-16 space-y-6 px-1 sm:px-2">
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
