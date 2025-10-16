@@ -1286,7 +1286,7 @@ const SearchPage = () => {
           <SearchResultsGridSkeleton count={6} />
         ) : (searchResults.length > 0 || hasSearched) ? (
           /* Search Results - Image Grid Style */
-          <div className="px-1 py-2 w-full">
+          <div className="px-1 pt-1 pb-2 w-full">
             {/* Results Grid - Maximum width usage with minimal separation */}
             <div className="grid grid-cols-2 gap-1">
               {searchResults.map((result, index) => (
