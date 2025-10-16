@@ -503,7 +503,7 @@ const TikTokPollCard = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-white text-base">{poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'Usuario'}</h3>
+                <h3 className="text-white font-semibold text-base">{poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'Usuario'}</h3>
               </div>
               <p className="text-sm text-white/70">{poll.timeAgo}</p>
             </div>
