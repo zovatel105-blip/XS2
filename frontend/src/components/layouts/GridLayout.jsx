@@ -280,8 +280,9 @@ const GridLayout = ({
                       : "bg-gradient-to-t from-white/25 via-white/10 to-transparent border-t-2 border-white/60"
                 )}
                 style={{ 
-                  height: `${percentage}%`,
-                  transform: `translateY(${100 - percentage}%)`,
+                  height: `${Math.max(percentage, 8)}%`,
+                  minHeight: '32px',
+                  transform: `translateY(${100 - Math.max(percentage, 8)}%)`,
                   transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
