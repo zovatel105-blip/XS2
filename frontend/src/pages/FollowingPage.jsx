@@ -677,9 +677,9 @@ const FollowingPage = () => {
   // Renderizado desktop (Web layout similar a TikTok web)
   return (
     <>
-      {/* Logo fijo SIEMPRE VISIBLE - Desktop Mode */}
+      {/* Stories tabs deslizables + Logo en esquina superior derecha - Desktop Mode */}
       <div 
-        className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-white/95 backdrop-blur-md border border-gray-200/60 shadow-lg"
+        className="fixed top-4 right-4 z-[9999] flex items-center gap-2"
         style={{ 
           position: 'fixed',
           top: '16px',
@@ -687,8 +687,45 @@ const FollowingPage = () => {
           zIndex: 9999,
         }}
       >
-        <LogoWithQuickActions size={32} />
+        {/* Stories horizontales deslizables */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[250px]">
+          {demoStories.slice(0, 6).map((story, index) => (
+            <button
+              key={story.userId}
+              onClick={() => handleStoryClick(index)}
+              className="flex-shrink-0 group"
+              title={story.username}
+            >
+              <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${story.hasViewed ? 'from-gray-300 to-gray-400' : 'from-purple-500 via-pink-500 to-orange-400'} p-[2px] group-hover:scale-110 transition-transform`}>
+                <div className="w-full h-full rounded-full bg-white p-[1px]">
+                  <img
+                    src={story.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(story.username)}&background=random`}
+                    alt={story.username}
+                    className="w-full h-full rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.username)}&background=random`;
+                    }}
+                  />
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Logo de acciones rápidas */}
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/95 backdrop-blur-md border border-gray-200/60 shadow-lg flex items-center justify-center">
+          <LogoWithQuickActions size={32} />
+        </div>
       </div>
+
+      {/* Story Viewer Modal */}
+      {showStoryViewer && demoStories.length > 0 && (
+        <StoryViewer
+          stories={demoStories}
+          initialIndex={selectedStoryIndex}
+          onClose={handleCloseStoryViewer}
+        />
+      )}
       
       <div className="min-h-screen bg-gray-50 pt-6 relative">
         {/* Header */}
