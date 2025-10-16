@@ -600,9 +600,9 @@ const FollowingPage = () => {
   if (isMobile || isTikTokMode) {
     return (
       <>
-        {/* Logo fijo SIEMPRE VISIBLE - Mobile TikTok Mode */}
+        {/* Stories tabs deslizables en la posición del logo */}
         <div 
-          className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-white/95 backdrop-blur-md border border-white/60 shadow-lg"
+          className="fixed top-4 right-4 z-[9999] flex items-center gap-2"
           style={{ 
             position: 'fixed',
             top: '16px',
@@ -610,17 +610,34 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={32} />
-        </div>
+          {/* Stories horizontales deslizables */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[200px]">
+            {demoStories.slice(0, 5).map((story, index) => (
+              <button
+                key={story.userId}
+                onClick={() => handleStoryClick(index)}
+                className="flex-shrink-0"
+              >
+                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${story.hasViewed ? 'from-gray-300 to-gray-400' : 'from-purple-500 via-pink-500 to-orange-400'} p-[2px]`}>
+                  <div className="w-full h-full rounded-full bg-white p-[1px]">
+                    <img
+                      src={story.userAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(story.username)}&background=random`}
+                      alt={story.username}
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.username)}&background=random`;
+                      }}
+                    />
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
 
-        {/* Stories Bar - Horizontal at the top */}
-        <div className="fixed top-0 left-0 right-0 z-[9998]">
-          <StoriesBar 
-            stories={demoStories}
-            onStoryClick={handleStoryClick}
-            onAddStory={handleAddStory}
-            currentUserId={user?.id}
-          />
+          {/* Logo de acciones rápidas */}
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/95 backdrop-blur-md border border-white/60 shadow-lg flex items-center justify-center">
+            <LogoWithQuickActions size={32} />
+          </div>
         </div>
 
         {/* Story Viewer Modal */}
@@ -643,6 +660,16 @@ const FollowingPage = () => {
           onCreatePoll={handleCreatePoll}
           showLogo={false}
         />
+
+        <style jsx>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
       </>
     );
   }
