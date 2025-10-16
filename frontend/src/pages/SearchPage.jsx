@@ -1412,8 +1412,8 @@ const SearchPage = () => {
                   )}
 
                   {/* Description with hashtags */}
-                  <div className="px-0 pb-1 pl-2">
-                    <p className="text-sm font-semibold text-gray-900">
+                  <div className="px-1 pb-1">
+                    <p className="text-sm text-white font-normal mt-2 mb-2 line-clamp-2">
                       {result.title || result.content || result.description || ''}
                       {' '}
                       {/* Hashtags inline */}
