@@ -193,11 +193,11 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
                   : "bg-gray-400/50"
             )}
             initial={{ height: 0 }}
-            animate={{ height: `${Math.max(displayPercentage, 8)}%`, minHeight: '32px' }}
+            animate={{ height: `${Math.max(displayPercentage, 15)}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
             style={{ 
               transformOrigin: 'bottom',
-              minHeight: '32px'
+              minHeight: '48px'
             }}
           />
         )}
