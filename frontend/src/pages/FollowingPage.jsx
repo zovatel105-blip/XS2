@@ -725,11 +725,11 @@ const FollowingPage = () => {
       <>
         {/* Stories tabs deslizables */}
         <div 
-          className="fixed top-4 right-4 z-[9999] flex items-center gap-2"
+          className="fixed top-2 right-2 z-[9999] flex items-center gap-2"
           style={{ 
             position: 'fixed',
-            top: '16px',
-            right: '16px',
+            top: '8px',
+            right: '8px',
             zIndex: 9999,
           }}
         >
