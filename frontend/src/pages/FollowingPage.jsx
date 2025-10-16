@@ -633,46 +633,31 @@ const FollowingPage = () => {
   // Show error state
   if (error && !isLoading) {
     return (
-      <>
-        {/* Logo fijo SIEMPRE VISIBLE - Error State */}
-        <div 
-          className="fixed top-4 right-4 z-[9999] flex items-center justify-center w-10 h-10 rounded-full bg-white/95 backdrop-blur-md border border-white/60 shadow-lg"
-          style={{ 
-            position: 'fixed',
-            top: '16px',
-            right: '16px',
-            zIndex: 9999,
-          }}
-        >
-          <LogoWithQuickActions size={32} />
-        </div>
-        
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          <div className="text-center px-6">
-            <div className="w-32 h-32 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-8">
-              <svg className="w-16 h-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-            <h3 className="text-3xl font-bold text-white mb-4">Error al cargar</h3>
-            <p className="text-white/70 text-lg mb-6">{error}</p>
-            <div className="space-y-3">
-              <button 
-                onClick={() => window.location.reload()}
-                className="block w-full px-6 py-3 bg-purple-500 text-white rounded-full font-medium hover:bg-purple-600 transition-colors"
-              >
-                Reintentar
-              </button>
-              <button
-                onClick={() => navigate('/feed')}
-                className="block w-full px-6 py-3 bg-gray-600 text-white rounded-full font-medium hover:bg-gray-700 transition-colors"
-              >
-                Volver al Feed
-              </button>
-            </div>
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="text-center px-6">
+          <div className="w-32 h-32 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-8">
+            <svg className="w-16 h-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h3 className="text-3xl font-bold text-white mb-4">Error al cargar</h3>
+          <p className="text-white/70 text-lg mb-6">{error}</p>
+          <div className="space-y-3">
+            <button 
+              onClick={() => window.location.reload()}
+              className="block w-full px-6 py-3 bg-purple-500 text-white rounded-full font-medium hover:bg-purple-600 transition-colors"
+            >
+              Reintentar
+            </button>
+            <button
+              onClick={() => navigate('/feed')}
+              className="block w-full px-6 py-3 bg-gray-600 text-white rounded-full font-medium hover:bg-gray-700 transition-colors"
+            >
+              Volver al Feed
+            </button>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
