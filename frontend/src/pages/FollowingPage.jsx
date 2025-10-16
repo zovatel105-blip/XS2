@@ -733,9 +733,9 @@ const FollowingPage = () => {
             zIndex: 9999,
           }}
         >
-          {/* Stories horizontales deslizables - Solo 4 visibles */}
+          {/* Stories horizontales deslizables - Todas las historias disponibles */}
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[200px] justify-end pr-1">
-            {demoStories.slice(0, 4).map((story, index) => (
+            {demoStories.map((story, index) => (
               <button
                 key={story.userId}
                 onClick={() => handleStoryClick(index)}
