@@ -1940,7 +1940,7 @@ const ProfilePage = () => {
                   </TabsContent>
                 )}
 
-                <TabsContent value="mentions" className="space-y-6 mt-0">
+                <TabsContent value="mentions" className="mt-0">
                   {mentionedPollsLoading ? (
                     <div className="flex justify-center items-center py-16">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
