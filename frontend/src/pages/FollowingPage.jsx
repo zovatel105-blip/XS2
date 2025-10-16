@@ -806,7 +806,7 @@ const FollowingPage = () => {
         }}
       >
         {/* Stories horizontales deslizables - Todas las historias disponibles */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[200px] justify-end pr-1">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[200px] pr-1">
           {demoStories.map((story, index) => (
             <button
               key={story.userId}
