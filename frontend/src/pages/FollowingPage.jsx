@@ -836,6 +836,36 @@ const FollowingPage = () => {
       >
         {/* Stories horizontales deslizables - Todas las historias disponibles */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-[200px] pr-1">
+          {/* Tu Historia - Primera posición */}
+          <button
+            onClick={() => {
+              toast({
+                title: "Agregar Historia",
+                description: "Funcionalidad de historias próximamente disponible",
+              });
+            }}
+            className="flex-shrink-0 relative group"
+            title="Tu historia"
+          >
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 p-[2px] group-hover:scale-110 transition-transform">
+              <div className="w-full h-full rounded-full bg-white p-[1px] relative">
+                <img
+                  src={user?.avatar || user?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || user?.name || 'Tu')}&background=random`}
+                  alt="Tu historia"
+                  className="w-full h-full rounded-full object-cover"
+                  onError={(e) => {
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || user?.name || 'Tu')}&background=random`;
+                  }}
+                />
+                {/* Botón + para agregar historia */}
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center border border-white">
+                  <Plus className="w-2 h-2 text-white" strokeWidth={3} />
+                </div>
+              </div>
+            </div>
+          </button>
+          
+          {/* Historias de otros usuarios */}
           {demoStories.map((story, index) => (
             <button
               key={story.userId}
