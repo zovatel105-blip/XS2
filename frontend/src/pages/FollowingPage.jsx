@@ -797,11 +797,11 @@ const FollowingPage = () => {
     <>
       {/* Stories tabs deslizables en esquina superior derecha - Desktop Mode */}
       <div 
-        className="fixed top-1 right-1 z-[9999] flex items-center gap-2"
+        className="fixed top-1 right-0 z-[9999] flex items-center gap-2"
         style={{ 
           position: 'fixed',
           top: '4px',
-          right: '4px',
+          right: '0px',
           zIndex: 9999,
         }}
       >
