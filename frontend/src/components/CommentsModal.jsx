@@ -109,8 +109,8 @@ const CommentsModal = ({
           >
             {/* Handle para móviles */}
             {isMobile && (
-              <div className="w-full p-3 flex justify-center">
-                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              <div className="w-full py-2 flex justify-center bg-white">
+                <div className="w-10 h-1 bg-gray-300 rounded-full" />
               </div>
             )}
 
