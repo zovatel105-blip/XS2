@@ -91,9 +91,9 @@ const CommentsModal = ({
           <motion.div
             ref={modalRef}
             className={cn(
-              "relative bg-white/95 backdrop-blur-xl shadow-2xl border border-white/20 overflow-hidden",
+              "relative bg-white shadow-2xl overflow-hidden",
               isMobile 
-                ? "w-full h-[60vh] rounded-t-3xl" 
+                ? "w-full h-[70vh] rounded-t-3xl" 
                 : "w-full max-w-2xl max-h-[92vh] rounded-2xl"
             )}
             variants={modalVariants}
