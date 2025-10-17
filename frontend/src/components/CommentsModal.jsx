@@ -108,7 +108,7 @@ const CommentsModal = ({
             }}
           >
             {/* Handle superior - ambos móvil y desktop */}
-            <div className="w-full py-2 flex justify-center bg-white border-b border-gray-100">
+            <div className="w-full py-2 flex justify-center bg-white">
               <div className={cn(
                 "bg-gray-300 rounded-full",
                 isMobile ? "w-10 h-1" : "w-12 h-1"
@@ -116,7 +116,7 @@ const CommentsModal = ({
             </div>
 
             {/* Header minimalista centrado */}
-            <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-4 sm:px-6 py-3">
+            <div className="sticky top-0 z-10 bg-white px-4 sm:px-6 py-3">
               <div className="flex items-center justify-between">
                 <div className="flex-1" />
                 
