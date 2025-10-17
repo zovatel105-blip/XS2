@@ -510,16 +510,16 @@ const CommentSection = ({
         )}
       </div>
       
-      {/* Área de comentario flotante moderna */}
+      {/* Área de comentario flotante minimalista */}
       {!showHeader && user && !showNewCommentForm && (
-        <div className="sticky bottom-0 bg-white/95 backdrop-blur-xl border-t border-gray-200/60 p-3 sm:p-4">
-          <Button
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-3 sm:p-4">
+          <button
             onClick={() => setShowNewCommentForm(true)}
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-3 sm:py-4 rounded-2xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 sm:py-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 sm:gap-3"
           >
-            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-            <span className="text-sm sm:text-base">Escribir comentario</span>
-          </Button>
+            <MessageCircle className="w-5 h-5" />
+            <span className="text-base">Escribir comentario</span>
+          </button>
         </div>
       )}
       
