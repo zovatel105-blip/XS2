@@ -408,29 +408,27 @@ const CommentSection = ({
         {showNewCommentForm && <NewCommentForm />}
       </AnimatePresence>
       
-      {/* Lista de comentarios con diseño moderno */}
-      <div className="comment-list overflow-y-auto flex-1 bg-gradient-to-b from-white to-gray-50/30" style={{ maxHeight: `calc(${maxHeight} - 140px)` }}>
+      {/* Lista de comentarios minimalista */}
+      <div className="comment-list overflow-y-auto flex-1 bg-white" style={{ maxHeight: `calc(${maxHeight} - 140px)` }}>
         {error && (
           <motion.div 
-            className="error-message p-4 m-4 bg-red-50 border border-red-200 rounded-2xl"
+            className="error-message p-4 m-4 bg-red-50 border border-red-200 rounded-xl"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
           >
             <div className="flex items-center gap-3 text-red-700">
-              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <AlertCircle className="w-4 h-4" />
               </div>
               <div className="flex-1">
                 <span className="text-sm font-medium">{error}</span>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={() => loadComments(0, false)}
-                className="h-8 text-red-700 hover:text-red-800 hover:bg-red-100 rounded-xl"
+                className="h-8 px-3 text-red-700 hover:text-red-800 hover:bg-red-100 rounded-lg text-sm font-medium transition-colors"
               >
                 Reintentar
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
@@ -438,28 +436,24 @@ const CommentSection = ({
         {loading && comments.length === 0 ? (
           <div className="loading-state p-12 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4 text-gray-500">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
-              </div>
+              <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
               <span className="font-medium">Cargando comentarios...</span>
             </div>
           </div>
         ) : comments.length === 0 ? (
           <div className="empty-state p-12 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <MessageCircle className="w-10 h-10 text-indigo-300" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">¡Sé el primero!</h3>
-            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-              No hay comentarios aún. Inicia la conversación y comparte tu perspectiva.
+            <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">¡Sé el primero!</h3>
+            <p className="text-gray-500 mb-6 max-w-sm mx-auto text-sm">
+              No hay comentarios aún. Inicia la conversación.
             </p>
             {user && (
-              <Button
+              <button
                 onClick={() => setShowNewCommentForm(true)}
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-8 py-3 rounded-2xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
                 Escribir primer comentario
-              </Button>
+              </button>
             )}
           </div>
         ) : (
