@@ -182,21 +182,21 @@ const FeedMenu = ({
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
           />
           
           {/* Bottom Sheet Content */}
           <div className="fixed bottom-0 left-0 right-0 z-[101] animate-in slide-in-from-bottom duration-300">
-            <div className="bg-gray-900 rounded-t-3xl shadow-2xl border-t border-gray-700/50 overflow-hidden max-w-lg mx-auto">
+            <div className="bg-white rounded-t-3xl shadow-2xl overflow-hidden max-w-lg mx-auto">
               {/* Handle Bar */}
               <div className="flex justify-center pt-3 pb-2">
-                <div className="w-12 h-1 bg-gray-600 rounded-full" />
+                <div className="w-12 h-1 bg-gray-300 rounded-full" />
               </div>
               
               {/* Header */}
-              <div className="px-6 py-4 border-b border-gray-700/50">
-                <h3 className="text-white font-semibold text-lg">Opciones del contenido</h3>
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="text-gray-900 font-semibold text-lg">Opciones del contenido</h3>
               </div>
 
               {/* Menu Options */}
@@ -204,42 +204,42 @@ const FeedMenu = ({
                 {/* No me interesa */}
                 <button
                   onClick={handleNotInterested}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
                 >
-                  <EyeOff className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <EyeOff className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <div className="text-white text-base font-medium">No me interesa</div>
-                    <div className="text-gray-400 text-sm mt-0.5">Este contenido aparecerá menos</div>
+                    <div className="text-gray-900 text-base font-medium">No me interesa</div>
+                    <div className="text-gray-500 text-sm mt-0.5">Este contenido aparecerá menos</div>
                   </div>
                 </button>
 
                 {/* Ocultar usuario */}
                 <button
                   onClick={handleHideUser}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
                 >
-                  <UserX className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <UserX className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <div className="text-white text-base font-medium">Ocultar usuario</div>
-                    <div className="text-gray-400 text-sm mt-0.5">No mostrar contenido de este usuario</div>
+                    <div className="text-gray-900 text-base font-medium">Ocultar usuario</div>
+                    <div className="text-gray-500 text-sm mt-0.5">No mostrar contenido de este usuario</div>
                   </div>
                 </button>
 
                 {/* Activar/Desactivar notificaciones */}
                 <button
                   onClick={handleToggleNotifications}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
                 >
                   {isNotificationEnabled ? (
-                    <BellOff className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <BellOff className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
                   ) : (
-                    <Bell className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <Bell className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
                   )}
                   <div className="flex-1">
-                    <div className="text-white text-base font-medium">
+                    <div className="text-gray-900 text-base font-medium">
                       {isNotificationEnabled ? 'Desactivar notificaciones' : 'Activar notificaciones'}
                     </div>
-                    <div className="text-gray-400 text-sm mt-0.5">
+                    <div className="text-gray-500 text-sm mt-0.5">
                       {isNotificationEnabled 
                         ? 'Dejar de recibir alertas de este usuario'
                         : 'Recibir alertas cuando publique contenido'
@@ -249,7 +249,7 @@ const FeedMenu = ({
                 </button>
 
                 {/* Separador */}
-                <div className="my-2 border-t border-gray-700/50" />
+                <div className="my-2 border-t border-gray-100" />
 
                 {/* Reportar */}
                 <button
@@ -257,12 +257,12 @@ const FeedMenu = ({
                     setShowReportModal(true);
                     setIsOpen(false);
                   }}
-                  className="w-full px-6 py-4 text-left hover:bg-red-900/20 active:bg-red-900/30 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-red-50 active:bg-red-100/50 transition-colors duration-150 flex items-start gap-4"
                 >
                   <Flag className="w-6 h-6 text-red-500 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="text-red-500 text-base font-medium">Reportar</div>
-                    <div className="text-gray-400 text-sm mt-0.5">Contenido inapropiado o spam</div>
+                    <div className="text-gray-500 text-sm mt-0.5">Contenido inapropiado o spam</div>
                   </div>
                 </button>
               </div>
