@@ -377,7 +377,7 @@ const CommentSection = ({
             </div>
           </div>
         ) : (
-          <div className="comments-container px-4 py-2 space-y-1">
+          <div className="comments-container px-4 py-2 space-y-3">
             <AnimatePresence mode="popLayout">
               {comments.map((comment, index) => (
                 <Comment
