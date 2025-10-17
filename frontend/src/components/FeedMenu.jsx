@@ -204,9 +204,9 @@ const FeedMenu = ({
                 {/* No me interesa */}
                 <button
                   onClick={handleNotInterested}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4"
                 >
-                  <EyeOff className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
+                  <EyeOff className="w-6 h-6 text-gray-600 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="text-gray-900 text-base font-medium">No me interesa</div>
                     <div className="text-gray-500 text-sm mt-0.5">Este contenido aparecerá menos</div>
@@ -216,9 +216,9 @@ const FeedMenu = ({
                 {/* Ocultar usuario */}
                 <button
                   onClick={handleHideUser}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4"
                 >
-                  <UserX className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
+                  <UserX className="w-6 h-6 text-gray-600 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="text-gray-900 text-base font-medium">Ocultar usuario</div>
                     <div className="text-gray-500 text-sm mt-0.5">No mostrar contenido de este usuario</div>
@@ -228,12 +228,12 @@ const FeedMenu = ({
                 {/* Activar/Desactivar notificaciones */}
                 <button
                   onClick={handleToggleNotifications}
-                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4"
                 >
                   {isNotificationEnabled ? (
-                    <BellOff className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
+                    <BellOff className="w-6 h-6 text-gray-600 flex-shrink-0" />
                   ) : (
-                    <Bell className="w-6 h-6 text-gray-600 mt-0.5 flex-shrink-0" />
+                    <Bell className="w-6 h-6 text-gray-600 flex-shrink-0" />
                   )}
                   <div className="flex-1">
                     <div className="text-gray-900 text-base font-medium">
@@ -257,9 +257,9 @@ const FeedMenu = ({
                     setShowReportModal(true);
                     setIsOpen(false);
                   }}
-                  className="w-full px-6 py-4 text-left hover:bg-red-50 active:bg-red-100/50 transition-colors duration-150 flex items-start gap-4"
+                  className="w-full px-6 py-4 text-left hover:bg-red-50 active:bg-red-100/50 transition-colors duration-150 flex items-center gap-4"
                 >
-                  <Flag className="w-6 h-6 text-red-500 mt-0.5 flex-shrink-0" />
+                  <Flag className="w-6 h-6 text-red-500 flex-shrink-0" />
                   <div className="flex-1">
                     <div className="text-red-500 text-base font-medium">Reportar</div>
                     <div className="text-gray-500 text-sm mt-0.5">Contenido inapropiado o spam</div>
