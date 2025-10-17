@@ -172,87 +172,134 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={className || "post-management-trigger absolute top-1 right-1 z-[9999] bg-white/90 hover:bg-white active:bg-gray-100 text-gray-800 rounded-full w-12 h-12 p-0 shadow-xl border-2 border-gray-300 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 touch-manipulation"}
-            style={!className ? { 
-              position: 'absolute',
-              top: '4px',
-              right: '4px',
-              zIndex: 99999
-            } : {}}
-          >
-            <MoreVertical className="post-management-icon w-6 h-6" />
-          </Button>
-        </DropdownMenuTrigger>
-        
-        <DropdownMenuContent align="end" className="post-management-content w-64 z-50 bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl rounded-xl p-2">
-          {/* Edición */}
-          <DropdownMenuItem 
-            onClick={() => setShowEditDialog(true)}
-            className="post-management-item px-4 py-3 text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <Edit className="post-management-item-icon w-5 h-5 mr-3" />
-            Editar título/descripción
-          </DropdownMenuItem>
+      {/* Menu Trigger Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        className={className || "post-management-trigger absolute top-1 right-1 z-[9999] bg-white/90 hover:bg-white active:bg-gray-100 text-gray-800 rounded-full w-12 h-12 p-0 shadow-xl border-2 border-gray-300 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 touch-manipulation flex items-center justify-center"}
+        style={!className ? { 
+          position: 'absolute',
+          top: '4px',
+          right: '4px',
+          zIndex: 99999
+        } : {}}
+      >
+        <MoreVertical className="post-management-icon w-6 h-6" />
+      </button>
+
+      {/* Bottom Sheet Modal */}
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
+            onClick={() => setIsOpen(false)}
+          />
           
-          <DropdownMenuSeparator className="post-management-separator my-2 bg-gray-200" />
-          
-          {/* Organización */}
-          <DropdownMenuItem 
-            onClick={handlePin} 
-            disabled={isLoading}
-            className="post-management-item px-4 py-3 text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <Pin className="post-management-item-icon w-5 h-5 mr-3" />
-            {poll.is_pinned ? 'Desanclar del perfil' : 'Fijar en perfil'}
-          </DropdownMenuItem>
-          
-          <DropdownMenuItem 
-            onClick={handleArchive} 
-            disabled={isLoading}
-            className="post-management-item px-4 py-3 text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <Archive className="post-management-item-icon w-5 h-5 mr-3" />
-            {poll.is_archived ? 'Desarchivar publicación' : 'Archivar publicación'}
-          </DropdownMenuItem>
-          
-          <DropdownMenuSeparator className="post-management-separator my-2 bg-gray-200" />
-          
-          {/* Privacidad */}
-          <DropdownMenuItem 
-            onClick={handlePrivacy} 
-            disabled={isLoading}
-            className="post-management-item px-4 py-3 text-sm font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {poll.is_private ? (
-              <>
-                <Globe className="post-management-item-icon w-5 h-5 mr-3" />
-                Hacer publicación pública
-              </>
-            ) : (
-              <>
-                <Lock className="post-management-item-icon w-5 h-5 mr-3" />
-                Hacer publicación privada
-              </>
-            )}
-          </DropdownMenuItem>
-          
-          <DropdownMenuSeparator className="post-management-separator my-2 bg-gray-200" />
-          
-          {/* Eliminar */}
-          <DropdownMenuItem 
-            onClick={() => setShowDeleteDialog(true)}
-            className="post-management-item post-management-delete px-4 py-3 text-sm font-medium cursor-pointer hover:bg-red-50 rounded-lg transition-colors text-red-600 focus:text-red-600"
-          >
-            <Trash2 className="post-management-item-icon w-5 h-5 mr-3" />
-            Eliminar publicación
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          {/* Bottom Sheet Content */}
+          <div className="fixed bottom-0 left-0 right-0 z-[101] animate-in slide-in-from-bottom duration-300">
+            <div className="bg-white rounded-t-3xl shadow-2xl overflow-hidden max-w-lg mx-auto">
+              {/* Handle Bar */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-gray-300 rounded-full" />
+              </div>
+
+              {/* Menu Options */}
+              <div className="py-2">
+                {/* Editar título/descripción */}
+                <button
+                  onClick={() => {
+                    setShowEditDialog(true);
+                    setIsOpen(false);
+                  }}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4"
+                >
+                  <Edit className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  <div className="text-gray-900 text-base font-medium">Editar título/descripción</div>
+                </button>
+
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-100" />
+
+                {/* Fijar en perfil */}
+                <button
+                  onClick={() => {
+                    handlePin();
+                    setIsOpen(false);
+                  }}
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
+                >
+                  <Pin className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  <div className="text-gray-900 text-base font-medium">
+                    {poll.is_pinned ? 'Desanclar del perfil' : 'Fijar en perfil'}
+                  </div>
+                </button>
+
+                {/* Archivar publicación */}
+                <button
+                  onClick={() => {
+                    handleArchive();
+                    setIsOpen(false);
+                  }}
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
+                >
+                  <Archive className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  <div className="text-gray-900 text-base font-medium">
+                    {poll.is_archived ? 'Desarchivar publicación' : 'Archivar publicación'}
+                  </div>
+                </button>
+
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-100" />
+
+                {/* Hacer publicación privada/pública */}
+                <button
+                  onClick={() => {
+                    handlePrivacy();
+                    setIsOpen(false);
+                  }}
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
+                >
+                  {poll.is_private ? (
+                    <>
+                      <Globe className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                      <div className="text-gray-900 text-base font-medium">Hacer publicación pública</div>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                      <div className="text-gray-900 text-base font-medium">Hacer publicación privada</div>
+                    </>
+                  )}
+                </button>
+
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-100" />
+
+                {/* Eliminar publicación */}
+                <button
+                  onClick={() => {
+                    setShowDeleteDialog(true);
+                    setIsOpen(false);
+                  }}
+                  className="w-full px-6 py-4 text-left hover:bg-red-50 active:bg-red-100/50 transition-colors duration-150 flex items-center gap-4"
+                >
+                  <Trash2 className="w-6 h-6 text-red-500 flex-shrink-0" />
+                  <div className="text-red-500 text-base font-medium">Eliminar publicación</div>
+                </button>
+              </div>
+              
+              {/* Safe Area Bottom Padding (for mobile notch/home bar) */}
+              <div className="h-6" />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
