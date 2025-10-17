@@ -195,7 +195,7 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
         {/* Animación de ondas cuando está reproduciéndose */}
         {isPlaying && (
           <div className="absolute -inset-2 opacity-60 pointer-events-none">
-            <div className="w-14 h-14 rounded-full border-2 border-white/30 animate-ping" />
+            <div className="w-14 h-14 rounded-full border-2 border-purple-500/30 animate-ping" />
           </div>
         )}
       </div>
