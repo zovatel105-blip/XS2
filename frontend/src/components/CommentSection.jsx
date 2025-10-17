@@ -344,22 +344,19 @@ const CommentSection = ({
 
   return (
     <motion.div 
-      className="comment-section bg-white/95 backdrop-blur-xl border border-gray-200/60 rounded-2xl overflow-hidden shadow-lg"
+      className="comment-section bg-white rounded-2xl overflow-hidden"
       style={{ maxHeight }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* Header moderno - solo mostrar cuando showHeader = true */}
+      {/* Header minimalista - solo mostrar cuando showHeader = true */}
       {showHeader && (
-        <div className="comment-header p-6 bg-gradient-to-r from-gray-50/80 via-white to-gray-50/80 border-b border-gray-100 backdrop-blur-sm">
+        <div className="comment-header p-6 bg-white border-b border-gray-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                <MessageCircle className="w-5 h-5 text-white" />
-              </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-lg">Comentarios</h3>
+                <h3 className="font-semibold text-gray-900 text-lg">Comentarios</h3>
                 {comments.length > 0 && (
                   <p className="text-sm text-gray-500">{comments.length} comentario{comments.length !== 1 ? 's' : ''}</p>
                 )}
@@ -367,40 +364,37 @@ const CommentSection = ({
             </div>
             
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={() => loadComments(0, false)}
                 disabled={loading}
-                className="h-10 px-4 rounded-xl hover:bg-gray-100 transition-colors"
+                className="h-10 w-10 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
               >
-                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-              </Button>
+                <RefreshCw className={cn("w-5 h-5 text-gray-500", loading && "animate-spin")} />
+              </button>
               
               {user && (
-                <Button
-                  size="sm"
+                <button
                   onClick={() => setShowNewCommentForm(!showNewCommentForm)}
                   className={cn(
-                    "px-5 py-2 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg",
+                    "px-5 py-2 rounded-lg font-medium transition-all duration-200",
                     showNewCommentForm 
-                      ? "bg-gray-200 text-gray-700 hover:bg-gray-300" 
-                      : "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white"
+                      ? "bg-gray-100 text-gray-700 hover:bg-gray-200" 
+                      : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
                   )}
                 >
                   {showNewCommentForm ? (
                     'Cancelar'
                   ) : (
-                    <>
-                      <Plus className="w-4 h-4 mr-2" />
+                    <div className="flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
                       Comentar
-                    </>
+                    </div>
                   )}
-                </Button>
+                </button>
               )}
               
               {!user && (
-                <div className="text-sm text-gray-500 bg-amber-50 px-4 py-2 rounded-xl border border-amber-200">
+                <div className="text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
                   <span>Inicia sesión para comentar</span>
                 </div>
               )}
