@@ -124,6 +124,20 @@ class CommentService {
       throw error;
     }
   }
+
+  // Frontend-friendly method to get comments (alias for getComments)
+  async getCommentsForFrontend(pollId, limit = 20, offset = 0) {
+    return this.getComments(pollId, offset, limit);
+  }
+
+  // Frontend-friendly method to add comment (alias for createComment)
+  async addCommentForFrontend(pollId, content, parentId = null) {
+    const commentData = {
+      content,
+      ...(parentId && { parent_id: parentId })
+    };
+    return this.createComment(pollId, commentData);
+  }
 }
 
 export default new CommentService();
