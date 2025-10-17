@@ -177,88 +177,98 @@ const FeedMenu = ({
         <MoreVertical className="w-5 h-5" />
       </button>
 
-      {/* Menu Dropdown */}
+      {/* Bottom Sheet Modal */}
       {isOpen && (
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
           />
           
-          {/* Menu Content */}
-          <div className="absolute bottom-full right-0 mb-2 w-64 bg-gray-900/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-600/50 overflow-hidden z-50">
-            {/* Header */}
-            <div className="px-4 py-3 border-b border-gray-600/50">
-              <h3 className="text-white font-medium text-sm">Opciones del contenido</h3>
-            </div>
+          {/* Bottom Sheet Content */}
+          <div className="fixed bottom-0 left-0 right-0 z-[101] animate-in slide-in-from-bottom duration-300">
+            <div className="bg-gray-900 rounded-t-3xl shadow-2xl border-t border-gray-700/50 overflow-hidden max-w-lg mx-auto">
+              {/* Handle Bar */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-12 h-1 bg-gray-600 rounded-full" />
+              </div>
+              
+              {/* Header */}
+              <div className="px-6 py-4 border-b border-gray-700/50">
+                <h3 className="text-white font-semibold text-lg">Opciones del contenido</h3>
+              </div>
 
-            {/* Menu Options */}
-            <div className="py-2">
-              {/* No me interesa */}
-              <button
-                onClick={handleNotInterested}
-                className="w-full px-4 py-3 text-left hover:bg-gray-700/50 transition-colors duration-200 flex items-center gap-3"
-              >
-                <EyeOff className="w-5 h-5 text-gray-400" />
-                <div>
-                  <div className="text-white text-sm font-medium">No me interesa</div>
-                  <div className="text-gray-400 text-xs">Este contenido aparecerá menos</div>
-                </div>
-              </button>
-
-              {/* Ocultar usuario */}
-              <button
-                onClick={handleHideUser}
-                className="w-full px-4 py-3 text-left hover:bg-gray-700/50 transition-colors duration-200 flex items-center gap-3"
-              >
-                <UserX className="w-5 h-5 text-gray-400" />
-                <div>
-                  <div className="text-white text-sm font-medium">Ocultar usuario</div>
-                  <div className="text-gray-400 text-xs">No mostrar contenido de este usuario</div>
-                </div>
-              </button>
-
-              {/* Activar/Desactivar notificaciones */}
-              <button
-                onClick={handleToggleNotifications}
-                className="w-full px-4 py-3 text-left hover:bg-gray-700/50 transition-colors duration-200 flex items-center gap-3"
-              >
-                {isNotificationEnabled ? (
-                  <BellOff className="w-5 h-5 text-gray-400" />
-                ) : (
-                  <Bell className="w-5 h-5 text-gray-400" />
-                )}
-                <div>
-                  <div className="text-white text-sm font-medium">
-                    {isNotificationEnabled ? 'Desactivar notificaciones' : 'Activar notificaciones'}
+              {/* Menu Options */}
+              <div className="py-2">
+                {/* No me interesa */}
+                <button
+                  onClick={handleNotInterested}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                >
+                  <EyeOff className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-white text-base font-medium">No me interesa</div>
+                    <div className="text-gray-400 text-sm mt-0.5">Este contenido aparecerá menos</div>
                   </div>
-                  <div className="text-gray-400 text-xs">
-                    {isNotificationEnabled 
-                      ? 'Dejar de recibir alertas de este usuario'
-                      : 'Recibir alertas cuando publique contenido'
-                    }
+                </button>
+
+                {/* Ocultar usuario */}
+                <button
+                  onClick={handleHideUser}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                >
+                  <UserX className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-white text-base font-medium">Ocultar usuario</div>
+                    <div className="text-gray-400 text-sm mt-0.5">No mostrar contenido de este usuario</div>
                   </div>
-                </div>
-              </button>
+                </button>
 
-              {/* Separador */}
-              <div className="my-2 border-t border-gray-600/50" />
+                {/* Activar/Desactivar notificaciones */}
+                <button
+                  onClick={handleToggleNotifications}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-800/50 active:bg-gray-800 transition-colors duration-150 flex items-start gap-4"
+                >
+                  {isNotificationEnabled ? (
+                    <BellOff className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <Bell className="w-6 h-6 text-gray-400 mt-0.5 flex-shrink-0" />
+                  )}
+                  <div className="flex-1">
+                    <div className="text-white text-base font-medium">
+                      {isNotificationEnabled ? 'Desactivar notificaciones' : 'Activar notificaciones'}
+                    </div>
+                    <div className="text-gray-400 text-sm mt-0.5">
+                      {isNotificationEnabled 
+                        ? 'Dejar de recibir alertas de este usuario'
+                        : 'Recibir alertas cuando publique contenido'
+                      }
+                    </div>
+                  </div>
+                </button>
 
-              {/* Reportar */}
-              <button
-                onClick={() => {
-                  setShowReportModal(true);
-                  setIsOpen(false);
-                }}
-                className="w-full px-4 py-3 text-left hover:bg-red-900/30 transition-colors duration-200 flex items-center gap-3"
-              >
-                <Flag className="w-5 h-5 text-red-400" />
-                <div>
-                  <div className="text-red-400 text-sm font-medium">Reportar</div>
-                  <div className="text-gray-400 text-xs">Contenido inapropiado o spam</div>
-                </div>
-              </button>
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-700/50" />
+
+                {/* Reportar */}
+                <button
+                  onClick={() => {
+                    setShowReportModal(true);
+                    setIsOpen(false);
+                  }}
+                  className="w-full px-6 py-4 text-left hover:bg-red-900/20 active:bg-red-900/30 transition-colors duration-150 flex items-start gap-4"
+                >
+                  <Flag className="w-6 h-6 text-red-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-red-500 text-base font-medium">Reportar</div>
+                    <div className="text-gray-400 text-sm mt-0.5">Contenido inapropiado o spam</div>
+                  </div>
+                </button>
+              </div>
+              
+              {/* Safe Area Bottom Padding (for mobile notch/home bar) */}
+              <div className="h-6" />
             </div>
           </div>
         </>
