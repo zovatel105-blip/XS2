@@ -112,6 +112,20 @@ const Comment = ({
     }
   };
 
+  const handleDislike = async () => {
+    if (isDisliking) return;
+    
+    setIsDisliking(true);
+    try {
+      // TODO: Implementar funcionalidad de dislike en el backend
+      console.log('Dislike comment:', comment.id);
+    } catch (error) {
+      console.error('Error disliking comment:', error);
+    } finally {
+      setIsDisliking(false);
+    }
+  };
+
   const handleReply = async (content) => {
     try {
       await onReply(comment.id, content);
