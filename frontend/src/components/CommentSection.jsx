@@ -303,33 +303,6 @@ const CommentSection = ({
               >
                 <RefreshCw className={cn("w-5 h-5 text-gray-500", loading && "animate-spin")} />
               </button>
-              
-              {user && (
-                <button
-                  onClick={() => setShowNewCommentForm(!showNewCommentForm)}
-                  className={cn(
-                    "px-5 py-2 rounded-lg font-medium transition-all duration-200",
-                    showNewCommentForm 
-                      ? "bg-gray-100 text-gray-700 hover:bg-gray-200" 
-                      : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                  )}
-                >
-                  {showNewCommentForm ? (
-                    'Cancelar'
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Plus className="w-4 h-4" />
-                      Comentar
-                    </div>
-                  )}
-                </button>
-              )}
-              
-              {!user && (
-                <div className="text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
-                  <span>Inicia sesión para comentar</span>
-                </div>
-              )}
             </div>
           </div>
         </div>
