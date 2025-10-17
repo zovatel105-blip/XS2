@@ -189,130 +189,149 @@ const Comment = ({
         </Avatar>
         
         <div className="flex-1 min-w-0">
-          {/* Header con nombre y tiempo */}
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-gray-900 text-sm">
-                {comment.user.display_name || comment.user.username}
-              </span>
-              <span className="text-xs text-gray-500">
-                {formatTimeAgo(comment.created_at)}
-              </span>
-              {comment.is_edited && (
-                <span className="text-xs text-gray-400">(editado)</span>
-              )}
-            </div>
-            
-            {/* Botón de like a la derecha */}
-            <motion.button
-              onClick={handleLike}
-              disabled={isLiking}
-              className={cn(
-                "p-1 transition-all duration-200",
-                comment.user_liked ? "text-red-500" : "text-gray-400 hover:text-red-500"
-              )}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Heart className={cn(
-                "w-4 h-4",
-                comment.user_liked && "fill-current"
-              )} />
-            </motion.button>
-          </div>
-          
-          {/* Contenido del comentario */}
-          {showEditForm ? (
-            <div className="mb-2">
-              <CommentForm
-                onSubmit={handleEdit}
-                onCancel={() => setShowEditForm(false)}
-                placeholder="Editar comentario..."
-                initialValue={comment.content}
-                isEditing={true}
-              />
-            </div>
-          ) : (
-            <p className="text-gray-900 text-sm leading-relaxed mb-2">
-              {comment.content}
-            </p>
-          )}
-          
-          {/* Likes count y acciones */}
-          <div className="flex items-center gap-4 text-xs text-gray-500">
-            {comment.likes > 0 && (
-              <span className="font-semibold">{comment.likes} Me gusta</span>
-            )}
-            
-            {canReply && (
-              <button
-                onClick={() => setShowReplyForm(!showReplyForm)}
-                className="font-semibold hover:text-gray-700"
-              >
-                Responder
-              </button>
-            )}
-            
-            {isAuthor && (
-              <>
-                <button
-                  onClick={() => setShowEditForm(true)}
-                  className="font-semibold hover:text-gray-700"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="font-semibold hover:text-red-500"
-                >
-                  Eliminar
-                </button>
-              </>
-            )}
-            
-            {/* Menú de 3 puntos */}
-            <div className="relative ml-auto">
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                className="hover:text-gray-700"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-              
-              <AnimatePresence>
-                {showMenu && (
-                  <motion.div 
-                    className="absolute right-0 top-6 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20 min-w-[120px]"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <button
-                      onClick={() => setShowMenu(false)}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    >
-                      <Flag className="w-4 h-4" />
-                      Reportar
-                    </button>
-                  </motion.div>
+          {/* Header con nombre, tiempo y botones like/dislike */}
+          <div className="flex items-start justify-between mb-1">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-gray-900 text-sm">
+                  {comment.user.display_name || comment.user.username}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {formatTimeAgo(comment.created_at)}
+                </span>
+                {comment.is_edited && (
+                  <span className="text-xs text-gray-400">(editado)</span>
                 )}
-              </AnimatePresence>
+              </div>
+              
+              {/* Contenido del comentario */}
+              {showEditForm ? (
+                <div className="mt-2">
+                  <CommentForm
+                    onSubmit={handleEdit}
+                    onCancel={() => setShowEditForm(false)}
+                    placeholder="Editar comentario..."
+                    initialValue={comment.content}
+                    isEditing={true}
+                  />
+                </div>
+              ) : (
+                <p className="text-gray-900 text-sm leading-relaxed mt-1">
+                  {comment.content}
+                </p>
+              )}
+              
+              {/* Likes count y acciones */}
+              <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                {comment.likes > 0 && (
+                  <span className="font-semibold">{comment.likes} Me gusta</span>
+                )}
+                
+                {canReply && (
+                  <button
+                    onClick={() => setShowReplyForm(!showReplyForm)}
+                    className="font-semibold hover:text-gray-700"
+                  >
+                    Responder
+                  </button>
+                )}
+                
+                {isAuthor && (
+                  <>
+                    <button
+                      onClick={() => setShowEditForm(true)}
+                      className="font-semibold hover:text-gray-700"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="font-semibold hover:text-red-500"
+                    >
+                      Eliminar
+                    </button>
+                  </>
+                )}
+                
+                {/* Menú de 3 puntos */}
+                <div className="relative ml-auto">
+                  <button
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="hover:text-gray-700"
+                  >
+                    <MoreHorizontal className="w-4 h-4" />
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showMenu && (
+                      <motion.div 
+                        className="absolute right-0 top-6 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20 min-w-[120px]"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <button
+                          onClick={() => setShowMenu(false)}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        >
+                          <Flag className="w-4 h-4" />
+                          Reportar
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+              
+              {/* Ver respuestas */}
+              {hasReplies && (
+                <button
+                  onClick={() => setShowReplies(!showReplies)}
+                  className="flex items-center gap-2 text-xs text-gray-500 font-semibold hover:text-gray-700 mt-2"
+                >
+                  {showReplies ? (
+                    <>Ocultar respuestas ({comment.reply_count})</>
+                  ) : (
+                    <>Ver {comment.reply_count} respuesta{comment.reply_count !== 1 ? 's' : ''} más</>
+                  )}
+                </button>
+              )}
+            </div>
+            
+            {/* Botones de like y dislike a la derecha */}
+            <div className="flex items-center gap-2 ml-3">
+              <motion.button
+                onClick={handleLike}
+                disabled={isLiking}
+                className={cn(
+                  "p-1 transition-all duration-200",
+                  comment.user_liked ? "text-red-500" : "text-gray-400 hover:text-red-500"
+                )}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Heart className={cn(
+                  "w-4 h-4",
+                  comment.user_liked && "fill-current"
+                )} />
+              </motion.button>
+              
+              <motion.button
+                onClick={handleDislike}
+                disabled={isDisliking}
+                className={cn(
+                  "p-1 transition-all duration-200",
+                  comment.user_disliked ? "text-blue-500" : "text-gray-400 hover:text-blue-500"
+                )}
+                whileTap={{ scale: 0.9 }}
+              >
+                <HeartCrack className={cn(
+                  "w-4 h-4",
+                  comment.user_disliked && "fill-current"
+                )} />
+              </motion.button>
             </div>
           </div>
-          
-          {/* Ver respuestas */}
-          {hasReplies && (
-            <button
-              onClick={() => setShowReplies(!showReplies)}
-              className="flex items-center gap-2 text-xs text-gray-500 font-semibold hover:text-gray-700 mt-2"
-            >
-              {showReplies ? (
-                <>Ocultar respuestas ({comment.reply_count})</>
-              ) : (
-                <>Ver {comment.reply_count} respuesta{comment.reply_count !== 1 ? 's' : ''} más</>
-              )}
-            </button>
-          )}
         </div>
       </div>
       
