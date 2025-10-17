@@ -276,8 +276,7 @@ const CommentSection = ({
 
   return (
     <motion.div 
-      className="comment-section bg-white rounded-2xl overflow-hidden flex flex-col"
-      style={{ maxHeight }}
+      className="comment-section bg-white rounded-2xl overflow-hidden flex flex-col h-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
