@@ -269,10 +269,10 @@ const CommentSection = ({
     }
   }, [pollId, isVisible]);
 
-  // Formulario para nuevo comentario - Diseño moderno
+  // Formulario para nuevo comentario - Diseño minimalista
   const NewCommentForm = () => (
     <motion.div
-      className="new-comment-form p-3 sm:p-6 bg-gradient-to-r from-indigo-50/50 via-white to-purple-50/50 border-b border-gray-100 backdrop-blur-sm"
+      className="new-comment-form p-3 sm:p-6 bg-white border-b border-gray-100"
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
@@ -296,54 +296,43 @@ const CommentSection = ({
         <div className="relative">
           <textarea
             name="content"
-            placeholder="¿Qué piensas sobre esto? Comparte tu opinión..."
-            className="w-full px-3 sm:px-4 py-3 sm:py-4 pr-12 border-2 border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 placeholder:text-gray-400 bg-white/80 backdrop-blur-sm text-sm sm:text-base"
+            placeholder="Escribe un comentario..."
+            className="w-full px-3 sm:px-4 py-3 sm:py-4 pr-12 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-all duration-200 placeholder:text-gray-400 bg-white text-sm sm:text-base"
             rows={3}
             maxLength={500}
             required
           />
-          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded-full">
-            500 max
+          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400 px-2 py-1">
+            {500}
           </div>
         </div>
         
-        <div className="flex items-center justify-between">
-          <div className="hidden sm:flex items-center gap-3 text-xs text-gray-500">
-            <kbd className="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg font-mono">⌘ + Enter</kbd>
-            <span>para enviar rápido</span>
-          </div>
+        <div className="flex items-center justify-end gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => setShowNewCommentForm(false)}
+            className="text-gray-600 hover:text-gray-800 hover:bg-gray-50 px-3 sm:px-4 py-2 rounded-lg text-sm transition-colors"
+          >
+            Cancelar
+          </button>
           
-          <div className="flex items-center gap-2 sm:gap-3 ml-auto sm:ml-0">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowNewCommentForm(false)}
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 px-3 sm:px-4 py-2 rounded-xl text-sm"
-            >
-              Cancelar
-            </Button>
-            
-            <Button
-              type="submit"
-              size="sm"
-              disabled={submitting}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-4 sm:px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-medium text-sm"
-            >
-              {submitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-1 sm:mr-2 animate-spin" />
-                  <span className="hidden sm:inline">Enviando...</span>
-                  <span className="sm:hidden">...</span>
-                </>
-              ) : (
-                <>
-                  <Send className="w-4 h-4 mr-1 sm:mr-2" />
-                  Comentar
-                </>
-              )}
-            </Button>
-          </div>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Enviando...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span>Comentar</span>
+              </>
+            )}
+          </button>
         </div>
       </form>
     </motion.div>
