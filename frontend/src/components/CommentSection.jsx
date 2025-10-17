@@ -341,11 +341,11 @@ const CommentSection = ({
             </div>
           </div>
         ) : comments.length === 0 ? (
-          <div className="empty-state flex items-center justify-center min-h-[400px] p-8">
+          <div className="empty-state flex flex-col items-center justify-center p-8 py-16">
             <div className="text-center">
               <h3 className="text-xl font-bold text-gray-900 mb-2">Todavía no hay comentarios</h3>
               <p className="text-gray-500 text-base">
-                Inicia una conversación.
+                Sé el primero en comentar.
               </p>
             </div>
           </div>
