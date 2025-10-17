@@ -276,7 +276,7 @@ const CommentSection = ({
 
   return (
     <motion.div 
-      className="comment-section bg-white rounded-2xl overflow-hidden"
+      className="comment-section bg-white rounded-2xl overflow-hidden flex flex-col"
       style={{ maxHeight }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
@@ -284,7 +284,7 @@ const CommentSection = ({
     >
       {/* Header minimalista - solo mostrar cuando showHeader = true */}
       {showHeader && (
-        <div className="comment-header p-6 bg-white border-b border-gray-100">
+        <div className="comment-header p-6 bg-white border-b border-gray-100 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div>
@@ -308,8 +308,8 @@ const CommentSection = ({
         </div>
       )}
       
-      {/* Lista de comentarios minimalista */}
-      <div className="comment-list overflow-y-auto flex-1 bg-white" style={{ maxHeight: `calc(${maxHeight} - 140px)` }}>
+      {/* Lista de comentarios minimalista - con flex-1 para que ocupe espacio disponible */}
+      <div className="comment-list overflow-y-auto flex-1 bg-white">
         {error && (
           <motion.div 
             className="error-message p-4 m-4 bg-red-50 border border-red-200 rounded-xl"
