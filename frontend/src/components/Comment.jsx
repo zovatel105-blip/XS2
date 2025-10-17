@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Heart, MessageCircle, MoreHorizontal, Edit3, Trash2, 
-  ChevronDown, ChevronUp, Reply, Flag, CheckCircle, Send, Sparkles, Loader2
+  ChevronDown, ChevronUp, Reply, Flag, CheckCircle, Send, Sparkles, Loader2, HeartCrack
 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
