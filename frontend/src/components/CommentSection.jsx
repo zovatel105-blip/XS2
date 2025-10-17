@@ -391,9 +391,9 @@ const CommentSection = ({
         )}
       </div>
       
-      {/* Área de comentario flotante estilo Instagram */}
-      {!showHeader && user && (
-        <div className="sticky bottom-0 bg-white p-4">
+      {/* Área de comentario flotante en la parte inferior - SIEMPRE */}
+      {user && (
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4">
           <div className="flex items-center gap-3">
             <Avatar className="w-8 h-8 flex-shrink-0">
               <AvatarImage src={user.avatar_url} alt={user.username} />
@@ -402,54 +402,43 @@ const CommentSection = ({
               </AvatarFallback>
             </Avatar>
             
-            {showNewCommentForm ? (
-              <div className="flex-1">
-                <form 
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    const content = e.target.content.value.trim();
-                    if (!content) return;
-                    
-                    try {
-                      await handleAddComment(content);
-                      e.target.reset();
-                      setShowNewCommentForm(false);
-                    } catch (error) {
-                      // Error ya manejado en handleAddComment
-                    }
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <input
-                    name="content"
-                    type="text"
-                    placeholder="Añade un comentario..."
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-300"
-                    maxLength={500}
-                    autoFocus
-                    required
-                  />
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="text-blue-500 hover:text-blue-600 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {submitting ? 'Enviando...' : 'Publicar'}
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowNewCommentForm(true)}
-                className="flex-1 text-left px-3 py-2 text-gray-400 text-sm"
+            <div className="flex-1">
+              <form 
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const content = e.target.content.value.trim();
+                  if (!content) return;
+                  
+                  try {
+                    await handleAddComment(content);
+                    e.target.reset();
+                  } catch (error) {
+                    // Error ya manejado en handleAddComment
+                  }
+                }}
+                className="flex items-center gap-2"
               >
-                Añade un comentario...
-              </button>
-            )}
-            
-            <button className="text-gray-400 hover:text-gray-600 text-sm font-semibold">
-              GIF
-            </button>
+                <input
+                  name="content"
+                  type="text"
+                  placeholder="Añade un comentario..."
+                  className="flex-1 px-4 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                  maxLength={500}
+                  disabled={submitting}
+                />
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
