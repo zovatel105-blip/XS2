@@ -36,80 +36,44 @@ const CommentForm = ({
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      handleSubmit(e);
-    }
-  };
-
   return (
     <motion.form 
       className={cn(
-        "space-y-4 p-5 rounded-2xl border-2 bg-white/90 backdrop-blur-sm shadow-lg",
-        isReply ? "ml-8 border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50" : "border-gray-200"
+        "flex items-center gap-2 p-2 rounded-lg border bg-white",
+        isReply && "ml-12"
       )}
       onSubmit={handleSubmit}
-      initial={{ opacity: 0, height: 0, scale: 0.95 }}
-      animate={{ opacity: 1, height: 'auto', scale: 1 }}
-      exit={{ opacity: 0, height: 0, scale: 0.95 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className="relative">
-        <textarea
-          ref={textareaRef}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="w-full px-4 py-4 pr-20 border-2 border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all duration-200 placeholder:text-gray-400 bg-white/80 backdrop-blur-sm"
-          rows={isReply ? 3 : 4}
-          maxLength={500}
-          autoFocus
-        />
-        <div className="absolute bottom-3 right-3 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded-lg">
-          {content.length}/500
-        </div>
-      </div>
+      <input
+        ref={textareaRef}
+        type="text"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder={placeholder}
+        className="flex-1 px-3 py-2 text-sm border-none focus:outline-none bg-transparent"
+        maxLength={500}
+        autoFocus
+      />
       
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-          <kbd className="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg font-mono">⌘+↵</kbd>
-          <span>envío rápido</span>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          {onCancel && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onCancel}
-              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 px-4 py-2 rounded-xl"
-            >
-              Cancelar
-            </Button>
-          )}
-          
-          <Button
-            type="submit"
-            size="sm"
-            disabled={!content.trim() || isSubmitting}
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                Enviando...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4 mr-2" />
-                {isEditing ? 'Guardar' : 'Comentar'}
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
+      <button
+        type="button"
+        onClick={onCancel}
+        className="text-gray-400 hover:text-gray-600 text-sm font-semibold px-3"
+      >
+        Cancelar
+      </button>
+      
+      <button
+        type="submit"
+        disabled={!content.trim() || isSubmitting}
+        className="text-blue-500 hover:text-blue-600 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed px-3"
+      >
+        {isSubmitting ? 'Enviando...' : (isEditing ? 'Guardar' : 'Publicar')}
+      </button>
     </motion.form>
   );
 };
