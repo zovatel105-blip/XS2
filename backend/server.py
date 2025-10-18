@@ -4105,26 +4105,43 @@ async def delete_comment(
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found or not authorized")
     
+    # Guardar el poll_id para actualizar el contador después
+    poll_id = comment.get("poll_id")
+    
     # Eliminar el comentario y todas sus respuestas recursivamente
-    await delete_comment_recursive(comment_id)
+    # La función retorna el número de comentarios eliminados
+    deleted_count = await delete_comment_recursive(comment_id)
+    
+    # Decrementar el contador de comentarios en el poll
+    if poll_id:
+        await db.polls.update_one(
+            {"id": poll_id},
+            {"$inc": {"comments_count": -deleted_count}}
+        )
     
     return {"message": "Comment deleted successfully"}
 
-async def delete_comment_recursive(comment_id: str):
-    """Función auxiliar para eliminar comentarios de forma recursiva"""
+async def delete_comment_recursive(comment_id: str) -> int:
+    """Función auxiliar para eliminar comentarios de forma recursiva
+    Retorna el número de comentarios eliminados (incluyendo hijos)"""
     
     # Encontrar todos los comentarios hijos
     child_comments = await db.comments.find({"parent_comment_id": comment_id}).to_list(1000)
     
+    # Contador de comentarios eliminados
+    deleted_count = 1  # El comentario actual
+    
     # Eliminar recursivamente los comentarios hijos
     for child in child_comments:
-        await delete_comment_recursive(child["id"])
+        deleted_count += await delete_comment_recursive(child["id"])
     
     # Eliminar likes del comentario
     await db.comment_likes.delete_many({"comment_id": comment_id})
     
     # Eliminar el comentario principal
     await db.comments.delete_one({"id": comment_id})
+    
+    return deleted_count
 
 @api_router.post("/comments/{comment_id}/like")
 async def toggle_comment_like(
