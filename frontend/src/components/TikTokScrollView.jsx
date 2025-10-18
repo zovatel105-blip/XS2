@@ -613,14 +613,36 @@ const TikTokPollCard = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.stopPropagation();
-                // Marcar como compartido
-                setSharedPolls(prev => {
-                  const newSet = new Set(prev);
-                  newSet.add(poll.id);
-                  return newSet;
-                });
+                
+                // Llamar al backend para registrar el share
+                const token = localStorage.getItem('token');
+                if (token) {
+                  try {
+                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${poll.id}/share`, {
+                      method: 'POST',
+                      headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                      }
+                    });
+                    
+                    if (response.ok) {
+                      const result = await response.json();
+                      console.log('🔗 TikTokScrollView: Poll shared successfully, new count:', result.shares);
+                      
+                      // Marcar como compartido localmente
+                      setSharedPolls(prev => {
+                        const newSet = new Set(prev);
+                        newSet.add(poll.id);
+                        return newSet;
+                      });
+                    }
+                  } catch (error) {
+                    console.error('🔗 TikTokScrollView: Error sharing poll:', error);
+                  }
+                }
                 
                 // Intentar Web Share API primero
                 if (navigator.share) {
