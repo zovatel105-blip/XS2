@@ -705,6 +705,11 @@ const TikTokPollCard = ({
                           newSet.delete(poll.id);
                           return newSet;
                         });
+                        // Decrementar el contador localmente
+                        setSaveCounts(prev => ({
+                          ...prev,
+                          [poll.id]: Math.max((prev[poll.id] ?? poll.saves_count ?? 0) - 1, 0)
+                        }));
                         console.log('🔖 TikTokScrollView: Poll unsaved successfully');
                       }
                     } else {
@@ -717,6 +722,11 @@ const TikTokPollCard = ({
                         newSet.add(poll.id);
                         return newSet;
                       });
+                      // Incrementar el contador localmente
+                      setSaveCounts(prev => ({
+                        ...prev,
+                        [poll.id]: (prev[poll.id] ?? poll.saves_count ?? 0) + 1
+                      }));
                     }
                   } catch (error) {
                     console.error('🔖 TikTokScrollView: Error with save/unsave:', error);
