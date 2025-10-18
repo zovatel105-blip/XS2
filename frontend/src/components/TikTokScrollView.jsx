@@ -854,6 +854,42 @@ const TikTokScrollView = ({
     loadSavedPolls();
   }, [currentUser?.id]);
 
+  // Load polls where user has commented
+  useEffect(() => {
+    if (!polls || polls.length === 0) return;
+    
+    // Check each poll to see if user has commented
+    const pollsWithUserComments = new Set();
+    polls.forEach(poll => {
+      // If poll has userCommented flag or comments > 0 and we can verify
+      if (poll.userCommented || (poll.comments > 0 && poll.hasUserComment)) {
+        pollsWithUserComments.add(poll.id);
+      }
+    });
+    
+    if (pollsWithUserComments.size > 0) {
+      setCommentedPolls(pollsWithUserComments);
+    }
+  }, [polls]);
+
+  // Load polls where user has shared
+  useEffect(() => {
+    if (!polls || polls.length === 0) return;
+    
+    // Check each poll to see if user has shared
+    const pollsUserShared = new Set();
+    polls.forEach(poll => {
+      // If poll has userShared flag
+      if (poll.userShared) {
+        pollsUserShared.add(poll.id);
+      }
+    });
+    
+    if (pollsUserShared.size > 0) {
+      setSharedPolls(pollsUserShared);
+    }
+  }, [polls]);
+
   // DEBUG: Monitorear cambios de activeIndex para sincronización de audio
   useEffect(() => {
     console.log(`🎯 ACTIVE INDEX CHANGED: ${activeIndex}`);
