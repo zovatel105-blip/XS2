@@ -5777,6 +5777,7 @@ async def create_poll(
         likes=poll.likes,
         shares=poll.shares,
         comments_count=poll.comments_count,
+        saves_count=poll.saves_count if hasattr(poll, 'saves_count') else 0,
         music=music_info,  # Include music information
         user_vote=None,
         user_liked=False,
