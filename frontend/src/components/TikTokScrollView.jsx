@@ -879,6 +879,47 @@ const TikTokScrollView = ({
     loadSavedPolls();
   }, [currentUser?.id]);
 
+  // Load user's shared polls on component mount
+  useEffect(() => {
+    const loadSharedPolls = async () => {
+      if (!currentUser?.id) return;
+      
+      try {
+        console.log('🔗 TikTokScrollView: Loading shared polls for user:', currentUser.id);
+        
+        // Get current user ID from token
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const tokenParts = token.split('.');
+        if (tokenParts.length !== 3) return;
+        
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const userId = payload.sub;
+        
+        if (!userId) return;
+        
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}/shared-polls`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          const sharedPollIds = result.shared_poll_ids || [];
+          console.log('🔗 TikTokScrollView: Loaded shared poll IDs:', sharedPollIds);
+          setSharedPolls(new Set(sharedPollIds));
+        }
+      } catch (error) {
+        console.error('🔗 TikTokScrollView: Error loading shared polls:', error);
+      }
+    };
+    
+    loadSharedPolls();
+  }, [currentUser?.id]);
+
   // Load polls where user has commented
   useEffect(() => {
     if (!polls || polls.length === 0) return;
