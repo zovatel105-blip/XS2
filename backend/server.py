@@ -4916,6 +4916,7 @@ async def get_polls(
             likes=len(poll_data["likes"]) if isinstance(poll_data["likes"], list) else poll_data["likes"],
             shares=len(poll_data["shares"]) if isinstance(poll_data["shares"], list) else poll_data["shares"],
             comments_count=poll_data["comments_count"],
+            saves_count=poll_data.get("saves_count", 0),
             music=music_info,  # Include music information
             user_vote=user_votes_dict.get(poll_data["id"]),
             user_liked=poll_data["id"] in liked_poll_ids,
