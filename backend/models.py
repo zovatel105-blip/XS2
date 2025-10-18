@@ -439,6 +439,7 @@ class Poll(BaseModel):
     likes: int = 0
     shares: int = 0
     comments_count: int = 0
+    saves_count: int = 0  # Contador de veces que se guardó
     music_id: Optional[str] = None
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
