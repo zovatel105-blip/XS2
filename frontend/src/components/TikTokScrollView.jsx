@@ -589,10 +589,20 @@ const TikTokPollCard = ({
               onClick={(e) => {
                 e.stopPropagation();
                 setShowCommentsModal(true);
+                // Marcar como comentado cuando abre el modal
+                setCommentedPolls(prev => {
+                  const newSet = new Set(prev);
+                  newSet.add(poll.id);
+                  return newSet;
+                });
               }}
-              className="flex items-center gap-1 text-white hover:text-blue-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm"
+              className={`flex items-center gap-1 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg backdrop-blur-sm ${
+                commentedPolls.has(poll.id) || poll.userCommented || poll.comments > 0
+                  ? 'text-blue-400 bg-blue-500/20 hover:text-blue-300'
+                  : 'text-white bg-black/20 hover:text-blue-400'
+              }`}
             >
-              <MessageCircle className="w-5 h-5" />
+              <MessageCircle className={`w-5 h-5 ${commentedPolls.has(poll.id) || poll.userCommented ? 'fill-current' : ''}`} />
               <span className="font-medium text-sm">{formatNumber(poll.comments)}</span>
             </Button>
 
