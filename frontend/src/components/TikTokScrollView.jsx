@@ -114,6 +114,10 @@ const TikTokPollCard = ({
   currentUser: authUser, 
   savedPolls, 
   setSavedPolls,
+  commentedPolls,
+  setCommentedPolls,
+  sharedPolls,
+  setSharedPolls,
   // 🚀 NEW: Performance optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
