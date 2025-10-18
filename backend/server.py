@@ -2302,6 +2302,7 @@ async def search_posts_optimized(query: str, current_user_id: str, limit: int):
                     "created_at": 1,
                     "votes_count": {"$ifNull": ["$votes_count", 0]},
                     "comments_count": {"$ifNull": ["$comments_count", 0]},
+                    "saves_count": {"$ifNull": ["$saves_count", 0]},
                     "author.id": 1,  # Include author id
                     "author.username": 1,
                     "author.display_name": 1,
