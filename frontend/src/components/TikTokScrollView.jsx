@@ -675,7 +675,7 @@ const TikTokPollCard = ({
                     console.error('🔖 TikTokScrollView: Error with save/unsave:', error);
                   }
                 }}
-                className={`flex flex-col items-center justify-center hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg backdrop-blur-sm cursor-pointer pointer-events-auto z-50 ${
+                className={`flex flex-row items-center gap-1 hover:scale-105 transition-all duration-200 h-auto px-3 py-2 rounded-lg backdrop-blur-sm cursor-pointer pointer-events-auto z-50 ${
                   savedPolls.has(poll.id) 
                     ? 'text-yellow-400 bg-yellow-500/20 hover:text-yellow-300' 
                     : 'text-white bg-black/20 hover:text-yellow-400'
