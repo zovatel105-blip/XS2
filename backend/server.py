@@ -7022,6 +7022,7 @@ async def get_posts_using_audio(
                     likes=poll_data.get("likes", 0),
                     shares=poll_data.get("shares", 0),
                     comments_count=poll_data.get("comments_count", 0),
+                    saves_count=poll_data.get("saves_count", 0),
                     music=music_info,
                     user_vote=user_votes_dict.get(poll_data["id"]),  # ✅ FIXED: Now includes actual user vote
                     user_liked=poll_data["id"] in liked_poll_ids,    # ✅ FIXED: Now includes actual user like status
