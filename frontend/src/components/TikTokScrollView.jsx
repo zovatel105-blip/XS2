@@ -740,7 +740,9 @@ const TikTokPollCard = ({
                 style={{ pointerEvents: 'auto' }}
               >
                 <Bookmark className={`w-5 h-5 ${savedPolls.has(poll.id) ? 'fill-current' : ''}`} />
-                <span className="font-medium text-sm">{formatNumber(poll.saves_count || 0)}</span>
+                <span className="font-medium text-sm">
+                  {formatNumber(saveCounts[poll.id] !== undefined ? saveCounts[poll.id] : (poll.saves_count || 0))}
+                </span>
               </Button>
             ) : (
               console.log('🔖 TikTokScrollView: onSave prop is falsy, not rendering save button')
