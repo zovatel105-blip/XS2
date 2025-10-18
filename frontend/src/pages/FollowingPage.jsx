@@ -21,6 +21,7 @@ const FollowingPage = () => {
   const [polls, setPolls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [savedPolls, setSavedPolls] = useState(new Set()); // Track saved polls
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [selectedPollId, setSelectedPollId] = useState(null);
   const [selectedPollTitle, setSelectedPollTitle] = useState('');
