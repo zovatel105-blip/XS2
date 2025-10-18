@@ -7791,6 +7791,12 @@ async def unsave_poll(
             "poll_id": poll_id
         })
         
+        # Decrementar el contador de guardados en el poll
+        await db.polls.update_one(
+            {"id": poll_id},
+            {"$inc": {"saves_count": -1}}
+        )
+        
         return {"success": True, "message": "Poll removed from saved", "saved": False}
         
     except Exception as e:
