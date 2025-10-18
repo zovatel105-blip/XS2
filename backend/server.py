@@ -3938,6 +3938,11 @@ async def create_comment(
         if not parent_comment:
             raise HTTPException(status_code=404, detail="Parent comment not found")
     
+    # Verificar que el poll existe
+    poll = await db.polls.find_one({"id": poll_id})
+    if not poll:
+        raise HTTPException(status_code=404, detail="Poll not found")
+    
     # Crear el comentario
     comment = Comment(
         poll_id=poll_id,
@@ -3948,6 +3953,12 @@ async def create_comment(
     
     # Insertar en la base de datos
     await db.comments.insert_one(comment.dict())
+    
+    # Incrementar el contador de comentarios en el poll
+    await db.polls.update_one(
+        {"id": poll_id},
+        {"$inc": {"comments_count": 1}}
+    )
     
     # Retornar el comentario creado con información del usuario
     return CommentResponse(
