@@ -463,21 +463,7 @@ const FeedPage = () => {
     const isSaved = savedPolls.has(pollId);
     const action = isSaved ? 'unsave' : 'save';
     
-    // Optimistic update: actualizar el contador inmediatamente
-    setPolls(prevPolls => 
-      prevPolls.map(poll => 
-        poll.id === pollId 
-          ? { 
-              ...poll, 
-              saves_count: isSaved 
-                ? Math.max(0, (poll.saves_count || 0) - 1) 
-                : (poll.saves_count || 0) + 1 
-            }
-          : poll
-      )
-    );
-    
-    // Actualizar el estado de guardado
+    // Optimistic update: actualizar el estado de guardado inmediatamente
     setSavedPolls(prev => {
       const newSet = new Set(prev);
       if (isSaved) {
@@ -495,12 +481,14 @@ const FeedPage = () => {
       console.log('🔖 FeedPage: Token length:', token ? token.length : 0);
       
       const baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const method = isSaved ? 'DELETE' : 'POST';
       const url = `${baseUrl}/api/polls/${pollId}/save`;
       console.log('🔖 FeedPage: Making request to:', url);
+      console.log('🔖 FeedPage: Method:', method);
       console.log('🔖 FeedPage: Base URL used:', baseUrl);
       
       const response = await fetch(url, {
-        method: 'POST',
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -519,6 +507,18 @@ const FeedPage = () => {
       
       const result = await response.json();
       console.log('🔖 FeedPage: Success result:', result);
+      
+      // Actualizar el contador con el valor del servidor
+      if (result.saves_count !== undefined) {
+        setPolls(prevPolls => 
+          prevPolls.map(poll => 
+            poll.id === pollId 
+              ? { ...poll, saves_count: result.saves_count }
+              : poll
+          )
+        );
+        console.log('🔖 FeedPage: Updated saves_count to:', result.saves_count);
+      }
       
       toast({
         title: result.saved ? "¡Publicación guardada!" : "Publicación removida",
