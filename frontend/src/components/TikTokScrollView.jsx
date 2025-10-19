@@ -118,8 +118,6 @@ const TikTokPollCard = ({
   setCommentedPolls,
   sharedPolls,
   setSharedPolls,
-  saveCounts = {},
-  setSaveCounts,
   // 🚀 NEW: Performance optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
