@@ -248,6 +248,7 @@ class PollService {
       likes: backendPoll.likes,
       shares: backendPoll.shares,
       comments: backendPoll.comments_count,
+      saves_count: backendPoll.saves_count || 0,  // ✅ CRITICAL FIX: Include saves_count
       userVote: backendPoll.user_vote,
       userLiked: backendPoll.user_liked,
       category: backendPoll.category,
