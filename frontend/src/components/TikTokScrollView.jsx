@@ -875,6 +875,22 @@ const TikTokScrollView = ({
   const { user: currentUser } = useAuth();
   const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
 
+  // Initialize save counts from polls data
+  useEffect(() => {
+    if (!polls || polls.length === 0) return;
+    
+    // Initialize saveCounts with current values from polls
+    const initialCounts = {};
+    polls.forEach(poll => {
+      if (poll.id && poll.saves_count !== undefined) {
+        initialCounts[poll.id] = poll.saves_count;
+      }
+    });
+    
+    console.log('🔖 TikTokScrollView: Initializing save counts from polls:', initialCounts);
+    setSaveCounts(initialCounts);
+  }, [polls]);
+
   // Load user's saved polls on component mount
   useEffect(() => {
     const loadSavedPolls = async () => {
