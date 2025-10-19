@@ -7819,13 +7819,21 @@ async def unsave_poll(
             "poll_id": poll_id
         })
         
-        # Decrementar el contador de guardados en el poll
-        await db.polls.update_one(
+        # Decrementar el contador de guardados en el poll y obtener el valor actualizado
+        updated_poll = await db.polls.find_one_and_update(
             {"id": poll_id},
-            {"$inc": {"saves_count": -1}}
+            {"$inc": {"saves_count": -1}},
+            return_document=True
         )
         
-        return {"success": True, "message": "Poll removed from saved", "saved": False}
+        saves_count = max(0, updated_poll.get("saves_count", 0)) if updated_poll else 0
+        
+        return {
+            "success": True, 
+            "message": "Poll removed from saved", 
+            "saved": False,
+            "saves_count": saves_count
+        }
         
     except Exception as e:
         logger.error(f"Error unsaving poll: {str(e)}")
