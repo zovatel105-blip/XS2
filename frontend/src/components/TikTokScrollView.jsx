@@ -859,25 +859,8 @@ const TikTokScrollView = ({
   const [savedPolls, setSavedPolls] = useState(new Set()); // Track saved polls locally
   const [commentedPolls, setCommentedPolls] = useState(new Set()); // Track polls user has commented on
   const [sharedPolls, setSharedPolls] = useState(new Set()); // Track polls user has shared
-  const [saveCounts, setSaveCounts] = useState({}); // Track updated save counts
   const { user: currentUser } = useAuth();
   const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
-
-  // Initialize save counts from polls data
-  useEffect(() => {
-    if (!polls || polls.length === 0) return;
-    
-    // Initialize saveCounts with current values from polls
-    const initialCounts = {};
-    polls.forEach(poll => {
-      if (poll.id && poll.saves_count !== undefined) {
-        initialCounts[poll.id] = poll.saves_count;
-      }
-    });
-    
-    console.log('🔖 TikTokScrollView: Initializing save counts from polls:', initialCounts);
-    setSaveCounts(initialCounts);
-  }, [polls]);
 
   // Load user's saved polls on component mount
   useEffect(() => {
