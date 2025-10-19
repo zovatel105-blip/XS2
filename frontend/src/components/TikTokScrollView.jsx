@@ -1523,8 +1523,6 @@ const TikTokScrollView = ({
             setCommentedPolls={setCommentedPolls}
             sharedPolls={sharedPolls}
             setSharedPolls={setSharedPolls}
-            saveCounts={saveCounts}
-            setSaveCounts={setSaveCounts}
             // ✅ FIXED: Simplified optimization props (less restrictive)
             optimizeVideo={poll.optimizeVideo}
             renderPriority={poll.renderPriority || 'medium'}
