@@ -7775,13 +7775,21 @@ async def save_poll(
         
         await db.saved_polls.insert_one(save_record)
         
-        # Incrementar el contador de guardados en el poll
-        await db.polls.update_one(
+        # Incrementar el contador de guardados en el poll y obtener el valor actualizado
+        updated_poll = await db.polls.find_one_and_update(
             {"id": poll_id},
-            {"$inc": {"saves_count": 1}}
+            {"$inc": {"saves_count": 1}},
+            return_document=True
         )
         
-        return {"success": True, "message": "Poll saved successfully", "saved": True}
+        saves_count = updated_poll.get("saves_count", 1) if updated_poll else 1
+        
+        return {
+            "success": True, 
+            "message": "Poll saved successfully", 
+            "saved": True,
+            "saves_count": saves_count
+        }
         
     except HTTPException:
         raise
