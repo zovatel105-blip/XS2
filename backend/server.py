@@ -7780,7 +7780,7 @@ async def save_poll(
         updated_poll = await db.polls.find_one_and_update(
             {"id": poll_id},
             {"$inc": {"saves_count": 1}},
-            return_document=True
+            return_document=ReturnDocument.AFTER
         )
         
         saves_count = updated_poll.get("saves_count", 1) if updated_poll else 1
