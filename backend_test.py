@@ -148,55 +148,52 @@ class BackendTester:
         
         return all_results
     
-    def check_poll_image_fields(self, result: Dict[str, Any], query: str) -> bool:
-        """Check if poll result has the expected image fields for frontend"""
-        print(f"  🔍 Checking poll: {result.get('id', 'unknown')} - '{result.get('title', 'No title')[:50]}...'")
+    def check_sound_result_fields(self, result: Dict[str, Any], query: str) -> bool:
+        """Check if sound result has the expected fields for frontend"""
+        print(f"  🔍 Checking sound: {result.get('id', 'unknown')} - '{result.get('title', 'No title')}'")
         
-        # Check all the fields that frontend looks for (lines 979-981 in SearchPage.jsx)
-        image_url = result.get("image_url")
-        thumbnail_url = result.get("thumbnail_url") 
-        media_url = result.get("media_url")
-        images_array = result.get("images", [])
-        images_first_url = images_array[0].get("url") if images_array and len(images_array) > 0 else None
+        # Check all the required fields mentioned in the review
+        required_fields = ["thumbnail_url", "posts_count", "title", "artist", "cover_image"]
         
-        print(f"    📸 image_url: {image_url}")
+        title = result.get("title")
+        artist = result.get("artist") 
+        thumbnail_url = result.get("thumbnail_url")
+        cover_image = result.get("cover_image")
+        posts_count = result.get("posts_count")
+        posts_using_count = result.get("posts_using_count")
+        duration = result.get("duration")
+        author = result.get("author", {})
+        
+        print(f"    🎵 title: {title}")
+        print(f"    👤 artist: {artist}")
         print(f"    🖼️  thumbnail_url: {thumbnail_url}")
-        print(f"    🎬 media_url: {media_url}")
-        print(f"    📚 images array: {len(images_array)} items")
-        if images_first_url:
-            print(f"    🎯 images[0].url: {images_first_url}")
+        print(f"    🎨 cover_image: {cover_image}")
+        print(f"    📊 posts_count: {posts_count}")
+        print(f"    📊 posts_using_count: {posts_using_count}")
+        print(f"    ⏱️  duration: {duration}")
+        print(f"    👨‍🎤 author: {author}")
         
-        # Check if any of the expected fields have values
-        has_image_url = bool(image_url)
+        # Check if all required fields are present
+        has_title = bool(title)
+        has_artist = bool(artist)
         has_thumbnail_url = bool(thumbnail_url)
-        has_media_url = bool(media_url)
-        has_images_array = bool(images_first_url)
+        has_cover_image = bool(cover_image)
+        has_posts_count = posts_count is not None
+        has_author = bool(author and author.get("username"))
         
-        has_any_image = has_image_url or has_thumbnail_url or has_media_url or has_images_array
+        all_required_present = has_title and has_artist and has_thumbnail_url and has_posts_count
         
-        if has_any_image:
-            print(f"    ✅ Poll has images - Frontend will display correctly")
-            
-            # Verify images come from poll options (the fix we're testing)
-            options = result.get("options", [])
-            if options:
-                print(f"    🔧 Poll has {len(options)} options")
-                options_with_media = 0
-                for i, option in enumerate(options):
-                    if option.get("media_url") or option.get("thumbnail_url"):
-                        options_with_media += 1
-                        print(f"      Option {i+1}: media_url={bool(option.get('media_url'))}, thumbnail_url={bool(option.get('thumbnail_url'))}")
-                
-                if options_with_media > 0:
-                    print(f"    ✅ Images correctly extracted from {options_with_media} poll options")
-                else:
-                    print(f"    ⚠️  No media found in poll options - images may be from legacy fields")
-            else:
-                print(f"    ⚠️  Poll has no options - images may be from legacy fields")
+        if all_required_present:
+            print(f"    ✅ Sound has all required fields - Frontend will display correctly")
         else:
-            print(f"    ❌ Poll has no images - Frontend will show placeholder")
+            missing_fields = []
+            if not has_title: missing_fields.append("title")
+            if not has_artist: missing_fields.append("artist") 
+            if not has_thumbnail_url: missing_fields.append("thumbnail_url")
+            if not has_posts_count: missing_fields.append("posts_count")
+            print(f"    ❌ Sound missing fields: {', '.join(missing_fields)}")
         
-        return has_any_image
+        return all_required_present
     
     async def test_specific_poll_search(self):
         """Test search for specific polls that should have images"""
