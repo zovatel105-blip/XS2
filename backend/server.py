@@ -2654,9 +2654,12 @@ async def search_hashtags_optimized(query: str, current_user_id: str, limit: int
         return []
 
 async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
-    """Optimized sound search with minimal database operations"""
+    """Optimized sound search - searches both user_audio and music used in posts"""
     try:
-        # Search in user_audio collection
+        results = []
+        query_lower = query.lower()
+        
+        # 1. Search in user_audio collection (user uploaded audios)
         pipeline = [
             {
                 "$match": {
@@ -2672,7 +2675,7 @@ async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
             {
                 "$lookup": {
                     "from": "users",
-                    "localField": "user_id",
+                    "localField": "uploader_id",
                     "foreignField": "id",
                     "as": "user_info"
                 }
@@ -2686,11 +2689,10 @@ async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
         
         sounds = await db.user_audio.aggregate(pipeline).to_list(limit)
         
-        results = []
         for sound in sounds:
             # Calculate relevance score
-            title_score = 2 if query.lower() in sound.get("title", "").lower() else 0
-            artist_score = 1.5 if query.lower() in sound.get("artist", "").lower() else 0
+            title_score = 2 if query_lower in sound.get("title", "").lower() else 0
+            artist_score = 1.5 if query_lower in sound.get("artist", "").lower() else 0
             relevance_score = title_score + artist_score
             
             # Count posts using this audio
@@ -2702,8 +2704,8 @@ async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
                 ]
             })
             
-            # Get cover image - use cover_image field or fallback to waveform_url
-            cover_url = sound.get("cover_image") or sound.get("waveform_url", "")
+            # Get cover image
+            cover_url = sound.get("cover_url") or sound.get("cover_image") or sound.get("waveform_url", "")
             
             results.append({
                 "type": "sound",
@@ -2712,21 +2714,91 @@ async def search_sounds_optimized(query: str, current_user_id: str, limit: int):
                 "artist": sound.get("artist", ""),
                 "duration": sound.get("duration", 0),
                 "cover_image": cover_url,
-                "thumbnail_url": cover_url,  # Frontend expects this field
+                "thumbnail_url": cover_url,
                 "author": {
                     "username": sound.get("author", {}).get("username", ""),
                     "display_name": sound.get("author", {}).get("display_name", "")
                 },
-                "posts_count": posts_count,  # Frontend uses posts_count
+                "posts_count": posts_count,
                 "posts_using_count": posts_count,
                 "relevance_score": relevance_score,
                 "popularity_score": posts_count
             })
         
-        return results
+        # 2. If user_audio results are less than limit, search in polls for system music
+        if len(results) < limit:
+            # Get unique music from polls - search by music_id field
+            polls_with_music = await db.polls.find({
+                "music_id": {"$exists": True, "$ne": None}
+            }).to_list(500)  # Get more to filter
+            
+            # Collect unique music IDs and their info
+            music_usage = {}
+            for poll in polls_with_music:
+                music_id = poll.get("music_id")
+                if music_id and music_id not in [r["id"] for r in results]:
+                    # Get music info for this ID
+                    music_info = await get_music_info(music_id)
+                    if music_info:
+                        title = music_info.get("title", "")
+                        artist = music_info.get("artist", "")
+                        
+                        # Check if matches search query
+                        if query_lower in title.lower() or query_lower in artist.lower():
+                            if music_id not in music_usage:
+                                music_usage[music_id] = {
+                                    "info": music_info,
+                                    "count": 0
+                                }
+                            music_usage[music_id]["count"] += 1
+            
+            # Convert music_usage to results
+            for music_id, data in music_usage.items():
+                music_info = data["info"]
+                posts_count = data["count"]
+                
+                title = music_info.get("title", "")
+                artist = music_info.get("artist", "")
+                
+                # Calculate relevance score
+                title_score = 2 if query_lower in title.lower() else 0
+                artist_score = 1.5 if query_lower in artist.lower() else 0
+                relevance_score = title_score + artist_score
+                
+                # Get cover/thumbnail
+                cover_url = music_info.get("cover") or music_info.get("cover_url", "")
+                
+                results.append({
+                    "type": "sound",
+                    "id": music_id,
+                    "title": title,
+                    "artist": artist,
+                    "duration": music_info.get("duration", 0),
+                    "cover_image": cover_url,
+                    "thumbnail_url": cover_url,
+                    "author": {
+                        "username": artist,
+                        "display_name": artist
+                    },
+                    "posts_count": posts_count,
+                    "posts_using_count": posts_count,
+                    "relevance_score": relevance_score,
+                    "popularity_score": posts_count
+                })
+                
+                # Stop if we reached the limit
+                if len(results) >= limit:
+                    break
+        
+        # Sort by relevance and popularity
+        results.sort(key=lambda x: (x["relevance_score"], x["popularity_score"]), reverse=True)
+        
+        return results[:limit]
         
     except Exception as e:
         logger.error(f"Error in optimized sound search: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
         return []
 
 async def search_users_advanced(query: str, current_user_id: str, limit: int):
