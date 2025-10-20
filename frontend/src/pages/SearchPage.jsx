@@ -80,6 +80,7 @@ const SearchPage = () => {
     loadRecentSearches();
     loadStories();
     loadRecommendedContent();
+    loadFollowingUsers(); // Load users that current user is following
   }, []);
 
   // Load real recent searches
