@@ -1421,7 +1421,13 @@ const SearchPage = () => {
             
             {/* Posts and Hashtags in Grid Mode */}
             <div className="grid grid-cols-2 gap-1 mt-0">
-              {searchResults.filter(r => r.type === 'post' || r.type === 'hashtag').map((result, index) => (
+              {searchResults
+                .filter(r => r.type === 'post' || r.type === 'hashtag')
+                .filter((result, index, self) => 
+                  // Remove duplicates based on ID
+                  index === self.findIndex((t) => (t.id === result.id && t.type === result.type))
+                )
+                .map((result, index) => (
                 <div
                   key={`${result.type}-${result.id}-${index}`}
                   className="bg-white overflow-hidden group animate-slide-up"
