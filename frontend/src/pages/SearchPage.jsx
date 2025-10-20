@@ -124,6 +124,21 @@ const SearchPage = () => {
     }
   };
 
+  // Load following users to persist follow state
+  const loadFollowingUsers = async () => {
+    if (!isAuthenticated || !user) return;
+    
+    try {
+      const response = await userService.getFollowing(user.id);
+      const followingIds = new Set(response.following.map(u => u.id));
+      setFollowingUsers(followingIds);
+      console.log('Loaded following users:', followingIds.size);
+    } catch (error) {
+      console.error('Error loading following users:', error);
+      // Keep empty set if error
+    }
+  };
+
   const tabs = [
     { id: SEARCH_CONFIG.FILTERS.ALL, label: 'Top', icon: Sparkles, description: 'Buscar en todo' },
     { id: SEARCH_CONFIG.FILTERS.USERS, label: 'Usuarios', icon: User, description: 'Encuentra personas' },
