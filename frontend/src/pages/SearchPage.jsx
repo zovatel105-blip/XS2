@@ -1301,18 +1301,18 @@ const SearchPage = () => {
           /* Show skeleton while loading search results */
           <SearchResultsGridSkeleton count={6} />
         ) : (searchResults.length > 0 || hasSearched) ? (
-          /* Search Results - Grid or List based on filter type */
+          /* Search Results - Mixed Layout: List for users/sounds, Grid for posts/hashtags */
           <div className="px-1 pt-0 pb-2 w-full">
-            {/* Results Grid/List - Grid for posts/hashtags, List for users/sounds */}
-            <div className={activeTab === 'users' || activeTab === 'sounds' ? 'flex flex-col gap-0' : 'grid grid-cols-2 gap-1'}>
-              {searchResults.map((result, index) => (
+            {/* Users and Sounds in List Mode */}
+            <div className="flex flex-col gap-0">
+              {searchResults.filter(r => r.type === 'user' || r.type === 'sound').map((result, index) => (
                 <div
                   key={`${result.type}-${result.id}-${index}`}
                   className="bg-white overflow-hidden group animate-slide-up"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {/* Render in List Mode for Users and Sounds */}
-                  {(activeTab === 'users' || activeTab === 'sounds') && (result.type === 'user' || result.type === 'sound') ? (
+                  {(result.type === 'user' || result.type === 'sound') ? (
                     /* List View for Users and Sounds */
                     <div 
                       onClick={() => handleResultClick(result)}
