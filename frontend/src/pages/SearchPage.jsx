@@ -1319,9 +1319,9 @@ const SearchPage = () => {
                       className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
                     >
                       <div className="flex items-center space-x-3 flex-1 min-w-0">
-                        {/* Avatar/Icon */}
+                        {/* Avatar/Icon - Circular for users, Square with rounded corners for sounds */}
                         <div 
-                          className={`${result.type === 'user' ? 'w-12 h-12' : 'w-12 h-12'} rounded-full bg-gradient-to-br ${
+                          className={`w-12 h-12 ${result.type === 'user' ? 'rounded-full' : 'rounded-lg'} bg-gradient-to-br ${
                             result.type === 'user' ? 'from-green-400 to-blue-500' : 'from-purple-400 to-pink-500'
                           } flex items-center justify-center overflow-hidden flex-shrink-0`}
                         >
