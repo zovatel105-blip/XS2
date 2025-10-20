@@ -1408,110 +1408,105 @@ const SearchPage = () => {
                         );
                       })()}
                     </div>
-                  ) : (
-                    /* Grid View for Posts and Hashtags */
-                    <>
-                      {/* Header: Avatar + Username + Follow Button */}
-                      <div className="flex items-center justify-between px-0 py-2">
-                        <div className="flex items-center space-x-1 flex-1 min-w-0">
-                          {/* Avatar */}
-                          <div 
-                            className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden cursor-pointer flex-shrink-0"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const username = result.username || result.author?.username || result.author_username;
-                              if (username) {
-                                navigate(`/profile/${username}`);
-                              }
-                            }}
-                          >
-                            {(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? (
-                              <LazyImage 
-                                src={result.avatar_url || result.author?.avatar_url || result.author_avatar_url}
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : null}
-                            <span className={`text-gray-600 text-xs font-semibold ${(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? 'hidden' : ''}`}>
-                              {(result.username || result.author?.username || result.author_username || '?').charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          {/* Display Name */}
-                          <span className="text-xs text-gray-400 truncate flex-1 min-w-0">
-                            {result.display_name || result.author?.display_name || result.author_display_name || result.username || result.author?.username || result.author_username || 'usuario'}
-                          </span>
-                        </div>
-                        {/* Follow Button */}
-                        {(() => {
-                          const userId = result.user_id || result.author_id || result.id;
-                          const isFollowing = followingUsers.has(userId);
-                          const isLoading = loadingFollow.has(userId);
-                          const isSelf = user && user.id === userId;
-                          
-                          // No mostrar botón si es el usuario actual
-                          if (isSelf) return null;
-                          
-                          return (
-                            <button 
-                              onClick={(e) => handleFollow(result, e)}
-                              disabled={isLoading}
-                              className={`flex items-center space-x-1 px-3 py-1 text-xs font-medium rounded-full transition-colors ${
-                                isFollowing 
-                                  ? 'bg-gray-200 text-gray-900 hover:bg-gray-300' 
-                                  : 'bg-black text-white hover:bg-gray-800'
-                              } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                              {isFollowing ? (
-                                <>
-                                  <Check size={12} />
-                                  <span>Siguiendo</span>
-                                </>
-                              ) : (
-                                <>
-                                  <UserPlus size={12} />
-                                  <span>Seguir</span>
-                                </>
-                              )}
-                            </button>
-                          );
-                        })()}
+                  ) : null}
+                </div>
+              ))}
+            </div>
+            
+            {/* Posts and Hashtags in Grid Mode */}
+            <div className="grid grid-cols-2 gap-1 mt-0">
+              {searchResults.filter(r => r.type === 'post' || r.type === 'hashtag').map((result, index) => (
+                <div
+                  key={`${result.type}-${result.id}-${index}`}
+                  className="bg-white overflow-hidden group animate-slide-up"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  {/* Header: Avatar + Username + Follow Button */}
+                  <div className="flex items-center justify-between px-0 py-2">
+                    <div className="flex items-center space-x-1 flex-1 min-w-0">
+                      {/* Avatar */}
+                      <div 
+                        className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden cursor-pointer flex-shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const username = result.username || result.author?.username || result.author_username;
+                          if (username) {
+                            navigate(`/profile/${username}`);
+                          }
+                        }}
+                      >
+                        {(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? (
+                          <LazyImage 
+                            src={result.avatar_url || result.author?.avatar_url || result.author_avatar_url}
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : null}
+                        <span className={`text-gray-600 text-xs font-semibold ${(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? 'hidden' : ''}`}>
+                          {(result.username || result.author?.username || result.author_username || '?').charAt(0).toUpperCase()}
+                        </span>
                       </div>
-
-                      {/* Image Container - Use PollThumbnail for posts, original logic for others */}
-                      {result.type === 'post' ? (
-                        <PollThumbnail 
-                          result={result}
-                          onClick={() => handleResultClick(result)}
-                          hideBadge={true}
-                          onQuickVote={handleQuickVote}
-                        />
-                      ) : (
-                        <div 
-                          onClick={() => handleResultClick(result)}
-                          className="relative aspect-[6/11] bg-gray-100 cursor-pointer rounded-xl overflow-hidden"
+                      {/* Display Name */}
+                      <span className="text-xs text-gray-400 truncate flex-1 min-w-0">
+                        {result.display_name || result.author?.display_name || result.author_display_name || result.username || result.author?.username || result.author_username || 'usuario'}
+                      </span>
+                    </div>
+                    {/* Follow Button */}
+                    {(() => {
+                      const userId = result.user_id || result.author_id || result.id;
+                      const isFollowing = followingUsers.has(userId);
+                      const isLoading = loadingFollow.has(userId);
+                      const isSelf = user && user.id === userId;
+                      
+                      // No mostrar botón si es el usuario actual
+                      if (isSelf) return null;
+                      
+                      return (
+                        <button 
+                          onClick={(e) => handleFollow(result, e)}
+                          disabled={isLoading}
+                          className={`flex items-center space-x-1 px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                            isFollowing 
+                              ? 'bg-gray-200 text-gray-900 hover:bg-gray-300' 
+                              : 'bg-black text-white hover:bg-gray-800'
+                          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                          {/* Main Image with lazy loading */}
-                          {(result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url) ? (
-                            <LazyImage 
-                              src={result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url}
-                              alt={result.title || result.content || 'Result'}
-                              className="w-full h-full object-cover"
-                              placeholder={
-                                <div className={`absolute inset-0 w-full h-full flex items-center justify-center ${
-                                  result.type === 'user' ? 'bg-gradient-to-br from-green-400 to-blue-500' :
-                                  result.type === 'hashtag' ? 'bg-gradient-to-br from-pink-400 to-red-500' :
-                                  'bg-gradient-to-br from-yellow-400 to-orange-500'
-                                }`}>
-                                  <div className="text-center text-white">
-                                    {result.type === 'user' && <User size={32} className="mx-auto mb-2" />}
-                                    {result.type === 'hashtag' && <Hash size={32} className="mx-auto mb-2" />}
-                                    {result.type === 'sound' && <Music size={32} className="mx-auto mb-2" />}
-                                  </div>
-                                </div>
-                              }
-                            />
+                          {isFollowing ? (
+                            <>
+                              <Check size={12} />
+                              <span>Siguiendo</span>
+                            </>
                           ) : (
-                            /* Fallback placeholder */
+                            <>
+                              <UserPlus size={12} />
+                              <span>Seguir</span>
+                            </>
+                          )}
+                        </button>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Image Container - Use PollThumbnail for posts, original logic for others */}
+                  {result.type === 'post' ? (
+                    <PollThumbnail 
+                      result={result}
+                      onClick={() => handleResultClick(result)}
+                      hideBadge={true}
+                      onQuickVote={handleQuickVote}
+                    />
+                  ) : (
+                    <div 
+                      onClick={() => handleResultClick(result)}
+                      className="relative aspect-[6/11] bg-gray-100 cursor-pointer rounded-xl overflow-hidden"
+                    >
+                      {/* Main Image with lazy loading */}
+                      {(result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url) ? (
+                        <LazyImage 
+                          src={result.image_url || result.thumbnail_url || result.images?.[0]?.url || result.media_url}
+                          alt={result.title || result.content || 'Result'}
+                          className="w-full h-full object-cover"
+                          placeholder={
                             <div className={`absolute inset-0 w-full h-full flex items-center justify-center ${
                               result.type === 'user' ? 'bg-gradient-to-br from-green-400 to-blue-500' :
                               result.type === 'hashtag' ? 'bg-gradient-to-br from-pink-400 to-red-500' :
@@ -1523,25 +1518,38 @@ const SearchPage = () => {
                                 {result.type === 'sound' && <Music size={32} className="mx-auto mb-2" />}
                               </div>
                             </div>
-                          )}
+                          }
+                        />
+                      ) : (
+                        /* Fallback placeholder */
+                        <div className={`absolute inset-0 w-full h-full flex items-center justify-center ${
+                          result.type === 'user' ? 'bg-gradient-to-br from-green-400 to-blue-500' :
+                          result.type === 'hashtag' ? 'bg-gradient-to-br from-pink-400 to-red-500' :
+                          'bg-gradient-to-br from-yellow-400 to-orange-500'
+                        }`}>
+                          <div className="text-center text-white">
+                            {result.type === 'user' && <User size={32} className="mx-auto mb-2" />}
+                            {result.type === 'hashtag' && <Hash size={32} className="mx-auto mb-2" />}
+                            {result.type === 'sound' && <Music size={32} className="mx-auto mb-2" />}
+                          </div>
                         </div>
                       )}
-
-                      {/* Description with hashtags */}
-                      <div className="px-1 pb-1">
-                        <p className="text-sm text-gray-900 font-normal mt-1 mb-2 line-clamp-2">
-                          {result.title || result.content || result.description || ''}
-                          {' '}
-                          {/* Hashtags inline */}
-                          {result.hashtags && result.hashtags.length > 0 && result.hashtags.slice(0, 2).map((hashtag, idx) => (
-                            <span key={idx} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
-                              #{hashtag}{' '}
-                            </span>
-                          ))}
-                        </p>
-                      </div>
-                    </>
+                    </div>
                   )}
+
+                  {/* Description with hashtags */}
+                  <div className="px-1 pb-1">
+                    <p className="text-sm text-gray-900 font-normal mt-1 mb-2 line-clamp-2">
+                      {result.title || result.content || result.description || ''}
+                      {' '}
+                      {/* Hashtags inline */}
+                      {result.hashtags && result.hashtags.length > 0 && result.hashtags.slice(0, 2).map((hashtag, idx) => (
+                        <span key={idx} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
+                          #{hashtag}{' '}
+                        </span>
+                      ))}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
