@@ -3520,7 +3520,8 @@ async def send_message(message: MessageCreate, current_user: UserResponse = Depe
 
 @api_router.get("/conversations")
 async def get_conversations(current_user: UserResponse = Depends(get_current_user)):
-    """Get user's conversations"""
+    """Get user's conversations including pending chat requests"""
+    # Get regular conversations
     conversations = await db.conversations.find({
         "participants": current_user.id,
         "is_active": True
@@ -3549,6 +3550,47 @@ async def get_conversations(current_user: UserResponse = Depends(get_current_use
             created_at=conv_data["created_at"]
         )
         result.append(conversation_response)
+    
+    # Get pending chat requests (both sent and received)
+    pending_requests = await db.chat_requests.find({
+        "$or": [
+            {"sender_id": current_user.id, "status": "pending"},
+            {"receiver_id": current_user.id, "status": "pending"}
+        ]
+    }).sort("created_at", -1).to_list(50)
+    
+    # Convert chat requests to conversation-like format
+    for req in pending_requests:
+        is_sender = req["sender_id"] == current_user.id
+        other_user_id = req["receiver_id"] if is_sender else req["sender_id"]
+        
+        # Get other user info
+        other_user_data = await db.users.find_one({"id": other_user_id})
+        if not other_user_data:
+            continue
+        
+        other_user = UserResponse(**other_user_data)
+        
+        # Create conversation-like object with chat request metadata
+        request_conversation = {
+            "id": f"request-{req['id']}",  # Prefix to identify as request
+            "participants": [other_user],
+            "last_message": req.get("message", "Nueva solicitud de chat"),
+            "last_message_at": req.get("created_at"),
+            "unread_count": 0 if is_sender else 1,  # Unread for receiver
+            "created_at": req["created_at"],
+            # Chat request specific fields
+            "is_chat_request": True,
+            "chat_request_id": req["id"],
+            "chat_request_status": "pending",
+            "is_request_sender": is_sender,
+            "is_request_receiver": not is_sender
+        }
+        
+        result.append(request_conversation)
+    
+    # Sort all by last message time
+    result.sort(key=lambda x: x.get("last_message_at") or x.get("created_at"), reverse=True)
     
     return result
 
