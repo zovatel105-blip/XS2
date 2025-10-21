@@ -423,6 +423,38 @@ const MessagesPage = () => {
     }
   };
 
+  // Cancel chat request (sender only)
+  const handleCancelRequest = async (requestId) => {
+    if (!requestId) return;
+    
+    try {
+      console.log('🚫 Cancelling chat request:', requestId);
+      
+      const response = await apiRequest(`/api/chat-requests/${requestId}`, {
+        method: 'DELETE'
+      });
+      
+      console.log('✅ Request cancelled:', response);
+      
+      toast({
+        title: "Solicitud cancelada",
+        description: "La solicitud de chat ha sido cancelada",
+      });
+      
+      // Close the conversation and reload
+      setSelectedConversation(null);
+      await loadConversations();
+      
+    } catch (error) {
+      console.error('❌ Error cancelling chat request:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo cancelar la solicitud",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Handle chat request (accept/reject)
   const handleChatRequest = async (requestId, action) => {
     if (!requestId) return;
