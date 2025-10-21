@@ -521,6 +521,9 @@ const MessagesMainPage = () => {
     const messageContent = newMessage.trim();
     const tempMessageId = `temp-${Date.now()}`;
     
+    // Determinar el destinatario ANTES del try para que esté disponible en el catch
+    let recipient = selectedConversation.participants?.find(p => p.id !== user.id);
+    
     // Crear mensaje temporal para mostrar inmediatamente en la UI
     const tempMessage = {
       id: tempMessageId,
@@ -543,9 +546,6 @@ const MessagesMainPage = () => {
       // Agregar mensaje temporal a la UI inmediatamente
       setMessages(prevMessages => [...prevMessages, tempMessage]);
       setNewMessage('');
-
-      // Determinar el destinatario
-      let recipient = selectedConversation.participants?.find(p => p.id !== user.id);
       
       console.log('🔍 Debug recipient:', {
         conversationId: selectedConversation.id,
@@ -562,11 +562,6 @@ const MessagesMainPage = () => {
 
       if (!recipient.id) {
         throw new Error('El destinatario no tiene ID válido');
-      }
-
-      // Validar datos antes de enviar
-      if (!recipient.id) {
-        throw new Error('ID del destinatario no válido');
       }
       
       if (!messageContent || messageContent.length === 0) {
