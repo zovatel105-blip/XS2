@@ -667,8 +667,8 @@ const MessagesMainPage = () => {
             }
           }));
 
-          // Recargar conversaciones para actualizar la lista
-          loadConversations();
+          // NO recargar conversaciones aquí - causaría re-render innecesario
+          // loadConversations(); // <-- Comentado para evitar problemas
         }
       } catch (error) {
         console.error('❌ Error enviando mensaje COMPLETO:', error);
