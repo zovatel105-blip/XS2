@@ -844,44 +844,95 @@ const MessagesPage = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input */}
-            <div className="border-t p-4">
-              <div className="flex items-center space-x-2">
-                <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                      }
-                    }}
-                    placeholder="Escribe un mensaje..."
-                    className="flex-1 bg-transparent outline-none text-sm"
-                    disabled={sendingMessage}
-                  />
+            {/* Message Input or Chat Request Actions */}
+            {selectedConversation.is_chat_request && selectedConversation.is_request_receiver && (
+              /* Receiver: Show accept/reject buttons */
+              <div className="border-t p-4 bg-blue-50">
+                <div className="text-center mb-3">
+                  <p className="text-sm text-blue-900 font-medium">
+                    ✉️ Solicitud de chat pendiente
+                  </p>
+                  <p className="text-xs text-blue-700">
+                    ¿Quieres aceptar esta conversación?
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleChatRequest(selectedConversation.chat_request_id, 'accept')}
+                    className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 font-medium text-sm"
+                  >
+                    ✓ Aceptar solicitud
+                  </button>
+                  <button
+                    onClick={() => handleChatRequest(selectedConversation.chat_request_id, 'reject')}
+                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 font-medium text-sm"
+                  >
+                    ✗ Rechazar
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {selectedConversation.is_chat_request && selectedConversation.is_request_sender && (
+              /* Sender: Show waiting message */
+              <div className="border-t p-4 bg-yellow-50">
+                <div className="text-center mb-3">
+                  <p className="text-sm text-yellow-900 font-medium">
+                    ⏳ Esperando respuesta
+                  </p>
+                  <p className="text-xs text-yellow-700">
+                    Tu solicitud está pendiente. No puedes enviar más mensajes hasta que sea aceptada.
+                  </p>
                 </div>
                 <button
-                  onClick={sendMessage}
-                  disabled={!newMessage.trim() || sendingMessage}
-                  className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-                    newMessage.trim() && !sendingMessage
-                      ? "bg-blue-500 text-white hover:bg-blue-600"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  )}
+                  onClick={() => handleCancelRequest(selectedConversation.chat_request_id)}
+                  className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200 font-medium text-sm"
                 >
-                  {sendingMessage ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
+                  Cancelar solicitud
                 </button>
               </div>
-            </div>
+            )}
+            
+            {!selectedConversation.is_chat_request && (
+              /* Normal conversation: Show message input */
+              <div className="border-t p-4">
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4 py-2">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
+                      placeholder="Escribe un mensaje..."
+                      className="flex-1 bg-transparent outline-none text-sm"
+                      disabled={sendingMessage}
+                    />
+                  </div>
+                  <button
+                    onClick={sendMessage}
+                    disabled={!newMessage.trim() || sendingMessage}
+                    className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+                      newMessage.trim() && !sendingMessage
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    )}
+                  >
+                    {sendingMessage ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           /* No conversation selected */
