@@ -446,22 +446,26 @@ const MessagesPage = () => {
 
       if (response.success) {
         toast({
-          title: action === 'accept' ? "Solicitud aceptada" : "Solicitud rechazada",
-          description: response.message,
+          title: action === 'accept' ? "✅ Solicitud aceptada" : "❌ Solicitud rechazada",
+          description: action === 'accept' 
+            ? "Ahora puedes enviar mensajes libremente" 
+            : "La solicitud ha sido rechazada",
         });
 
-        // Reload chat requests and conversations
-        await loadChatRequests();
+        // Reload conversations
         await loadConversations();
 
         // If accepted, navigate to the new conversation
         if (action === 'accept' && response.conversation_id) {
-          const conversation = await apiRequest(`/api/conversations`);
-          const newConv = conversation.find(c => c.id === response.conversation_id);
+          const conversations = await apiRequest(`/api/conversations`);
+          const newConv = conversations.find(c => c.id === response.conversation_id);
           if (newConv) {
             setSelectedConversation(newConv);
             loadMessages(newConv.id);
           }
+        } else if (action === 'reject') {
+          // If rejected, close the conversation
+          setSelectedConversation(null);
         }
       }
     } catch (error) {
