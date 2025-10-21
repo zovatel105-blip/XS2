@@ -755,15 +755,33 @@ const MessagesMainPage = () => {
       console.error('❌ Error typeof:', typeof error);
       console.error('❌ Error keys:', Object.keys(error));
       
-      // Eliminar mensaje temporal
-      setMessages(prevMessages =>
-        prevMessages.filter(msg => msg.id !== tempMessageId)
-      );
+      // Eliminar mensaje temporal solo si NO es el error de "ya enviado"
+      const isAlreadySentError = error.status === 403 && error.message && error.message.includes('Chat request already sent');
+      
+      if (!isAlreadySentError) {
+        setMessages(prevMessages =>
+          prevMessages.filter(msg => msg.id !== tempMessageId)
+        );
+      }
 
       // Manejar errores específicos
       if (error.status === 403 && error.message && error.message.includes('Chat request already sent')) {
         // El backend devolvió 403 con "Chat request already sent"
-        console.log('📨 Chat request ya enviado - mostrando mensaje informativo');
+        console.log('📨 Chat request ya enviado - manteniendo mensaje con estado pendiente');
+        
+        // NO eliminar el mensaje, sino actualizarlo a estado de solicitud pendiente
+        setMessages(prevMessages =>
+          prevMessages.map(msg =>
+            msg.id === tempMessageId
+              ? { 
+                  ...msg, 
+                  id: `chat-request-pending-${Date.now()}`,
+                  status: 'chat_request',
+                  isPending: true
+                }
+              : msg
+          )
+        );
         
         const chatRequestPendingMessage = {
           id: `system-${Date.now()}`,
