@@ -53,8 +53,8 @@ async function detectEnvironment() {
     HOSTNAME: hostname,
     API_URL,
     IS_LOCAL: hostname.includes("localhost"),
-    IS_EMERGENT: hostname.endsWith(".emergent.sh"),
-    SUBDOMAIN: hostname.endsWith(".emergent.sh") ? hostname.split(".")[0] : null,
+    IS_EMERGENT: hostname.endsWith(".emergent.sh") || hostname.endsWith(".emergentagent.com"),
+    SUBDOMAIN: hostname.endsWith(".emergent.sh") ? hostname.split(".")[0] : hostname.endsWith(".emergentagent.com") ? hostname.split(".")[0] : null,
   };
 }
 
