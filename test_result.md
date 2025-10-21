@@ -3795,9 +3795,9 @@ user_problem_statement: 🔐 NUEVA PÁGINA DE AUTENTICACIÓN CREADA (2025-01-27)
 6. ✅ **UX mejorada**: El usuario ahora puede ver su mensaje persistentemente con estado visual claro
 
 **CAMBIOS ESPECÍFICOS:**
-- Líneas 608-631: Mensaje temporal se convierte en mensaje con estado 'chat_request' en lugar de eliminarse
-- Líneas 1247-1262: Agregado soporte visual para estado 'chat_request' con color amarillo y borde
-- Líneas 1247-1262: Indicador de estado amarillo pulsante para solicitudes de chat
+- Líneas 608-656: Mensaje temporal se convierte en mensaje con estado 'chat_request' en lugar de eliminarse
+- Líneas 1247-1265: Agregado soporte visual para estado 'chat_request' con color amarillo y borde
+- Líneas 1250-1262: Indicador de estado amarillo pulsante para solicitudes de chat
 - Mensaje del sistema más descriptivo: "Tu mensaje fue enviado como solicitud de chat..."
 
 ✅ **RESULTADO FINAL:**
@@ -3812,6 +3812,48 @@ user_problem_statement: 🔐 NUEVA PÁGINA DE AUTENTICACIÓN CREADA (2025-01-27)
 - `sent`: Punto verde - mensaje enviado exitosamente
 - `chat_request`: Punto amarillo pulsante - solicitud de chat enviada (mensaje persiste con fondo amarillo)
 - `failed`: Punto rojo - mensaje fallido (puede reintentar)
+
+---
+
+**💬 CONVERSACIONES NUEVAS APARECEN EN LISTA DE MENSAJES - IMPLEMENTADO (2025-01-27):**
+
+✅ **PROBLEMA REPORTADO:**
+- Después de enviar un mensaje en una conversación nueva, la conversación no aparecía en la lista de mensajes
+- El usuario tenía que recargar la página para ver la conversación
+- No había feedback visual de que la conversación se había creado
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**ACTUALIZACIÓN AUTOMÁTICA DE LISTA (/app/frontend/src/pages/messages/MessagesMainPage.jsx):**
+
+1. ✅ **Solicitudes de chat** (líneas 637-656):
+   - Agregar conversación a la lista inmediatamente después de enviar
+   - Marcar con flag `isPending: true` para indicar que es una solicitud
+   - Verificar que no exista ya en la lista antes de agregar
+
+2. ✅ **Mensajes normales** (líneas 697-730):
+   - Agregar conversación nueva a la lista si no existe
+   - Actualizar conversación existente y moverla al inicio
+   - Mantener sincronización con último mensaje y timestamp
+
+3. ✅ **Indicadores visuales en lista** (líneas 1106-1131):
+   - Texto especial: "⏳ Solicitud de chat enviada..." para conversaciones pendientes
+   - Badge amarillo con reloj (⏳) para conversaciones pendientes
+   - Badge rosa para mensajes no leídos (funcionalidad existente)
+
+**FUNCIONALIDADES IMPLEMENTADAS:**
+- ✅ Conversación aparece inmediatamente en la lista después de enviar mensaje
+- ✅ Indicador visual claro para solicitudes pendientes vs conversaciones activas
+- ✅ Orden cronológico: conversaciones más recientes al inicio
+- ✅ Actualización optimista: no requiere recarga de página
+- ✅ Prevención de duplicados: verifica existencia antes de agregar
+
+✅ **RESULTADO FINAL:**
+🎯 **LISTA DE CONVERSACIONES SIEMPRE ACTUALIZADA** - Los usuarios ahora:
+- Ven sus conversaciones nuevas aparecer inmediatamente en la lista
+- Pueden identificar visualmente cuáles son solicitudes pendientes (⏳)
+- No necesitan recargar la página para ver sus conversaciones
+- Tienen feedback visual claro del estado de cada conversación
 
 🎯 PROBLEMA CRÍTICO COMPATIBILIDAD UUID AUDIO Y SUBIDA DE AUDIOS RESUELTO (2025-01-27): 
 
