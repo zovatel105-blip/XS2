@@ -17,7 +17,6 @@ const MessagesPage = () => {
   const [showNewChat, setShowNewChat] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
-  const [chatRequests, setChatRequests] = useState([]);
   const [storyUsers, setStoryUsers] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [reactionTarget, setReactionTarget] = useState(null);
