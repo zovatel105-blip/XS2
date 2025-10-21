@@ -634,6 +634,26 @@ const MessagesMainPage = () => {
           
           setMessages(prevMessages => [...prevMessages, chatRequestMessage]);
           
+          // Agregar la conversación a la lista si no existe
+          const conversationExists = conversations.some(conv => 
+            conv.participants?.some(p => p.id === recipient.id)
+          );
+          
+          if (!conversationExists) {
+            const newConversation = {
+              id: selectedConversation.id || `temp-${Date.now()}`,
+              participants: [recipient],
+              last_message: messageContent,
+              last_message_at: new Date().toISOString(),
+              unread_count: 0,
+              created_at: new Date().toISOString(),
+              isPending: true // Marcar como solicitud pendiente
+            };
+            
+            setConversations(prevConversations => [newConversation, ...prevConversations]);
+            console.log('📋 Conversación agregada a la lista con solicitud pendiente');
+          }
+          
           // NO cerrar la conversación automáticamente - dejar que el usuario la cierre
           // El usuario puede seguir viendo su mensaje y el estado de la solicitud
           
