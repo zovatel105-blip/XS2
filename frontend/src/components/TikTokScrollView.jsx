@@ -795,6 +795,18 @@ const TikTokPollCard = ({
             />
           )}
         </div>
+        
+        {/* Título de la música - Debajo de los botones (estilo TikTok) */}
+        {poll.music && (
+          <div className="mt-2 px-4">
+            <div className="flex items-center gap-1.5 text-white/90">
+              <Music className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="text-xs font-light truncate">
+                {poll.music.title} - {poll.music.artist}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Scroll hints - Enhanced for first card */}
