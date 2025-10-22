@@ -3640,9 +3640,12 @@ async def get_conversation_messages(
         # Get sender user info
         sender = await db.users.find_one({"id": msg["sender_id"]})
         
+        # Remove MongoDB _id field if present (not JSON serializable)
+        msg_dict = {k: v for k, v in msg.items() if k != "_id"}
+        
         # Build enriched message object
         enriched_msg = {
-            **msg,
+            **msg_dict,
             "sender": {
                 "id": msg["sender_id"],
                 "username": sender.get("username") if sender else "unknown",
