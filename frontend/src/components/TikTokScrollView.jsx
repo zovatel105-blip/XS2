@@ -816,7 +816,7 @@ const TikTokPollCard = ({
                 navigate(`/audio/${audioId}`);
               }
             }}
-            className="flex items-center gap-1.5 text-white cursor-pointer hover:text-gray-200 transition-colors duration-200 ml-2 w-fit" 
+            className="flex items-center gap-1.5 text-white cursor-pointer hover:text-gray-200 transition-colors duration-200 -ml-2 w-fit" 
             style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}
           >
             <Music className="w-3.5 h-3.5 flex-shrink-0" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.8))' }} />
