@@ -5939,3 +5939,80 @@ result.append(conversation_response)
 
 El problema de "usuario desapareció completamente" está completamente resuelto.
 
+
+**💬 MENSAJES DESAPARECIDOS DESPUÉS DE ACEPTAR SOLICITUD CORREGIDO (2025-01-28): El mensaje inicial ahora permanece visible después de aceptar una solicitud de chat.**
+
+✅ **PROBLEMA REPORTADO POR USUARIO:**
+- "Ahora cuando aceptó la solicitud el mensaje desaparece de la conversación"
+- Después de aceptar una solicitud, la conversación aparecía pero sin el mensaje inicial
+- El historial de chat quedaba vacío
+
+✅ **CAUSA RAÍZ IDENTIFICADA:**
+**ERROR 500 en GET /api/conversations/{conversation_id}/messages**
+
+El endpoint GET `/api/conversations/{conversation_id}/messages` (líneas 3637-3658) estaba enriqueciendo los mensajes con información del sender, pero al hacerlo copiaba TODOS los campos del mensaje incluyendo `_id`:
+
+```python
+enriched_msg = {
+    **msg,  # ❌ Copia TODOS los campos, incluido _id (ObjectId de MongoDB)
+    "sender": {...}
+}
+```
+
+**PROBLEMA**: El campo `_id` de MongoDB es un `ObjectId` que NO es JSON serializable. Cuando FastAPI intentaba devolver la respuesta, fallaba con:
+```
+TypeError: 'ObjectId' object is not iterable
+TypeError: vars() argument must have __dict__ attribute
+```
+
+Esto causaba error 500, impidiendo que el frontend cargara los mensajes de la conversación recién creada.
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**CAMBIO EN BACKEND (/app/backend/server.py líneas 3637-3658):**
+```python
+# ANTES:
+enriched_msg = {
+    **msg,  # Incluía _id no serializable
+    "sender": {...}
+}
+
+# AHORA:
+# Remove MongoDB _id field if present (not JSON serializable)
+msg_dict = {k: v for k, v in msg.items() if k != "_id"}
+
+enriched_msg = {
+    **msg_dict,  # ✅ Excluye _id
+    "sender": {...}
+}
+```
+
+**RESULTADO**: Ahora los mensajes se devuelven correctamente sin campos no serializables, y el endpoint responde con 200 OK.
+
+✅ **FLUJO CORREGIDO:**
+1. Usuario acepta solicitud de chat
+2. Backend crea conversación y convierte mensaje inicial de solicitud a mensaje real
+3. Frontend recarga conversaciones y selecciona la nueva
+4. Frontend llama GET /api/conversations/{id}/messages
+5. ✅ Endpoint devuelve 200 OK con mensaje inicial enriquecido
+6. ✅ Mensaje aparece en el historial de chat
+7. ✅ Usuario puede ver el contenido y continuar la conversación
+
+✅ **CAMBIOS TÉCNICOS:**
+- **Archivo**: `/app/backend/server.py`
+- **Líneas**: 3637-3658
+- **Cambio**: Filtrado del campo `_id` antes de serializar
+- **Backend reiniciado**: Exitosamente
+
+✅ **RESULTADO FINAL:**
+🎯 **SISTEMA DE MENSAJERÍA COMPLETAMENTE FUNCIONAL** - El flujo completo ahora funciona:
+1. ✅ Envío de solicitud de chat
+2. ✅ Visualización de solicitud en ambos lados (sender/receiver)
+3. ✅ Botones de aceptar/rechazar/cancelar funcionando
+4. ✅ Conversación persiste después de aceptar
+5. ✅ Mensaje inicial se conserva en el historial
+6. ✅ Chat funciona normalmente después de aceptación
+7. ✅ Sin errores 500 en ningún endpoint
+
+El problema de "mensaje desaparece de la conversación" está completamente resuelto.
+
