@@ -866,6 +866,71 @@ const MessagesMainPage = () => {
       handleSendMessage();
     }
   };
+
+  // Función para manejar aceptar/rechazar solicitud de chat
+  const handleChatRequestAction = async (action) => {
+    if (!selectedConversation?.chat_request_id) return;
+    
+    try {
+      console.log(`📨 ${action === 'accept' ? 'Aceptando' : 'Rechazando'} solicitud de chat:`, selectedConversation.chat_request_id);
+      
+      const response = await apiRequest(`/api/chat-requests/${selectedConversation.chat_request_id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ action })
+      });
+      
+      console.log('✅ Respuesta del servidor:', response);
+      
+      if (action === 'accept') {
+        // Recargar conversaciones para obtener la conversación real
+        await loadConversations();
+        
+        // Si se devolvió un conversation_id, seleccionarlo
+        if (response.conversation_id) {
+          const conversations = await apiRequest('/api/conversations');
+          const newConv = conversations.find(c => c.id === response.conversation_id);
+          if (newConv) {
+            setSelectedConversation(newConv);
+            await loadMessages(newConv.id);
+          }
+        }
+        
+        alert('✅ Solicitud aceptada. Ahora pueden chatear libremente.');
+      } else {
+        // Cerrar la conversación y recargar lista
+        setSelectedConversation(null);
+        await loadConversations();
+        alert('❌ Solicitud rechazada.');
+      }
+    } catch (error) {
+      console.error('❌ Error al procesar solicitud de chat:', error);
+      alert('Error al procesar la solicitud. Por favor intenta de nuevo.');
+    }
+  };
+
+  // Función para cancelar solicitud de chat (para el sender)
+  const handleCancelChatRequest = async () => {
+    if (!selectedConversation?.chat_request_id) return;
+    
+    try {
+      console.log('🗑️ Cancelando solicitud de chat:', selectedConversation.chat_request_id);
+      
+      await apiRequest(`/api/chat-requests/${selectedConversation.chat_request_id}`, {
+        method: 'DELETE'
+      });
+      
+      console.log('✅ Solicitud cancelada');
+      
+      // Cerrar la conversación y recargar lista
+      setSelectedConversation(null);
+      await loadConversations();
+      alert('🗑️ Solicitud cancelada.');
+    } catch (error) {
+      console.error('❌ Error al cancelar solicitud:', error);
+      alert('Error al cancelar la solicitud. Por favor intenta de nuevo.');
+    }
+  };
+
   const handleStartNewConversationWithUser = async (username) => {
     try {
       console.log('🔍 === INICIANDO BÚSQUEDA DE USUARIO ===');
