@@ -190,7 +190,7 @@ const RequestsPage = () => {
                 style={{ touchAction: 'manipulation' }}
               >
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold">
+                <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gray-100">
                   {request.avatar ? (
                     <>
                       <img 
@@ -217,7 +217,7 @@ const RequestsPage = () => {
                 {/* Content */}
                 <div className="flex-1 min-w-0 text-left">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-base font-semibold truncate text-purple-700">
+                    <span className="text-base font-semibold truncate text-black">
                       {request.title}
                     </span>
                     <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
