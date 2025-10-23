@@ -4161,54 +4161,6 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         # Return empty list if error
         return []
 
-@api_router.get("/messages/requests")
-async def get_message_requests(current_user: UserResponse = Depends(get_current_user)):
-    """Get pending message requests from non-followed users"""
-    try:
-        # Get pending chat requests (these are message requests from non-followed users)
-        requests = await db.chat_requests.find({
-            "receiver_id": current_user.id,
-            "status": "pending"
-        }).sort("created_at", -1).limit(50).to_list(50)
-        
-        result = []
-        for req in requests:
-            sender = await db.users.find_one({"id": req["sender_id"]})
-            if sender:
-                # Check if users follow each other (to determine if it's a "request" vs normal message)
-                follows_them = await db.follows.find_one({
-                    "follower_id": current_user.id,
-                    "followed_id": sender["id"]
-                })
-                
-                they_follow_user = await db.follows.find_one({
-                    "follower_id": sender["id"],
-                    "followed_id": current_user.id
-                })
-                
-                # If neither follows the other, it's a message request
-                if not follows_them and not they_follow_user:
-                    result.append({
-                        "id": req["id"],
-                        "sender": {
-                            "id": sender["id"],
-                            "username": sender["username"],
-                            "display_name": sender.get("display_name", sender["username"]),
-                            "avatar_url": sender.get("avatar_url"),  # Usar foto de perfil real
-                            "is_verified": sender.get("is_verified", False)
-                        },
-                        "message": req.get("message", ""),
-                        "preview": req.get("message", "")[:100] if req.get("message") else "Solicitud de mensaje",
-                        "created_at": req["created_at"],
-                        "unread": True
-                    })
-        
-        return result
-        
-    except Exception as e:
-        # Return empty list if error
-        return []
-
 # =============  COMMENT ENDPOINTS =============
 
 @api_router.post("/polls/{poll_id}/comments", response_model=CommentResponse)
