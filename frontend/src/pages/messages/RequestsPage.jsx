@@ -180,80 +180,62 @@ const RequestsPage = () => {
         ) : (
           <div className="bg-white">
             {requests.map((request, index) => (
-              <motion.div
+              <motion.button
                 key={request.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="w-full border-b border-gray-100 bg-white hover:bg-gray-50"
+                onClick={() => handleRequestClick(request)}
+                className="w-full flex items-center px-4 py-4 border-b border-gray-100 transition-colors min-h-[72px] hover:bg-gray-50 active:bg-gray-100"
+                style={{ touchAction: 'manipulation' }}
               >
-                <div 
-                  onClick={() => handleRequestClick(request)}
-                  className="flex items-center px-4 py-4 cursor-pointer"
-                >
-                  {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold">
-                    {request.avatar ? (
-                      <>
-                        <img 
-                          src={request.avatar} 
-                          alt="Avatar" 
-                          className="w-full h-full rounded-full object-cover"
-                          onError={(e) => {
-                            // Si la imagen falla al cargar, ocultar imagen y mostrar fallback
-                            e.target.style.display = 'none';
-                            e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
-                          }}
-                        />
-                        <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-bold" style={{ display: 'none' }}>
-                          {request.fallbackAvatar}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-full h-full rounded-full flex items-center justify-center text-lg font-bold">
+                {/* Avatar */}
+                <div className="w-12 h-12 rounded-full mr-3 flex items-center justify-center text-lg flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold">
+                  {request.avatar ? (
+                    <>
+                      <img 
+                        src={request.avatar} 
+                        alt="Avatar" 
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          // Si la imagen falla al cargar, ocultar imagen y mostrar fallback
+                          e.target.style.display = 'none';
+                          e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
+                        }}
+                      />
+                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-bold" style={{ display: 'none' }}>
                         {request.fallbackAvatar}
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1 min-w-0 text-left">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-base font-semibold truncate text-purple-700">
-                        {request.title}
-                      </span>
-                      <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                        {request.time}
-                      </span>
+                    </>
+                  ) : (
+                    <div className="w-full h-full rounded-full flex items-center justify-center text-lg font-bold">
+                      {request.fallbackAvatar}
                     </div>
-                    <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
-                      {request.message}
-                    </p>
+                  )}
+                </div>
+                
+                {/* Content */}
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-base font-semibold truncate text-purple-700">
+                      {request.title}
+                    </span>
+                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      {request.time}
+                    </span>
                   </div>
+                  <p className="text-sm text-gray-600 truncate mt-1 leading-relaxed">
+                    {request.message}
+                  </p>
                 </div>
 
-                {/* Botones de aceptar/rechazar */}
+                {/* Badge de solicitud pendiente */}
                 {request.needsApproval && (
-                  <div className="flex gap-2 px-4 pb-3">
-                    <button
-                      onClick={(e) => handleAcceptRequest(request, e)}
-                      disabled={processingRequest === request.requestId}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
-                    >
-                      <Check className="h-4 w-4" />
-                      {processingRequest === request.requestId ? 'Aceptando...' : 'Aceptar'}
-                    </button>
-                    <button
-                      onClick={(e) => handleRejectRequest(request, e)}
-                      disabled={processingRequest === request.requestId}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 text-gray-700 rounded-lg font-medium transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                      {processingRequest === request.requestId ? 'Rechazando...' : 'Rechazar'}
-                    </button>
+                  <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                    Nueva
                   </div>
                 )}
-              </motion.div>
+              </motion.button>
             ))}
           </div>
         )}
