@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MessageCircle, Check, X } from 'lucide-react';
+import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useToast } from '../../hooks/use-toast';
 import AppConfig from '../../config/config.js';
 
 const RequestsPage = () => {
