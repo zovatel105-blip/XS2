@@ -1447,14 +1447,11 @@ const MessagesMainPage = () => {
             {/* Si es una solicitud de chat pendiente y el usuario es el receptor */}
             {selectedConversation?.is_chat_request && selectedConversation?.is_request_receiver ? (
               <div className="space-y-4">
-                {/* Título y descripción mejorados */}
-                <div className="text-center space-y-2 px-2">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    ¿Aceptar la solicitud de mensaje de {selectedConversation?.other_user?.display_name || selectedConversation?.other_user?.username || 'este usuario'}?
+                {/* Título minimalista */}
+                <div className="text-center px-2">
+                  <h3 className="text-base font-medium text-gray-700">
+                    Solicitud de mensaje de {selectedConversation?.other_user?.display_name || selectedConversation?.other_user?.username || 'este usuario'}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed max-w-md mx-auto">
-                    Si aceptas, los miembros también podrán llamarte y ver información, como tu estado de actividad y cuándo has leído los mensajes.
-                  </p>
                 </div>
 
                 {/* Botones minimalistas */}
