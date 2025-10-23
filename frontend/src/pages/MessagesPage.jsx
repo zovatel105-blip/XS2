@@ -847,19 +847,16 @@ const MessagesPage = () => {
             )}
             
             {selectedConversation.is_chat_request && selectedConversation.is_request_sender && (
-              /* Sender: Show waiting message */
-              <div className="border-t p-4 bg-yellow-50">
-                <div className="text-center mb-3">
-                  <p className="text-sm text-yellow-900 font-medium">
-                    ⏳ Esperando respuesta
-                  </p>
-                  <p className="text-xs text-yellow-700">
-                    Tu solicitud está pendiente. No puedes enviar más mensajes hasta que sea aceptada.
+              /* Sender: Show waiting message - Diseño minimalista */
+              <div className="border-t border-gray-200 p-3 bg-white">
+                <div className="text-center mb-2">
+                  <p className="text-sm text-gray-600">
+                    Esperando respuesta...
                   </p>
                 </div>
                 <button
                   onClick={() => handleCancelRequest(selectedConversation.chat_request_id)}
-                  className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200 font-medium text-sm"
+                  className="w-full max-w-md mx-auto block px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
                 >
                   Cancelar solicitud
                 </button>
