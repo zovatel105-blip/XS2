@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, X, ArrowLeft, Users, Bell, Send, Plus } from 'lucide-react';
+import { MessageCircle, X, ArrowLeft, Users, Bell, Send, Plus, Inbox } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import AppConfig from '../../config/config.js';
