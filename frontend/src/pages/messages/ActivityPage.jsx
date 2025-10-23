@@ -151,9 +151,9 @@ const ActivityPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-white">
       {/* Header */}
-      <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
+      <div className="flex-shrink-0 bg-white px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <button
@@ -184,7 +184,7 @@ const ActivityPage = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
           </div>
         ) : activities.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center px-6">
+          <div className="flex flex-col items-center justify-center h-full text-center px-6 bg-white">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
               <Bell className="h-8 w-8 text-red-500" />
             </div>
