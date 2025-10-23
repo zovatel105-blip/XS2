@@ -207,7 +207,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
         <form id="edit-profile-form" onSubmit={handleSubmit} className="min-h-full">
           
           {/* Foto de perfil hero section */}
-          <div className="bg-gradient-to-b from-blue-50 to-white px-6 py-12">
+          <div className="px-6 py-12" style={{background: 'linear-gradient(to bottom, rgba(176, 97, 255, 0.1), white)'}}>
             <div className="flex flex-col items-center">
               <div className="relative group mb-6">
                 {/* Avatar clickeable con overlay de cámara */}
