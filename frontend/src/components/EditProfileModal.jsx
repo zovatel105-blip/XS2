@@ -341,7 +341,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
             type="submit"
             form="edit-profile-form"
             disabled={loading}
-            className="flex-2 h-14 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25 min-w-[140px]"
+            className="flex-2 h-14 rounded-2xl bg-gray-900 hover:bg-black text-white font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-900/25 min-w-[140px]"
           >
             {loading ? (
               <div className="flex items-center justify-center">
