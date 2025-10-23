@@ -1369,13 +1369,6 @@ const MessagesMainPage = () => {
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {/* Mensaje de inicio de conversación */}
-            <div className="flex justify-center">
-              <div className="bg-gray-100 px-4 py-2 rounded-lg">
-                <span className="text-sm text-gray-600">Conversación iniciada</span>
-              </div>
-            </div>
-            
             {/* Renderizar mensajes */}
             {messages.map((message, index) => {
               const isOwnMessage = message.sender_id === user?.id;
