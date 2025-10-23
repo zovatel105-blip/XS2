@@ -3551,21 +3551,17 @@ async def get_conversations(current_user: UserResponse = Depends(get_current_use
         }
         result.append(conversation_response)
     
-    # Get pending chat requests (both sent and received)
+    # Get pending chat requests where current user is the SENDER only
+    # Receivers will see these in the separate "Solicitudes de mensajes" section
     pending_requests = await db.chat_requests.find({
-        "$or": [
-            {"sender_id": current_user.id, "status": "pending"},
-            {"receiver_id": current_user.id, "status": "pending"}
-        ]
+        "sender_id": current_user.id,
+        "status": "pending"
     }).sort("created_at", -1).to_list(50)
     
     # Convert chat requests to conversation-like format
     for req in pending_requests:
-        is_sender = req["sender_id"] == current_user.id
-        other_user_id = req["receiver_id"] if is_sender else req["sender_id"]
-        
-        # Get other user info
-        other_user_data = await db.users.find_one({"id": other_user_id})
+        # Get receiver user info
+        other_user_data = await db.users.find_one({"id": req["receiver_id"]})
         if not other_user_data:
             continue
         
@@ -3577,14 +3573,14 @@ async def get_conversations(current_user: UserResponse = Depends(get_current_use
             "participants": [other_user],
             "last_message": req.get("message", "Nueva solicitud de chat"),
             "last_message_at": req.get("created_at"),
-            "unread_count": 0 if is_sender else 1,  # Unread for receiver
+            "unread_count": 0,  # No unread for sender
             "created_at": req["created_at"],
             # Chat request specific fields
             "is_chat_request": True,
             "chat_request_id": req["id"],
             "chat_request_status": "pending",
-            "is_request_sender": is_sender,
-            "is_request_receiver": not is_sender
+            "is_request_sender": True,
+            "is_request_receiver": False
         }
         
         result.append(request_conversation)
