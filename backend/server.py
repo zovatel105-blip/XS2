@@ -3708,6 +3708,43 @@ async def get_chat_request_messages(
         "is_chat_request_message": True
     }]
 
+@api_router.get("/messages/requests")
+async def get_message_requests(current_user: UserResponse = Depends(get_current_user)):
+    """Get message requests (pending chat requests) where current user is the RECEIVER"""
+    try:
+        # Get pending chat requests where current user is the receiver ONLY
+        requests = await db.chat_requests.find({
+            "receiver_id": current_user.id,
+            "status": "pending"
+        }).sort("created_at", -1).to_list(50)
+        
+        result = []
+        for req in requests:
+            # Get sender info
+            sender = await db.users.find_one({"id": req["sender_id"]})
+            if sender:
+                result.append({
+                    "id": req["id"],
+                    "sender": {
+                        "id": sender["id"],
+                        "username": sender["username"],
+                        "display_name": sender.get("display_name", sender["username"]),
+                        "avatar_url": sender.get("avatar_url"),
+                        "is_verified": sender.get("is_verified", False)
+                    },
+                    "message": req.get("message", ""),
+                    "preview": req.get("message", "")[:100] if req.get("message") else "Solicitud de mensaje",
+                    "created_at": req["created_at"],
+                    "updated_at": req.get("updated_at"),
+                    "unread": True
+                })
+        
+        return result
+        
+    except Exception as e:
+        print(f"❌ Error getting message requests: {str(e)}")
+        return []
+
 # =============  CHAT REQUEST ENDPOINTS =============
 
 @api_router.post("/chat-requests")
