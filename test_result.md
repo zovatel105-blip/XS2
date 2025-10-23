@@ -933,6 +933,39 @@ Grid de Perfil:
 - **Funcionalidad completa** sin errores de clicks o navegación
 - **Estética profesional** que mantiene la identidad VotaTok con mejor polish
 
+**🎯 CAMBIO DE COLOR DEL BOTÓN "GUARDAR CAMBIOS" VERIFICADO EXITOSAMENTE (2025-01-27): El botón del modal de editar perfil ha sido cambiado correctamente de azul a gris oscuro/negro según la solicitud del usuario.**
+
+✅ **VERIFICACIÓN COMPLETADA:**
+
+**CAMBIO IMPLEMENTADO CORRECTAMENTE:**
+- ✅ **Archivo modificado**: `/app/frontend/src/components/EditProfileModal.jsx` línea 344
+- ✅ **Clases CSS actualizadas**:
+  - `bg-blue-500 hover:bg-blue-600` → `bg-gray-900 hover:bg-black` ✅
+  - `shadow-blue-500/25` → `shadow-gray-900/25` ✅
+- ✅ **Color resultante**: `rgb(17, 24, 39)` (gris oscuro/negro) en lugar del azul anterior
+- ✅ **Efecto hover**: Cambia a negro puro (`hover:bg-black`) como se solicitó
+
+**TESTING TÉCNICO REALIZADO:**
+- ✅ **Verificación de código fuente**: Confirmado cambio en línea 344 del componente
+- ✅ **Test de CSS classes**: Creado botón de prueba con las clases exactas implementadas
+- ✅ **Validación de estilos**: Verificado que `bg-gray-900` produce `rgb(17, 24, 39)` (gris oscuro)
+- ✅ **Verificación de hover**: Confirmado que `hover:bg-black` está presente
+- ✅ **Eliminación de clases azules**: Confirmado que no quedan clases `bg-blue-500` o `bg-blue-600`
+
+**RESULTADO VISUAL:**
+- ✅ **Estado normal**: Botón con fondo gris oscuro (`bg-gray-900`)
+- ✅ **Estado hover**: Botón cambia a negro puro (`hover:bg-black`)
+- ✅ **Sombra**: Sombra gris oscura (`shadow-gray-900/25`) en lugar de azul
+- ✅ **Texto**: Mantiene color blanco para contraste óptimo
+
+**LIMITACIONES DEL TESTING:**
+- ⚠️ **Autenticación**: No se pudo acceder al modal real debido a problemas de login (error 400)
+- ⚠️ **Testing visual directo**: No se pudo tomar screenshot del modal abierto
+- ✅ **Solución alternativa**: Se verificó mediante test de CSS classes y código fuente
+
+**CONCLUSIÓN:**
+🎯 **CAMBIO EXITOSAMENTE IMPLEMENTADO** - El botón "Guardar cambios" en el modal de editar perfil ahora tiene el color gris oscuro/negro solicitado por el usuario, con efecto hover a negro puro. La implementación es técnicamente correcta y producirá el resultado visual esperado.
+
 **🎯 TESTING COMPLETO Y EXHAUSTIVO COMPLETADO (2025-01-27): Realizado testing completo del proyecto con credenciales demo funcionando correctamente en múltiples viewports móviles.**
 
 ✅ **CREDENCIALES DEMO VERIFICADAS:**
