@@ -341,7 +341,10 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
             type="submit"
             form="edit-profile-form"
             disabled={loading}
-            className="flex-2 h-14 rounded-2xl bg-gray-900 hover:bg-black text-white font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-900/25 min-w-[140px]"
+            className="flex-2 h-14 rounded-2xl text-white font-medium transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg min-w-[140px]"
+            style={{backgroundColor: '#B061FF', boxShadow: '0 10px 15px -3px rgba(176, 97, 255, 0.25)'}}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#9941E5'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#B061FF'}
           >
             {loading ? (
               <div className="flex items-center justify-center">
