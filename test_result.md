@@ -287,10 +287,27 @@ Feed Post Layout (Posts PROPIOS):
 - ✅ Botones "Aceptar" y "Rechazar" disponibles
 - ✅ Al hacer clic, se abre la conversación con opciones de aceptar/rechazar
 
+**FRONTEND - Diseño minimalista de botones:**
+3. ✅ **Botones dentro de la conversación** (MessagesPage.jsx):
+   - Diseño minimalista y limpio, sin texto innecesario
+   - Para RECEIVER: Botones "Aceptar" y "Rechazar" en fondo blanco
+   - Para SENDER: Mensaje simple "Esperando respuesta..." con botón "Cancelar solicitud"
+   - Sin emojis excesivos ni fondos de colores
+   - Centrados con max-width para mejor UX en desktop
+
+4. ✅ **Navegación desde RequestsPage**:
+   - Al hacer clic en solicitud → abre conversación en MessagesPage
+   - Los botones aparecen DENTRO de la conversación, no en la lista
+   - Diseño consistente y profesional
+
 **ARCHIVOS MODIFICADOS:**
 - `/app/backend/server.py`:
   - GET /api/conversations (líneas 3554-3575): Solo incluye solicitudes del sender
   - GET /api/messages/requests (restaurado): Solo retorna solicitudes para el receiver
+- `/app/frontend/src/pages/messages/RequestsPage.jsx`:
+  - Lista de solicitudes sin botones (solo para navegación)
+- `/app/frontend/src/pages/MessagesPage.jsx`:
+  - Botones minimalistas de aceptar/rechazar dentro de la conversación (líneas 829-867)
 
 **RESULTADO FINAL:**
 🎯 **SIN DUPLICACIÓN - FLUJO LIMPIO Y ORGANIZADO**:
