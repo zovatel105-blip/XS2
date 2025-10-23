@@ -9,9 +9,11 @@ import AppConfig from '../../config/config.js';
 const RequestsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [requestCount, setRequestCount] = useState(0);
+  const [processingRequest, setProcessingRequest] = useState(null);
 
   // Función para hacer peticiones autenticadas
   const apiRequest = async (endpoint, options = {}) => {
