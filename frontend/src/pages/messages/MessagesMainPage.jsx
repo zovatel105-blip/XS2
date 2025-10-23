@@ -1294,7 +1294,7 @@ const MessagesMainPage = () => {
           </div>
 
           {/* Perfil Central */}
-          <div className="flex-shrink-0 bg-white px-4 py-6 border-b border-gray-100">
+          <div className="flex-shrink-0 bg-white px-4 py-6">
             <div className="flex flex-col items-center text-center">
               {/* Logo principal del perfil */}
               <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4 relative overflow-hidden">
