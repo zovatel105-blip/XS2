@@ -42,8 +42,8 @@ const ResponsiveLayout = ({ children, onCreatePoll }) => {
 
   if (shouldUseTikTokLayout) {
     // Mobile TikTok mode - full screen without sidebars
-    // For create page, don't apply bg-black to allow gradients
-    const backgroundClass = isCreatePage ? '' : 'bg-black';
+    // For create page and story pages, don't apply bg-black to allow gradients
+    const backgroundClass = (isCreatePage || isStoryPage) ? '' : 'bg-black';
     
     return (
       <div className={`relative h-screen ${backgroundClass}`}>
