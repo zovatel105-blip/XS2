@@ -1,6 +1,6 @@
-import AppConfig from '../config';
+import AppConfig from '../config/config';
 
-const API_URL = AppConfig.API_BASE_URL;
+const API_URL = AppConfig.BACKEND_URL;
 
 class StoryService {
   // Get stories from followed users
