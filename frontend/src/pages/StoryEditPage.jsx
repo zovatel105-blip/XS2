@@ -252,32 +252,8 @@ const StoryEditPage = () => {
           </div>
         </div>
       )}
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
 
-            {/* Preview de imagen o video */}
-            <div className="relative w-full h-full rounded-3xl overflow-hidden bg-black/20 backdrop-blur-sm border-2 border-white/30">
-              {mediaType === 'image' ? (
-                <img
-                  src={mediaPreview}
-                  alt="Story preview"
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <video
-                  ref={videoRef}
-                  src={mediaPreview}
-                  className="w-full h-full object-contain"
-                  controls
-                />
-              )}
-
-              {/* Overlays de texto (si los hay) */}
-              {textOverlays.map((text, index) => (
-                <div
-                  key={index}
-                  className="absolute text-white font-bold text-2xl"
+      {/* Área inferior - Descripción y botón publicar */}
                   style={{
                     top: `${text.y}%`,
                     left: `${text.x}%`,
