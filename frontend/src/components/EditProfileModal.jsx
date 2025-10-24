@@ -222,7 +222,7 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
       </div>
 
       {/* Contenido scrolleable */}
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
         <form id="edit-profile-form" onSubmit={handleSubmit} className="min-h-full">
           
           {/* Foto de perfil hero section */}
