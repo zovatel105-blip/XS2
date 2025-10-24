@@ -253,20 +253,9 @@ const StoryEditPage = () => {
         </div>
       )}
 
-      {/* Área inferior - Descripción y botón publicar */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 pb-8 px-4">
+      {/* Área inferior - Botón publicar */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 pb-8 px-4 bg-gradient-to-t from-black via-black/95 to-transparent pt-8">
         <div className="max-w-md mx-auto space-y-4">
-          {/* Input de descripción */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/30">
-            <input
-              type="text"
-              placeholder="Añade una descripción..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-transparent text-white placeholder-white/60 px-6 py-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/40"
-            />
-          </div>
-
           {/* Botones de acción */}
           <div className="flex gap-3">
             {/* Botón "Tu historia" */}
