@@ -720,5 +720,60 @@ class FeedMenuResponse(BaseModel):
     message: str
     data: Optional[Dict[str, Any]] = None
 
+
+
+# =============  STORY MODELS =============
+
+class Story(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    media_type: str  # "image" or "video"
+    media_url: str
+    thumbnail_url: Optional[str] = None
+    duration: int = 86400  # Duration in seconds (default 24 hours)
+    text_overlays: List[Dict[str, Any]] = []  # Text overlays with position and style
+    stickers: List[Dict[str, Any]] = []  # Stickers with position
+    music_id: Optional[str] = None
+    views_count: int = 0
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: datetime = Field(default_factory=lambda: datetime.utcnow() + timedelta(hours=24))
+    is_active: bool = True
+
+class StoryCreate(BaseModel):
+    media_type: str
+    media_url: str
+    thumbnail_url: Optional[str] = None
+    text_overlays: List[Dict[str, Any]] = []
+    stickers: List[Dict[str, Any]] = []
+    music_id: Optional[str] = None
+    duration: int = 86400
+
+class StoryView(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    story_id: str
+    user_id: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class StoryResponse(BaseModel):
+    id: str
+    user: UserResponse
+    media_type: str
+    media_url: str
+    thumbnail_url: Optional[str] = None
+    text_overlays: List[Dict[str, Any]] = []
+    stickers: List[Dict[str, Any]] = []
+    music_id: Optional[str] = None
+    views_count: int
+    created_at: datetime
+    expires_at: datetime
+    is_active: bool
+    viewed_by_me: bool = False
+
+class StoriesGroupResponse(BaseModel):
+    user: UserResponse
+    stories: List[StoryResponse]
+    total_stories: int
+    has_unviewed: bool
+
 # Necesario para resolver referencia circular
 CommentResponse.model_rebuild()
