@@ -196,10 +196,12 @@ const QuickActionsMenu = ({ isVisible, onClose, onActionSelect }) => {
 
   const handleMoments = () => {
     toast({
-      title: "📸 Historias",
-      description: "¡Próximamente! Esta función estará disponible pronto",
-      duration: 4000,
+      title: "📸 Crear Historia",
+      description: "Abriendo editor de historias...",
+      duration: 2000,
     });
+    
+    navigate('/story-creation');
     
     if (onActionSelect) {
       onActionSelect('moments');
