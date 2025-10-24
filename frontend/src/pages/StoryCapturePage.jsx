@@ -87,13 +87,8 @@ const StoryCapturePage = () => {
       />
       
       {!previewUrl ? (
-        /* Estado inicial - solo botón circular blanco en el centro */
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-20 h-20 rounded-full bg-white hover:bg-gray-100 transition-all shadow-2xl"
-          >
-          </button>
+        /* Estado inicial - sin botón en el centro */
+        <div className="absolute inset-0">
         </div>
       ) : (
         /* Preview del contenido seleccionado - fullscreen con bordes curvos arriba y abajo */
