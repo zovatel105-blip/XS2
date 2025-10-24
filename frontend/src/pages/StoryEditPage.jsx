@@ -254,36 +254,6 @@ const StoryEditPage = () => {
       )}
 
       {/* Área inferior - Descripción y botón publicar */}
-                  style={{
-                    top: `${text.y}%`,
-                    left: `${text.x}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                >
-                  {text.content}
-                </div>
-              ))}
-
-              {/* Stickers (si los hay) */}
-              {stickers.map((sticker, index) => (
-                <div
-                  key={index}
-                  className="absolute text-4xl"
-                  style={{
-                    top: `${sticker.y}%`,
-                    left: `${sticker.x}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                >
-                  {sticker.emoji}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Área inferior - Descripción y botón publicar */}
       <div className="absolute bottom-0 left-0 right-0 z-30 pb-8 px-4">
         <div className="max-w-md mx-auto space-y-4">
           {/* Input de descripción */}
