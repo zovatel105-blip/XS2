@@ -29,7 +29,7 @@ const StoryCapturePage = () => {
   };
 
   // Ir a la página de edición
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!selectedFile) {
       toast({
         title: "Error",
@@ -39,12 +39,18 @@ const StoryCapturePage = () => {
       return;
     }
 
-    // Guardar en sessionStorage para pasar a la siguiente página
-    sessionStorage.setItem('storyMediaType', fileType);
-    sessionStorage.setItem('storyMediaPreview', previewUrl);
-    
-    // Navegar a página de edición
-    navigate('/story-edit');
+    // Convertir archivo a base64 para pasar a la siguiente página
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      sessionStorage.setItem('storyMediaType', fileType);
+      sessionStorage.setItem('storyMediaPreview', previewUrl);
+      sessionStorage.setItem('storyMediaFile', reader.result);
+      sessionStorage.setItem('storyFileName', selectedFile.name);
+      
+      // Navegar a página de edición
+      navigate('/story-edit');
+    };
+    reader.readAsDataURL(selectedFile);
   };
 
   return (
