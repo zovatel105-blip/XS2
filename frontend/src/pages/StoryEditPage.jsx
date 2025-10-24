@@ -14,16 +14,20 @@ import {
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
-const StoryCreationPage = () => {
+const StoryEditPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
 
+  // Obtener datos de sessionStorage
+  const storedMediaType = sessionStorage.getItem('storyMediaType');
+  const storedMediaPreview = sessionStorage.getItem('storyMediaPreview');
+
   // Estados principales
   const [mediaFile, setMediaFile] = useState(null);
-  const [mediaType, setMediaType] = useState(null); // 'image' o 'video'
-  const [mediaPreview, setMediaPreview] = useState(null);
+  const [mediaType, setMediaType] = useState(storedMediaType || null); // 'image' o 'video'
+  const [mediaPreview, setMediaPreview] = useState(storedMediaPreview || null);
   const [description, setDescription] = useState('');
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [textOverlays, setTextOverlays] = useState([]);
