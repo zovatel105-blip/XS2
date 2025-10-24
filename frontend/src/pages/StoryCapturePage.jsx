@@ -134,50 +134,79 @@ const StoryCapturePage = () => {
       )}
 
       {/* Barra inferior */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 bg-black pb-8 px-4">
-        <div className="flex items-center justify-between max-w-md mx-auto">
-          {/* Modo seleccionado */}
-          <div className="flex items-center gap-6">
-            <button className="text-white/50 text-sm font-medium">
-              TÁNER
-            </button>
-            <button className="text-white text-base font-bold">
-              HISTORIA
-            </button>
-            <button className="text-white/50 text-sm font-medium">
-              REEL
-            </button>
-          </div>
+      <div className="absolute bottom-0 left-0 right-0 z-30 bg-black">
+        {previewUrl ? (
+          /* Barra inferior con imagen cargada - descripción y botones */
+          <div className="px-4 pb-6 space-y-4">
+            {/* Input de descripción */}
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="Añade una descripción..."
+                className="w-full bg-transparent text-white text-sm placeholder-white/50 px-0 py-2 border-b border-white/20 focus:outline-none focus:border-white/40 transition-colors"
+              />
+            </div>
 
-          {/* Botón de captura/siguiente */}
-          <div className="flex items-center gap-4">
-            {previewUrl && (
+            {/* Botones de acción */}
+            <div className="flex items-center gap-3">
+              {/* Botón "Tu historia" */}
               <button
                 onClick={handleNext}
-                className="w-14 h-14 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition-all"
+                className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-full transition-all flex items-center justify-center gap-2"
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+                  <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
+                    <span className="text-white text-xs">📸</span>
+                  </div>
+                </div>
+                <span>Tu historia</span>
+              </button>
+
+              {/* Botón siguiente (flecha) */}
+              <button
+                onClick={handleNext}
+                className="w-12 h-12 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition-all"
               >
                 <svg className="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
               </button>
-            )}
-            
-            {!previewUrl && (
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-16 h-16 rounded-full border-4 border-white bg-transparent flex items-center justify-center hover:bg-white/10 transition-all"
-              >
-                <div className="w-14 h-14 rounded-full bg-white"></div>
-              </button>
-            )}
+            </div>
           </div>
+        ) : (
+          /* Barra inferior sin imagen - controles de captura */
+          <div className="flex items-center justify-between px-4 pb-8">
+            {/* Modo seleccionado */}
+            <div className="flex items-center gap-6">
+              <button className="text-white/50 text-sm font-medium">
+                TÁNER
+              </button>
+              <button className="text-white text-base font-bold">
+                HISTORIA
+              </button>
+              <button className="text-white/50 text-sm font-medium">
+                REEL
+              </button>
+            </div>
 
-          {/* Preview de historias anteriores */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                <span className="text-white text-xs">📸</span>
+            {/* Botón de captura */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-16 h-16 rounded-full border-4 border-white bg-transparent flex items-center justify-center hover:bg-white/10 transition-all"
+            >
+              <div className="w-14 h-14 rounded-full bg-white"></div>
+            </button>
+
+            {/* Preview de historias anteriores */}
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+                <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
+                  <span className="text-white text-xs">📸</span>
+                </div>
               </div>
+            </div>
+          </div>
+        )}
             </div>
           </div>
         </div>
