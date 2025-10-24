@@ -34,10 +34,11 @@ const ResponsiveLayout = ({ children, onCreatePoll }) => {
   const isFeedPage = location.pathname === '/feed';
   const isExplorePage = location.pathname === '/explore';
   const isCreatePage = location.pathname === '/create';
-  const shouldUseTikTokLayout = (isFeedPage || isExplorePage || isCreatePage) && isTikTokMode;
+  const isStoryPage = location.pathname === '/story-creation' || location.pathname === '/story-edit';
+  const shouldUseTikTokLayout = (isFeedPage || isExplorePage || isCreatePage || isStoryPage) && isTikTokMode;
   
-  // Force hide RightSideNavigation on create page regardless of other conditions
-  const shouldHideRightNavigation = hideRightNavigation || isCreatePage;
+  // Force hide RightSideNavigation on create page and story pages regardless of other conditions
+  const shouldHideRightNavigation = hideRightNavigation || isCreatePage || isStoryPage;
 
   if (shouldUseTikTokLayout) {
     // Mobile TikTok mode - full screen without sidebars
