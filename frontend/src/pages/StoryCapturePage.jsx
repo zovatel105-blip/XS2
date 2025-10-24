@@ -114,7 +114,7 @@ const StoryCapturePage = () => {
         </div>
       ) : (
         /* Preview del contenido seleccionado - fullscreen como TikTok/Instagram */
-        <div className="absolute top-16 left-0 right-0 bottom-52">
+        <div className="absolute top-16 left-0 right-0 bottom-44">
           <div className="relative w-full h-full bg-black">
             {fileType === 'image' ? (
               <img
