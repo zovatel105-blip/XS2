@@ -145,7 +145,7 @@ function AppContent() {
             <Route path="/create" element={<ContentCreationPage />} />
             <Route path="/content-publish" element={<ContentPublishPage />} />
             <Route path="/following" element={<FollowingPage />} />
-            {/* <Route path="/story-creation" element={<StoryCreationPage />} /> Stories feature disabled */}
+            <Route path="/story-creation" element={<StoryCreationPage />} />
           </Routes>
 
           <Toaster />
