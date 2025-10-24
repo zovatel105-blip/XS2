@@ -207,9 +207,6 @@ const StoryCapturePage = () => {
             </div>
           </div>
         )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
