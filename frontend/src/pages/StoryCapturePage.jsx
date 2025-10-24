@@ -134,10 +134,10 @@ const StoryCapturePage = () => {
       )}
 
       {/* Barra inferior */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 bg-black">
+      <div className="absolute bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-black via-black/95 to-transparent pt-8">
         {previewUrl ? (
           /* Barra inferior con imagen cargada - descripción y botones */
-          <div className="px-4 pb-6 space-y-4">
+          <div className="px-4 pb-5 space-y-3 bg-black">
             {/* Input de descripción */}
             <div className="w-full">
               <input
@@ -175,7 +175,7 @@ const StoryCapturePage = () => {
           </div>
         ) : (
           /* Barra inferior sin imagen - controles de captura */
-          <div className="flex items-center justify-between px-4 pb-8">
+          <div className="flex items-center justify-between px-4 pb-6 bg-black">
             {/* Modo seleccionado */}
             <div className="flex items-center gap-6">
               <button className="text-white/50 text-sm font-medium">
