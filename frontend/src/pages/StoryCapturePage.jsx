@@ -78,6 +78,14 @@ const StoryCapturePage = () => {
       </div>
 
       {/* Área central - preview o prompt de captura */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,video/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+      
       {!previewUrl ? (
         <div className="absolute inset-0 flex items-center justify-center pt-20 pb-32">
           {/* Estado inicial - sin contenido */}
