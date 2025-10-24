@@ -8706,7 +8706,7 @@ async def delete_recent_search(
 
 # =============  STORY ENDPOINTS =============
 
-@api_router.post("/api/stories", response_model=StoryResponse, tags=["Stories"])
+@api_router.post("/stories", response_model=StoryResponse, tags=["Stories"])
 async def create_story(
     story: StoryCreate,
     current_user: User = Depends(get_current_user)
@@ -8740,7 +8740,7 @@ async def create_story(
         logger.error(f"Error creating story: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create story")
 
-@api_router.get("/api/stories", response_model=List[StoriesGroupResponse], tags=["Stories"])
+@api_router.get("/stories", response_model=List[StoriesGroupResponse], tags=["Stories"])
 async def get_stories(
     current_user: User = Depends(get_current_user)
 ):
@@ -8826,7 +8826,7 @@ async def get_stories(
         logger.error(f"Error getting stories: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get stories")
 
-@api_router.get("/api/stories/user/{user_id}", response_model=StoriesGroupResponse, tags=["Stories"])
+@api_router.get("/stories/user/{user_id}", response_model=StoriesGroupResponse, tags=["Stories"])
 async def get_user_stories(
     user_id: str,
     current_user: User = Depends(get_current_user)
@@ -8888,7 +8888,7 @@ async def get_user_stories(
         logger.error(f"Error getting user stories: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get user stories")
 
-@api_router.post("/api/stories/{story_id}/view", tags=["Stories"])
+@api_router.post("/stories/{story_id}/view", tags=["Stories"])
 async def view_story(
     story_id: str,
     current_user: User = Depends(get_current_user)
@@ -8931,7 +8931,7 @@ async def view_story(
         logger.error(f"Error viewing story: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to view story")
 
-@api_router.delete("/api/stories/{story_id}", tags=["Stories"])
+@api_router.delete("/stories/{story_id}", tags=["Stories"])
 async def delete_story(
     story_id: str,
     current_user: User = Depends(get_current_user)
@@ -8960,7 +8960,7 @@ async def delete_story(
         logger.error(f"Error deleting story: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to delete story")
 
-@api_router.get("/api/stories/{story_id}/views", tags=["Stories"])
+@api_router.get("/stories/{story_id}/views", tags=["Stories"])
 async def get_story_viewers(
     story_id: str,
     current_user: User = Depends(get_current_user)
@@ -9006,7 +9006,7 @@ async def get_story_viewers(
         raise HTTPException(status_code=500, detail="Failed to get story viewers")
 
 
-@api_router.post("/api/stories/upload", tags=["Stories"])
+@api_router.post("/stories/upload", tags=["Stories"])
 async def upload_story_media(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)

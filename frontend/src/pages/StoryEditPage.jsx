@@ -23,6 +23,8 @@ const StoryEditPage = () => {
   // Obtener datos de sessionStorage
   const storedMediaType = sessionStorage.getItem('storyMediaType');
   const storedMediaPreview = sessionStorage.getItem('storyMediaPreview');
+  const storedMediaFile = sessionStorage.getItem('storyMediaFile');
+  const storedFileName = sessionStorage.getItem('storyFileName');
 
   // Estados principales
   const [mediaFile, setMediaFile] = useState(null);
@@ -32,6 +34,7 @@ const StoryEditPage = () => {
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [textOverlays, setTextOverlays] = useState([]);
   const [stickers, setStickers] = useState([]);
+  const [isPublishing, setIsPublishing] = useState(false);
   
   // Estados de modales
   const [showTextEditor, setShowTextEditor] = useState(false);
@@ -62,25 +65,112 @@ const StoryEditPage = () => {
   };
 
   // Publicar historia
-  const handlePublishStory = () => {
-    if (!mediaFile) {
+  const handlePublishStory = async () => {
+    if (!storedMediaFile) {
       toast({
         title: "Error",
-        description: "Debes añadir una foto o video para tu historia",
+        description: "No hay contenido para publicar",
         variant: "destructive"
       });
       return;
     }
 
-    // Por ahora solo mostramos confirmación (frontend only)
-    toast({
-      title: "¡Historia publicada!",
-      description: "Tu historia se ha publicado exitosamente",
-    });
+    setIsPublishing(true);
 
-    setTimeout(() => {
-      navigate('/');
-    }, 1500);
+    try {
+      const token = localStorage.getItem('token');
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+
+      // 1. Convertir base64 a Blob
+      const base64Data = storedMediaFile.split(',')[1];
+      const mimeType = storedMediaFile.split(',')[0].split(':')[1].split(';')[0];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: mimeType });
+
+      // Crear File con el tipo correcto
+      const fileName = storedFileName || 'story.' + (mediaType === 'image' ? 'jpg' : 'mp4');
+      const file = new File([blob], fileName, { type: mimeType });
+
+      console.log('Subiendo archivo:', fileName, 'tipo:', mimeType, 'tamaño:', blob.size);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const uploadResponse = await fetch(`${backendUrl}/api/stories/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json().catch(() => ({}));
+        console.error('Error en upload:', errorData);
+        throw new Error(errorData.detail || 'Error al subir el archivo');
+      }
+
+      const uploadData = await uploadResponse.json();
+      console.log('Upload exitoso:', uploadData);
+
+      // 2. Crear la historia
+      const storyData = {
+        media_type: uploadData.media_type,
+        media_url: uploadData.media_url,
+        thumbnail_url: uploadData.thumbnail_url,
+        text_overlays: textOverlays,
+        stickers: stickers,
+        music_id: selectedMusic?.id || null,
+        duration: 86400
+      };
+
+      console.log('Creando historia:', storyData);
+
+      const createResponse = await fetch(`${backendUrl}/api/stories`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(storyData)
+      });
+
+      if (!createResponse.ok) {
+        const errorData = await createResponse.json().catch(() => ({}));
+        console.error('Error al crear historia:', errorData);
+        throw new Error(errorData.detail || 'Error al crear la historia');
+      }
+
+      // Limpiar sessionStorage
+      sessionStorage.removeItem('storyMediaType');
+      sessionStorage.removeItem('storyMediaPreview');
+      sessionStorage.removeItem('storyMediaFile');
+      sessionStorage.removeItem('storyFileName');
+
+      toast({
+        title: "¡Historia publicada!",
+        description: "Tu historia se ha publicado exitosamente",
+      });
+
+      setTimeout(() => {
+        navigate('/feed');
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error al publicar historia:', error);
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo publicar la historia. Intenta de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   return (
@@ -257,9 +347,12 @@ const StoryEditPage = () => {
             {/* Botón "Tu historia" minimalista */}
             <button
               onClick={handlePublishStory}
-              disabled={!mediaFile}
-              className="w-14 h-14 rounded-full bg-white hover:bg-gray-100 disabled:bg-white/40 disabled:cursor-not-allowed transition-all shadow-2xl"
+              disabled={!storedMediaFile || isPublishing}
+              className="w-14 h-14 rounded-full bg-white hover:bg-gray-100 disabled:bg-white/40 disabled:cursor-not-allowed transition-all shadow-2xl flex items-center justify-center"
             >
+              {isPublishing ? (
+                <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-800 rounded-full animate-spin"></div>
+              ) : null}
             </button>
           </div>
 

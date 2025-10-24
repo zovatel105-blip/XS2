@@ -12,7 +12,7 @@ import ShareModal from '../components/ShareModal';
 import StatisticsModal from '../components/StatisticsModal';
 import TikTokProfileGrid from '../components/TikTokProfileGrid';
 import TikTokScrollView from '../components/TikTokScrollView';
-// import StoryViewer from '../components/StoryViewer'; // Removed - Stories feature disabled
+import StoriesViewer from '../components/StoriesViewer';
 import { 
   Settings, Users, Vote, Trophy, Heart, Share, ArrowLeft, AtSign, Bookmark, LayoutDashboard, Check, 
   Share2, UserPlus, UserCheck, ChevronDown, Plus, BarChart3, Mail, MessageCircle, Send, Hash, Bell, BellOff, UserCircle, Link, X, Trash2, TrendingUp 
@@ -89,9 +89,9 @@ const ProfilePage = () => {
   const [followingLoading, setFollowingLoading] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
-  // const [userHasStories, setUserHasStories] = useState(false); // Removed - Stories feature disabled
-  // const [userStories, setUserStories] = useState([]); // Removed - Stories feature disabled
-  // const [showStoryViewer, setShowStoryViewer] = useState(false); // Removed - Stories feature disabled
+  const [userHasStories, setUserHasStories] = useState(false);
+  const [userStories, setUserStories] = useState([]);
+  const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [socialLinks, setSocialLinks] = useState({});
   const [savingSocialLinks, setSavingSocialLinks] = useState(false);
   const [showAddSocialModal, setShowAddSocialModal] = useState(false);
@@ -1696,15 +1696,20 @@ const ProfilePage = () => {
                 {/* Avatar - Centro */}
                 <div className="flex justify-center">
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24">
-                    {/* Stories feature removed - simple avatar display */}
-                    <div className="w-full h-full bg-white rounded-full overflow-hidden border-4 border-gray-100">
-                      <Avatar className="w-full h-full rounded-full">
-                        <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-lg sm:text-xl font-medium">
-                          {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
+                    {/* Avatar with story ring */}
+                    <button
+                      onClick={() => userHasStories && setShowStoryViewer(true)}
+                      className={`w-full h-full rounded-full overflow-hidden ${userHasStories ? 'p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 cursor-pointer' : 'border-4 border-gray-100'}`}
+                    >
+                      <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                        <Avatar className="w-full h-full rounded-full">
+                          <AvatarImage src={displayUser?.avatar} alt={displayUser?.displayName} className="object-cover" />
+                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-lg sm:text-xl font-medium">
+                            {displayUser?.displayName ? displayUser.displayName.charAt(0).toUpperCase() : 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                    </button>
                   </div>
                 </div>
                 
