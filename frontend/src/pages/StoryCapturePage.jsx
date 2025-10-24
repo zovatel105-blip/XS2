@@ -114,7 +114,7 @@ const StoryCapturePage = () => {
         </div>
       ) : (
         /* Preview del contenido seleccionado - fullscreen con bordes curvos arriba y abajo */
-        <div className="absolute top-0 left-0 right-0 bottom-40">
+        <div className="absolute top-0 left-0 right-0 bottom-32">
           <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden">
             {fileType === 'image' ? (
               <img
