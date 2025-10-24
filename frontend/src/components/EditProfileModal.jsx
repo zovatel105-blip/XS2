@@ -17,6 +17,8 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [tempImageForCrop, setTempImageForCrop] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const scrollContainerRef = useRef(null);
   const [formData, setFormData] = useState({
     display_name: '',
     bio: '',
@@ -34,6 +36,20 @@ const EditProfileModal = ({ isOpen, onClose, onProfileUpdate }) => {
       });
     }
   }, [isOpen, user]);
+
+  // Detectar scroll para cambiar el fondo del header
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      // Si el scroll es mayor a 150px (después de la sección lila), cambiar a blanco
+      setIsScrolled(scrollContainer.scrollTop > 150);
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll);
+    return () => scrollContainer.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
