@@ -84,9 +84,9 @@ const StoryEditPage = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-orange-400 via-pink-500 to-red-500 overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black overflow-hidden">
       {/* Header con botones circulares */}
-      <div className="absolute top-0 left-0 right-0 z-30 pt-4 px-4">
+      <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
         <div className="flex items-center justify-between gap-2">
           {/* Botón volver */}
           <button
