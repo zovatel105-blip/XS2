@@ -147,10 +147,69 @@ const StoryEditPage = () => {
         </div>
       </div>
 
-      {/* Área de contenido central */}
-      <div className="absolute inset-0 flex items-center justify-center p-4 pt-24 pb-48">
-        {!mediaPreview ? (
-          /* Estado inicial - sin contenido */
+      {/* Área de contenido central con imagen */}
+      {mediaPreview ? (
+        /* Vista previa del contenido con bordes curvos */
+        <div className="absolute top-2 left-2 right-2 bottom-40">
+          <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden">
+            {/* Preview de imagen o video */}
+            {mediaType === 'image' ? (
+              <img
+                src={mediaPreview}
+                alt="Story preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                src={mediaPreview}
+                className="w-full h-full object-cover"
+                controls
+              />
+            )}
+
+            {/* Botón para eliminar media */}
+            <button
+              onClick={handleRemoveMedia}
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Overlays de texto (si los hay) */}
+            {textOverlays.map((text, index) => (
+              <div
+                key={index}
+                className="absolute text-white font-bold text-2xl"
+                style={{
+                  top: `${text.y}%`,
+                  left: `${text.x}%`,
+                  transform: 'translate(-50%, -50%)'
+                }}
+              >
+                {text.content}
+              </div>
+            ))}
+
+            {/* Stickers (si los hay) */}
+            {stickers.map((sticker, index) => (
+              <div
+                key={index}
+                className="absolute text-4xl"
+                style={{
+                  top: `${sticker.y}%`,
+                  left: `${sticker.x}%`,
+                  transform: 'translate(-50%, -50%)'
+                }}
+              >
+                {sticker.emoji}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Estado inicial - sin contenido */
+        <div className="absolute inset-0 flex items-center justify-center p-4 pt-24 pb-48">
           <div className="w-full max-w-md">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 text-center border-2 border-white/30">
               <div className="mb-6">
@@ -191,13 +250,8 @@ const StoryEditPage = () => {
               </div>
             </div>
           </div>
-        ) : (
-          /* Vista previa del contenido */
-          <div className="relative w-full max-w-md h-full">
-            {/* Botón para eliminar media */}
-            <button
-              onClick={handleRemoveMedia}
-              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+        </div>
+      )}
             >
               <X className="w-5 h-5 text-white" />
             </button>
