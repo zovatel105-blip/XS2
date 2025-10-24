@@ -113,19 +113,19 @@ const StoryCapturePage = () => {
           </div>
         </div>
       ) : (
-        /* Preview del contenido seleccionado - ocupa todo el espacio dejando inferior libre */
-        <div className="absolute top-16 left-0 right-0 bottom-52 flex items-center justify-center p-4">
-          <div className="relative w-full h-full bg-white/10 backdrop-blur-sm rounded-3xl overflow-hidden border-2 border-white/30">
+        /* Preview del contenido seleccionado - fullscreen como TikTok/Instagram */
+        <div className="absolute top-16 left-0 right-0 bottom-52">
+          <div className="relative w-full h-full bg-black">
             {fileType === 'image' ? (
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
               />
             ) : (
               <video
                 src={previewUrl}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
                 controls
               />
             )}
