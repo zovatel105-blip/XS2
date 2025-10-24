@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import pollService from '../services/pollService';
 import userService from '../services/userService';
-// import storyService from '../services/storyService'; // Removed - Stories feature disabled
+import storyService from '../services/storyService';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useFollow } from '../contexts/FollowContext';
