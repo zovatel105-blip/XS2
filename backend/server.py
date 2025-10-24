@@ -9002,6 +9002,8 @@ async def get_story_viewers(
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"Error getting story viewers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get story viewers")
 
 
 @api_router.post("/api/stories/upload", tags=["Stories"])
