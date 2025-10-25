@@ -474,31 +474,41 @@ const TikTokPollCard = ({
                   handleUserClick(poll.authorUser || { username: poll.author?.username || poll.author?.display_name || 'usuario' });
                 }}
                 className={cn(
-                  "relative transition-transform duration-200 hover:scale-110",
-                  authorHasStories ? "p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full" : ""
+                  "w-12 h-12 rounded-full overflow-hidden relative transition-transform duration-200 hover:scale-110",
+                  authorHasStories 
+                    ? "p-[2px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600" 
+                    : "ring-3 ring-yellow-400 shadow-lg shadow-yellow-400/50"
                 )}
               >
                 {/* Inner white border for story ring effect */}
                 {authorHasStories && (
-                  <div className="absolute inset-0 rounded-full bg-white p-[2px]">
-                    <div className="w-full h-full rounded-full bg-black" />
+                  <div className="w-full h-full bg-black rounded-full overflow-hidden p-[2px]">
+                    <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                      <Avatar className="w-full h-full rounded-full">
+                        <AvatarImage 
+                          src={poll.author?.avatar_url && poll.author.avatar_url !== null ? poll.author.avatar_url : undefined} 
+                          className="object-cover" 
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 font-bold">
+                          {(poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'U').charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
                   </div>
                 )}
                 
-                <Avatar className={cn(
-                  "w-12 h-12 relative",
-                  authorHasStories 
-                    ? "ring-0" 
-                    : "ring-3 ring-yellow-400 shadow-lg shadow-yellow-400/50"
-                )}>
-                  <AvatarImage 
-                    src={poll.author?.avatar_url && poll.author.avatar_url !== null ? poll.author.avatar_url : undefined} 
-                    className="object-cover" 
-                  />
-                  <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 font-bold">
-                    {(poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'U').charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                {/* Normal avatar when no stories */}
+                {!authorHasStories && (
+                  <Avatar className="w-full h-full rounded-full">
+                    <AvatarImage 
+                      src={poll.author?.avatar_url && poll.author.avatar_url !== null ? poll.author.avatar_url : undefined} 
+                      className="object-cover" 
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 font-bold">
+                      {(poll.author?.display_name || poll.author?.username || poll.authorUser?.displayName || 'U').charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
               </button>
 
               {/* Botón separado para seguir - Solo se muestra si no se está siguiendo y no es el usuario actual */}
