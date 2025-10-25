@@ -473,9 +473,24 @@ const TikTokPollCard = ({
                   e.stopPropagation();
                   handleUserClick(poll.authorUser || { username: poll.author?.username || poll.author?.display_name || 'usuario' });
                 }}
-                className="relative transition-transform duration-200 hover:scale-110"
+                className={cn(
+                  "relative transition-transform duration-200 hover:scale-110",
+                  authorHasStories ? "p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full" : ""
+                )}
               >
-                <Avatar className="ring-3 ring-yellow-400 shadow-lg shadow-yellow-400/50 w-12 h-12 relative">
+                {/* Inner white border for story ring effect */}
+                {authorHasStories && (
+                  <div className="absolute inset-0 rounded-full bg-white p-[2px]">
+                    <div className="w-full h-full rounded-full bg-black" />
+                  </div>
+                )}
+                
+                <Avatar className={cn(
+                  "w-12 h-12 relative",
+                  authorHasStories 
+                    ? "ring-0" 
+                    : "ring-3 ring-yellow-400 shadow-lg shadow-yellow-400/50"
+                )}>
                   <AvatarImage 
                     src={poll.author?.avatar_url && poll.author.avatar_url !== null ? poll.author.avatar_url : undefined} 
                     className="object-cover" 
