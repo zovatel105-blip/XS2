@@ -258,11 +258,18 @@ const TikTokPollCard = ({
     const loadAuthorStories = async () => {
       try {
         if (!authorUserId) return;
-        const hasStories = await storyService.checkUserHasStories(authorUserId);
-        setAuthorHasStories(hasStories);
+        const storiesResponse = await storyService.getUserStories(authorUserId);
+        if (storiesResponse && storiesResponse.total_stories > 0) {
+          setAuthorHasStories(true);
+          setAuthorStoriesData(storiesResponse);
+        } else {
+          setAuthorHasStories(false);
+          setAuthorStoriesData(null);
+        }
       } catch (error) {
         console.error('Error loading author stories:', error);
         setAuthorHasStories(false);
+        setAuthorStoriesData(null);
       }
     };
     loadAuthorStories();
