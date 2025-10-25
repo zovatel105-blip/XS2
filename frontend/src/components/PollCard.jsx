@@ -11,6 +11,7 @@ import { useAddiction } from '../contexts/AddictionContext';
 import CommentsModal from './CommentsModal';
 import ShareModal from './ShareModal';
 import { useShare } from '../hooks/useShare';
+import storyService from '../services/storyService';
 
 // Helper function to render text with clickable hashtags
 const renderTextWithHashtags = (text, navigate) => {
