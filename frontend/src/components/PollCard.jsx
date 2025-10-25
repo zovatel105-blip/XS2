@@ -373,11 +373,18 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
       try {
         const authorId = poll.author?.id;
         if (!authorId) return;
-        const hasStories = await storyService.checkUserHasStories(authorId);
-        setAuthorHasStories(hasStories);
+        const storiesResponse = await storyService.getUserStories(authorId);
+        if (storiesResponse && storiesResponse.total_stories > 0) {
+          setAuthorHasStories(true);
+          setAuthorStoriesData(storiesResponse);
+        } else {
+          setAuthorHasStories(false);
+          setAuthorStoriesData(null);
+        }
       } catch (error) {
         console.error('Error loading author stories in PollCard:', error);
         setAuthorHasStories(false);
+        setAuthorStoriesData(null);
       }
     };
     loadAuthorStories();
