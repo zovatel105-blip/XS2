@@ -709,18 +709,18 @@ const FollowingPage = () => {
                     onClick={() => handleStoryClick(index)}
                     className="flex-shrink-0 relative"
                   >
-                    {/* Story ring container - outer gradient ring */}
+                    {/* Story ring container - exact same as ProfilePage */}
                     <div className={`w-10 h-10 rounded-full overflow-hidden ${
                       hasStories && !story.hasViewed
-                        ? 'p-[2px] bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000]'
+                        ? 'p-[3px] bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000]'
                         : hasStories && story.hasViewed
-                        ? 'p-[2px] bg-gray-300'
-                        : 'p-[2px] bg-gray-200'
+                        ? 'p-[3px] bg-gray-300'
+                        : 'p-[3px] bg-gray-200'
                     }`}>
-                      {/* Minimal white space between ring and avatar */}
-                      <div className="w-full h-full bg-white rounded-full overflow-hidden p-[1.5px]">
+                      {/* White space between ring and avatar - exact same as ProfilePage */}
+                      <div className="w-full h-full bg-white rounded-full overflow-hidden p-[2px]">
                         {/* Avatar container */}
-                        <div className="w-full h-full rounded-full overflow-hidden relative bg-white">
+                        <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
                           {/* Avatar image if available */}
                           {story.userAvatar ? (
                             <img
