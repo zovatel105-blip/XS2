@@ -565,18 +565,21 @@ const ProfilePage = () => {
       try {
         const targetUserId = userId || authUser?.id;
         if (!targetUserId) return;
-        const hasStoriesResponse = await storyService.checkUserHasStories(targetUserId);
-        setUserHasStories(hasStoriesResponse);
-        if (hasStoriesResponse) {
-          const storiesResponse = await storyService.getUserStories(targetUserId);
+        const storiesResponse = await storyService.getUserStories(targetUserId);
+        if (storiesResponse && storiesResponse.total_stories > 0) {
+          setUserHasStories(true);
           setUserStories(storiesResponse?.stories || []);
+          setUserStoriesData(storiesResponse);
         } else {
+          setUserHasStories(false);
           setUserStories([]);
+          setUserStoriesData(null);
         }
       } catch (error) {
         console.error('Error loading user stories:', error);
         setUserHasStories(false);
         setUserStories([]);
+        setUserStoriesData(null);
       }
     };
     loadUserStories();
