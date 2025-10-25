@@ -1774,7 +1774,7 @@ const ProfilePage = () => {
                           ? "p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 cursor-pointer"
                           : userHasStories && !userStoriesData?.has_unviewed
                           ? "p-1 bg-gray-400 cursor-pointer"
-                          : "border-4 border-gray-100"
+                          : ""
                       )}
                     >
                       {userHasStories ? (
