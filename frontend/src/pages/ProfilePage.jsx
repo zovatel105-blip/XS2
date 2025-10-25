@@ -1725,8 +1725,25 @@ const ProfilePage = () => {
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24">
                     {/* Avatar with story ring */}
                     <button
-                      onClick={() => userHasStories && setShowStoryViewer(true)}
-                      className={`w-full h-full rounded-full overflow-hidden ${userHasStories ? 'p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 cursor-pointer' : 'border-4 border-gray-100'}`}
+                      onClick={() => {
+                        if (userHasStories) {
+                          if (userStoriesData?.has_unviewed) {
+                            // Has unviewed stories - open viewer
+                            setShowStoryViewer(true);
+                          } else {
+                            // All stories viewed - go to profile or open viewer
+                            setShowStoryViewer(true);
+                          }
+                        }
+                      }}
+                      className={cn(
+                        "w-full h-full rounded-full overflow-hidden",
+                        userHasStories && userStoriesData?.has_unviewed
+                          ? "p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 cursor-pointer"
+                          : userHasStories && !userStoriesData?.has_unviewed
+                          ? "p-1 bg-gray-400 cursor-pointer"
+                          : "border-4 border-gray-100"
+                      )}
                     >
                       <div className="w-full h-full bg-white rounded-full overflow-hidden">
                         <Avatar className="w-full h-full rounded-full">
