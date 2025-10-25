@@ -76,6 +76,59 @@ const FollowingPage = () => {
     loadFollowingPolls();
   }, [isAuthenticated, toast]);
 
+  // Load real stories from backend
+  useEffect(() => {
+    const loadRealStories = async () => {
+      if (!isAuthenticated) {
+        return;
+      }
+
+      try {
+        setLoadingStories(true);
+        const storiesData = await storyService.getStories();
+        
+        // Transform backend data to match StoryViewer format
+        const transformedStories = storiesData.map(group => ({
+          userId: group.user.id,
+          username: group.user.username || group.user.name || 'Usuario',
+          userAvatar: group.user.avatar || group.user.profilePicture || null,
+          hasViewed: !group.has_unviewed, // If has_unviewed is false, it means all are viewed
+          storiesCount: group.total_stories,
+          stories: group.stories.map(story => ({
+            id: story.id,
+            type: story.media_type,
+            url: story.media_url,
+            caption: story.text_overlays?.[0]?.text || null,
+            timeAgo: formatTimeAgo(new Date(story.created_at)),
+            viewedByMe: story.viewed_by_me
+          }))
+        }));
+
+        setRealStories(transformedStories);
+      } catch (err) {
+        console.error('Error loading stories:', err);
+        // Don't show error toast, just fail silently for stories
+      } finally {
+        setLoadingStories(false);
+      }
+    };
+
+    loadRealStories();
+  }, [isAuthenticated]);
+
+  // Helper function to format time ago
+  const formatTimeAgo = (date) => {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `Hace ${days}d`;
+    if (hours > 0) return `Hace ${hours}h`;
+    if (minutes > 0) return `Hace ${minutes}m`;
+    return 'Ahora';
+  };
+
   // Handle navigation state for pre-selected audio
   useEffect(() => {
     if (location.state?.createPoll) {
