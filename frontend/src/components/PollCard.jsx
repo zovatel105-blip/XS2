@@ -651,14 +651,13 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 <button
                   className={cn(
                     "group relative transition-transform duration-200 hover:scale-105",
-                    authorHasStories ? "w-10 h-10 rounded-full overflow-hidden p-[2px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600" : ""
+                    authorHasStories && authorStoriesData?.has_unviewed
+                      ? "w-10 h-10 rounded-full overflow-hidden p-[2px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600"
+                      : authorHasStories && !authorStoriesData?.has_unviewed
+                      ? "w-10 h-10 rounded-full overflow-hidden p-[2px] bg-gray-400"
+                      : ""
                   )}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Create a simple username from author name
-                    const username = poll.author.toLowerCase().replace(/\s+/g, '_');
-                    navigate(`/profile/${username}`);
-                  }}
+                  onClick={handleAvatarClick}
                 >
                   {authorHasStories ? (
                     <div className="w-full h-full bg-black rounded-full overflow-hidden p-[2px]">
