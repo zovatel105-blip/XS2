@@ -1188,6 +1188,15 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
         onClose={closeShareModal}
         content={shareModal.content}
       />
+      
+      {/* Story Viewer */}
+      {showAuthorStoryViewer && authorStoriesData && (
+        <StoriesViewer
+          storiesGroups={[authorStoriesData]}
+          onClose={handleStoryViewerClose}
+          initialUserIndex={0}
+        />
+      )}
     </motion.div>
   );
 };
