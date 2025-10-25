@@ -943,6 +943,15 @@ const TikTokPollCard = ({
         onClose={closeShareModal}
         content={shareModal.content}
       />
+      
+      {/* Story Viewer */}
+      {showAuthorStoryViewer && authorStoriesData && (
+        <StoriesViewer
+          storiesGroups={[authorStoriesData]}
+          onClose={handleStoryViewerClose}
+          initialUserIndex={0}
+        />
+      )}
     </div>
   );
 };
