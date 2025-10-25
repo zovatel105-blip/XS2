@@ -762,11 +762,6 @@ const FollowingPage = () => {
             onStoryView={handleStoryView}
           />
         )}
-            stories={demoStories}
-            initialIndex={selectedStoryIndex}
-            onClose={handleCloseStoryViewer}
-          />
-        )}
         
         <TikTokScrollView
           polls={polls}
