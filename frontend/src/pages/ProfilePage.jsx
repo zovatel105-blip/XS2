@@ -1771,7 +1771,7 @@ const ProfilePage = () => {
                       className={cn(
                         "w-full h-full rounded-full overflow-hidden",
                         userHasStories && userStoriesData?.has_unviewed
-                          ? "p-1 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 cursor-pointer"
+                          ? "p-1 bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000] cursor-pointer"
                           : userHasStories && !userStoriesData?.has_unviewed
                           ? "p-1 bg-gray-400 cursor-pointer"
                           : ""
