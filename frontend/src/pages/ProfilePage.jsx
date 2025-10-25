@@ -563,27 +563,45 @@ const ProfilePage = () => {
   useEffect(() => {
     const loadUserStories = async () => {
       try {
-        const targetUserId = userId || authUser?.id;
-        if (!targetUserId) return;
+        // Determine the correct user ID to use
+        let targetUserId;
+        
+        if (userId && viewedUser) {
+          // Viewing another user's profile - use viewedUser.id (real UUID)
+          targetUserId = viewedUser.id;
+        } else if (!userId && authUser) {
+          // Viewing own profile - use authUser.id
+          targetUserId = authUser.id;
+        } else {
+          // Still loading viewedUser or no user data available
+          console.log('⏳ Stories: Waiting for user data to load...');
+          return;
+        }
+        
+        console.log('📖 Loading stories for user:', targetUserId);
         const storiesResponse = await storyService.getUserStories(targetUserId);
+        console.log('📖 Stories response:', storiesResponse);
+        
         if (storiesResponse && storiesResponse.total_stories > 0) {
           setUserHasStories(true);
           setUserStories(storiesResponse?.stories || []);
           setUserStoriesData(storiesResponse);
+          console.log('✅ Stories loaded:', storiesResponse.total_stories, 'stories, has_unviewed:', storiesResponse.has_unviewed);
         } else {
           setUserHasStories(false);
           setUserStories([]);
           setUserStoriesData(null);
+          console.log('ℹ️ No stories found for user');
         }
       } catch (error) {
-        console.error('Error loading user stories:', error);
+        console.error('❌ Error loading user stories:', error);
         setUserHasStories(false);
         setUserStories([]);
         setUserStoriesData(null);
       }
     };
     loadUserStories();
-  }, [userId, authUser?.id]);
+  }, [userId, authUser?.id, viewedUser?.id]);
 
   const handleShareProfile = () => {
     // Intentar usar Web Share API primero (mejor para móviles)
