@@ -602,7 +602,10 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
             <div className="flex items-center justify-between p-4 pb-3 flex-shrink-0 bg-white/90 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <button
-                  className="group relative transition-transform duration-200 hover:scale-105"
+                  className={cn(
+                    "group relative transition-transform duration-200 hover:scale-105",
+                    authorHasStories ? "w-10 h-10 rounded-full overflow-hidden p-[2px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600" : ""
+                  )}
                   onClick={(e) => {
                     e.stopPropagation();
                     // Create a simple username from author name
@@ -610,12 +613,25 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                     navigate(`/profile/${username}`);
                   }}
                 >
-                  <Avatar className="ring-2 ring-blue-500/20 w-10 h-10 cursor-pointer">
-                    <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm">
-                      {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  {authorHasStories ? (
+                    <div className="w-full h-full bg-black rounded-full overflow-hidden p-[2px]">
+                      <div className="w-full h-full bg-white rounded-full overflow-hidden">
+                        <Avatar className="w-full h-full cursor-pointer">
+                          <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} className="object-cover" />
+                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm">
+                            {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                    </div>
+                  ) : (
+                    <Avatar className="ring-2 ring-blue-500/20 w-10 h-10 cursor-pointer">
+                      <AvatarImage src={poll.author?.avatar_url || "https://github.com/shadcn.png"} className="object-cover" />
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm">
+                        {(poll.author?.display_name || poll.author?.username || 'U').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                 </button>
                 <div>
                   <h3 className="font-semibold text-gray-900 text-sm">{poll.author?.display_name || poll.author?.username || 'Usuario'}</h3>
