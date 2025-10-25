@@ -516,7 +516,7 @@ const TikTokPollCard = ({
                 className={cn(
                   "w-12 h-12 rounded-full overflow-hidden relative transition-transform duration-200 hover:scale-110",
                   authorHasStories && authorStoriesData?.has_unviewed
-                    ? "p-[2px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600" 
+                    ? "p-[2px] bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000]" 
                     : authorHasStories && !authorStoriesData?.has_unviewed
                     ? "p-[2px] bg-gray-400"
                     : "ring-3 ring-yellow-400 shadow-lg shadow-yellow-400/50"
