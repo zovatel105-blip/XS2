@@ -251,6 +251,21 @@ const TikTokPollCard = ({
     }
   }, [authorUserId, currentUser, getFollowStatus, followStateVersion]);
 
+  // Load author stories status
+  useEffect(() => {
+    const loadAuthorStories = async () => {
+      try {
+        if (!authorUserId) return;
+        const hasStories = await storyService.checkUserHasStories(authorUserId);
+        setAuthorHasStories(hasStories);
+      } catch (error) {
+        console.error('Error loading author stories:', error);
+        setAuthorHasStories(false);
+      }
+    };
+    loadAuthorStories();
+  }, [authorUserId]);
+
   // SINCRONIZACIÓN COMPLETA DE AUDIO con detección mejorada
   useEffect(() => {
     const handleAudioSync = async () => {
