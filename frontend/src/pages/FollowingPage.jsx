@@ -700,7 +700,8 @@ const FollowingPage = () => {
                 
                 // Get initial for avatar
                 const username = story.username || 'U';
-                const initial = username.charAt(0).toUpperCase();
+                const displayName = story.username || 'Usuario';
+                const initial = displayName.charAt(0).toUpperCase();
                 
                 return (
                   <button
@@ -708,42 +709,48 @@ const FollowingPage = () => {
                     onClick={() => handleStoryClick(index)}
                     className="flex-shrink-0 relative"
                   >
-                    {/* Gradient ring for new stories, gray for viewed or no stories */}
-                    <div className={`w-10 h-10 rounded-full ${
-                      !hasStories 
-                        ? 'bg-gradient-to-br from-gray-200 to-gray-300' 
-                        : story.hasViewed 
-                          ? 'bg-gradient-to-br from-gray-300 to-gray-400' 
-                          : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400'
-                    } p-[2px]`}>
-                      <div className="w-full h-full rounded-full bg-white p-[1px] relative">
-                        {/* Avatar image if available, otherwise gradient with initial */}
-                        {story.userAvatar ? (
-                          <img
-                            src={story.userAvatar}
-                            alt={story.username}
-                            className="w-full h-full rounded-full object-cover"
-                            onError={(e) => {
-                              // Fallback to gradient with initial
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
-                            }}
-                          />
-                        ) : null}
-                        {/* Fallback gradient avatar with initial (like ProfilePage) */}
-                        <div 
-                          className={`w-full h-full rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white font-bold text-sm ${story.userAvatar ? 'hidden' : 'flex'}`}
-                          style={{ display: story.userAvatar ? 'none' : 'flex' }}
-                        >
-                          {initial}
-                        </div>
-                        
-                        {/* Plus button for own story when no stories exist */}
-                        {isOwnStory && !hasStories && (
-                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center border border-white">
-                            <Plus className="w-2 h-2 text-white" strokeWidth={3} />
+                    {/* Story ring container - same as ProfilePage */}
+                    <div className={`w-10 h-10 rounded-full overflow-hidden ${
+                      hasStories && !story.hasViewed
+                        ? 'p-[3px] bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000]'
+                        : hasStories && story.hasViewed
+                        ? 'p-[3px] bg-gray-300'
+                        : 'p-[3px] bg-gray-200'
+                    }`}>
+                      {/* White padding ring */}
+                      <div className="w-full h-full bg-white rounded-full overflow-hidden p-[2px]">
+                        {/* Avatar container */}
+                        <div className="w-full h-full bg-white rounded-full overflow-hidden relative">
+                          {/* Avatar image if available */}
+                          {story.userAvatar ? (
+                            <img
+                              src={story.userAvatar}
+                              alt={story.username}
+                              className="w-full h-full rounded-full object-cover"
+                              onError={(e) => {
+                                // Fallback to gradient with initial
+                                e.target.style.display = 'none';
+                                if (e.target.nextSibling) {
+                                  e.target.nextSibling.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : null}
+                          {/* Fallback gradient avatar with initial (like ProfilePage) */}
+                          <div 
+                            className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium text-xs ${story.userAvatar ? 'hidden' : 'flex'}`}
+                            style={{ display: story.userAvatar ? 'none' : 'flex' }}
+                          >
+                            {initial}
                           </div>
-                        )}
+                          
+                          {/* Plus button for own story when no stories exist */}
+                          {isOwnStory && !hasStories && (
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center border border-white">
+                              <Plus className="w-2 h-2 text-white" strokeWidth={3} />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </button>
