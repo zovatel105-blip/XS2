@@ -134,6 +134,9 @@ const TikTokPollCard = ({
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   
+  // Story state for author avatar ring
+  const [authorHasStories, setAuthorHasStories] = useState(false);
+  
   // Touch handlers for carousel navigation
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientX);
