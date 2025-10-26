@@ -8746,9 +8746,10 @@ async def get_stories(
 ):
     """Get stories from followed users (grouped by user)"""
     try:
-        # Get followed users
-        following_doc = await db.user_relationships.find_one({"user_id": current_user.id})
-        following_ids = following_doc.get("following", []) if following_doc else []
+        # Get followed users from follows collection
+        follows_cursor = db.follows.find({"follower_id": current_user.id})
+        follows_docs = await follows_cursor.to_list(length=1000)
+        following_ids = [doc["following_id"] for doc in follows_docs]
         
         logger.info(f"📖 [STORIES] User {current_user.id} is following {len(following_ids)} users: {following_ids}")
         
