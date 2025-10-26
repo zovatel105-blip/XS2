@@ -9073,8 +9073,8 @@ async def upload_story_media(
             content = await file.read()
             await f.write(content)
         
-        # Generate public URL
-        public_url = f"/uploads/stories/{unique_filename}"
+        # Generate public URL with /api prefix for proper routing
+        public_url = f"/api/uploads/stories/{unique_filename}"
         
         # Get dimensions if image
         width = height = None
@@ -9097,7 +9097,7 @@ async def upload_story_media(
                     ret, frame = cap.read()
                     if ret:
                         cv2.imwrite(str(thumbnail_path), frame)
-                        thumbnail_url = f"/uploads/stories/{thumbnail_filename}"
+                        thumbnail_url = f"/api/uploads/stories/{thumbnail_filename}"
                     cap.release()
                 except Exception as e:
                     logger.error(f"Error generating video thumbnail: {str(e)}")
