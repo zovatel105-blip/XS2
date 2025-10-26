@@ -748,34 +748,37 @@ const FollowingPage = () => {
                       </div>
                     ) : (
                       // Usuario sin historias - SIN borde, solo avatar con botón +
-                      <div className="w-10 h-10 rounded-full overflow-hidden relative">
-                        {/* Avatar image if available */}
-                        {story.userAvatar ? (
-                          <img
-                            src={story.userAvatar}
-                            alt={story.username}
-                            className="w-full h-full rounded-full object-cover"
-                            onError={(e) => {
-                              // Fallback to gradient with initial
-                              e.target.style.display = 'none';
-                              if (e.target.nextSibling) {
-                                e.target.nextSibling.style.display = 'flex';
-                              }
-                            }}
-                          />
-                        ) : null}
-                        {/* Fallback gradient avatar with initial (like ProfilePage) */}
-                        <div 
-                          className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium text-xs ${story.userAvatar ? 'hidden' : 'flex'}`}
-                          style={{ display: story.userAvatar ? 'none' : 'flex' }}
-                        >
-                          {initial}
+                      <div className="w-10 h-10 relative">
+                        {/* Avatar container */}
+                        <div className="w-full h-full rounded-full overflow-hidden">
+                          {/* Avatar image if available */}
+                          {story.userAvatar ? (
+                            <img
+                              src={story.userAvatar}
+                              alt={story.username}
+                              className="w-full h-full rounded-full object-cover"
+                              onError={(e) => {
+                                // Fallback to gradient with initial
+                                e.target.style.display = 'none';
+                                if (e.target.nextSibling) {
+                                  e.target.nextSibling.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : null}
+                          {/* Fallback gradient avatar with initial (like ProfilePage) */}
+                          <div 
+                            className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium text-xs ${story.userAvatar ? 'hidden' : 'flex'}`}
+                            style={{ display: story.userAvatar ? 'none' : 'flex' }}
+                          >
+                            {initial}
+                          </div>
                         </div>
                         
-                        {/* Plus button for own story when no stories exist */}
+                        {/* Plus button for own story when no stories exist - positioned to overlap slightly */}
                         {isOwnStory && (
-                          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white shadow-md">
-                            <Plus className="w-2 h-2 text-white" strokeWidth={3} />
+                          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-cyan-400 rounded-full flex items-center justify-center border-[2.5px] border-black shadow-lg">
+                            <Plus className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                           </div>
                         )}
                       </div>
