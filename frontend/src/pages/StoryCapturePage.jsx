@@ -291,14 +291,14 @@ const StoryCapturePage = () => {
     if (!file) return;
 
     const type = file.type.startsWith('image') ? 'image' : 'video';
-    setFileType(type);
-    setSelectedFile(file);
+    
+    stopCamera();
 
-    // Crear preview
+    // Crear preview y navegar directamente a edición
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreviewUrl(reader.result);
-      stopCamera();
+      const previewUrl = reader.result;
+      navigateToEdit(file, type, previewUrl);
     };
     reader.readAsDataURL(file);
   };
