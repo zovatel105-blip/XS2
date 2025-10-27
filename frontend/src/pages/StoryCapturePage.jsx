@@ -73,7 +73,7 @@ const StoryCapturePage = () => {
           width: { ideal: 1920 },
           height: { ideal: 1080 }
         },
-        audio: captureMode === 'video'
+        audio: true // Siempre con audio para poder grabar video
       };
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
