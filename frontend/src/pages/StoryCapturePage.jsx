@@ -253,13 +253,6 @@ const StoryCapturePage = () => {
 
   // Manejar captura/grabación según el modo
   const handleCapture = () => {
-    // Si la cámara no está disponible, abrir selector de archivo con captura
-    if (!cameraActive || cameraError) {
-      fileInputRef.current?.click();
-      return;
-    }
-    
-    // Si la cámara está activa, usar captura en vivo
     if (captureMode === 'photo') {
       capturePhoto();
     } else {
