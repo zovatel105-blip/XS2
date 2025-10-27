@@ -301,7 +301,19 @@ const StoryCapturePage = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black overflow-hidden">
-      {/* Header con botones transparentes sobre la imagen */}
+      {/* Canvas oculto para capturar fotos */}
+      <canvas ref={canvasRef} className="hidden" />
+      
+      {/* Video oculto para input de archivo */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,video/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+
+      {/* Header con botones transparentes */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
         <div className="flex items-start justify-between">
           {/* Botón cerrar a la izquierda */}
@@ -314,36 +326,53 @@ const StoryCapturePage = () => {
 
           {/* Botones en vertical a la derecha */}
           <div className="flex flex-col gap-3">
-            <button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
+            {/* Botón Flash */}
+            <button 
+              onClick={toggleFlash}
+              className={`w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all ${
+                flashEnabled ? 'bg-yellow-500/80' : 'bg-black/60'
+              }`}
+            >
+              {flashEnabled ? (
+                <Zap className="w-5 h-5 text-white" />
+              ) : (
+                <ZapOff className="w-5 h-5 text-white" />
+              )}
             </button>
-            <button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3"/>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 1v6m0 6v6"/>
-              </svg>
+            
+            {/* Botón Flip Camera */}
+            <button 
+              onClick={toggleCamera}
+              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+            >
+              <RotateCw className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Área central - preview o prompt de captura */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*,video/*"
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-      
+      {/* Indicador de grabación */}
+      {isRecording && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-30 bg-red-500 text-white px-4 py-2 rounded-full flex items-center gap-2">
+          <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+          <span className="font-semibold">{formatTime(recordingTime)}</span>
+        </div>
+      )}
+
+      {/* Área central - cámara en vivo o preview */}
       {!previewUrl ? (
-        /* Estado inicial - sin botón en el centro */
+        /* Cámara en vivo */
         <div className="absolute inset-0">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full h-full object-cover"
+          />
         </div>
       ) : (
-        /* Preview del contenido seleccionado - fullscreen con bordes curvos arriba y abajo */
+        /* Preview del contenido capturado */
         <div className="absolute top-0 left-0 right-0 bottom-32">
           <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden">
             {fileType === 'image' ? (
@@ -366,32 +395,78 @@ const StoryCapturePage = () => {
       {/* Barra inferior */}
       <div className="absolute bottom-0 left-0 right-0 z-30 pb-8">
         {previewUrl ? (
-          /* Barra inferior con imagen - botón blanco centrado */
-          <div className="flex items-center justify-center">
+          /* Barra inferior con preview - botones de retake y siguiente */
+          <div className="flex items-center justify-around px-8">
+            <button
+              onClick={handleRetake}
+              className="w-16 h-16 rounded-full bg-gray-700/80 backdrop-blur-sm hover:bg-gray-600/80 transition-all shadow-2xl flex items-center justify-center"
+            >
+              <X className="w-8 h-8 text-white" />
+            </button>
             <button
               onClick={handleNext}
-              className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-all shadow-2xl"
+              className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-all shadow-2xl flex items-center justify-center"
             >
+              <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
+              </svg>
             </button>
           </div>
         ) : (
-          /* Barra inferior sin imagen - botón galería a la izquierda y botón captura al centro */
-          <div className="flex items-center justify-center px-4">
-            {/* Botón de galería a la izquierda con icono */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute left-8 w-16 h-16 rounded-full bg-white hover:bg-gray-100 transition-all shadow-2xl flex items-center justify-center"
-            >
-              <ImageIcon className="w-8 h-8 text-black" />
-            </button>
-            
-            {/* Botón circular de captura en el centro */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-20 h-20 rounded-full border-4 border-white bg-transparent flex items-center justify-center hover:bg-white/10 transition-all"
-            >
-              <div className="w-16 h-16 rounded-full bg-white"></div>
-            </button>
+          /* Barra inferior en modo captura */
+          <div className="flex flex-col items-center gap-4">
+            {/* Selector de modo foto/video */}
+            <div className="flex items-center gap-4 bg-black/60 backdrop-blur-sm rounded-full px-6 py-2">
+              <button
+                onClick={() => setCaptureMode('photo')}
+                className={`px-4 py-1 rounded-full transition-all ${
+                  captureMode === 'photo' 
+                    ? 'bg-white text-black font-semibold' 
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                Foto
+              </button>
+              <button
+                onClick={() => setCaptureMode('video')}
+                className={`px-4 py-1 rounded-full transition-all ${
+                  captureMode === 'video' 
+                    ? 'bg-white text-black font-semibold' 
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                Video
+              </button>
+            </div>
+
+            {/* Botones de captura */}
+            <div className="flex items-center justify-center px-4 w-full">
+              {/* Botón de galería a la izquierda */}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute left-8 w-14 h-14 rounded-2xl bg-white/90 hover:bg-white transition-all shadow-2xl flex items-center justify-center"
+              >
+                <ImageIcon className="w-7 h-7 text-black" />
+              </button>
+              
+              {/* Botón circular de captura en el centro */}
+              <button
+                onClick={handleCapture}
+                className={`w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
+                  isRecording 
+                    ? 'border-red-500 bg-transparent' 
+                    : 'border-white bg-transparent hover:bg-white/10'
+                }`}
+              >
+                <div className={`transition-all ${
+                  isRecording 
+                    ? 'w-8 h-8 rounded bg-red-500' 
+                    : captureMode === 'video' 
+                      ? 'w-16 h-16 rounded-full bg-red-500' 
+                      : 'w-16 h-16 rounded-full bg-white'
+                }`} />
+              </button>
+            </div>
           </div>
         )}
       </div>
