@@ -464,59 +464,34 @@ const StoryCapturePage = () => {
           </div>
         ) : (
           /* Barra inferior en modo captura */
-          <div className="flex flex-col items-center gap-4">
-            {/* Selector de modo foto/video */}
-            <div className="flex items-center gap-4 bg-black/60 backdrop-blur-sm rounded-full px-6 py-2">
-              <button
-                onClick={() => setCaptureMode('photo')}
-                className={`px-4 py-1 rounded-full transition-all ${
-                  captureMode === 'photo' 
-                    ? 'bg-white text-black font-semibold' 
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                Foto
-              </button>
-              <button
-                onClick={() => setCaptureMode('video')}
-                className={`px-4 py-1 rounded-full transition-all ${
-                  captureMode === 'video' 
-                    ? 'bg-white text-black font-semibold' 
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                Video
-              </button>
-            </div>
-
-            {/* Botones de captura */}
-            <div className="flex items-center justify-center px-4 w-full">
-              {/* Botón de galería a la izquierda */}
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute left-8 w-14 h-14 rounded-2xl bg-white/90 hover:bg-white transition-all shadow-2xl flex items-center justify-center"
-              >
-                <ImageIcon className="w-7 h-7 text-black" />
-              </button>
-              
-              {/* Botón circular de captura en el centro */}
-              <button
-                onClick={handleCapture}
-                className={`w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
-                  isRecording 
-                    ? 'border-red-500 bg-transparent' 
-                    : 'border-white bg-transparent hover:bg-white/10'
-                }`}
-              >
-                <div className={`transition-all ${
-                  isRecording 
-                    ? 'w-8 h-8 rounded bg-red-500' 
-                    : captureMode === 'video' 
-                      ? 'w-16 h-16 rounded-full bg-red-500' 
-                      : 'w-16 h-16 rounded-full bg-white'
-                }`} />
-              </button>
-            </div>
+          <div className="flex items-center justify-center px-4 w-full">
+            {/* Botón de galería a la izquierda */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute left-8 w-14 h-14 rounded-2xl bg-white/90 hover:bg-white transition-all shadow-2xl flex items-center justify-center"
+            >
+              <ImageIcon className="w-7 h-7 text-black" />
+            </button>
+            
+            {/* Botón circular de captura en el centro - Click = foto, Mantener = video */}
+            <button
+              onMouseDown={handlePressStart}
+              onMouseUp={handlePressEnd}
+              onMouseLeave={handlePressEnd}
+              onTouchStart={handlePressStart}
+              onTouchEnd={handlePressEnd}
+              className={`w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
+                isRecording 
+                  ? 'border-red-500 bg-transparent scale-110' 
+                  : 'border-white bg-transparent hover:scale-105'
+              }`}
+            >
+              <div className={`transition-all ${
+                isRecording 
+                  ? 'w-8 h-8 rounded bg-red-500' 
+                  : 'w-16 h-16 rounded-full bg-white'
+              }`} />
+            </button>
           </div>
         )}
       </div>
