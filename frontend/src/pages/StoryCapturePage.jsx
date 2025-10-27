@@ -240,12 +240,16 @@ const StoryCapturePage = () => {
   // Manejar inicio de presión (mouse o touch) - Iniciar video
   const handlePressStart = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsPressingButton(true);
     pressStartTimeRef.current = Date.now();
     
     // Iniciar grabación de video después de mantener presionado
     pressTimerRef.current = setTimeout(() => {
-      if (isPressingButton) {
+      // Verificar que aún esté presionado usando la referencia de tiempo
+      const elapsed = Date.now() - pressStartTimeRef.current;
+      if (elapsed >= 500) {
+        console.log('Iniciando grabación de video');
         startRecording();
       }
     }, 500); // Delay de 500ms para distinguir entre click y mantener presionado
@@ -254,8 +258,11 @@ const StoryCapturePage = () => {
   // Manejar fin de presión - Si es rápido = foto, si es largo = detener video
   const handlePressEnd = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     const pressDuration = Date.now() - (pressStartTimeRef.current || 0);
     setIsPressingButton(false);
+    
+    console.log('Press duration:', pressDuration, 'ms');
     
     // Limpiar el timer si no se completó
     if (pressTimerRef.current) {
@@ -265,9 +272,11 @@ const StoryCapturePage = () => {
     
     // Si está grabando, detener
     if (isRecording) {
+      console.log('Deteniendo grabación');
       stopRecording();
     } else if (pressDuration < 500) {
       // Si fue un click rápido (menos de 500ms), tomar foto
+      console.log('Capturando foto (click rápido)');
       capturePhoto();
     }
   };
