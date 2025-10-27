@@ -182,10 +182,10 @@ const StoryCapturePage = () => {
       const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
       const previewUrl = URL.createObjectURL(blob);
       
-      setSelectedFile(file);
-      setFileType('image');
-      setPreviewUrl(previewUrl);
       stopCamera();
+      
+      // Navegar directamente a edición
+      navigateToEdit(file, 'image', previewUrl);
     }, 'image/jpeg', 0.95);
   };
 
