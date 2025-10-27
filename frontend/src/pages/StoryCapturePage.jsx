@@ -13,9 +13,6 @@ const StoryCapturePage = () => {
   const chunksRef = useRef([]);
   const streamRef = useRef(null);
   
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [fileType, setFileType] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [facingMode, setFacingMode] = useState('user'); // 'user' = frontal, 'environment' = trasera
   const [flashEnabled, setFlashEnabled] = useState(false);
