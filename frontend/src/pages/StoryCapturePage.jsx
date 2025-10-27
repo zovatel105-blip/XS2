@@ -36,6 +36,9 @@ const StoryCapturePage = () => {
     
     return () => {
       clearTimeout(timer);
+      if (pressTimerRef.current) {
+        clearTimeout(pressTimerRef.current);
+      }
       stopCamera();
     };
   }, [facingMode]);
