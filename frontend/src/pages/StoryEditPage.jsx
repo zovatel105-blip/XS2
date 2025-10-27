@@ -445,9 +445,9 @@ const StoryEditPage = () => {
             >
               {/* Avatar circular */}
               <div className="relative w-12 h-12 flex-shrink-0">
-                {user?.avatar ? (
+                {user?.avatar_url ? (
                   <img
-                    src={user.avatar}
+                    src={user.avatar_url}
                     alt={user.username}
                     className="w-full h-full rounded-full object-cover border-2 border-white"
                   />
