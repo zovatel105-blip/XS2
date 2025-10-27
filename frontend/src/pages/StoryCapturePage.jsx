@@ -395,6 +395,34 @@ const StoryCapturePage = () => {
             muted
             className="w-full h-full object-cover"
           />
+          
+          {/* Mensaje de ayuda si hay error de cámara */}
+          {cameraError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+              <div className="text-center px-6">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
+                  <Camera className="w-10 h-10 text-gray-400" />
+                </div>
+                <h3 className="text-white text-lg font-semibold mb-2">
+                  Cámara no disponible
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  {permissionDenied 
+                    ? 'Necesitas dar permisos de cámara en tu navegador'
+                    : 'No se pudo acceder a la cámara'}
+                </p>
+                <p className="text-gray-500 text-xs mb-6">
+                  Puedes usar el botón de galería para subir una foto o video
+                </p>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-gray-100 transition-all"
+                >
+                  Abrir Galería
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         /* Preview del contenido capturado */
