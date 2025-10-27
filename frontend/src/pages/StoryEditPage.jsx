@@ -315,21 +315,36 @@ const StoryEditPage = () => {
         /* Vista previa del contenido con bordes curvos arriba y abajo */
         <div className="absolute top-0 left-0 right-0 bottom-32">
           <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden">
-            {/* Preview de imagen o video */}
-            {mediaType === 'image' ? (
-              <img
-                src={mediaPreview}
-                alt="Story preview"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <video
-                ref={videoRef}
-                src={mediaPreview}
-                className="w-full h-full object-cover"
-                controls
-              />
-            )}
+            {/* Preview de imagen o video con zoom */}
+            <div
+              ref={contentRef}
+              className="w-full h-full"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                touchAction: 'none',
+                transform: `translate(${posX}px, ${posY}px) scale(${scale})`,
+                transition: initialDistance === 0 ? 'transform 0.3s ease-out' : 'none'
+              }}
+            >
+              {mediaType === 'image' ? (
+                <img
+                  src={mediaPreview}
+                  alt="Story preview"
+                  className="w-full h-full object-cover pointer-events-none"
+                  draggable={false}
+                />
+              ) : (
+                <video
+                  ref={videoRef}
+                  src={mediaPreview}
+                  className="w-full h-full object-cover pointer-events-none"
+                  controls
+                  draggable={false}
+                />
+              )}
+            </div>
 
             {/* Botón para eliminar media */}
             <button
@@ -339,11 +354,11 @@ const StoryEditPage = () => {
               <X className="w-5 h-5 text-white" />
             </button>
 
-            {/* Overlays de texto (si los hay) */}
+            {/* Overlays de texto (independientes del zoom) */}
             {textOverlays.map((text, index) => (
               <div
                 key={index}
-                className="absolute text-white font-bold text-2xl"
+                className="absolute text-white font-bold text-2xl z-10 pointer-events-none"
                 style={{
                   top: `${text.y}%`,
                   left: `${text.x}%`,
@@ -354,11 +369,11 @@ const StoryEditPage = () => {
               </div>
             ))}
 
-            {/* Stickers (si los hay) */}
+            {/* Stickers (independientes del zoom) */}
             {stickers.map((sticker, index) => (
               <div
                 key={index}
-                className="absolute text-4xl"
+                className="absolute text-4xl z-10 pointer-events-none"
                 style={{
                   top: `${sticker.y}%`,
                   left: `${sticker.x}%`,
