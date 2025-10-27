@@ -316,16 +316,6 @@ const StoryCapturePage = () => {
     reader.readAsDataURL(file);
   };
 
-  // Volver a captura (descartar preview)
-  const handleRetake = () => {
-    setSelectedFile(null);
-    setFileType(null);
-    setPreviewUrl(null);
-    setIsRecording(false);
-    setRecordingTime(0);
-    startCamera();
-  };
-
   // Formatear tiempo de grabación
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
