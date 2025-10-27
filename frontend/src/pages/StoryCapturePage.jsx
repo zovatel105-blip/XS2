@@ -246,13 +246,9 @@ const StoryCapturePage = () => {
     
     // Iniciar grabación de video después de mantener presionado
     pressTimerRef.current = setTimeout(() => {
-      // Verificar que aún esté presionado usando la referencia de tiempo
-      const elapsed = Date.now() - pressStartTimeRef.current;
-      if (elapsed >= 500) {
-        console.log('Iniciando grabación de video');
-        startRecording();
-      }
-    }, 500); // Delay de 500ms para distinguir entre click y mantener presionado
+      console.log('Iniciando grabación de video (después de 500ms)');
+      startRecording();
+    }, 500); // Delay de 500ms para iniciar video
   };
 
   // Manejar fin de presión - Si es rápido = foto, si es largo = detener video
@@ -262,22 +258,30 @@ const StoryCapturePage = () => {
     const pressDuration = Date.now() - (pressStartTimeRef.current || 0);
     setIsPressingButton(false);
     
-    console.log('Press duration:', pressDuration, 'ms');
+    console.log('Press duration:', pressDuration, 'ms', 'isRecording:', isRecording);
     
-    // Limpiar el timer si no se completó
-    if (pressTimerRef.current) {
-      clearTimeout(pressTimerRef.current);
-      pressTimerRef.current = null;
-    }
-    
-    // Si está grabando, detener
+    // Si está grabando, detener (el usuario mantuvo presionado más de 500ms)
     if (isRecording) {
       console.log('Deteniendo grabación');
       stopRecording();
-    } else if (pressDuration < 500) {
+      // Limpiar timer si existe
+      if (pressTimerRef.current) {
+        clearTimeout(pressTimerRef.current);
+        pressTimerRef.current = null;
+      }
+    } else {
+      // No está grabando aún, limpiar el timer
+      if (pressTimerRef.current) {
+        clearTimeout(pressTimerRef.current);
+        pressTimerRef.current = null;
+      }
+      
       // Si fue un click rápido (menos de 500ms), tomar foto
-      console.log('Capturando foto (click rápido)');
-      capturePhoto();
+      if (pressDuration < 500) {
+        console.log('Capturando foto (click rápido)');
+        capturePhoto();
+      }
+      // Si pasó 500ms pero soltó justo cuando iba a iniciar, no hacer nada
     }
   };
 
