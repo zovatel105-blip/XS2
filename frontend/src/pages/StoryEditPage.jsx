@@ -508,27 +508,6 @@ const StoryEditPage = () => {
               </span>
             </button>
           </div>
-
-          {/* Información de música seleccionada */}
-          {selectedMusic && (
-            <div className="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 flex items-center gap-3 border border-white/30">
-              <Music className="w-5 h-5 text-white" />
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-medium text-sm truncate">
-                  {selectedMusic.name}
-                </p>
-                <p className="text-white/60 text-xs truncate">
-                  {selectedMusic.artist}
-                </p>
-              </div>
-              <button
-                onClick={() => setSelectedMusic(null)}
-                className="text-white/80 hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
