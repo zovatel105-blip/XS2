@@ -344,11 +344,47 @@ const StoryEditPage = () => {
       {mediaPreview ? (
         /* Vista previa del contenido con bordes curvos arriba y abajo */
         <div className="absolute top-0 left-0 right-0 bottom-32">
+          {/* Barra de estilos de texto - Solo visible en modo texto */}
+          {isTextMode && (
+            <div className="absolute top-20 left-0 right-0 z-40 px-4">
+              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                {textStyles.map((style) => (
+                  <button
+                    key={style.id}
+                    onClick={() => setCurrentTextStyle(style.id)}
+                    className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-semibold transition-all ${
+                      currentTextStyle === style.id
+                        ? 'bg-white text-black'
+                        : 'bg-black/60 backdrop-blur-sm text-white hover:bg-black/70'
+                    }`}
+                  >
+                    {style.name}
+                  </button>
+                ))}
+              </div>
+              
+              {/* Selector de colores */}
+              <div className="flex gap-2 mt-2 overflow-x-auto pb-2 no-scrollbar">
+                {['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'].map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setCurrentTextColor(color)}
+                    className={`w-8 h-8 rounded-full border-2 flex-shrink-0 ${
+                      currentTextColor === color ? 'border-white scale-110' : 'border-gray-400'
+                    } transition-all`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div 
             className="relative w-full h-full bg-black rounded-3xl overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onClick={handleScreenTap}
             style={{ touchAction: 'none' }}
           >
             {/* Preview de imagen o video con zoom */}
@@ -380,20 +416,52 @@ const StoryEditPage = () => {
               )}
             </div>
 
-            {/* Overlays de texto (independientes del zoom) */}
-            {textOverlays.map((text, index) => (
-              <div
-                key={index}
-                className="absolute text-white font-bold text-2xl z-10 pointer-events-none"
-                style={{
-                  top: `${text.y}%`,
-                  left: `${text.x}%`,
-                  transform: 'translate(-50%, -50%)'
-                }}
-              >
-                {text.content}
-              </div>
-            ))}
+            {/* Overlays de texto - Ahora editables inline */}
+            {textOverlays.map((text, index) => {
+              const styleConfig = textStyles.find(s => s.id === text.style) || textStyles[0];
+              
+              return (
+                <div
+                  key={index}
+                  className="absolute z-20"
+                  style={{
+                    top: `${text.y}%`,
+                    left: `${text.x}%`,
+                    transform: 'translate(-50%, -50%)',
+                    color: text.color
+                  }}
+                >
+                  {text.isEditing || editingTextIndex === index ? (
+                    <div className="flex flex-col items-center">
+                      <input
+                        type="text"
+                        value={text.content}
+                        onChange={(e) => handleTextChange(index, e.target.value)}
+                        onBlur={() => handleFinishEditing(index)}
+                        autoFocus
+                        placeholder="Toca para escribir"
+                        className={`bg-transparent border-b-2 border-white outline-none text-center text-2xl font-bold ${styleConfig.font} ${styleConfig.bg} ${styleConfig.shadow || ''}`}
+                        style={{ 
+                          color: text.color,
+                          minWidth: '150px',
+                          maxWidth: '300px'
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingTextIndex(index);
+                      }}
+                      className={`text-2xl font-bold cursor-pointer ${styleConfig.font} ${styleConfig.bg} ${styleConfig.shadow || ''}`}
+                    >
+                      {text.content}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             {/* Stickers (independientes del zoom) */}
             {stickers.map((sticker, index) => (
@@ -409,6 +477,15 @@ const StoryEditPage = () => {
                 {sticker.emoji}
               </div>
             ))}
+            
+            {/* Indicador de modo texto */}
+            {isTextMode && (
+              <div className="absolute inset-0 pointer-events-none border-4 border-dashed border-white/50 rounded-3xl z-10">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm px-6 py-3 rounded-full">
+                  <p className="text-white text-sm font-medium">Toca para añadir texto</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       ) : (
