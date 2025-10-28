@@ -487,93 +487,125 @@ const StoryEditPage = () => {
         <div className="absolute top-0 left-0 right-0 bottom-32">
           {/* Barra lateral izquierda - Control de tamaño del texto */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="absolute left-4 top-1/4 bottom-1/4 z-40 flex flex-col items-center">
-              <div className="bg-black/60 backdrop-blur-sm rounded-full p-2 flex flex-col items-center gap-2">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 z-40">
+              <div className="bg-black/60 backdrop-blur-sm rounded-full p-3 flex flex-col items-center gap-3" style={{ width: '44px' }}>
                 {/* Slider vertical para tamaño */}
-                <div className="flex flex-col-reverse items-center h-48 relative">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-white text-xs font-bold">{currentTextSize}</span>
                   <input
                     type="range"
                     min="16"
                     max="72"
                     value={currentTextSize}
                     onChange={(e) => handleSizeChange(Number(e.target.value))}
-                    className="slider-vertical w-48 h-1"
+                    className="slider-vertical"
                     style={{
                       writingMode: 'bt-lr',
                       WebkitAppearance: 'slider-vertical',
-                      width: '4px',
-                      height: '180px',
-                      cursor: 'pointer'
+                      width: '6px',
+                      height: '200px',
                     }}
                   />
-                  <span className="text-white text-xs font-bold mb-2">{currentTextSize}</span>
                 </div>
-                <span className="text-white text-xs font-semibold mt-1">Tamaño</span>
               </div>
             </div>
           )}
 
-          {/* Barra de herramientas de texto - Solo visible en modo texto */}
+          {/* Barra de herramientas superior estilo Instagram */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="absolute top-20 left-0 right-0 z-40 px-4">
-              <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-3 space-y-3">
-                {/* Fila 1: Fuente, Color, Fondo, Efectos, Alineación */}
-                <div className="flex gap-2 justify-center items-center">
-                  {/* Botón Aa - Selector de fuentes */}
-                  <button
-                    onClick={() => setShowFontPicker(!showFontPicker)}
-                    className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold text-lg transition-all"
-                    title="Cambiar fuente"
-                  >
-                    Aa
-                  </button>
+            <div className="absolute top-16 left-0 right-0 z-40">
+              {/* Fila principal de controles */}
+              <div className="flex gap-3 justify-center items-center px-4 py-3">
+                {/* Botón Aa - Selector de fuentes */}
+                <button
+                  onClick={() => {
+                    setShowFontPicker(!showFontPicker);
+                    setShowColorPicker(false);
+                    setShowEffectPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-xl transition-all ${
+                    showFontPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  Aa
+                </button>
 
-                  {/* Botón rueda de color */}
-                  <button
-                    onClick={() => setShowColorPicker(!showColorPicker)}
-                    className="w-10 h-10 rounded-full border-2 border-white hover:scale-110 transition-all"
-                    style={{ 
-                      background: `conic-gradient(red, yellow, lime, aqua, blue, magenta, red)`,
-                    }}
-                    title="Cambiar color"
-                  />
+                {/* Botón rueda de color */}
+                <button
+                  onClick={() => {
+                    setShowColorPicker(!showColorPicker);
+                    setShowFontPicker(false);
+                    setShowEffectPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-11 h-11 rounded-full border-2 transition-all ${
+                    showColorPicker ? 'border-white scale-110' : 'border-white/50'
+                  }`}
+                  style={{ 
+                    background: `conic-gradient(red, yellow, lime, aqua, blue, magenta, red)`,
+                  }}
+                />
 
-                  {/* Botón //A - Fondo de texto */}
-                  <button
-                    onClick={() => {
-                      const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
-                      handleBgChange(nextBg);
-                    }}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white font-bold transition-all"
-                    title="Cambiar fondo"
-                  >
-                    <span className="text-sm">//A</span>
-                  </button>
+                {/* Botón //A - Fondo de texto */}
+                <button
+                  onClick={() => {
+                    const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
+                    handleBgChange(nextBg);
+                  }}
+                  className={`w-11 h-11 rounded-full flex items-center justify-center font-bold transition-all ${
+                    currentTextBg !== 'none' ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-current">
+                    <text x="12" y="16" fontSize="12" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
+                    <rect x="4" y="10" width="16" height="8" rx="2" fill="currentColor" opacity="0.3"/>
+                  </svg>
+                </button>
 
-                  {/* Botón A con puntos - Efectos */}
-                  <button
-                    onClick={() => setShowEffectPicker(!showEffectPicker)}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-all"
-                    title="Efectos de texto"
-                  >
-                    <Sparkle className="w-5 h-5" />
-                  </button>
+                {/* Botón efectos - A con puntos alrededor */}
+                <button
+                  onClick={() => {
+                    setShowEffectPicker(!showEffectPicker);
+                    setShowFontPicker(false);
+                    setShowColorPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
+                    showEffectPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <text x="12" y="17" fontSize="14" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
+                    <circle cx="8" cy="7" r="1.5"/>
+                    <circle cx="16" cy="7" r="1.5"/>
+                    <circle cx="8" cy="19" r="1.5"/>
+                    <circle cx="16" cy="19" r="1.5"/>
+                  </svg>
+                </button>
 
-                  {/* Botón tres líneas - Alineación */}
-                  <button
-                    onClick={() => setShowAlignPicker(!showAlignPicker)}
-                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-all"
-                    title="Alinear texto"
-                  >
-                    {currentTextAlign === 'left' && <AlignLeft className="w-5 h-5" />}
-                    {currentTextAlign === 'center' && <AlignCenter className="w-5 h-5" />}
-                    {currentTextAlign === 'right' && <AlignRight className="w-5 h-5" />}
-                  </button>
-                </div>
+                {/* Botón alineación - Tres líneas */}
+                <button
+                  onClick={() => {
+                    setShowAlignPicker(!showAlignPicker);
+                    setShowFontPicker(false);
+                    setShowColorPicker(false);
+                    setShowEffectPicker(false);
+                  }}
+                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
+                    showAlignPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  {currentTextAlign === 'left' && <AlignLeft className="w-5 h-5" />}
+                  {currentTextAlign === 'center' && <AlignCenter className="w-5 h-5" />}
+                  {currentTextAlign === 'right' && <AlignRight className="w-5 h-5" />}
+                </button>
+              </div>
 
-                {/* Panel de fuentes expandido */}
-                {showFontPicker && (
-                  <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+              {/* Panel de fuentes - Horizontal scroll */}
+              {showFontPicker && (
+                <div className="mt-2 px-4">
+                  <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                     {textStyles.map((style) => (
                       <button
                         key={style.id}
@@ -581,10 +613,10 @@ const StoryEditPage = () => {
                           handleStyleChange(style.id);
                           setShowFontPicker(false);
                         }}
-                        className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                        className={`px-5 py-2 rounded-full whitespace-nowrap font-semibold transition-all flex-shrink-0 ${
                           currentTextStyle === style.id
                             ? 'bg-white text-black'
-                            : 'bg-white/20 text-white hover:bg-white/30'
+                            : 'bg-white/20 backdrop-blur-sm text-white'
                         }`}
                         style={style.style}
                       >
@@ -592,47 +624,42 @@ const StoryEditPage = () => {
                       </button>
                     ))}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Panel de colores expandido - Selector completo */}
-                {showColorPicker && (
-                  <div className="space-y-2">
-                    {/* Selector de color HTML5 nativo */}
-                    <div className="flex items-center justify-center gap-3">
-                      <input
-                        type="color"
-                        value={currentTextColor}
-                        onChange={(e) => handleColorChange(e.target.value)}
-                        className="w-16 h-16 rounded-full cursor-pointer border-2 border-white"
-                        title="Selector de color personalizado"
-                      />
-                      <div className="text-white text-sm">
-                        <p className="font-semibold">Color actual:</p>
-                        <p className="font-mono">{currentTextColor}</p>
-                      </div>
-                    </div>
-                    {/* Colores predefinidos */}
-                    <div className="grid grid-cols-8 gap-2">
+              {/* Panel de colores - Grid compacto */}
+              {showColorPicker && (
+                <div className="mt-2 px-4">
+                  <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-3">
+                    <div className="grid grid-cols-8 gap-2 mb-3">
                       {['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', 
                         '#ffa500', '#ff69b4', '#8b4513', '#9370db', '#20b2aa', '#ff6347', '#4169e1', '#32cd32'].map((color) => (
                         <button
                           key={color}
-                          onClick={() => {
-                            handleColorChange(color);
-                          }}
-                          className={`w-10 h-10 rounded-full border-2 ${
-                            currentTextColor === color ? 'border-white scale-110 ring-2 ring-white' : 'border-gray-400'
-                          } transition-all`}
+                          onClick={() => handleColorChange(color)}
+                          className={`w-9 h-9 rounded-full border-2 transition-all ${
+                            currentTextColor === color ? 'border-white scale-110' : 'border-transparent'
+                          }`}
                           style={{ backgroundColor: color }}
                         />
                       ))}
                     </div>
+                    <div className="flex items-center justify-center">
+                      <input
+                        type="color"
+                        value={currentTextColor}
+                        onChange={(e) => handleColorChange(e.target.value)}
+                        className="w-full h-10 rounded-lg cursor-pointer"
+                      />
+                    </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Panel de efectos expandido */}
-                {showEffectPicker && (
-                  <div className="grid grid-cols-3 gap-2">
+              {/* Panel de efectos - Horizontal scroll */}
+              {showEffectPicker && (
+                <div className="mt-2 px-4">
+                  <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                     {textEffects.map((effect) => (
                       <button
                         key={effect.id}
@@ -640,10 +667,10 @@ const StoryEditPage = () => {
                           handleEffectChange(effect.id);
                           setShowEffectPicker(false);
                         }}
-                        className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                        className={`px-5 py-2 rounded-full whitespace-nowrap font-semibold transition-all flex-shrink-0 ${
                           currentTextEffect === effect.id
                             ? 'bg-white text-black'
-                            : 'bg-white/20 text-white hover:bg-white/30'
+                            : 'bg-white/20 backdrop-blur-sm text-white'
                         }`}
                         style={effect.style}
                       >
@@ -651,53 +678,34 @@ const StoryEditPage = () => {
                       </button>
                     ))}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Panel de alineación expandido */}
-                {showAlignPicker && (
+              {/* Panel de alineación - 3 botones */}
+              {showAlignPicker && (
+                <div className="mt-2 px-4">
                   <div className="flex gap-2 justify-center">
-                    <button
-                      onClick={() => {
-                        handleAlignChange('left');
-                        setShowAlignPicker(false);
-                      }}
-                      className={`px-4 py-2 rounded-lg transition-all ${
-                        currentTextAlign === 'left'
-                          ? 'bg-white text-black'
-                          : 'bg-white/20 text-white hover:bg-white/30'
-                      }`}
-                    >
-                      <AlignLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleAlignChange('center');
-                        setShowAlignPicker(false);
-                      }}
-                      className={`px-4 py-2 rounded-lg transition-all ${
-                        currentTextAlign === 'center'
-                          ? 'bg-white text-black'
-                          : 'bg-white/20 text-white hover:bg-white/30'
-                      }`}
-                    >
-                      <AlignCenter className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleAlignChange('right');
-                        setShowAlignPicker(false);
-                      }}
-                      className={`px-4 py-2 rounded-lg transition-all ${
-                        currentTextAlign === 'right'
-                          ? 'bg-white text-black'
-                          : 'bg-white/20 text-white hover:bg-white/30'
-                      }`}
-                    >
-                      <AlignRight className="w-5 h-5" />
-                    </button>
+                    {['left', 'center', 'right'].map((align) => (
+                      <button
+                        key={align}
+                        onClick={() => {
+                          handleAlignChange(align);
+                          setShowAlignPicker(false);
+                        }}
+                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                          currentTextAlign === align
+                            ? 'bg-white text-black'
+                            : 'bg-white/20 backdrop-blur-sm text-white'
+                        }`}
+                      >
+                        {align === 'left' && <AlignLeft className="w-5 h-5" />}
+                        {align === 'center' && <AlignCenter className="w-5 h-5" />}
+                        {align === 'right' && <AlignRight className="w-5 h-5" />}
+                      </button>
+                    ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
           
