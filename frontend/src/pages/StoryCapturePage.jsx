@@ -460,29 +460,29 @@ const StoryCapturePage = () => {
           </button>
           
           {/* Botón circular de captura en el centro - Click = foto, Mantener = video */}
-          <div className="relative w-28 h-28 flex items-center justify-center">
+          <div className="relative w-20 h-20 flex items-center justify-center">
             {/* Anillo exterior gris con progreso - SIEMPRE visible */}
-            <svg className="absolute inset-0 w-28 h-28 transform -rotate-90 pointer-events-none">
+            <svg className="absolute inset-0 w-20 h-20 transform -rotate-90 pointer-events-none">
               {/* Círculo de fondo gris completo */}
               <circle
-                cx="56"
-                cy="56"
-                r="52"
+                cx="40"
+                cy="40"
+                r="38"
                 stroke="#9CA3AF"
-                strokeWidth="4"
+                strokeWidth="3"
                 fill="none"
               />
               {/* Círculo de progreso gris oscuro que se anima durante grabación */}
               {isRecording && (
                 <circle
-                  cx="56"
-                  cy="56"
-                  r="52"
+                  cx="40"
+                  cy="40"
+                  r="38"
                   stroke="#374151"
-                  strokeWidth="4"
+                  strokeWidth="3"
                   fill="none"
-                  strokeDasharray={326.73}
-                  strokeDashoffset={326.73 * (1 - recordingTime / 15)}
+                  strokeDasharray={238.76}
+                  strokeDashoffset={238.76 * (1 - recordingTime / 15)}
                   strokeLinecap="round"
                   className="transition-all duration-1000 ease-linear"
                 />
@@ -495,7 +495,7 @@ const StoryCapturePage = () => {
               onMouseLeave={handlePressEnd}
               onTouchStart={handlePressStart}
               onTouchEnd={handlePressEnd}
-              className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all ${
+              className={`relative w-full h-full rounded-full flex items-center justify-center transition-all ${
                 isRecording 
                   ? 'bg-transparent scale-110' 
                   : 'bg-transparent hover:scale-105'
