@@ -306,53 +306,14 @@ const StoryEditPage = () => {
             </span>
           </button>
 
-          {/* Botones agrupados en un contenedor común a la derecha */}
-          <div className="bg-black/60 backdrop-blur-sm rounded-full px-1 py-1 flex flex-col gap-1.5">
-            {/* Expandir - Pantalla completa */}
-            <button 
-              onClick={handleToggleFullscreen}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Pantalla completa"
-            >
-              <Maximize2 className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Texto "Aa" */}
-            <button
-              onClick={() => setShowTextEditor(!showTextEditor)}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Añadir texto"
-            >
-              <Type className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Emoji */}
-            <button
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Añadir emoji"
-            >
-              <Smile className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Stickers */}
-            <button
-              onClick={() => setShowStickerPicker(!showStickerPicker)}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Añadir sticker"
-            >
-              <Sticker className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Más opciones */}
-            <button 
-              onClick={() => setShowMoreOptions(!showMoreOptions)}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Más opciones"
-            >
-              <MoreHorizontal className="w-5 h-5 text-white" />
-            </button>
-          </div>
+          {/* Botón pantalla completa a la derecha */}
+          <button 
+            onClick={handleToggleFullscreen}
+            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+            title="Pantalla completa"
+          >
+            <Maximize2 className="w-5 h-5 text-white" />
+          </button>
         </div>
       </div>
 
