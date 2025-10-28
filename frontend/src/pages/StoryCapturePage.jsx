@@ -463,6 +463,14 @@ const StoryCapturePage = () => {
           <div className="relative w-20 h-20 flex items-center justify-center">
             {/* Anillo exterior gris con progreso - SIEMPRE visible */}
             <svg className="absolute inset-0 w-20 h-20 transform -rotate-90 pointer-events-none">
+              {/* Definir gradiente de colores de historia */}
+              <defs>
+                <linearGradient id="storyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#00FFFF', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#8A2BE2', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#000000', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
               {/* Círculo de fondo gris completo */}
               <circle
                 cx="40"
@@ -472,13 +480,13 @@ const StoryCapturePage = () => {
                 strokeWidth="3"
                 fill="none"
               />
-              {/* Círculo de progreso gris oscuro que se anima durante grabación */}
+              {/* Círculo de progreso con gradiente de colores que se anima durante grabación */}
               {isRecording && (
                 <circle
                   cx="40"
                   cy="40"
                   r="38"
-                  stroke="#374151"
+                  stroke="url(#storyGradient)"
                   strokeWidth="3"
                   fill="none"
                   strokeDasharray={238.76}
