@@ -347,7 +347,7 @@ const StoryEditPage = () => {
         </div>
       ) : (
         /* Estado inicial - sin contenido */
-        <div className="absolute inset-0 flex items-center justify-center p-4 pt-24 pb-32">
+        <div className="absolute inset-0 flex items-center justify-center p-4 pt-24 pb-48">
           <div className="w-full max-w-md">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 text-center border-2 border-white/30">
               <div className="mb-6">
