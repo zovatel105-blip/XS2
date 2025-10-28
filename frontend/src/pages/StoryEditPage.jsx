@@ -284,6 +284,17 @@ const StoryEditPage = () => {
             <ArrowLeft className="w-6 h-6 text-white" />
           </button>
 
+          {/* Botón de música - Centro */}
+          <button
+            onClick={() => setShowMusicSelector(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-sm hover:bg-black/70 rounded-full text-white transition-all"
+          >
+            <Music className="w-5 h-5" />
+            <span className="text-sm font-medium truncate max-w-32">
+              {selectedMusic ? `🎵 ${selectedMusic.name}` : 'Add sound'}
+            </span>
+          </button>
+
           {/* Botones agrupados en un contenedor común a la derecha */}
           <div className="bg-black/60 backdrop-blur-sm rounded-full px-2 py-2 flex flex-col gap-2">
             {/* Expandir - Pantalla completa */}
@@ -320,15 +331,6 @@ const StoryEditPage = () => {
               title="Añadir sticker"
             >
               <Sticker className="w-5 h-5 text-white" />
-            </button>
-
-            {/* Música */}
-            <button
-              onClick={() => setShowMusicSelector(!showMusicSelector)}
-              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
-              title="Añadir música"
-            >
-              <Music className="w-5 h-5 text-white" />
             </button>
 
             {/* Más opciones */}
