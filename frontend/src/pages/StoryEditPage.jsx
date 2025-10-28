@@ -261,17 +261,19 @@ const StoryEditPage = () => {
             <ArrowLeft className="w-6 h-6 text-white" />
           </button>
 
-          {/* Botones en vertical a la derecha */}
-          <div className="flex flex-col gap-3">
+          {/* Botones agrupados en un contenedor común a la derecha */}
+          <div className="bg-black/60 backdrop-blur-sm rounded-full px-2 py-2 flex flex-col gap-2">
             {/* Expandir */}
-            <button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all">
+            <button 
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+            >
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
 
             {/* Texto "Aa" */}
             <button
               onClick={() => setShowTextEditor(!showTextEditor)}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
             >
               <Type className="w-5 h-5 text-white" />
             </button>
@@ -279,7 +281,7 @@ const StoryEditPage = () => {
             {/* Emoji */}
             <button
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
             >
               <Smile className="w-5 h-5 text-white" />
             </button>
@@ -287,7 +289,7 @@ const StoryEditPage = () => {
             {/* Stickers */}
             <button
               onClick={() => setShowStickerPicker(!showStickerPicker)}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
             >
               <Sticker className="w-5 h-5 text-white" />
             </button>
@@ -295,13 +297,13 @@ const StoryEditPage = () => {
             {/* Música */}
             <button
               onClick={() => setShowMusicSelector(!showMusicSelector)}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
             >
               <Music className="w-5 h-5 text-white" />
             </button>
 
             {/* Más opciones */}
-            <button className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all">
+            <button className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all">
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>
           </div>
