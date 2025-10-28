@@ -57,7 +57,71 @@ const StoryEditPage = () => {
   const [lastPanX, setLastPanX] = useState(0);
   const [lastPanY, setLastPanY] = useState(0);
 
-  // Manejo de archivos
+  // Estilos de texto disponibles
+  const textStyles = [
+    { id: 'classic', name: 'Classic', font: 'font-sans', bg: 'bg-transparent' },
+    { id: 'bold', name: 'Bold', font: 'font-black', bg: 'bg-transparent' },
+    { id: 'typewriter', name: 'Typewriter', font: 'font-mono', bg: 'bg-transparent' },
+    { id: 'neon', name: 'Neon', font: 'font-bold', bg: 'bg-transparent', shadow: 'shadow-[0_0_10px_currentColor]' },
+    { id: 'strong', name: 'Strong', font: 'font-extrabold', bg: 'bg-black/70 px-2 py-1' },
+  ];
+
+  // Handler para activar modo texto
+  const handleTextMode = () => {
+    setIsTextMode(!isTextMode);
+    if (isTextMode) {
+      setEditingTextIndex(null);
+    }
+  };
+
+  // Handler para añadir texto al tocar la pantalla
+  const handleScreenTap = (e) => {
+    if (!isTextMode) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    const newText = {
+      content: '',
+      x,
+      y,
+      color: currentTextColor,
+      style: currentTextStyle,
+      isEditing: true
+    };
+    
+    setTextOverlays([...textOverlays, newText]);
+    setEditingTextIndex(textOverlays.length);
+  };
+
+  // Handler para actualizar texto
+  const handleTextChange = (index, newContent) => {
+    const updated = [...textOverlays];
+    updated[index].content = newContent;
+    setTextOverlays(updated);
+  };
+
+  // Handler para finalizar edición de texto
+  const handleFinishEditing = (index) => {
+    const updated = [...textOverlays];
+    if (updated[index].content.trim() === '') {
+      // Eliminar si está vacío
+      updated.splice(index, 1);
+    } else {
+      updated[index].isEditing = false;
+    }
+    setTextOverlays(updated);
+    setEditingTextIndex(null);
+    setIsTextMode(false);
+  };
+
+  // Handler para eliminar texto
+  const handleDeleteText = (index) => {
+    const updated = [...textOverlays];
+    updated.splice(index, 1);
+    setTextOverlays(updated);
+  };
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
