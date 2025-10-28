@@ -397,7 +397,7 @@ const StoryEditPage = () => {
                 {textStyles.map((style) => (
                   <button
                     key={style.id}
-                    onClick={() => setCurrentTextStyle(style.id)}
+                    onClick={() => handleStyleChange(style.id)}
                     className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-semibold transition-all ${
                       currentTextStyle === style.id
                         ? 'bg-white text-black'
@@ -414,7 +414,7 @@ const StoryEditPage = () => {
                 {['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'].map((color) => (
                   <button
                     key={color}
-                    onClick={() => setCurrentTextColor(color)}
+                    onClick={() => handleColorChange(color)}
                     className={`w-8 h-8 rounded-full border-2 flex-shrink-0 ${
                       currentTextColor === color ? 'border-white scale-110' : 'border-gray-400'
                     } transition-all`}
