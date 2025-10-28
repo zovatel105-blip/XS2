@@ -307,7 +307,7 @@ const StoryEditPage = () => {
           </button>
 
           {/* Botones agrupados en un contenedor común a la derecha */}
-          <div className="bg-black/60 backdrop-blur-sm rounded-full px-2 py-2 flex flex-col gap-2">
+          <div className="bg-black/60 backdrop-blur-sm rounded-full px-1 py-1 flex flex-col gap-1.5">
             {/* Expandir - Pantalla completa */}
             <button 
               onClick={handleToggleFullscreen}
