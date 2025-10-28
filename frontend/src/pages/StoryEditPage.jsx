@@ -392,10 +392,10 @@ const StoryEditPage = () => {
       )}
 
       {/* Área inferior - Botones de edición y botón publicar */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 pb-12 px-4 bg-black pt-4">
-        <div className="max-w-md mx-auto space-y-4">
+      <div className="absolute bottom-0 left-0 right-0 z-30 pb-2 px-4 bg-black pt-2">
+        <div className="max-w-md mx-auto space-y-3">
           {/* Botones de edición en horizontal */}
-          <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="flex items-center justify-center gap-4 mb-3">
             {/* Texto "Aa" */}
             <button
               onClick={() => setShowTextEditor(!showTextEditor)}
