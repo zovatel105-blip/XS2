@@ -461,30 +461,24 @@ const StoryCapturePage = () => {
           
           {/* Botón circular de captura en el centro - Click = foto, Mantener = video */}
           <div className="relative w-28 h-28 flex items-center justify-center">
-            {/* Círculo de progreso cuando está grabando con gradiente de historias */}
+            {/* Anillo de progreso gris cuando está grabando */}
             {isRecording && (
               <svg className="absolute inset-0 w-28 h-28 transform -rotate-90">
-                <defs>
-                  <linearGradient id="storyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#00FFFF', stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: '#8A2BE2', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#000000', stopOpacity: 1 }} />
-                  </linearGradient>
-                </defs>
                 <circle
                   cx="56"
                   cy="56"
                   r="52"
                   stroke="#374151"
-                  strokeWidth="3"
+                  strokeWidth="4"
                   fill="none"
+                  opacity="0.3"
                 />
                 <circle
                   cx="56"
                   cy="56"
                   r="52"
-                  stroke="url(#storyGradient)"
-                  strokeWidth="3"
+                  stroke="#9CA3AF"
+                  strokeWidth="4"
                   fill="none"
                   strokeDasharray={326.73}
                   strokeDashoffset={326.73 * (1 - recordingTime / 15)}
