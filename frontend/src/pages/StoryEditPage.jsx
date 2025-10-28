@@ -302,7 +302,7 @@ const StoryEditPage = () => {
           >
             <Music className="w-5 h-5" />
             <span className="text-sm font-medium truncate max-w-32">
-              {selectedMusic ? `🎵 ${selectedMusic.name}` : 'Add sound'}
+              {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
             </span>
           </button>
 
