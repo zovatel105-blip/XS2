@@ -155,6 +155,10 @@ const StoryEditPage = () => {
       y,
       color: currentTextColor,
       style: currentTextStyle,
+      size: currentTextSize,
+      align: currentTextAlign,
+      bg: currentTextBg,
+      effect: currentTextEffect,
       isEditing: true
     };
     
