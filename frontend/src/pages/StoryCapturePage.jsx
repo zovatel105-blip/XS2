@@ -434,6 +434,15 @@ const StoryCapturePage = () => {
 
       {/* Barra inferior en modo captura */}
       <div className="absolute bottom-0 left-0 right-0 z-30 pb-8">
+        {/* Timer de grabación centrado arriba del botón */}
+        {isRecording && (
+          <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full">
+            <div className="text-white font-mono text-lg font-semibold">
+              {formatTime(recordingTime)}
+            </div>
+          </div>
+        )}
+        
         <div className="flex items-center justify-center px-4 w-full">
           {/* Botón de galería a la izquierda */}
           <button
@@ -444,24 +453,52 @@ const StoryCapturePage = () => {
           </button>
           
           {/* Botón circular de captura en el centro - Click = foto, Mantener = video */}
-          <button
-            onMouseDown={handlePressStart}
-            onMouseUp={handlePressEnd}
-            onMouseLeave={handlePressEnd}
-            onTouchStart={handlePressStart}
-            onTouchEnd={handlePressEnd}
-            className={`w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
-              isRecording 
-                ? 'border-red-500 bg-transparent scale-110' 
-                : 'border-white bg-transparent hover:scale-105'
-            }`}
-          >
-            <div className={`transition-all ${
-              isRecording 
-                ? 'w-8 h-8 rounded bg-red-500' 
-                : 'w-16 h-16 rounded-full bg-white'
-            }`} />
-          </button>
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            {/* Círculo de progreso cuando está grabando */}
+            {isRecording && (
+              <svg className="absolute inset-0 w-24 h-24 transform -rotate-90">
+                <circle
+                  cx="48"
+                  cy="48"
+                  r="44"
+                  stroke="#374151"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <circle
+                  cx="48"
+                  cy="48"
+                  r="44"
+                  stroke="#3b82f6"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeDasharray={276.46}
+                  strokeDashoffset={276.46 * (1 - recordingTime / 15)}
+                  strokeLinecap="round"
+                  className="transition-all duration-1000 ease-linear"
+                />
+              </svg>
+            )}
+            
+            <button
+              onMouseDown={handlePressStart}
+              onMouseUp={handlePressEnd}
+              onMouseLeave={handlePressEnd}
+              onTouchStart={handlePressStart}
+              onTouchEnd={handlePressEnd}
+              className={`relative w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
+                isRecording 
+                  ? 'border-transparent bg-transparent scale-110' 
+                  : 'border-white bg-transparent hover:scale-105'
+              }`}
+            >
+              <div className={`transition-all ${
+                isRecording 
+                  ? 'w-8 h-8 rounded bg-red-500' 
+                  : 'w-16 h-16 rounded-full bg-white'
+              }`} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
