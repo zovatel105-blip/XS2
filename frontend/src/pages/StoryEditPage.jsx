@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Smile, 
-  Sticker, 
+  Sparkles, 
   Music, 
   MoreHorizontal,
   Image as ImageIcon,
