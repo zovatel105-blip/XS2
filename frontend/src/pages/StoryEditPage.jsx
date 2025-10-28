@@ -746,4 +746,68 @@ const MusicSelectorModal = ({ onClose, onSelect }) => {
   );
 };
 
+// Modal de más opciones
+const MoreOptionsModal = ({ onClose, onReset }) => {
+  const options = [
+    { 
+      id: 'reset',
+      name: 'Reiniciar todo',
+      description: 'Eliminar texto, stickers y música',
+      icon: '🔄',
+      action: onReset
+    },
+    {
+      id: 'save_draft',
+      name: 'Guardar borrador',
+      description: 'Guardar para continuar después',
+      icon: '💾',
+      action: () => {
+        // Funcionalidad futura
+        onClose();
+      }
+    },
+    {
+      id: 'settings',
+      name: 'Configuración',
+      description: 'Ajustes de privacidad y duración',
+      icon: '⚙️',
+      action: () => {
+        // Funcionalidad futura
+        onClose();
+      }
+    }
+  ];
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end justify-center">
+      <div className="bg-white rounded-t-3xl p-6 w-full max-w-md animate-slide-up">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-bold text-gray-900">Más opciones</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {options.map((option) => (
+            <button
+              key={option.id}
+              onClick={option.action}
+              className="w-full text-left p-4 rounded-2xl hover:bg-gray-100 transition-all flex items-center gap-3"
+            >
+              <div className="text-3xl">
+                {option.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-gray-900">{option.name}</p>
+                <p className="text-sm text-gray-500">{option.description}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default StoryEditPage;
