@@ -485,37 +485,218 @@ const StoryEditPage = () => {
       {mediaPreview ? (
         /* Vista previa del contenido con bordes curvos arriba y abajo */
         <div className="absolute top-0 left-0 right-0 bottom-32">
-          {/* Barra de estilos de texto - Solo visible en modo texto */}
-          {isTextMode && (
-            <div className="absolute top-20 left-0 right-0 z-40 px-4">
-              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                {textStyles.map((style) => (
-                  <button
-                    key={style.id}
-                    onClick={() => handleStyleChange(style.id)}
-                    className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-semibold transition-all ${
-                      currentTextStyle === style.id
-                        ? 'bg-white text-black'
-                        : 'bg-black/60 backdrop-blur-sm text-white hover:bg-black/70'
-                    }`}
-                  >
-                    {style.name}
-                  </button>
-                ))}
-              </div>
-              
-              {/* Selector de colores */}
-              <div className="flex gap-2 mt-2 overflow-x-auto pb-2 no-scrollbar">
-                {['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'].map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => handleColorChange(color)}
-                    className={`w-8 h-8 rounded-full border-2 flex-shrink-0 ${
-                      currentTextColor === color ? 'border-white scale-110' : 'border-gray-400'
-                    } transition-all`}
-                    style={{ backgroundColor: color }}
+          {/* Barra lateral izquierda - Control de tamaño del texto */}
+          {isTextMode && editingTextIndex !== null && (
+            <div className="absolute left-4 top-1/4 bottom-1/4 z-40 flex flex-col items-center">
+              <div className="bg-black/60 backdrop-blur-sm rounded-full p-2 flex flex-col items-center gap-2">
+                {/* Slider vertical para tamaño */}
+                <div className="flex flex-col-reverse items-center h-48 relative">
+                  <input
+                    type="range"
+                    min="16"
+                    max="72"
+                    value={currentTextSize}
+                    onChange={(e) => handleSizeChange(Number(e.target.value))}
+                    className="slider-vertical w-48 h-1"
+                    style={{
+                      writingMode: 'bt-lr',
+                      WebkitAppearance: 'slider-vertical',
+                      width: '4px',
+                      height: '180px',
+                      cursor: 'pointer'
+                    }}
                   />
-                ))}
+                  <span className="text-white text-xs font-bold mb-2">{currentTextSize}</span>
+                </div>
+                <span className="text-white text-xs font-semibold mt-1">Tamaño</span>
+              </div>
+            </div>
+          )}
+
+          {/* Barra de herramientas de texto - Solo visible en modo texto */}
+          {isTextMode && editingTextIndex !== null && (
+            <div className="absolute top-20 left-0 right-0 z-40 px-4">
+              <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-3 space-y-3">
+                {/* Fila 1: Fuente, Color, Fondo, Efectos, Alineación */}
+                <div className="flex gap-2 justify-center items-center">
+                  {/* Botón Aa - Selector de fuentes */}
+                  <button
+                    onClick={() => setShowFontPicker(!showFontPicker)}
+                    className="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold text-lg transition-all"
+                    title="Cambiar fuente"
+                  >
+                    Aa
+                  </button>
+
+                  {/* Botón rueda de color */}
+                  <button
+                    onClick={() => setShowColorPicker(!showColorPicker)}
+                    className="w-10 h-10 rounded-full border-2 border-white hover:scale-110 transition-all"
+                    style={{ 
+                      background: `conic-gradient(red, yellow, lime, aqua, blue, magenta, red)`,
+                    }}
+                    title="Cambiar color"
+                  />
+
+                  {/* Botón //A - Fondo de texto */}
+                  <button
+                    onClick={() => {
+                      const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
+                      handleBgChange(nextBg);
+                    }}
+                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white font-bold transition-all"
+                    title="Cambiar fondo"
+                  >
+                    <span className="text-sm">//A</span>
+                  </button>
+
+                  {/* Botón A con puntos - Efectos */}
+                  <button
+                    onClick={() => setShowEffectPicker(!showEffectPicker)}
+                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-all"
+                    title="Efectos de texto"
+                  >
+                    <Sparkle className="w-5 h-5" />
+                  </button>
+
+                  {/* Botón tres líneas - Alineación */}
+                  <button
+                    onClick={() => setShowAlignPicker(!showAlignPicker)}
+                    className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-all"
+                    title="Alinear texto"
+                  >
+                    {currentTextAlign === 'left' && <AlignLeft className="w-5 h-5" />}
+                    {currentTextAlign === 'center' && <AlignCenter className="w-5 h-5" />}
+                    {currentTextAlign === 'right' && <AlignRight className="w-5 h-5" />}
+                  </button>
+                </div>
+
+                {/* Panel de fuentes expandido */}
+                {showFontPicker && (
+                  <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto">
+                    {textStyles.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => {
+                          handleStyleChange(style.id);
+                          setShowFontPicker(false);
+                        }}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                          currentTextStyle === style.id
+                            ? 'bg-white text-black'
+                            : 'bg-white/20 text-white hover:bg-white/30'
+                        }`}
+                        style={style.style}
+                      >
+                        {style.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Panel de colores expandido - Selector completo */}
+                {showColorPicker && (
+                  <div className="space-y-2">
+                    {/* Selector de color HTML5 nativo */}
+                    <div className="flex items-center justify-center gap-3">
+                      <input
+                        type="color"
+                        value={currentTextColor}
+                        onChange={(e) => handleColorChange(e.target.value)}
+                        className="w-16 h-16 rounded-full cursor-pointer border-2 border-white"
+                        title="Selector de color personalizado"
+                      />
+                      <div className="text-white text-sm">
+                        <p className="font-semibold">Color actual:</p>
+                        <p className="font-mono">{currentTextColor}</p>
+                      </div>
+                    </div>
+                    {/* Colores predefinidos */}
+                    <div className="grid grid-cols-8 gap-2">
+                      {['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', 
+                        '#ffa500', '#ff69b4', '#8b4513', '#9370db', '#20b2aa', '#ff6347', '#4169e1', '#32cd32'].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => {
+                            handleColorChange(color);
+                          }}
+                          className={`w-10 h-10 rounded-full border-2 ${
+                            currentTextColor === color ? 'border-white scale-110 ring-2 ring-white' : 'border-gray-400'
+                          } transition-all`}
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Panel de efectos expandido */}
+                {showEffectPicker && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {textEffects.map((effect) => (
+                      <button
+                        key={effect.id}
+                        onClick={() => {
+                          handleEffectChange(effect.id);
+                          setShowEffectPicker(false);
+                        }}
+                        className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                          currentTextEffect === effect.id
+                            ? 'bg-white text-black'
+                            : 'bg-white/20 text-white hover:bg-white/30'
+                        }`}
+                        style={effect.style}
+                      >
+                        {effect.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Panel de alineación expandido */}
+                {showAlignPicker && (
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      onClick={() => {
+                        handleAlignChange('left');
+                        setShowAlignPicker(false);
+                      }}
+                      className={`px-4 py-2 rounded-lg transition-all ${
+                        currentTextAlign === 'left'
+                          ? 'bg-white text-black'
+                          : 'bg-white/20 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <AlignLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleAlignChange('center');
+                        setShowAlignPicker(false);
+                      }}
+                      className={`px-4 py-2 rounded-lg transition-all ${
+                        currentTextAlign === 'center'
+                          ? 'bg-white text-black'
+                          : 'bg-white/20 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <AlignCenter className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleAlignChange('right');
+                        setShowAlignPicker(false);
+                      }}
+                      className={`px-4 py-2 rounded-lg transition-all ${
+                        currentTextAlign === 'right'
+                          ? 'bg-white text-black'
+                          : 'bg-white/20 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <AlignRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
