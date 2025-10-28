@@ -738,9 +738,11 @@ const StoryEditPage = () => {
               )}
             </div>
 
-            {/* Overlays de texto - Ahora editables inline */}
+            {/* Overlays de texto - Ahora editables inline con todos los estilos */}
             {textOverlays.map((text, index) => {
               const styleConfig = textStyles.find(s => s.id === text.style) || textStyles[0];
+              const effectConfig = textEffects.find(e => e.id === text.effect) || textEffects[0];
+              const bgConfig = textBackgrounds.find(b => b.id === text.bg) || textBackgrounds[0];
               
               return (
                 <div
@@ -750,7 +752,6 @@ const StoryEditPage = () => {
                     top: `${text.y}%`,
                     left: `${text.x}%`,
                     transform: 'translate(-50%, -50%)',
-                    color: text.color
                   }}
                 >
                   {text.isEditing || editingTextIndex === index ? (
@@ -767,12 +768,17 @@ const StoryEditPage = () => {
                         autoFocus
                         placeholder="Escribe aquí..."
                         rows={1}
-                        className={`bg-transparent border-b-2 border-white outline-none text-center text-3xl font-bold ${styleConfig.font} ${styleConfig.bg} ${styleConfig.shadow || ''} resize-none`}
+                        className={`bg-transparent border-b-2 border-white outline-none resize-none ${styleConfig.font}`}
                         style={{ 
                           color: text.color,
+                          fontSize: `${text.size || 36}px`,
+                          textAlign: text.align || 'center',
                           minWidth: '200px',
                           maxWidth: '350px',
-                          caretColor: text.color
+                          caretColor: text.color,
+                          ...styleConfig.style,
+                          ...effectConfig.style,
+                          ...bgConfig.style
                         }}
                       />
                     </div>
@@ -782,8 +788,23 @@ const StoryEditPage = () => {
                         e.stopPropagation();
                         setEditingTextIndex(index);
                         setIsTextMode(true);
+                        // Cargar configuración del texto actual
+                        setCurrentTextColor(text.color);
+                        setCurrentTextStyle(text.style);
+                        setCurrentTextSize(text.size || 36);
+                        setCurrentTextAlign(text.align || 'center');
+                        setCurrentTextBg(text.bg || 'none');
+                        setCurrentTextEffect(text.effect || 'none');
                       }}
-                      className={`text-3xl font-bold cursor-pointer ${styleConfig.font} ${styleConfig.bg} ${styleConfig.shadow || ''}`}
+                      className={`cursor-pointer ${styleConfig.font}`}
+                      style={{
+                        color: text.color,
+                        fontSize: `${text.size || 36}px`,
+                        textAlign: text.align || 'center',
+                        ...styleConfig.style,
+                        ...effectConfig.style,
+                        ...bgConfig.style
+                      }}
                     >
                       {text.content}
                     </div>
