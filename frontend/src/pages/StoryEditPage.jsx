@@ -541,11 +541,13 @@ const StoryEditPage = () => {
           <div className="flex items-center justify-center gap-4 mb-3">
             {/* Texto "Aa" */}
             <button
-              onClick={() => setShowTextEditor(!showTextEditor)}
-              className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+              onClick={handleTextMode}
+              className={`w-12 h-12 rounded-full backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all ${
+                isTextMode ? 'bg-white' : 'bg-black/60'
+              }`}
               title="Añadir texto"
             >
-              <span className="text-white font-bold text-xl">Aa</span>
+              <span className={`font-bold text-xl ${isTextMode ? 'text-black' : 'text-white'}`}>Aa</span>
             </button>
 
             {/* GIFs y Emojis */}
