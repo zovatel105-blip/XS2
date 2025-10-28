@@ -626,16 +626,6 @@ const StoryEditPage = () => {
       </div>
 
       {/* Modales y pickers */}
-      {showTextEditor && (
-        <TextEditorModal
-          onClose={() => setShowTextEditor(false)}
-          onAdd={(text) => {
-            setTextOverlays([...textOverlays, { content: text, x: 50, y: 50 }]);
-            setShowTextEditor(false);
-          }}
-        />
-      )}
-
       {showGifEmojiPicker && (
         <GifEmojiPickerModal
           onClose={() => setShowGifEmojiPicker(false)}
