@@ -284,35 +284,15 @@ const StoryEditPage = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black overflow-hidden">
-      {/* Header con botones circulares */}
+      {/* Header con botón de volver */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-start">
           {/* Botón volver a la izquierda */}
           <button
             onClick={() => navigate(-1)}
             className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
           >
             <ArrowLeft className="w-6 h-6 text-white" />
-          </button>
-
-          {/* Botón de música - Centro */}
-          <button
-            onClick={() => setShowMusicSelector(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-sm hover:bg-black/70 rounded-full text-white transition-all"
-          >
-            <Music className="w-5 h-5" />
-            <span className="text-sm font-medium truncate max-w-32">
-              {selectedMusic ? `🎵 ${selectedMusic.title}` : 'Add sound'}
-            </span>
-          </button>
-
-          {/* Botón pantalla completa a la derecha */}
-          <button 
-            onClick={handleToggleFullscreen}
-            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
-            title="Pantalla completa"
-          >
-            <Maximize2 className="w-5 h-5 text-white" />
           </button>
         </div>
       </div>
