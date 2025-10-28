@@ -694,57 +694,6 @@ const StoryEditPage = () => {
   );
 };
 
-// Modal de editor de texto
-const TextEditorModal = ({ onClose, onAdd }) => {
-  const [text, setText] = useState('');
-  const [color, setColor] = useState('#ffffff');
-
-  const colors = ['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-900">Añadir texto</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Escribe tu texto aquí..."
-          className="w-full h-32 px-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-purple-500 resize-none"
-          style={{ color }}
-        />
-
-        <div className="mt-4">
-          <p className="text-sm font-medium text-gray-700 mb-2">Color del texto</p>
-          <div className="flex gap-2">
-            {colors.map((c) => (
-              <button
-                key={c}
-                onClick={() => setColor(c)}
-                className={`w-10 h-10 rounded-full border-2 ${color === c ? 'border-purple-500 scale-110' : 'border-gray-200'} transition-all`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <button
-          onClick={() => text.trim() && onAdd(text)}
-          disabled={!text.trim()}
-          className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-4 rounded-full transition-all"
-        >
-          Añadir texto
-        </button>
-      </div>
-    </div>
-  );
-};
-
 // Modal de GIFs y emojis
 const GifEmojiPickerModal = ({ onClose, onSelect }) => {
   const [activeTab, setActiveTab] = useState('emojis');
