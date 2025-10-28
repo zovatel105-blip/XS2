@@ -443,7 +443,7 @@ const StoryEditPage = () => {
       )}
 
       {/* Área inferior - Botones de edición y botón publicar */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 pb-6 px-4 bg-gradient-to-t from-black via-black/95 to-transparent pt-8">
+      <div className="absolute bottom-0 left-0 right-0 z-30 pb-6 px-4 bg-black pt-4">
         <div className="max-w-md mx-auto space-y-4">
           {/* Botones de edición en horizontal */}
           <div className="flex items-center justify-center gap-4 mb-4">
