@@ -267,28 +267,25 @@ const StoryCapturePage = () => {
     
     console.log('Press duration:', pressDuration, 'ms', 'isRecording:', isRecording);
     
-    // Si está grabando, detener (el usuario mantuvo presionado más de 500ms)
-    if (isRecording) {
+    // Limpiar timer de inicio si existe
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
+    
+    // Si está grabando O si ya pasó el tiempo para iniciar, detener
+    if (isRecording || pressDuration >= 500) {
       console.log('Deteniendo grabación');
-      stopRecording();
-      // Limpiar timer si existe
-      if (pressTimerRef.current) {
-        clearTimeout(pressTimerRef.current);
-        pressTimerRef.current = null;
-      }
+      // Usar setTimeout para asegurar que el estado se actualice
+      setTimeout(() => {
+        stopRecording();
+      }, 10);
     } else {
-      // No está grabando aún, limpiar el timer
-      if (pressTimerRef.current) {
-        clearTimeout(pressTimerRef.current);
-        pressTimerRef.current = null;
-      }
-      
       // Si fue un click rápido (menos de 500ms), tomar foto
       if (pressDuration < 500) {
         console.log('Capturando foto (click rápido)');
         capturePhoto();
       }
-      // Si pasó 500ms pero soltó justo cuando iba a iniciar, no hacer nada
     }
   };
 
