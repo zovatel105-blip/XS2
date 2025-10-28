@@ -8,7 +8,12 @@ import {
   MoreHorizontal,
   Image as ImageIcon,
   Video,
-  X
+  X,
+  Type,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Sparkle
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
