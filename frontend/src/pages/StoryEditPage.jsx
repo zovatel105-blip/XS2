@@ -511,11 +511,11 @@ const StoryEditPage = () => {
               </div>
             ))}
             
-            {/* Indicador de modo texto */}
-            {isTextMode && (
+            {/* Indicador de modo texto - Solo si no hay texto editándose */}
+            {isTextMode && editingTextIndex === null && (
               <div className="absolute inset-0 pointer-events-none border-4 border-dashed border-white/50 rounded-3xl z-10">
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-sm px-6 py-3 rounded-full">
-                  <p className="text-white text-sm font-medium">Toca para añadir texto</p>
+                  <p className="text-white text-sm font-medium">Toca para añadir más texto</p>
                 </div>
               </div>
             )}
