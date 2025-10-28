@@ -506,8 +506,10 @@ const StoryCapturePage = () => {
                   : 'bg-transparent hover:scale-105'
               }`}
             >
-              {/* Anillo exterior gris (siempre visible) */}
-              <div className="absolute inset-0 rounded-full border-4 border-gray-400" />
+              {/* Anillo exterior gris (solo visible cuando NO está grabando) */}
+              {!isRecording && (
+                <div className="absolute inset-0 rounded-full border-4 border-gray-400" />
+              )}
               
               {/* Botón circular con gradiente cuando NO está grabando, blanco cuando SÍ está grabando */}
               <div className={`w-16 h-16 rounded-full transition-all ${
