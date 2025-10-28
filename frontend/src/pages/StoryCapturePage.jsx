@@ -446,11 +446,11 @@ const StoryCapturePage = () => {
               <svg className="absolute inset-0 w-28 h-28 transform -rotate-90">
                 <defs>
                   <linearGradient id="storyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#f7b733', stopOpacity: 1 }} />
-                    <stop offset="25%" style={{ stopColor: '#fc4a1a', stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: '#c71585', stopOpacity: 1 }} />
-                    <stop offset="75%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
+                    <stop offset="0%" style={{ stopColor: '#feda75', stopOpacity: 1 }} />
+                    <stop offset="25%" style={{ stopColor: '#fa7e1e', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#d62976', stopOpacity: 1 }} />
+                    <stop offset="75%" style={{ stopColor: '#962fbf', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#4f5bd5', stopOpacity: 1 }} />
                   </linearGradient>
                 </defs>
                 <circle
