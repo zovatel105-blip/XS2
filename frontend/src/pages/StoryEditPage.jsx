@@ -286,9 +286,11 @@ const StoryEditPage = () => {
 
           {/* Botones agrupados en un contenedor común a la derecha */}
           <div className="bg-black/60 backdrop-blur-sm rounded-full px-2 py-2 flex flex-col gap-2">
-            {/* Expandir */}
+            {/* Expandir - Pantalla completa */}
             <button 
+              onClick={handleToggleFullscreen}
               className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Pantalla completa"
             >
               <Maximize2 className="w-5 h-5 text-white" />
             </button>
@@ -297,6 +299,7 @@ const StoryEditPage = () => {
             <button
               onClick={() => setShowTextEditor(!showTextEditor)}
               className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Añadir texto"
             >
               <Type className="w-5 h-5 text-white" />
             </button>
@@ -305,6 +308,7 @@ const StoryEditPage = () => {
             <button
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Añadir emoji"
             >
               <Smile className="w-5 h-5 text-white" />
             </button>
@@ -313,6 +317,7 @@ const StoryEditPage = () => {
             <button
               onClick={() => setShowStickerPicker(!showStickerPicker)}
               className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Añadir sticker"
             >
               <Sticker className="w-5 h-5 text-white" />
             </button>
@@ -321,12 +326,17 @@ const StoryEditPage = () => {
             <button
               onClick={() => setShowMusicSelector(!showMusicSelector)}
               className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Añadir música"
             >
               <Music className="w-5 h-5 text-white" />
             </button>
 
             {/* Más opciones */}
-            <button className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all">
+            <button 
+              onClick={() => setShowMoreOptions(!showMoreOptions)}
+              className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition-all"
+              title="Más opciones"
+            >
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>
           </div>
