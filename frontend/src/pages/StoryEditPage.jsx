@@ -117,6 +117,26 @@ const StoryEditPage = () => {
     updated[index].content = newContent;
     setTextOverlays(updated);
   };
+  
+  // Handler para cambiar estilo del texto actual
+  const handleStyleChange = (newStyle) => {
+    setCurrentTextStyle(newStyle);
+    if (editingTextIndex !== null) {
+      const updated = [...textOverlays];
+      updated[editingTextIndex].style = newStyle;
+      setTextOverlays(updated);
+    }
+  };
+  
+  // Handler para cambiar color del texto actual
+  const handleColorChange = (newColor) => {
+    setCurrentTextColor(newColor);
+    if (editingTextIndex !== null) {
+      const updated = [...textOverlays];
+      updated[editingTextIndex].color = newColor;
+      setTextOverlays(updated);
+    }
+  };
 
   // Handler para finalizar edición de texto
   const handleFinishEditing = (index) => {
