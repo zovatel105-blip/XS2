@@ -237,8 +237,22 @@ const StoryCapturePage = () => {
 
   // Detener grabación de video
   const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    console.log('stopRecording llamado - mediaRecorder:', !!mediaRecorderRef.current, 'isRecording:', isRecording);
+    
+    if (mediaRecorderRef.current) {
+      const recorder = mediaRecorderRef.current;
+      
+      // Verificar el estado del MediaRecorder
+      if (recorder.state === 'recording') {
+        console.log('Deteniendo MediaRecorder...');
+        recorder.stop();
+      } else {
+        console.log('MediaRecorder no está grabando, estado:', recorder.state);
+      }
+      
+      setIsRecording(false);
+    } else {
+      console.log('No hay mediaRecorder activo');
       setIsRecording(false);
     }
   };
