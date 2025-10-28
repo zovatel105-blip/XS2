@@ -47,11 +47,19 @@ const StoryEditPage = () => {
   const [isTextMode, setIsTextMode] = useState(false);
   const [currentTextStyle, setCurrentTextStyle] = useState('classic');
   const [currentTextColor, setCurrentTextColor] = useState('#ffffff');
+  const [currentTextSize, setCurrentTextSize] = useState(36);
+  const [currentTextAlign, setCurrentTextAlign] = useState('center');
+  const [currentTextBg, setCurrentTextBg] = useState('none');
+  const [currentTextEffect, setCurrentTextEffect] = useState('none');
   const [editingTextIndex, setEditingTextIndex] = useState(null);
   const [showGifEmojiPicker, setShowGifEmojiPicker] = useState(false);
   const [showFilterPicker, setShowFilterPicker] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showFontPicker, setShowFontPicker] = useState(false);
+  const [showAlignPicker, setShowAlignPicker] = useState(false);
+  const [showEffectPicker, setShowEffectPicker] = useState(false);
 
   // Estados para zoom y pan (pinch-to-zoom estilo Instagram)
   const [scale, setScale] = useState(1);
