@@ -40,8 +40,8 @@ const StoryEditPage = () => {
   
   // Estados de modales
   const [showTextEditor, setShowTextEditor] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showStickerPicker, setShowStickerPicker] = useState(false);
+  const [showGifEmojiPicker, setShowGifEmojiPicker] = useState(false);
+  const [showFilterPicker, setShowFilterPicker] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
