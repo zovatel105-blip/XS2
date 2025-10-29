@@ -1159,7 +1159,7 @@ const GifEmojiPickerModal = ({ onClose, onSelect }) => {
   );
 };
 
-// Modal de filtros - Estilo bottom sheet como "Más opciones"
+// Modal de filtros - Estilo bottom sheet difuminado
 const FilterPickerModal = ({ onClose, onSelect }) => {
   const filters = [
     { id: 'normal', name: 'Normal', emoji: '📷' },
@@ -1174,10 +1174,10 @@ const FilterPickerModal = ({ onClose, onSelect }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end justify-center">
-      <div className="bg-white rounded-t-3xl p-6 w-full max-w-md animate-slide-up">
+      <div className="bg-white/10 backdrop-blur-xl rounded-t-3xl p-6 w-full max-w-md animate-slide-up border-t border-white/20">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-900">Filtros</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <h3 className="text-xl font-bold text-white">Filtros</h3>
+          <button onClick={onClose} className="text-white/80 hover:text-white">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -1187,7 +1187,7 @@ const FilterPickerModal = ({ onClose, onSelect }) => {
             <button
               key={filter.id}
               onClick={() => onSelect(filter.name)}
-              className="p-4 rounded-2xl bg-gray-100 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all text-center"
+              className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all text-center text-white"
             >
               <div className="text-3xl mb-2">{filter.emoji}</div>
               <div className="font-medium text-sm">{filter.name}</div>
