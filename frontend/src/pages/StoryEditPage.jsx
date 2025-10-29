@@ -994,7 +994,6 @@ const StoryEditPage = () => {
                         title: "Filtro aplicado",
                         description: `Filtro ${filter.name} seleccionado`,
                       });
-                      setShowFilterPicker(false);
                     }}
                     className={`flex-shrink-0 px-4 py-2 h-10 rounded-full backdrop-blur-sm transition-all ${
                       selectedFilter === filter.id
