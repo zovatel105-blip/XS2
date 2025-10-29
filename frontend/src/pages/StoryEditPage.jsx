@@ -461,109 +461,113 @@ const StoryEditPage = () => {
       {/* Header con botón de volver, controles de texto y botón Listo */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
         <div className="flex items-start justify-between">
-          {/* Botón volver a la izquierda */}
-          <button
-            onClick={() => navigate(-1)}
-            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
-          >
-            <ArrowLeft className="w-6 h-6 text-white" />
-          </button>
+          {/* Botón volver a la izquierda - Solo visible cuando NO se está editando texto */}
+          {!(isTextMode && editingTextIndex !== null) && (
+            <button
+              onClick={() => navigate(-1)}
+              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+            >
+              <ArrowLeft className="w-6 h-6 text-white" />
+            </button>
+          )}
 
-          {/* Botones de control de texto - Visibles cuando se está editando texto */}
+          {/* Botones de control de texto - Centrados cuando se está editando texto */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="flex gap-2 items-center">
-              {/* Botón Aa - Selector de fuentes */}
-              <button
-                onClick={() => {
-                  setShowFontPicker(!showFontPicker);
-                  setShowColorPicker(false);
-                  setShowEffectPicker(false);
-                  setShowAlignPicker(false);
-                }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
-                  showFontPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                }`}
-              >
-                Aa
-              </button>
+            <div className="flex-1 flex justify-center">
+              <div className="flex gap-1.5 items-center">
+                {/* Botón Aa - Selector de fuentes */}
+                <button
+                  onClick={() => {
+                    setShowFontPicker(!showFontPicker);
+                    setShowColorPicker(false);
+                    setShowEffectPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-base transition-all ${
+                    showFontPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  Aa
+                </button>
 
-              {/* Botón rueda de color */}
-              <button
-                onClick={() => {
-                  setShowColorPicker(!showColorPicker);
-                  setShowFontPicker(false);
-                  setShowEffectPicker(false);
-                  setShowAlignPicker(false);
-                }}
-                className={`w-10 h-10 rounded-full border-2 transition-all ${
-                  showColorPicker ? 'border-white scale-110' : 'border-white/50'
-                }`}
-                style={{ 
-                  background: `conic-gradient(red, yellow, lime, aqua, blue, magenta, red)`,
-                }}
-              />
+                {/* Botón rueda de color */}
+                <button
+                  onClick={() => {
+                    setShowColorPicker(!showColorPicker);
+                    setShowFontPicker(false);
+                    setShowEffectPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-9 h-9 rounded-full border-2 transition-all ${
+                    showColorPicker ? 'border-white scale-110' : 'border-white/50'
+                  }`}
+                  style={{ 
+                    background: `conic-gradient(red, yellow, lime, aqua, blue, magenta, red)`,
+                  }}
+                />
 
-              {/* Botón //A - Fondo de texto */}
-              <button
-                onClick={() => {
-                  const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
-                  handleBgChange(nextBg);
-                }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                  currentTextBg !== 'none' ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                }`}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-current">
-                  <text x="12" y="16" fontSize="12" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
-                  <rect x="4" y="10" width="16" height="8" rx="2" fill="currentColor" opacity="0.3"/>
-                </svg>
-              </button>
+                {/* Botón //A - Fondo de texto */}
+                <button
+                  onClick={() => {
+                    const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
+                    handleBgChange(nextBg);
+                  }}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center font-bold transition-all ${
+                    currentTextBg !== 'none' ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-current">
+                    <text x="12" y="16" fontSize="12" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
+                    <rect x="4" y="10" width="16" height="8" rx="2" fill="currentColor" opacity="0.3"/>
+                  </svg>
+                </button>
 
-              {/* Botón efectos - A con puntos alrededor */}
-              <button
-                onClick={() => {
-                  setShowEffectPicker(!showEffectPicker);
-                  setShowFontPicker(false);
-                  setShowColorPicker(false);
-                  setShowAlignPicker(false);
-                }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                  showEffectPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                }`}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <text x="12" y="17" fontSize="14" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
-                  <circle cx="8" cy="7" r="1.5"/>
-                  <circle cx="16" cy="7" r="1.5"/>
-                  <circle cx="8" cy="19" r="1.5"/>
-                  <circle cx="16" cy="19" r="1.5"/>
-                </svg>
-              </button>
+                {/* Botón efectos - A con puntos alrededor */}
+                <button
+                  onClick={() => {
+                    setShowEffectPicker(!showEffectPicker);
+                    setShowFontPicker(false);
+                    setShowColorPicker(false);
+                    setShowAlignPicker(false);
+                  }}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                    showEffectPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <text x="12" y="17" fontSize="14" fontWeight="bold" textAnchor="middle" fill="currentColor">A</text>
+                    <circle cx="8" cy="7" r="1.5"/>
+                    <circle cx="16" cy="7" r="1.5"/>
+                    <circle cx="8" cy="19" r="1.5"/>
+                    <circle cx="16" cy="19" r="1.5"/>
+                  </svg>
+                </button>
 
-              {/* Botón alineación - Tres líneas */}
-              <button
-                onClick={() => {
-                  setShowAlignPicker(!showAlignPicker);
-                  setShowFontPicker(false);
-                  setShowColorPicker(false);
-                  setShowEffectPicker(false);
-                }}
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                  showAlignPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                }`}
-              >
-                {currentTextAlign === 'left' && <AlignLeft className="w-4 h-4" />}
-                {currentTextAlign === 'center' && <AlignCenter className="w-4 h-4" />}
-                {currentTextAlign === 'right' && <AlignRight className="w-4 h-4" />}
-              </button>
+                {/* Botón alineación - Tres líneas */}
+                <button
+                  onClick={() => {
+                    setShowAlignPicker(!showAlignPicker);
+                    setShowFontPicker(false);
+                    setShowColorPicker(false);
+                    setShowEffectPicker(false);
+                  }}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                    showAlignPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                  }`}
+                >
+                  {currentTextAlign === 'left' && <AlignLeft className="w-3.5 h-3.5" />}
+                  {currentTextAlign === 'center' && <AlignCenter className="w-3.5 h-3.5" />}
+                  {currentTextAlign === 'right' && <AlignRight className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
           )}
           
-          {/* Botón Listo - Solo visible cuando se está editando texto */}
+          {/* Botón Listo - Solo visible cuando se está editando texto, sin marco */}
           {editingTextIndex !== null && (
             <button
               onClick={() => handleFinishEditing(editingTextIndex)}
-              className="px-4 py-2 rounded-full bg-white text-black font-semibold hover:bg-gray-100 transition-all"
+              className="px-4 py-2 text-white font-semibold hover:text-gray-200 transition-all"
             >
               Listo
             </button>
