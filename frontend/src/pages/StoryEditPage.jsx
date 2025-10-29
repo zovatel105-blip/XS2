@@ -679,7 +679,8 @@ const StoryEditPage = () => {
               style={{
                 transform: `translate(${posX}px, ${posY}px) scale(${scale})`,
                 transition: initialDistance === 0 && scale === 1 ? 'transform 0.3s ease-out' : 'none',
-                transformOrigin: 'center center'
+                transformOrigin: 'center center',
+                filter: getFilterStyle(selectedFilter)
               }}
             >
               {mediaType === 'image' ? (
