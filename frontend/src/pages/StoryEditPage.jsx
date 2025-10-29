@@ -484,7 +484,7 @@ const StoryEditPage = () => {
                 Aa
               </button>
 
-              {/* Botón paleta de color - Ícono profesional de Lucide */}
+              {/* Botón paleta de color - Paleta visual con colores */}
               <button
                 onClick={() => {
                   setShowColorPicker(!showColorPicker);
@@ -492,10 +492,24 @@ const StoryEditPage = () => {
                   setShowAlignPicker(false);
                 }}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                  showColorPicker ? 'bg-white text-black scale-110' : 'bg-white/20 backdrop-blur-sm text-white'
+                  showColorPicker ? 'bg-white scale-110' : 'bg-white/20 backdrop-blur-sm'
                 }`}
               >
-                <Palette className="w-4 h-4" strokeWidth={2.5} />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Forma de la paleta */}
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12C2 14.5 3 16.75 4.63 18.38C5 18.75 5.5 18.88 6 18.75C6.5 18.63 7 18.25 7 17.75C7 17.5 6.88 17.25 6.75 17C6.38 16.25 6.13 15.38 6.13 14.5C6.13 11.38 8.63 8.88 11.75 8.88C14.88 8.88 17.38 11.38 17.38 14.5C17.38 17.5 14.88 20 11.88 20C11.25 20 10.63 19.88 10.13 19.63C9.75 19.5 9.38 19.5 9 19.75C8.63 20 8.38 20.38 8.38 20.88C8.38 21.5 8.75 22 9.38 22.25C10.25 22.63 11.13 22.88 12.13 22.88C16.63 22.88 20.38 19.13 20.38 14.63C20.38 9.13 16.5 2 12 2Z"
+                    fill={showColorPicker ? '#333' : 'white'}
+                    opacity={showColorPicker ? '0.2' : '0.9'}
+                  />
+                  
+                  {/* Círculos de colores en la paleta */}
+                  <circle cx="8.5" cy="10" r="1.5" fill="#FF4444"/>
+                  <circle cx="12" cy="8.5" r="1.5" fill="#FFD700"/>
+                  <circle cx="15.5" cy="10" r="1.5" fill="#44FF44"/>
+                  <circle cx="13.5" cy="13" r="1.5" fill="#4444FF"/>
+                  <circle cx="10.5" cy="13.5" r="1.5" fill="#FF44FF"/>
+                </svg>
               </button>
 
               {/* Botón A con fondo - Mejorado y adaptado al círculo */}
