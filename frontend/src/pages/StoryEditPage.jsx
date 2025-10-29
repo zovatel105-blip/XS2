@@ -978,53 +978,96 @@ const StoryEditPage = () => {
           </div>
 
           {/* Botones de edición en horizontal */}
-          <div className="flex items-center justify-center gap-4 mb-3">
-            {/* Texto "Aa" */}
-            <button
-              onClick={handleTextMode}
-              className={`w-12 h-12 rounded-full backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all ${
-                isTextMode ? 'bg-white' : 'bg-black/60'
-              }`}
-              title="Añadir texto"
-            >
-              <span className={`font-bold text-xl ${isTextMode ? 'text-black' : 'text-white'}`}>Aa</span>
-            </button>
+          <div className="mb-3">
+            {/* Mostrar filtros cuando showFilterPicker está activo */}
+            {showFilterPicker ? (
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar px-4">
+                {/* Botón de volver */}
+                <button
+                  onClick={() => setShowFilterPicker(false)}
+                  className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all flex-shrink-0"
+                  title="Volver"
+                >
+                  <ArrowLeft className="w-5 h-5 text-white" />
+                </button>
+                
+                {/* Filtros individuales */}
+                {[
+                  { id: 'normal', name: 'Normal', emoji: '📷' },
+                  { id: 'vintage', name: 'Vintage', emoji: '📼' },
+                  { id: 'bw', name: 'B&N', emoji: '⚫' },
+                  { id: 'sepia', name: 'Sepia', emoji: '🟤' },
+                  { id: 'vivid', name: 'Vívido', emoji: '🌈' },
+                  { id: 'warm', name: 'Cálido', emoji: '🔥' },
+                  { id: 'cool', name: 'Frío', emoji: '❄️' },
+                  { id: 'dramatic', name: 'Dramático', emoji: '🎭' },
+                ].map((filter) => (
+                  <button
+                    key={filter.id}
+                    onClick={() => {
+                      toast({
+                        title: "Filtro aplicado",
+                        description: `Filtro ${filter.name} seleccionado`,
+                      });
+                      setShowFilterPicker(false);
+                    }}
+                    className="flex-shrink-0 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 transition-all flex items-center gap-2"
+                  >
+                    <span className="text-xl">{filter.emoji}</span>
+                    <span className="text-white text-sm font-medium whitespace-nowrap">{filter.name}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-4">
+                {/* Texto "Aa" */}
+                <button
+                  onClick={handleTextMode}
+                  className={`w-12 h-12 rounded-full backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all ${
+                    isTextMode ? 'bg-white' : 'bg-black/60'
+                  }`}
+                  title="Añadir texto"
+                >
+                  <span className={`font-bold text-xl ${isTextMode ? 'text-black' : 'text-white'}`}>Aa</span>
+                </button>
 
-            {/* GIFs y Emojis */}
-            <button
-              onClick={() => setShowGifEmojiPicker(!showGifEmojiPicker)}
-              className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
-              title="GIFs y Emojis"
-            >
-              <Smile className="w-5 h-5 text-white" />
-            </button>
+                {/* GIFs y Emojis */}
+                <button
+                  onClick={() => setShowGifEmojiPicker(!showGifEmojiPicker)}
+                  className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+                  title="GIFs y Emojis"
+                >
+                  <Smile className="w-5 h-5 text-white" />
+                </button>
 
-            {/* Filtros */}
-            <button
-              onClick={() => setShowFilterPicker(!showFilterPicker)}
-              className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
-              title="Filtros"
-            >
-              <Sparkles className="w-5 h-5 text-white" />
-            </button>
+                {/* Filtros */}
+                <button
+                  onClick={() => setShowFilterPicker(!showFilterPicker)}
+                  className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+                  title="Filtros"
+                >
+                  <Sparkles className="w-5 h-5 text-white" />
+                </button>
 
-            {/* Música */}
-            <button
-              onClick={() => setShowMusicSelector(true)}
-              className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
-              title="Añadir música"
-            >
-              <Music className="w-5 h-5 text-white" />
-            </button>
+                {/* Música */}
+                <button
+                  onClick={() => setShowMusicSelector(true)}
+                  className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+                  title="Añadir música"
+                >
+                  <Music className="w-5 h-5 text-white" />
+                </button>
 
-            {/* Más opciones */}
-            <button 
-              onClick={() => setShowMoreOptions(!showMoreOptions)}
-              className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
-              title="Más opciones"
-            >
-              <MoreHorizontal className="w-5 h-5 text-white" />
-            </button>
+                {/* Más opciones */}
+                <button 
+                  onClick={() => setShowMoreOptions(!showMoreOptions)}
+                  className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 flex items-center justify-center transition-all"
+                  title="Más opciones"
+                >
+                  <MoreHorizontal className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Botón de "Tu historia" estilo Instagram */}
