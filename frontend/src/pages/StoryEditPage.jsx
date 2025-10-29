@@ -490,11 +490,11 @@ const StoryEditPage = () => {
                   setShowFontPicker(false);
                   setShowAlignPicker(false);
                 }}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all p-1.5 ${
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all overflow-hidden ${
                   showColorPicker ? 'bg-white scale-110' : 'bg-white/20 backdrop-blur-sm'
                 }`}
               >
-                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute">
                   <defs>
                     {/* Gradiente cónico para la rueda de colores */}
                     <linearGradient id="colorGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -515,20 +515,20 @@ const StoryEditPage = () => {
                   </defs>
                   
                   {/* Anillo exterior con borde blanco */}
-                  <circle cx="50" cy="50" r="48" fill="none" stroke="white" strokeWidth="4"/>
+                  <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="3"/>
                   
                   {/* Segmentos de color que forman la rueda */}
-                  <path d="M 50,50 L 50,5 A 45,45 0 0,1 81.82,18.18 Z" fill="#FF0066"/>
-                  <path d="M 50,50 L 81.82,18.18 A 45,45 0 0,1 95,50 Z" fill="#FF9900"/>
-                  <path d="M 50,50 L 95,50 A 45,45 0 0,1 81.82,81.82 Z" fill="#FFFF00"/>
-                  <path d="M 50,50 L 81.82,81.82 A 45,45 0 0,1 50,95 Z" fill="#00FF00"/>
-                  <path d="M 50,50 L 50,95 A 45,45 0 0,1 18.18,81.82 Z" fill="#00FFFF"/>
-                  <path d="M 50,50 L 18.18,81.82 A 45,45 0 0,1 5,50 Z" fill="#0088FF"/>
-                  <path d="M 50,50 L 5,50 A 45,45 0 0,1 18.18,18.18 Z" fill="#8800FF"/>
-                  <path d="M 50,50 L 18.18,18.18 A 45,45 0 0,1 50,5 Z" fill="#FF00FF"/>
+                  <path d="M 50,50 L 50,7 A 43,43 0 0,1 80.46,19.54 Z" fill="#FF0066"/>
+                  <path d="M 50,50 L 80.46,19.54 A 43,43 0 0,1 93,50 Z" fill="#FF9900"/>
+                  <path d="M 50,50 L 93,50 A 43,43 0 0,1 80.46,80.46 Z" fill="#FFFF00"/>
+                  <path d="M 50,50 L 80.46,80.46 A 43,43 0 0,1 50,93 Z" fill="#00FF00"/>
+                  <path d="M 50,50 L 50,93 A 43,43 0 0,1 19.54,80.46 Z" fill="#00FFFF"/>
+                  <path d="M 50,50 L 19.54,80.46 A 43,43 0 0,1 7,50 Z" fill="#0088FF"/>
+                  <path d="M 50,50 L 7,50 A 43,43 0 0,1 19.54,19.54 Z" fill="#8800FF"/>
+                  <path d="M 50,50 L 19.54,19.54 A 43,43 0 0,1 50,7 Z" fill="#FF00FF"/>
                   
                   {/* Centro blanco para simular profundidad */}
-                  <circle cx="50" cy="50" r="15" fill="white" opacity={showColorPicker ? '0.9' : '0.7'}/>
+                  <circle cx="50" cy="50" r="14" fill="white" opacity={showColorPicker ? '0.9' : '0.7'}/>
                 </svg>
               </button>
 
