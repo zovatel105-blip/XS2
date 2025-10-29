@@ -478,16 +478,16 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
 
       {/* Enhanced search with real-time indicator */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
         <Input
           placeholder="Buscar cualquier canción, artista... ¡Millones de resultados!"
           value={searchQuery}
           onChange={handleSearchChange}
-          className="pl-10 bg-gray-50 border-0 rounded-full"
+          className="pl-10 bg-white/20 backdrop-blur-sm border-0 rounded-full text-white placeholder:text-white/60"
         />
         {isSearching && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+            <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
           </div>
         )}
       </div>
