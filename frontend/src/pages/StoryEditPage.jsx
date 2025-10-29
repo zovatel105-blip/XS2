@@ -530,30 +530,58 @@ const StoryEditPage = () => {
                 </svg>
               </button>
 
-              {/* Botón A con fondo - Mejorado */}
+              {/* Botón A con fondo - Mejorado y adaptado al círculo */}
               <button
                 onClick={() => {
-                  const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
+                  const nextBg = currentTextBg === 'none' ? 'white' : currentTextBg === 'white' ? 'black' : 'none';
                   handleBgChange(nextBg);
                 }}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                  currentTextBg !== 'none' ? 'bg-white' : 'bg-white/20 backdrop-blur-sm'
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all overflow-hidden ${
+                  currentTextBg === 'white' ? 'bg-white' : currentTextBg === 'black' ? 'bg-black border border-white/30' : 'bg-white/20 backdrop-blur-sm'
                 }`}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  {/* Rectángulo de fondo */}
-                  <rect x="5" y="8" width="14" height="10" rx="2" 
-                        fill={currentTextBg !== 'none' ? '#000000' : '#ffffff'} 
-                        opacity={currentTextBg !== 'none' ? '0.9' : '0.3'}/>
-                  {/* Letra A */}
-                  <text x="12" y="16.5" 
-                        fontSize="11" 
-                        fontWeight="bold" 
-                        textAnchor="middle" 
-                        fill={currentTextBg !== 'none' ? '#ffffff' : '#ffffff'}
-                        style={{ fontFamily: 'Arial, sans-serif' }}>
-                    A
-                  </text>
+                <svg width="36" height="36" viewBox="0 0 36 36" className="absolute">
+                  {currentTextBg === 'none' && (
+                    <>
+                      {/* Sin fondo - Solo letra A blanca */}
+                      <text x="18" y="24" 
+                            fontSize="16" 
+                            fontWeight="bold" 
+                            textAnchor="middle" 
+                            fill="#ffffff"
+                            style={{ fontFamily: 'Arial, sans-serif' }}>
+                        A
+                      </text>
+                    </>
+                  )}
+                  {currentTextBg === 'white' && (
+                    <>
+                      {/* Fondo blanco - Rectángulo blanco con letra negra */}
+                      <rect x="9" y="11" width="18" height="14" rx="3" fill="#ffffff"/>
+                      <text x="18" y="22" 
+                            fontSize="14" 
+                            fontWeight="bold" 
+                            textAnchor="middle" 
+                            fill="#000000"
+                            style={{ fontFamily: 'Arial, sans-serif' }}>
+                        A
+                      </text>
+                    </>
+                  )}
+                  {currentTextBg === 'black' && (
+                    <>
+                      {/* Fondo negro - Rectángulo negro con letra blanca */}
+                      <rect x="9" y="11" width="18" height="14" rx="3" fill="#000000" stroke="#ffffff" strokeWidth="1"/>
+                      <text x="18" y="22" 
+                            fontSize="14" 
+                            fontWeight="bold" 
+                            textAnchor="middle" 
+                            fill="#ffffff"
+                            style={{ fontFamily: 'Arial, sans-serif' }}>
+                        A
+                      </text>
+                    </>
+                  )}
                 </svg>
               </button>
 
