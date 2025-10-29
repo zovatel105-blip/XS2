@@ -495,7 +495,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
       {/* Search status/results info */}
       {searchQuery.trim() && (
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">
+          <span className="text-white/80">
             {isSearching 
               ? `Buscando "${searchQuery}"...`
               : searchResults.length > 0
@@ -504,7 +504,7 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
             }
           </span>
           {searchResults.length > 0 && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs bg-white/20 backdrop-blur-sm text-white border-0">
               <Globe className="w-3 h-3 mr-1" />
               Búsqueda global
             </Badge>
