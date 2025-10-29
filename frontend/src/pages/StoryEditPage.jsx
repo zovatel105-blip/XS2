@@ -460,12 +460,12 @@ const StoryEditPage = () => {
     <div className="fixed inset-0 z-50 bg-black overflow-hidden">
       {/* Header con botón de volver, controles de texto y botón Listo */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-center">
           {/* Botón volver a la izquierda - Solo visible cuando NO se está editando texto */}
           {!(isTextMode && editingTextIndex !== null) && (
             <button
               onClick={() => navigate(-1)}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
+              className="absolute left-4 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/70 transition-all"
             >
               <ArrowLeft className="w-6 h-6 text-white" />
             </button>
@@ -473,101 +473,113 @@ const StoryEditPage = () => {
 
           {/* Botones de control de texto - Centrados cuando se está editando texto */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="flex-1 flex justify-center">
-              <div className="flex gap-1.5 items-center">
-                {/* Botón Aa - Selector de fuentes */}
-                <button
-                  onClick={() => {
-                    setShowFontPicker(!showFontPicker);
-                    setShowColorPicker(false);
-                    setShowAlignPicker(false);
-                  }}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-base transition-all ${
-                    showFontPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                  }`}
-                >
-                  Aa
-                </button>
+            <div className="flex gap-2 items-center">
+              {/* Botón Aa - Selector de fuentes */}
+              <button
+                onClick={() => {
+                  setShowFontPicker(!showFontPicker);
+                  setShowColorPicker(false);
+                  setShowAlignPicker(false);
+                }}
+                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-base transition-all ${
+                  showFontPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                }`}
+              >
+                Aa
+              </button>
 
-                {/* Botón paleta de color - Círculo multicolor mejorado */}
-                <button
-                  onClick={() => {
-                    setShowColorPicker(!showColorPicker);
-                    setShowFontPicker(false);
-                    setShowAlignPicker(false);
-                  }}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    showColorPicker ? 'bg-white scale-110' : 'bg-white/20 backdrop-blur-sm'
-                  }`}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="transition-all">
-                    {/* Círculo base */}
-                    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.5" className={showColorPicker ? 'stroke-black' : 'stroke-white'}/>
-                    {/* Segmentos de color */}
-                    <path d="M12 3 L12 12 L17.3 6.7 Z" fill="#FF0000"/>
-                    <path d="M12 12 L17.3 6.7 L21 12 Z" fill="#FFFF00"/>
-                    <path d="M12 12 L21 12 L17.3 17.3 Z" fill="#00FF00"/>
-                    <path d="M12 12 L17.3 17.3 L12 21 Z" fill="#00FFFF"/>
-                    <path d="M12 12 L12 21 L6.7 17.3 Z" fill="#0000FF"/>
-                    <path d="M12 12 L6.7 17.3 L3 12 Z" fill="#FF00FF"/>
-                    <path d="M12 12 L3 12 L6.7 6.7 Z" fill="#FF0000" opacity="0.5"/>
-                    <path d="M12 12 L6.7 6.7 L12 3 Z" fill="#FF8800"/>
-                    {/* Círculo central blanco */}
-                    <circle cx="12" cy="12" r="2.5" fill="white" stroke={showColorPicker ? 'black' : 'white'} strokeWidth="1"/>
-                  </svg>
-                </button>
+              {/* Botón paleta de color - Mejorado y adaptado al círculo */}
+              <button
+                onClick={() => {
+                  setShowColorPicker(!showColorPicker);
+                  setShowFontPicker(false);
+                  setShowAlignPicker(false);
+                }}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all overflow-hidden ${
+                  showColorPicker ? 'bg-white scale-110' : 'bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <svg width="36" height="36" viewBox="0 0 36 36" className="absolute">
+                  {/* Fondo del círculo con degradado cónico */}
+                  <defs>
+                    <radialGradient id="colorWheel">
+                      <stop offset="0%" stopColor="white" />
+                      <stop offset="100%" stopColor="white" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
+                  {/* Segmentos de color formando la rueda */}
+                  <circle cx="18" cy="18" r="18" fill="url(#colorWheel)" opacity="0"/>
+                  {/* Círculo rojo */}
+                  <circle cx="18" cy="5" r="3" fill="#FF0000"/>
+                  {/* Círculo naranja */}
+                  <circle cx="27" cy="9" r="3" fill="#FF8800"/>
+                  {/* Círculo amarillo */}
+                  <circle cx="31" cy="18" r="3" fill="#FFFF00"/>
+                  {/* Círculo verde lima */}
+                  <circle cx="27" cy="27" r="3" fill="#00FF00"/>
+                  {/* Círculo cyan */}
+                  <circle cx="18" cy="31" r="3" fill="#00FFFF"/>
+                  {/* Círculo azul */}
+                  <circle cx="9" cy="27" r="3" fill="#0000FF"/>
+                  {/* Círculo magenta */}
+                  <circle cx="5" cy="18" r="3" fill="#FF00FF"/>
+                  {/* Círculo rosa */}
+                  <circle cx="9" cy="9" r="3" fill="#FF0088"/>
+                  {/* Círculo central blanco con borde */}
+                  <circle cx="18" cy="18" r="5" fill="white" stroke={showColorPicker ? '#000' : '#fff'} strokeWidth="1.5"/>
+                </svg>
+              </button>
 
-                {/* Botón A con fondo - Mejorado */}
-                <button
-                  onClick={() => {
-                    const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
-                    handleBgChange(nextBg);
-                  }}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    currentTextBg !== 'none' ? 'bg-white' : 'bg-white/20 backdrop-blur-sm'
-                  }`}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    {/* Rectángulo de fondo */}
-                    <rect x="5" y="8" width="14" height="10" rx="2" 
-                          fill={currentTextBg !== 'none' ? '#000000' : '#ffffff'} 
-                          opacity={currentTextBg !== 'none' ? '0.9' : '0.3'}/>
-                    {/* Letra A */}
-                    <text x="12" y="16.5" 
-                          fontSize="11" 
-                          fontWeight="bold" 
-                          textAnchor="middle" 
-                          fill={currentTextBg !== 'none' ? '#ffffff' : '#ffffff'}
-                          style={{ fontFamily: 'Arial, sans-serif' }}>
-                      A
-                    </text>
-                  </svg>
-                </button>
+              {/* Botón A con fondo - Mejorado */}
+              <button
+                onClick={() => {
+                  const nextBg = currentTextBg === 'none' ? 'solid' : currentTextBg === 'solid' ? 'semi' : currentTextBg === 'semi' ? 'gradient' : 'none';
+                  handleBgChange(nextBg);
+                }}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                  currentTextBg !== 'none' ? 'bg-white' : 'bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  {/* Rectángulo de fondo */}
+                  <rect x="5" y="8" width="14" height="10" rx="2" 
+                        fill={currentTextBg !== 'none' ? '#000000' : '#ffffff'} 
+                        opacity={currentTextBg !== 'none' ? '0.9' : '0.3'}/>
+                  {/* Letra A */}
+                  <text x="12" y="16.5" 
+                        fontSize="11" 
+                        fontWeight="bold" 
+                        textAnchor="middle" 
+                        fill={currentTextBg !== 'none' ? '#ffffff' : '#ffffff'}
+                        style={{ fontFamily: 'Arial, sans-serif' }}>
+                    A
+                  </text>
+                </svg>
+              </button>
 
-                {/* Botón alineación - Tres líneas */}
-                <button
-                  onClick={() => {
-                    setShowAlignPicker(!showAlignPicker);
-                    setShowFontPicker(false);
-                    setShowColorPicker(false);
-                  }}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                    showAlignPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
-                  }`}
-                >
-                  {currentTextAlign === 'left' && <AlignLeft className="w-3.5 h-3.5" />}
-                  {currentTextAlign === 'center' && <AlignCenter className="w-3.5 h-3.5" />}
-                  {currentTextAlign === 'right' && <AlignRight className="w-3.5 h-3.5" />}
-                </button>
-              </div>
+              {/* Botón alineación - Tres líneas */}
+              <button
+                onClick={() => {
+                  setShowAlignPicker(!showAlignPicker);
+                  setShowFontPicker(false);
+                  setShowColorPicker(false);
+                }}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                  showAlignPicker ? 'bg-white text-black' : 'bg-white/20 backdrop-blur-sm text-white'
+                }`}
+              >
+                {currentTextAlign === 'left' && <AlignLeft className="w-3.5 h-3.5" />}
+                {currentTextAlign === 'center' && <AlignCenter className="w-3.5 h-3.5" />}
+                {currentTextAlign === 'right' && <AlignRight className="w-3.5 h-3.5" />}
+              </button>
             </div>
           )}
           
-          {/* Botón Listo - Solo visible cuando se está editando texto, sin marco */}
+          {/* Botón Listo - Posición absoluta a la derecha */}
           {editingTextIndex !== null && (
             <button
               onClick={() => handleFinishEditing(editingTextIndex)}
-              className="px-4 py-2 text-white font-semibold hover:text-gray-200 transition-all"
+              className="absolute right-4 px-4 py-2 text-white font-semibold hover:text-gray-200 transition-all"
             >
               Listo
             </button>
