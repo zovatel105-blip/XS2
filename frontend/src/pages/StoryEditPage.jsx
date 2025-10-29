@@ -697,46 +697,26 @@ const StoryEditPage = () => {
                 >
                   {text.isEditing || editingTextIndex === index ? (
                     <div className="flex flex-col items-center">
-                      <textarea
-                        ref={(el) => {
-                          if (el) {
-                            // Ajustar altura automáticamente
-                            el.style.height = 'auto';
-                            el.style.height = el.scrollHeight + 'px';
-                            // Ajustar ancho automáticamente
-                            el.style.width = 'auto';
-                            const minWidth = Math.max(100, el.scrollWidth);
-                            el.style.width = minWidth + 'px';
-                          }
-                        }}
+                      <input
+                        type="text"
                         value={text.content}
-                        onChange={(e) => {
-                          handleTextChange(index, e.target.value);
-                          // Ajustar tamaño dinámicamente al escribir
-                          e.target.style.height = 'auto';
-                          e.target.style.height = e.target.scrollHeight + 'px';
-                          e.target.style.width = 'auto';
-                          const minWidth = Math.max(100, e.target.scrollWidth);
-                          e.target.style.width = minWidth + 'px';
-                        }}
+                        onChange={(e) => handleTextChange(index, e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
+                          if (e.key === 'Enter') {
                             e.preventDefault();
                             handleFinishEditing(index);
                           }
                         }}
                         autoFocus
                         placeholder="Escribe aquí..."
-                        rows={1}
-                        className={`bg-transparent border-none outline-none resize-none ${styleConfig.font}`}
+                        className={`bg-transparent border-none outline-none ${styleConfig.font}`}
                         style={{ 
                           color: text.color,
                           fontSize: `${text.size || 36}px`,
                           textAlign: text.align || 'center',
                           caretColor: text.color,
-                          overflow: 'hidden',
-                          whiteSpace: 'pre-wrap',
-                          wordBreak: 'break-word',
+                          width: 'auto',
+                          minWidth: '100px',
                           ...styleConfig.style,
                           ...effectConfig.style,
                           ...bgConfig.style
