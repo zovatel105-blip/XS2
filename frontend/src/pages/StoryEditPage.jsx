@@ -977,28 +977,32 @@ const StoryEditPage = () => {
                 
                 {/* Filtros individuales */}
                 {[
-                  { id: 'normal', name: 'Normal', emoji: '📷' },
-                  { id: 'vintage', name: 'Vintage', emoji: '📼' },
-                  { id: 'bw', name: 'B&N', emoji: '⚫' },
-                  { id: 'sepia', name: 'Sepia', emoji: '🟤' },
-                  { id: 'vivid', name: 'Vívido', emoji: '🌈' },
-                  { id: 'warm', name: 'Cálido', emoji: '🔥' },
-                  { id: 'cool', name: 'Frío', emoji: '❄️' },
-                  { id: 'dramatic', name: 'Dramático', emoji: '🎭' },
+                  { id: 'normal', name: 'Normal' },
+                  { id: 'vintage', name: 'Vintage' },
+                  { id: 'bw', name: 'B&N' },
+                  { id: 'sepia', name: 'Sepia' },
+                  { id: 'vivid', name: 'Vívido' },
+                  { id: 'warm', name: 'Cálido' },
+                  { id: 'cool', name: 'Frío' },
+                  { id: 'dramatic', name: 'Dramático' },
                 ].map((filter) => (
                   <button
                     key={filter.id}
                     onClick={() => {
+                      setSelectedFilter(filter.id);
                       toast({
                         title: "Filtro aplicado",
                         description: `Filtro ${filter.name} seleccionado`,
                       });
                       setShowFilterPicker(false);
                     }}
-                    className="flex-shrink-0 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm hover:bg-black/70 transition-all flex items-center gap-2"
+                    className={`flex-shrink-0 px-4 py-2 h-10 rounded-full backdrop-blur-sm transition-all ${
+                      selectedFilter === filter.id
+                        ? 'bg-white text-black'
+                        : 'bg-black/60 hover:bg-black/70 text-white'
+                    }`}
                   >
-                    <span className="text-xl">{filter.emoji}</span>
-                    <span className="text-white text-sm font-medium whitespace-nowrap">{filter.name}</span>
+                    <span className="text-sm font-medium whitespace-nowrap">{filter.name}</span>
                   </button>
                 ))}
               </div>
