@@ -474,25 +474,46 @@ const StoryEditPage = () => {
         /* Slider vertical con forma de embudo */
         .text-size-slider {
           -webkit-appearance: none;
+          -moz-appearance: none;
           appearance: none;
-          background: transparent;
+          background: transparent !important;
           cursor: pointer;
           position: relative;
+          outline: none;
+          border: none;
         }
 
         /* Track completamente transparente - el embudo SVG es el fondo visual */
         .text-size-slider::-webkit-slider-runnable-track {
           width: 3px;
           height: 180px;
-          background: transparent;
-          border: none;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
         }
 
         .text-size-slider::-moz-range-track {
           width: 3px;
           height: 180px;
-          background: transparent;
-          border: none;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+
+        .text-size-slider::-ms-track {
+          width: 3px;
+          height: 180px;
+          background: transparent !important;
+          border: none !important;
+          color: transparent !important;
+        }
+
+        .text-size-slider::-ms-fill-lower {
+          background: transparent !important;
+        }
+
+        .text-size-slider::-ms-fill-upper {
+          background: transparent !important;
         }
 
         /* Thumb - Círculo blanco sólido simple */
@@ -521,6 +542,16 @@ const StoryEditPage = () => {
           transition: transform 0.15s ease;
         }
 
+        .text-size-slider::-ms-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #ffffff;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
         /* Efecto al arrastrar */
         .text-size-slider:active::-webkit-slider-thumb {
           transform: scale(1.15);
@@ -533,6 +564,17 @@ const StoryEditPage = () => {
         /* Sin outline al hacer focus */
         .text-size-slider:focus {
           outline: none;
+        }
+
+        /* Eliminar cualquier borde o sombra adicional */
+        .text-size-slider:focus::-webkit-slider-runnable-track {
+          background: transparent !important;
+          border: none !important;
+        }
+
+        .text-size-slider:focus::-moz-range-track {
+          background: transparent !important;
+          border: none !important;
         }
       `}</style>
       
