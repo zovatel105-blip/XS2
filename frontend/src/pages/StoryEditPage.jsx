@@ -469,31 +469,58 @@ const StoryEditPage = () => {
 
   return (
     <>
-      {/* Estilos personalizados para el slider de texto - Estilo TikTok */}
+      {/* Estilos personalizados para el slider de texto - Forma de embudo */}
       <style>{`
-        /* Slider vertical estilo TikTok - Simple y minimalista */
+        /* Slider vertical con forma de embudo */
         .text-size-slider {
           -webkit-appearance: none;
           appearance: none;
           background: transparent;
           cursor: pointer;
+          position: relative;
         }
 
-        /* Track - Línea delgada translúcida */
+        /* Contenedor para el gradiente de embudo - Más ancho arriba, estrecho abajo */
         .text-size-slider::-webkit-slider-runnable-track {
           width: 3px;
           height: 180px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 10px;
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.15) 10%,
+            rgba(255, 255, 255, 0.25) 20%,
+            rgba(255, 255, 255, 0.3) 30%,
+            rgba(255, 255, 255, 0.35) 40%,
+            rgba(255, 255, 255, 0.35) 50%,
+            rgba(255, 255, 255, 0.3) 60%,
+            rgba(255, 255, 255, 0.25) 70%,
+            rgba(255, 255, 255, 0.2) 80%,
+            rgba(255, 255, 255, 0.15) 90%,
+            rgba(255, 255, 255, 0) 100%
+          );
           border: none;
+          position: relative;
         }
 
         .text-size-slider::-moz-range-track {
           width: 3px;
           height: 180px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 10px;
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.15) 10%,
+            rgba(255, 255, 255, 0.25) 20%,
+            rgba(255, 255, 255, 0.3) 30%,
+            rgba(255, 255, 255, 0.35) 40%,
+            rgba(255, 255, 255, 0.35) 50%,
+            rgba(255, 255, 255, 0.3) 60%,
+            rgba(255, 255, 255, 0.25) 70%,
+            rgba(255, 255, 255, 0.2) 80%,
+            rgba(255, 255, 255, 0.15) 90%,
+            rgba(255, 255, 255, 0) 100%
+          );
           border: none;
+          position: relative;
         }
 
         /* Thumb - Círculo blanco sólido simple */
