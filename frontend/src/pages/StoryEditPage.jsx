@@ -480,47 +480,19 @@ const StoryEditPage = () => {
           position: relative;
         }
 
-        /* Contenedor para el gradiente de embudo - Más ancho arriba, estrecho abajo */
+        /* Track completamente transparente - el embudo SVG es el fondo visual */
         .text-size-slider::-webkit-slider-runnable-track {
           width: 3px;
           height: 180px;
-          background: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.15) 10%,
-            rgba(255, 255, 255, 0.25) 20%,
-            rgba(255, 255, 255, 0.3) 30%,
-            rgba(255, 255, 255, 0.35) 40%,
-            rgba(255, 255, 255, 0.35) 50%,
-            rgba(255, 255, 255, 0.3) 60%,
-            rgba(255, 255, 255, 0.25) 70%,
-            rgba(255, 255, 255, 0.2) 80%,
-            rgba(255, 255, 255, 0.15) 90%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: transparent;
           border: none;
-          position: relative;
         }
 
         .text-size-slider::-moz-range-track {
           width: 3px;
           height: 180px;
-          background: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.15) 10%,
-            rgba(255, 255, 255, 0.25) 20%,
-            rgba(255, 255, 255, 0.3) 30%,
-            rgba(255, 255, 255, 0.35) 40%,
-            rgba(255, 255, 255, 0.35) 50%,
-            rgba(255, 255, 255, 0.3) 60%,
-            rgba(255, 255, 255, 0.25) 70%,
-            rgba(255, 255, 255, 0.2) 80%,
-            rgba(255, 255, 255, 0.15) 90%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: transparent;
           border: none;
-          position: relative;
         }
 
         /* Thumb - Círculo blanco sólido simple */
