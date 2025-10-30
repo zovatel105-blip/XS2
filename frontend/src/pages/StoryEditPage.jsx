@@ -1214,6 +1214,7 @@ const StoryEditPage = () => {
         />
       )}
     </div>
+    </>
   );
 };
 
