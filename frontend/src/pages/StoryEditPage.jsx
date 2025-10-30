@@ -468,7 +468,73 @@ const StoryEditPage = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black overflow-hidden">
+    <>
+      {/* Estilos personalizados para el slider de texto */}
+      <style>{`
+        /* Slider vertical estilo Instagram - Sin números, minimalista */
+        .text-size-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        /* Track (la cola translúcida gris) */
+        .text-size-slider::-webkit-slider-runnable-track {
+          width: 4px;
+          height: 200px;
+          background: rgba(180, 180, 180, 0.4);
+          border-radius: 10px;
+          border: none;
+        }
+
+        .text-size-slider::-moz-range-track {
+          width: 4px;
+          height: 200px;
+          background: rgba(180, 180, 180, 0.4);
+          border-radius: 10px;
+          border: none;
+        }
+
+        /* Thumb (el botón circular blanco) */
+        .text-size-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #ffffff;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          margin-left: -8px; /* Centrar el thumb sobre el track */
+        }
+
+        .text-size-slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #ffffff;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Efecto al hacer focus (cuando está siendo usado) */
+        .text-size-slider:focus {
+          outline: none;
+        }
+
+        .text-size-slider:focus::-webkit-slider-thumb {
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .text-size-slider:focus::-moz-range-thumb {
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+      `}</style>
+      
+      <div className="fixed inset-0 z-50 bg-black overflow-hidden">
       {/* Header con botón de volver, controles de texto y botón Listo */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-3 px-4">
         <div className="flex items-center justify-center">
