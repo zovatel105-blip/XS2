@@ -469,87 +469,137 @@ const StoryEditPage = () => {
 
   return (
     <>
-      {/* Estilos personalizados para el slider de texto */}
+      {/* Estilos personalizados para el slider de texto - Estilo videojuego moderno */}
       <style>{`
-        /* Slider vertical estilo Instagram - Sin números, minimalista */
+        /* Slider vertical estilo videojuego moderno */
         .text-size-slider {
           -webkit-appearance: none;
           appearance: none;
           background: transparent;
           cursor: pointer;
+          position: relative;
         }
 
-        /* Track (la cola translúcida gris que se estrecha) */
+        /* Track - Riel alargado con fondo translúcido oscuro */
         .text-size-slider::-webkit-slider-runnable-track {
-          width: 12px;
-          height: 200px;
-          background: linear-gradient(to bottom, 
-            rgba(200, 200, 200, 0.5) 0%, 
-            rgba(200, 200, 200, 0.4) 50%, 
-            rgba(200, 200, 200, 0.3) 100%
-          );
-          border-radius: 20px;
-          border: none;
+          width: 16px;
+          height: 220px;
+          background: rgba(20, 20, 30, 0.75);
+          backdrop-filter: blur(10px);
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 
+            inset 0 2px 8px rgba(0, 0, 0, 0.5),
+            0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         .text-size-slider::-moz-range-track {
-          width: 12px;
-          height: 200px;
-          background: linear-gradient(to bottom, 
-            rgba(200, 200, 200, 0.5) 0%, 
-            rgba(200, 200, 200, 0.4) 50%, 
-            rgba(200, 200, 200, 0.3) 100%
-          );
-          border-radius: 20px;
-          border: none;
+          width: 16px;
+          height: 220px;
+          background: rgba(20, 20, 30, 0.75);
+          backdrop-filter: blur(10px);
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 
+            inset 0 2px 8px rgba(0, 0, 0, 0.5),
+            0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* Thumb (el botón circular blanco) - Más grande */
+        /* Thumb - Círculo blanco brillante */
         .text-size-slider::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: none;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+          background: radial-gradient(circle at 30% 30%, #ffffff, #f0f0f0);
+          cursor: grab;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+          box-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.6),
+            0 4px 12px rgba(0, 0, 0, 0.4),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
           margin-left: -8px;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .text-size-slider::-moz-range-thumb {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
-          background: #ffffff;
-          cursor: pointer;
-          border: none;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+          background: radial-gradient(circle at 30% 30%, #ffffff, #f0f0f0);
+          cursor: grab;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+          box-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.6),
+            0 4px 12px rgba(0, 0, 0, 0.4),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Efecto al hacer focus (cuando está siendo usado) */
-        .text-size-slider:focus {
-          outline: none;
+        /* Estado activo - Al arrastrar */
+        .text-size-slider:active::-webkit-slider-thumb {
+          cursor: grabbing;
+          transform: scale(1.1);
+          box-shadow: 
+            0 0 25px rgba(255, 255, 255, 0.9),
+            0 6px 16px rgba(0, 0, 0, 0.5),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
         }
 
-        .text-size-slider:focus::-webkit-slider-thumb {
-          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .text-size-slider:focus::-moz-range-thumb {
-          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
+        .text-size-slider:active::-moz-range-thumb {
+          cursor: grabbing;
+          transform: scale(1.1);
+          box-shadow: 
+            0 0 25px rgba(255, 255, 255, 0.9),
+            0 6px 16px rgba(0, 0, 0, 0.5),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
         }
 
         /* Efecto hover */
         .text-size-slider:hover::-webkit-slider-thumb {
           transform: scale(1.05);
-          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.4);
+          box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.8),
+            0 5px 14px rgba(0, 0, 0, 0.45),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
         }
 
         .text-size-slider:hover::-moz-range-thumb {
           transform: scale(1.05);
-          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.4);
+          box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.8),
+            0 5px 14px rgba(0, 0, 0, 0.45),
+            inset 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Contenedor del slider con fondo */
+        .slider-container {
+          position: relative;
+          padding: 20px;
+          background: rgba(15, 15, 25, 0.6);
+          backdrop-filter: blur(20px);
+          border-radius: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animación de aparición */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px) translateX(-50%);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(-50%) translateX(-50%);
+          }
+        }
+
+        .slider-container.active {
+          animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
       `}</style>
       
