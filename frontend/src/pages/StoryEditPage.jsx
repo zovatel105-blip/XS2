@@ -732,27 +732,61 @@ const StoryEditPage = () => {
       {mediaPreview ? (
         /* Vista previa del contenido con bordes curvos arriba y abajo */
         <div className="absolute top-0 left-0 right-0 bottom-32">
-          {/* Barra lateral izquierda - Control de tamaño del texto - Estilo TikTok */}
+          {/* Barra lateral izquierda - Control de tamaño del texto - Forma de embudo */}
           {isTextMode && editingTextIndex !== null && (
             <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40">
-              {/* Slider vertical estilo TikTok - simple y limpio */}
-              <input
-                type="range"
-                min="16"
-                max="72"
-                value={currentTextSize}
-                onChange={(e) => handleSizeChange(Number(e.target.value))}
-                className="text-size-slider"
-                style={{
-                  writingMode: 'bt-lr',
-                  WebkitAppearance: 'slider-vertical',
-                  width: '3px',
-                  height: '180px',
-                  background: 'transparent',
-                  outline: 'none',
-                  border: 'none',
-                }}
-              />
+              <div className="relative flex items-center justify-center" style={{ width: '50px', height: '180px' }}>
+                {/* SVG de embudo en el fondo */}
+                <svg 
+                  width="50" 
+                  height="180" 
+                  viewBox="0 0 50 180" 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+                  style={{ zIndex: 0 }}
+                >
+                  {/* Forma de embudo - más ancho arriba, estrecho abajo */}
+                  <defs>
+                    <linearGradient id="funnelGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+                      <stop offset="50%" stopColor="rgba(255,255,255,0.35)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
+                    </linearGradient>
+                  </defs>
+                  {/* Path del embudo - ancho arriba (35px), estrecho abajo (8px) */}
+                  <path
+                    d="M 7.5 0 
+                       C 7.5 0, 7.5 10, 7.5 20
+                       L 17.5 180
+                       L 32.5 180
+                       L 42.5 20
+                       C 42.5 10, 42.5 0, 42.5 0
+                       Z"
+                    fill="url(#funnelGradient)"
+                    opacity="0.8"
+                  />
+                </svg>
+                
+                {/* Slider vertical sobre el embudo */}
+                <input
+                  type="range"
+                  min="16"
+                  max="72"
+                  value={currentTextSize}
+                  onChange={(e) => handleSizeChange(Number(e.target.value))}
+                  className="text-size-slider"
+                  style={{
+                    writingMode: 'bt-lr',
+                    WebkitAppearance: 'slider-vertical',
+                    width: '3px',
+                    height: '180px',
+                    background: 'transparent',
+                    outline: 'none',
+                    border: 'none',
+                    position: 'relative',
+                    zIndex: 10,
+                  }}
+                />
+              </div>
             </div>
           )}
 
