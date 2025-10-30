@@ -639,25 +639,25 @@ const StoryEditPage = () => {
           {/* Barra lateral izquierda - Control de tamaño del texto */}
           {isTextMode && editingTextIndex !== null && (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 z-40">
-              <div className="bg-black/60 backdrop-blur-sm rounded-full p-3 flex flex-col items-center gap-3" style={{ width: '44px' }}>
-                {/* Slider vertical para tamaño */}
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-white text-xs font-bold">{currentTextSize}</span>
-                  <input
-                    type="range"
-                    min="16"
-                    max="72"
-                    value={currentTextSize}
-                    onChange={(e) => handleSizeChange(Number(e.target.value))}
-                    className="slider-vertical"
-                    style={{
-                      writingMode: 'bt-lr',
-                      WebkitAppearance: 'slider-vertical',
-                      width: '6px',
-                      height: '200px',
-                    }}
-                  />
-                </div>
+              <div className="flex flex-col items-center">
+                {/* Slider vertical estilo Instagram sin números */}
+                <input
+                  type="range"
+                  min="16"
+                  max="72"
+                  value={currentTextSize}
+                  onChange={(e) => handleSizeChange(Number(e.target.value))}
+                  className="text-size-slider"
+                  style={{
+                    writingMode: 'bt-lr',
+                    WebkitAppearance: 'slider-vertical',
+                    width: '4px',
+                    height: '200px',
+                    background: 'transparent',
+                    outline: 'none',
+                    border: 'none',
+                  }}
+                />
               </div>
             </div>
           )}
