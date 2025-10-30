@@ -757,16 +757,16 @@ const StoryEditPage = () => {
           {/* Barra lateral izquierda - Control de tamaño del texto - Forma de embudo */}
           {isTextMode && editingTextIndex !== null && (
             <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40">
-              <div className="relative flex items-center justify-center" style={{ width: '50px', height: '180px' }}>
-                {/* SVG de embudo en el fondo */}
+              <div className="relative flex items-center justify-center" style={{ width: '40px', height: '160px' }}>
+                {/* SVG de embudo en el fondo - más pequeño y con bordes redondeados */}
                 <svg 
-                  width="50" 
-                  height="180" 
-                  viewBox="0 0 50 180" 
+                  width="40" 
+                  height="160" 
+                  viewBox="0 0 40 160" 
                   className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
                   style={{ zIndex: 0 }}
                 >
-                  {/* Forma de embudo - más ancho arriba, estrecho abajo */}
+                  {/* Forma de embudo - más ancho arriba, estrecho abajo con bordes redondeados */}
                   <defs>
                     <linearGradient id="funnelGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                       <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
@@ -774,14 +774,18 @@ const StoryEditPage = () => {
                       <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
                     </linearGradient>
                   </defs>
-                  {/* Path del embudo - ancho arriba (35px), estrecho abajo (8px) */}
+                  {/* Path del embudo con bordes redondeados arriba y abajo */}
                   <path
-                    d="M 7.5 0 
-                       C 7.5 0, 7.5 10, 7.5 20
-                       L 17.5 180
-                       L 32.5 180
-                       L 42.5 20
-                       C 42.5 10, 42.5 0, 42.5 0
+                    d="M 12 5 
+                       C 12 2, 14 0, 16 0
+                       L 24 0
+                       C 26 0, 28 2, 28 5
+                       L 28 15
+                       L 22 155
+                       C 22 157, 21 160, 20 160
+                       L 20 160
+                       C 19 160, 18 157, 18 155
+                       L 12 15
                        Z"
                     fill="url(#funnelGradient)"
                     opacity="0.8"
