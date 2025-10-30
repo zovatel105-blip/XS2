@@ -736,7 +736,7 @@ const StoryEditPage = () => {
                   style={{
                     writingMode: 'bt-lr',
                     WebkitAppearance: 'slider-vertical',
-                    width: '4px',
+                    width: '12px',
                     height: '200px',
                     background: 'transparent',
                     outline: 'none',
