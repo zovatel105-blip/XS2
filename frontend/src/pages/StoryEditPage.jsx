@@ -471,38 +471,43 @@ const StoryEditPage = () => {
     <>
       {/* Estilos personalizados para el slider de texto - Forma de embudo */}
       <style>{`
-        /* Slider vertical con forma de embudo */
+        /* Slider rotado para hacerlo vertical */
         .text-size-slider {
           -webkit-appearance: none;
           -moz-appearance: none;
           appearance: none;
+          width: 180px;
+          height: 3px;
           background: transparent !important;
           cursor: pointer;
-          position: relative;
           outline: none;
           border: none;
+          transform: rotate(-90deg);
+          transform-origin: center center;
         }
 
         /* Track completamente transparente - el embudo SVG es el fondo visual */
         .text-size-slider::-webkit-slider-runnable-track {
-          width: 3px;
-          height: 180px;
+          width: 100%;
+          height: 3px;
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
+          outline: none !important;
         }
 
         .text-size-slider::-moz-range-track {
-          width: 3px;
-          height: 180px;
+          width: 100%;
+          height: 3px;
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
+          outline: none !important;
         }
 
         .text-size-slider::-ms-track {
-          width: 3px;
-          height: 180px;
+          width: 100%;
+          height: 3px;
           background: transparent !important;
           border: none !important;
           color: transparent !important;
@@ -510,10 +515,12 @@ const StoryEditPage = () => {
 
         .text-size-slider::-ms-fill-lower {
           background: transparent !important;
+          border: none !important;
         }
 
         .text-size-slider::-ms-fill-upper {
           background: transparent !important;
+          border: none !important;
         }
 
         /* Thumb - Círculo blanco sólido simple */
@@ -527,7 +534,7 @@ const StoryEditPage = () => {
           cursor: pointer;
           border: none;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          margin-left: -10.5px;
+          margin-top: -10.5px;
           transition: transform 0.15s ease;
         }
 
@@ -563,18 +570,19 @@ const StoryEditPage = () => {
 
         /* Sin outline al hacer focus */
         .text-size-slider:focus {
-          outline: none;
+          outline: none !important;
         }
 
-        /* Eliminar cualquier borde o sombra adicional */
         .text-size-slider:focus::-webkit-slider-runnable-track {
           background: transparent !important;
           border: none !important;
+          outline: none !important;
         }
 
         .text-size-slider:focus::-moz-range-track {
           background: transparent !important;
           border: none !important;
+          outline: none !important;
         }
       `}</style>
       
