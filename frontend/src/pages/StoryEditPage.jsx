@@ -756,13 +756,13 @@ const StoryEditPage = () => {
         <div className="absolute top-0 left-0 right-0 bottom-32">
           {/* Barra lateral izquierda - Control de tamaño del texto - Forma de embudo */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40">
-              <div className="relative flex items-center justify-center" style={{ width: '35px', height: '140px' }}>
-                {/* SVG de embudo en el fondo - más pequeño y con bordes redondeados */}
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40" style={{ marginTop: '-20px' }}>
+              <div className="relative flex items-center justify-center" style={{ width: '42px', height: '140px' }}>
+                {/* SVG de embudo en el fondo - más ancho y con bordes redondeados */}
                 <svg 
-                  width="35" 
+                  width="42" 
                   height="140" 
-                  viewBox="0 0 35 140" 
+                  viewBox="0 0 42 140" 
                   className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
                   style={{ zIndex: 0 }}
                 >
@@ -774,18 +774,18 @@ const StoryEditPage = () => {
                       <stop offset="100%" stopColor="rgba(255,255,255,0.3)" />
                     </linearGradient>
                   </defs>
-                  {/* Path del embudo con bordes redondeados arriba y abajo */}
+                  {/* Path del embudo con bordes redondeados arriba y abajo - más ancho */}
                   <path
-                    d="M 11 4 
-                       C 11 2, 12.5 0, 14 0
-                       L 21 0
-                       C 22.5 0, 24 2, 24 4
-                       L 24 12
-                       L 19 136
-                       C 19 138, 18 140, 17.5 140
-                       L 17.5 140
-                       C 17 140, 16 138, 16 136
-                       L 11 12
+                    d="M 10 4 
+                       C 10 2, 12 0, 14 0
+                       L 28 0
+                       C 30 0, 32 2, 32 4
+                       L 32 12
+                       L 23 136
+                       C 23 138, 22 140, 21 140
+                       L 21 140
+                       C 20 140, 19 138, 19 136
+                       L 10 12
                        Z"
                     fill="url(#funnelGradient)"
                     opacity="0.8"
