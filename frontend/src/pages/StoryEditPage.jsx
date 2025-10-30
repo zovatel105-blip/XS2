@@ -705,29 +705,27 @@ const StoryEditPage = () => {
       {mediaPreview ? (
         /* Vista previa del contenido con bordes curvos arriba y abajo */
         <div className="absolute top-0 left-0 right-0 bottom-32">
-          {/* Barra lateral izquierda - Control de tamaño del texto - Estilo videojuego */}
+          {/* Barra lateral izquierda - Control de tamaño del texto - Estilo TikTok */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40">
-              <div className="slider-container active flex flex-col items-center">
-                {/* Slider vertical estilo videojuego moderno */}
-                <input
-                  type="range"
-                  min="16"
-                  max="72"
-                  value={currentTextSize}
-                  onChange={(e) => handleSizeChange(Number(e.target.value))}
-                  className="text-size-slider"
-                  style={{
-                    writingMode: 'bt-lr',
-                    WebkitAppearance: 'slider-vertical',
-                    width: '16px',
-                    height: '220px',
-                    background: 'transparent',
-                    outline: 'none',
-                    border: 'none',
-                  }}
-                />
-              </div>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40">
+              {/* Slider vertical estilo TikTok - simple y limpio */}
+              <input
+                type="range"
+                min="16"
+                max="72"
+                value={currentTextSize}
+                onChange={(e) => handleSizeChange(Number(e.target.value))}
+                className="text-size-slider"
+                style={{
+                  writingMode: 'bt-lr',
+                  WebkitAppearance: 'slider-vertical',
+                  width: '3px',
+                  height: '180px',
+                  background: 'transparent',
+                  outline: 'none',
+                  border: 'none',
+                }}
+              />
             </div>
           )}
 
