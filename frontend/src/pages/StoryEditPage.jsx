@@ -756,7 +756,7 @@ const StoryEditPage = () => {
         <div className="absolute top-0 left-0 right-0 bottom-32">
           {/* Barra lateral izquierda - Control de tamaño del texto - Forma de embudo */}
           {isTextMode && editingTextIndex !== null && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-40" style={{ marginTop: '-20px' }}>
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 z-40" style={{ marginTop: '-35px' }}>
               <div className="relative flex items-center justify-center" style={{ width: '42px', height: '140px' }}>
                 {/* SVG de embudo en el fondo - más ancho y con bordes redondeados */}
                 <svg 
