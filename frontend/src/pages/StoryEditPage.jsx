@@ -269,6 +269,70 @@ const StoryEditPage = () => {
     updated.splice(index, 1);
     setTextOverlays(updated);
   };
+
+  // Handlers para arrastrar textos
+  const handleTextDragStart = (e, index) => {
+    if (editingTextIndex !== null) return; // No arrastrar si está editando
+    e.stopPropagation();
+    setDraggingTextIndex(index);
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    setDragStartPos({ x: clientX, y: clientY });
+  };
+
+  const handleTextDragMove = (e, containerRef) => {
+    if (draggingTextIndex === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const rect = containerRef.getBoundingClientRect();
+    const newX = ((clientX - rect.left) / rect.width) * 100;
+    const newY = ((clientY - rect.top) / rect.height) * 100;
+    
+    const updated = [...textOverlays];
+    updated[draggingTextIndex].x = Math.max(0, Math.min(100, newX));
+    updated[draggingTextIndex].y = Math.max(0, Math.min(100, newY));
+    setTextOverlays(updated);
+  };
+
+  const handleTextDragEnd = () => {
+    setDraggingTextIndex(null);
+  };
+
+  // Handlers para arrastrar stickers
+  const handleStickerDragStart = (e, index) => {
+    e.stopPropagation();
+    setDraggingStickerIndex(index);
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    setDragStartPos({ x: clientX, y: clientY });
+  };
+
+  const handleStickerDragMove = (e, containerRef) => {
+    if (draggingStickerIndex === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    const rect = containerRef.getBoundingClientRect();
+    const newX = ((clientX - rect.left) / rect.width) * 100;
+    const newY = ((clientY - rect.top) / rect.height) * 100;
+    
+    const updated = [...stickers];
+    updated[draggingStickerIndex].x = Math.max(0, Math.min(100, newX));
+    updated[draggingStickerIndex].y = Math.max(0, Math.min(100, newY));
+    setStickers(updated);
+  };
+
+  const handleStickerDragEnd = () => {
+    setDraggingStickerIndex(null);
+  };
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
