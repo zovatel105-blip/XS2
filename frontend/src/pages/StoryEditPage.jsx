@@ -1078,22 +1078,47 @@ const StoryEditPage = () => {
               );
             })}
 
-            {/* Stickers (independientes del zoom) - Ahora arrastrables */}
+            {/* Stickers (independientes del zoom) - Ahora arrastrables y eliminables */}
             {stickers.map((sticker, index) => (
               <div
                 key={index}
-                onTouchStart={(e) => handleStickerDragStart(e, index)}
-                onMouseDown={(e) => handleStickerDragStart(e, index)}
-                className="absolute text-4xl z-10 cursor-move"
+                className="absolute z-10"
                 style={{
                   top: `${sticker.y}%`,
                   left: `${sticker.x}%`,
-                  transform: 'translate(-50%, -50%)',
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none'
+                  transform: 'translate(-50%, -50%)'
                 }}
               >
-                {sticker.emoji}
+                <div className="relative">
+                  <div
+                    onTouchStart={(e) => handleStickerDragStart(e, index)}
+                    onMouseDown={(e) => handleStickerDragStart(e, index)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedStickerIndex(selectedStickerIndex === index ? null : index);
+                    }}
+                    className="text-4xl cursor-move"
+                    style={{
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none'
+                    }}
+                  >
+                    {sticker.emoji}
+                  </div>
+                  {/* Botón de eliminar sticker cuando está seleccionado */}
+                  {selectedStickerIndex === index && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteSticker(index);
+                      }}
+                      className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors"
+                      style={{ zIndex: 100 }}
+                    >
+                      <X className="w-4 h-4 text-white" />
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
             
