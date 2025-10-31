@@ -27,8 +27,52 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
       console.log('     - Tipo:', currentStory.media_type);
       console.log('     - URL:', currentStory.media_url);
       console.log('     - Thumbnail:', currentStory.thumbnail_url);
+      console.log('     - Music:', currentStory.music);
     }
   }, [currentUserIndex, currentStoryIndex, storiesGroups]);
+  
+  // Handle background music playback
+  useEffect(() => {
+    if (!currentStory) return;
+
+    // Stop any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    // Play new audio if story has music
+    if (currentStory.music && currentStory.music.preview_url) {
+      console.log('🎵 [StoriesViewer] Story has music:', currentStory.music);
+      
+      // Create new audio element
+      const audio = new Audio(currentStory.music.preview_url);
+      audio.loop = false; // Don't loop, story will advance
+      audio.volume = isMuted ? 0 : 1;
+      
+      // Play audio automatically
+      audio.play().catch(error => {
+        console.error('❌ [StoriesViewer] Error playing story audio:', error);
+      });
+
+      audioRef.current = audio;
+    }
+
+    // Cleanup function
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentUserIndex, currentStoryIndex, currentStory]);
+
+  // Handle mute/unmute for background music
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : 1;
+    }
+  }, [isMuted]);
   
   // Helper function to get full URL
   const getFullMediaUrl = (url) => {
