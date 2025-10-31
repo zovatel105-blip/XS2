@@ -1061,19 +1061,6 @@ const StoryEditPage = () => {
                       >
                         {text.content}
                       </span>
-                      {/* Botón de eliminar texto cuando está editando */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteText(index);
-                          setIsTextMode(false);
-                          setEditingTextIndex(null);
-                        }}
-                        className="mt-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors"
-                        style={{ zIndex: 100 }}
-                      >
-                        <X className="w-5 h-5 text-white" />
-                      </button>
                     </div>
                   ) : (
                     <div
