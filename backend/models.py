@@ -763,6 +763,7 @@ class StoryResponse(BaseModel):
     text_overlays: List[Dict[str, Any]] = []
     stickers: List[Dict[str, Any]] = []
     music_id: Optional[str] = None
+    music: Optional[Dict[str, Any]] = None  # Complete music object with title, artist, preview_url
     views_count: int
     created_at: datetime
     expires_at: datetime
