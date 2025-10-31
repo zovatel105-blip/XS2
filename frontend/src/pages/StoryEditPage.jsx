@@ -1031,10 +1031,10 @@ const StoryEditPage = () => {
         <div className="max-w-md mx-auto space-y-3">
           {/* Paneles de selección - Aparecen encima de los botones */}
           <div className="space-y-2 mb-3">
-            {/* Panel de fuentes - Solo cuando está editando texto - Centrado en la pantalla */}
+            {/* Panel de fuentes - Solo cuando está editando texto - Centrado un poco más abajo */}
             {isTextMode && editingTextIndex !== null && showFontPicker && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-                <div className="bg-black/70 backdrop-blur-sm rounded-2xl p-3 pointer-events-auto max-w-md w-full mx-4">
+              <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style={{ paddingTop: '80px' }}>
+                <div className="pointer-events-auto max-w-md w-full mx-4">
                   <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                     {textStyles.map((style) => (
                       <button
