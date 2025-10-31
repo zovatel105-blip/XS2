@@ -1350,8 +1350,25 @@ const StoryEditPage = () => {
             )}
           </div>
 
-          {/* Botón de "Tu historia" estilo Instagram */}
-          <div className="flex justify-end">
+          {/* Botón de "Tu historia" estilo Instagram y Papelera */}
+          <div className="flex justify-between items-center">
+            {/* Papelera - Solo visible cuando se arrastra algo */}
+            {(draggingTextIndex !== null || draggingStickerIndex !== null) && (
+              <div
+                id="trash-zone"
+                className={`flex items-center justify-center w-14 h-14 rounded-full transition-all ${
+                  isOverTrash 
+                    ? 'bg-red-500 scale-110' 
+                    : 'bg-gray-900/80 backdrop-blur-sm'
+                }`}
+              >
+                <Trash2 className={`w-6 h-6 ${isOverTrash ? 'text-white' : 'text-gray-400'}`} />
+              </div>
+            )}
+            
+            {/* Espaciador cuando no hay papelera visible */}
+            {!(draggingTextIndex !== null || draggingStickerIndex !== null) && <div></div>}
+            
             <button
               onClick={handlePublishStory}
               disabled={!storedMediaFile || isPublishing}
