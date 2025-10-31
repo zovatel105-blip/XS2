@@ -8822,6 +8822,34 @@ async def get_stories(
         users_cursor = db.users.find({"id": {"$in": user_ids}})
         users_dict = {user["id"]: user async for user in users_cursor}
         
+        # Get music data for stories that have music_id
+        music_ids = [story.get("music_id") for story in stories if story.get("music_id")]
+        music_dict = {}
+        if music_ids:
+            # Try to get music from user_audio collection
+            user_audio_cursor = db.user_audio.find({"id": {"$in": music_ids}})
+            async for audio in user_audio_cursor:
+                music_dict[audio["id"]] = {
+                    "id": audio["id"],
+                    "title": audio.get("title", "Unknown"),
+                    "artist": audio.get("artist", "Unknown Artist"),
+                    "preview_url": audio.get("audio_url"),
+                    "cover_url": audio.get("cover_url")
+                }
+            
+            # Also try system music (iTunes, trending)
+            remaining_music_ids = [mid for mid in music_ids if mid not in music_dict]
+            if remaining_music_ids:
+                system_music_cursor = db.system_music.find({"id": {"$in": remaining_music_ids}})
+                async for music in system_music_cursor:
+                    music_dict[music["id"]] = {
+                        "id": music["id"],
+                        "title": music.get("title", "Unknown"),
+                        "artist": music.get("artist", "Unknown Artist"),
+                        "preview_url": music.get("preview_url"),
+                        "cover_url": music.get("cover_url")
+                    }
+        
         # Build response
         result = []
         for user_id, user_stories in stories_by_user.items():
@@ -8838,11 +8866,17 @@ async def get_stories(
                 viewed_by_me = story["id"] in viewed_story_ids
                 if not viewed_by_me:
                     has_unviewed = True
+                
+                # Get music data if story has music_id
+                music_data = None
+                if story.get("music_id"):
+                    music_data = music_dict.get(story["music_id"])
                     
                 story_responses.append(StoryResponse(
                     **story,
                     user=user_response,
-                    viewed_by_me=viewed_by_me
+                    viewed_by_me=viewed_by_me,
+                    music=music_data
                 ))
             
             result.append(StoriesGroupResponse(
