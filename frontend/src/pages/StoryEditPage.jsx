@@ -334,6 +334,14 @@ const StoryEditPage = () => {
     setDraggingStickerIndex(null);
   };
 
+  // Handler para eliminar sticker
+  const handleDeleteSticker = (index) => {
+    const updated = [...stickers];
+    updated.splice(index, 1);
+    setStickers(updated);
+    setSelectedStickerIndex(null);
+  };
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
