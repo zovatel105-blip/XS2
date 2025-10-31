@@ -1056,15 +1056,19 @@ const StoryEditPage = () => {
               );
             })}
 
-            {/* Stickers (independientes del zoom) */}
+            {/* Stickers (independientes del zoom) - Ahora arrastrables */}
             {stickers.map((sticker, index) => (
               <div
                 key={index}
-                className="absolute text-4xl z-10 pointer-events-none"
+                onTouchStart={(e) => handleStickerDragStart(e, index)}
+                onMouseDown={(e) => handleStickerDragStart(e, index)}
+                className="absolute text-4xl z-10 cursor-move"
                 style={{
                   top: `${sticker.y}%`,
                   left: `${sticker.x}%`,
-                  transform: 'translate(-50%, -50%)'
+                  transform: 'translate(-50%, -50%)',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none'
                 }}
               >
                 {sticker.emoji}
