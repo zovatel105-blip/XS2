@@ -75,7 +75,7 @@ const StoryEditPage = () => {
   const [draggingTextIndex, setDraggingTextIndex] = useState(null);
   const [draggingStickerIndex, setDraggingStickerIndex] = useState(null);
   const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 });
-  const [selectedStickerIndex, setSelectedStickerIndex] = useState(null);
+  const [isOverTrash, setIsOverTrash] = useState(false);
 
   // Estilos de texto disponibles - 10+ fuentes variadas
   const textStyles = [
