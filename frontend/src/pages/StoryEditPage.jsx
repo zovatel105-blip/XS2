@@ -1035,7 +1035,7 @@ const StoryEditPage = () => {
             {isTextMode && editingTextIndex !== null && showFontPicker && (
               <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style={{ paddingTop: '80px' }}>
                 <div className="pointer-events-auto max-w-md w-full mx-4">
-                  <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                  <div className="flex gap-2 overflow-x-auto no-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     {textStyles.map((style) => (
                       <button
                         key={style.id}
@@ -1043,12 +1043,12 @@ const StoryEditPage = () => {
                           handleStyleChange(style.id);
                           setShowFontPicker(false);
                         }}
-                        className={`px-5 py-2 rounded-full whitespace-nowrap font-semibold transition-all flex-shrink-0 ${
+                        className={`px-5 py-2 rounded-full whitespace-nowrap font-semibold transition-all flex-shrink-0 border-0 outline-none ${
                           currentTextStyle === style.id
                             ? 'bg-white text-black'
                             : 'bg-white/20 backdrop-blur-sm text-white'
                         }`}
-                        style={style.style}
+                        style={{ ...style.style, border: 'none', outline: 'none' }}
                       >
                         {style.name}
                       </button>
