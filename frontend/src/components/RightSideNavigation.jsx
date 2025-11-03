@@ -174,7 +174,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )}
         title="Mensajes"
       >
-        <MessageCircle className={cn(
+        <Inbox className={cn(
           "w-3 h-3",
           location.pathname === '/messages' ? "text-white" : "text-gray-600"
         )} />
