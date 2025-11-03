@@ -209,22 +209,26 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
     }
 
     return (
-      <div className="w-full h-full relative">
-        {/* Single option fullscreen preview */}
-        <div className="w-full h-full relative bg-black">
-          {/* Letter identifier */}
-          <div className="absolute top-6 left-6 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-lg z-20">
-            {String.fromCharCode(65 + previewIndex)}
-          </div>
-
-          {/* Background Image - True Fullscreen */}
-          <img 
-            src={previewOption.media.url} 
-            alt={`Opción ${previewIndex + 1}`}
-            className="w-full h-full object-cover"
-          />
-          
-          {/* No overlay - clean image only */}
+      <div className="w-full h-full relative bg-black">
+        {/* Single option fullscreen preview - Story style */}
+        <div className="w-full h-full relative flex items-center justify-center">
+          {/* Background Image - Centered with object-contain like Stories */}
+          {previewOption.media.type === 'video' ? (
+            <video
+              src={previewOption.media.url}
+              className="max-w-full max-h-full object-contain"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img 
+              src={previewOption.media.url} 
+              alt={`Opción ${previewIndex + 1}`}
+              className="max-w-full max-h-full object-contain"
+            />
+          )}
         </div>
       </div>
     );
