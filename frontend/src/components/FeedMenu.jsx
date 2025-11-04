@@ -160,7 +160,7 @@ const FeedMenu = ({
       setShowReportModal(false);
       setSelectedReportCategory(null);
       setReportComment('');
-      setIsOpen(false);
+      handleSetIsOpen(false);
     } catch (error) {
       toast({
         title: "Error",
