@@ -58,7 +58,7 @@ const FeedMenu = ({
         description: "Este tipo de contenido aparecerá menos en tu feed",
         duration: 3000,
       });
-      setIsOpen(false);
+      handleSetIsOpen(false);
     } catch (error) {
       console.error('❌ FeedMenu: Error in handleNotInterested:', error);
       console.error('❌ FeedMenu: Error stack:', error.stack);
