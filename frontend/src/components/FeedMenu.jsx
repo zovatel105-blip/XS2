@@ -95,7 +95,7 @@ const FeedMenu = ({
         description: `Ya no verás contenido de @${authorUsername}`,
         duration: 3000,
       });
-      setIsOpen(false);
+      handleSetIsOpen(false);
     } catch (error) {
       console.error('❌ FeedMenu: Error in handleHideUser:', error);
       toast({
