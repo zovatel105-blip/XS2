@@ -851,6 +851,7 @@ const TikTokPollCard = ({
                 onToggleNotifications={handleToggleNotifications}
                 onReport={handleReport}
                 isNotificationEnabled={isNotificationEnabled}
+                onOpenChange={setIsMenuOpen}
                 className="flex items-center justify-center text-white hover:text-gray-300 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm"
               />
             )}
@@ -863,6 +864,7 @@ const TikTokPollCard = ({
                 onDelete={onDeletePoll}
                 currentUser={authUser}
                 isOwnProfile={isOwnProfile}
+                onOpenChange={setIsMenuOpen}
                 className="flex items-center justify-center text-white hover:text-purple-400 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg bg-black/20 backdrop-blur-sm"
               />
             )}
