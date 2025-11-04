@@ -194,7 +194,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
           />
           
