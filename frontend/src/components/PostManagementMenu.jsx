@@ -220,7 +220,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 <button
                   onClick={() => {
                     setShowEditDialog(true);
-                    setIsOpen(false);
+                    handleSetIsOpen(false);
                   }}
                   className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4"
                 >
@@ -235,7 +235,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 <button
                   onClick={() => {
                     handlePin();
-                    setIsOpen(false);
+                    handleSetIsOpen(false);
                   }}
                   disabled={isLoading}
                   className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
@@ -250,7 +250,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 <button
                   onClick={() => {
                     handleArchive();
-                    setIsOpen(false);
+                    handleSetIsOpen(false);
                   }}
                   disabled={isLoading}
                   className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
@@ -268,7 +268,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 <button
                   onClick={() => {
                     handlePrivacy();
-                    setIsOpen(false);
+                    handleSetIsOpen(false);
                   }}
                   disabled={isLoading}
                   className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
@@ -293,7 +293,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 <button
                   onClick={() => {
                     setShowDeleteDialog(true);
-                    setIsOpen(false);
+                    handleSetIsOpen(false);
                   }}
                   className="w-full px-6 py-4 text-left hover:bg-red-50 active:bg-red-100/50 transition-colors duration-150 flex items-center gap-4"
                 >
