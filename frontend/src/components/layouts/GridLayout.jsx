@@ -183,7 +183,7 @@ const GridLayout = ({
   }, [poll]);
 
   return (
-    <div className={cn("w-full h-full", getGridClasses())}>
+    <div className={cn("w-full h-full bg-black", getGridClasses())}>
       {poll.options.map((option, optionIndex) => {
         const percentage = getPercentage(option.votes);
         const isWinner = option.id === winningOption.id && poll.userVote;
