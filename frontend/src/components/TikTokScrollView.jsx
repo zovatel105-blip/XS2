@@ -167,6 +167,7 @@ const TikTokPollCard = ({
   
   // Feed menu state
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const navigate = useNavigate();
   const { followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion } = useFollow();
