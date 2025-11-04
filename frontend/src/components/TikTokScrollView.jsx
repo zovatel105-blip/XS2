@@ -887,7 +887,7 @@ const TikTokPollCard = ({
       </div>
 
       {/* Título de la música - Contenedor separado debajo de los botones (estilo TikTok) */}
-      {poll.music && (
+      {poll.music && !isMenuOpen && (
         <div className="absolute left-0 right-0 z-40 px-4"
              style={{ 
                bottom: 'max(0.5rem, env(safe-area-inset-bottom))',
