@@ -184,7 +184,7 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
       <button
         onClick={(e) => {
           e.stopPropagation();
-          setIsOpen(!isOpen);
+          handleSetIsOpen(!isOpen);
         }}
         className={className || "post-management-trigger absolute top-1 right-1 z-[9999] bg-white/90 hover:bg-white active:bg-gray-100 text-gray-800 rounded-full w-12 h-12 p-0 shadow-xl border-2 border-gray-300 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 touch-manipulation flex items-center justify-center"}
         style={!className ? { 
