@@ -118,7 +118,7 @@ const FeedMenu = ({
           : `Recibirás notificaciones cuando @${authorUsername} publique contenido`,
         duration: 3000,
       });
-      setIsOpen(false);
+      handleSetIsOpen(false);
     } catch (error) {
       toast({
         title: "Error",
