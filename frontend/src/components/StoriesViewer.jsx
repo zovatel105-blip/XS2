@@ -227,9 +227,15 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   };
 
   if (!currentStory) return null;
+  
+  const musicText = currentStory.music ? 
+    `${currentStory.music.artist || 'Unknown Artist'} • ${currentStory.music.title || 'Unknown Song'}` : '';
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
+      {/* Inject marquee animation styles */}
+      <style>{marqueeStyles}</style>
+      
       {/* Progress bars */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-2 px-2">
         <div className="flex gap-1">
