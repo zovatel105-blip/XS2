@@ -229,10 +229,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
               {currentGroup.user.username}
             </span>
             <span className="text-white/60 text-xs">
-              {new Date(currentStory.created_at).toLocaleTimeString('es', {
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {formatTimeAgo(currentStory.created_at)}
             </span>
           </div>
           <div className="flex items-center gap-2">
