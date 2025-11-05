@@ -509,6 +509,7 @@ const AudioDetailPage = () => {
               <Bookmark className="w-6 h-6" />
             </Button>
           </div>
+          </div>
         </div>
 
         {/* Action Buttons */}
