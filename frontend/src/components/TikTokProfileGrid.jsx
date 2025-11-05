@@ -88,7 +88,7 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
                     <img
                       src={uploadService.getPublicUrl(thumbnail, { width: 300, height: 400, quality: 70 })}
                       alt={poll.title || 'Post thumbnail'}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-lg"
                       style={(() => {
                         // Find the option with media to get transform
                         const imageOption = poll.options?.find(opt => 
