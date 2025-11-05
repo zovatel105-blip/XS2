@@ -68,20 +68,16 @@ const AudioDetailPage = () => {
         g = Math.floor(g / count);
         b = Math.floor(b / count);
         
-        // Lighten the color for softer gradient
-        const lightR = Math.floor(r + (255 - r) * 0.6);
-        const lightG = Math.floor(g + (255 - g) * 0.6);
-        const lightB = Math.floor(b + (255 - b) * 0.6);
-        
-        setDominantColor(`rgb(${lightR}, ${lightG}, ${lightB})`);
+        // Use very light opacity for softer gradient (similar to EditProfile)
+        setDominantColor(`rgba(${r}, ${g}, ${b}, 0.1)`);
       } catch (error) {
         console.error('Error extracting color:', error);
-        setDominantColor('rgb(249, 250, 251)'); // Fallback to gray-50
+        setDominantColor('rgba(176, 97, 255, 0.1)'); // Fallback to soft purple
       }
     };
     
     img.onerror = () => {
-      setDominantColor('rgb(249, 250, 251)'); // Fallback to gray-50
+      setDominantColor('rgba(176, 97, 255, 0.1)'); // Fallback to soft purple
     };
     
     img.src = imageUrl;
