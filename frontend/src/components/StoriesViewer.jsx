@@ -95,6 +95,23 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username || 'User')}&background=random&color=fff`;
   };
 
+  // Helper function to format time ago (relative time)
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `hace ${days}d`;
+    if (hours > 0) return `hace ${hours}h`;
+    if (minutes > 0) return `hace ${minutes}m`;
+    if (seconds > 0) return `hace ${seconds}s`;
+    return 'ahora';
+  };
+
   // Auto advance story
   useEffect(() => {
     if (!currentStory) return;
