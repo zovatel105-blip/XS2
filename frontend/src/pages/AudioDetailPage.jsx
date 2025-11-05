@@ -470,7 +470,7 @@ const AudioDetailPage = () => {
         <div 
           className="max-w-md mx-auto rounded-lg border border-gray-200 p-6 transition-all duration-500"
           style={{ 
-            background: `linear-gradient(to bottom, ${dominantColor}, white)`
+            background: `linear-gradient(to bottom, ${dominantColor} 0%, ${dominantColor.replace('0.2', '0.12')} 40%, ${dominantColor.replace('0.2', '0.05')} 70%, white 100%)`
           }}
         >
           <div className="flex items-center space-x-4">
