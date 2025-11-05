@@ -23,65 +23,11 @@ const AudioDetailPage = () => {
   const [error, setError] = useState(null);
   const [showTikTokView, setShowTikTokView] = useState(false);
   const [selectedPostIndex, setSelectedPostIndex] = useState(0);
-  const [dominantColor, setDominantColor] = useState('rgba(176, 97, 255, 0.1)'); // Default soft purple like EditProfile
 
   useEffect(() => {
     fetchAudioDetails();
     fetchPostsUsingAudio();
   }, [audioId]);
-
-  // Extract dominant color from cover image
-  useEffect(() => {
-    if (audio?.cover_url) {
-      extractDominantColor(audio.cover_url);
-    }
-  }, [audio?.cover_url]);
-
-  const extractDominantColor = (imageUrl) => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Resize for performance
-        canvas.width = 100;
-        canvas.height = 100;
-        
-        ctx.drawImage(img, 0, 0, 100, 100);
-        const imageData = ctx.getImageData(0, 0, 100, 100).data;
-        
-        let r = 0, g = 0, b = 0;
-        let count = 0;
-        
-        // Sample every 4th pixel for performance
-        for (let i = 0; i < imageData.length; i += 16) {
-          r += imageData[i];
-          g += imageData[i + 1];
-          b += imageData[i + 2];
-          count++;
-        }
-        
-        r = Math.floor(r / count);
-        g = Math.floor(g / count);
-        b = Math.floor(b / count);
-        
-        // Use very light opacity for softer gradient (similar to EditProfile)
-        setDominantColor(`rgba(${r}, ${g}, ${b}, 0.1)`);
-      } catch (error) {
-        console.error('Error extracting color:', error);
-        setDominantColor('rgba(176, 97, 255, 0.1)'); // Fallback to soft purple
-      }
-    };
-    
-    img.onerror = () => {
-      setDominantColor('rgba(176, 97, 255, 0.1)'); // Fallback to soft purple
-    };
-    
-    img.src = imageUrl;
-  };
 
   const fetchAudioDetails = async () => {
     try {
