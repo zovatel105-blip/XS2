@@ -68,8 +68,12 @@ const AudioDetailPage = () => {
         g = Math.floor(g / count);
         b = Math.floor(b / count);
         
-        // Use the true color without lightening for gradient effect
-        setDominantColor(`rgb(${r}, ${g}, ${b})`);
+        // Lighten the color for softer gradient
+        const lightR = Math.floor(r + (255 - r) * 0.6);
+        const lightG = Math.floor(g + (255 - g) * 0.6);
+        const lightB = Math.floor(b + (255 - b) * 0.6);
+        
+        setDominantColor(`rgb(${lightR}, ${lightG}, ${lightB})`);
       } catch (error) {
         console.error('Error extracting color:', error);
         setDominantColor('rgb(249, 250, 251)'); // Fallback to gray-50
