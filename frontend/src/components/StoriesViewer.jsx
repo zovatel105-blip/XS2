@@ -308,27 +308,6 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
         )}
       </div>
 
-      {/* Music info - show at bottom if story has music */}
-      {currentStory.music && currentStory.music.preview_url && (
-        <div className="absolute bottom-6 left-0 right-0 px-6 z-30">
-          <div className="flex items-center gap-3 bg-black/40 backdrop-blur-sm rounded-full px-4 py-2 max-w-sm mx-auto">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <Volume2 className="w-4 h-4 text-white" />
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">
-                {currentStory.music.title || 'Unknown Song'}
-              </p>
-              <p className="text-white/70 text-xs truncate">
-                {currentStory.music.artist || 'Unknown Artist'}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Navigation areas */}
       <div className="absolute inset-0 flex">
         <button
