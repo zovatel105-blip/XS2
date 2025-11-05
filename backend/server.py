@@ -8874,8 +8874,8 @@ async def get_stories(
                 has_unviewed=has_unviewed
             ))
         
-        # Sort: unviewed stories first, then by most recent
-        result.sort(key=lambda x: (not x.has_unviewed, -x.stories[0].created_at.timestamp()))
+        # Sort: unviewed stories first, then by oldest story first (ascending order)
+        result.sort(key=lambda x: (not x.has_unviewed, x.stories[0].created_at.timestamp()))
         
         logger.info(f"📖 [STORIES] Returning {len(result)} story groups to frontend")
         for group in result:
