@@ -281,8 +281,11 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
               <div className="flex items-center gap-1.5 ml-10 max-w-[55%] overflow-hidden">
                 <Music className="w-3.5 h-3.5 text-white flex-shrink-0" />
                 <div className="overflow-hidden whitespace-nowrap relative flex-1">
-                  <span className="text-white text-xs inline-block animate-marquee">
-                    {currentStory.music.artist || 'Unknown Artist'} • {currentStory.music.title || 'Unknown Song'}
+                  <span 
+                    className="text-white text-xs inline-block animate-marquee relative"
+                    data-text={musicText}
+                  >
+                    {musicText}
                   </span>
                 </div>
               </div>
