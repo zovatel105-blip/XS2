@@ -126,7 +126,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   useEffect(() => {
     if (!currentStory) return;
 
-    const duration = 5000; // 5 seconds per story
+    const duration = 15000; // 15 seconds per story
     const interval = 50;
     let elapsed = 0;
 
