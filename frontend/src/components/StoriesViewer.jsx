@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Volume2, VolumeX, Music } from 'lucide-react';
 import AppConfig from '../config/config';
 
 const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
