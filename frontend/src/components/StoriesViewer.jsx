@@ -247,9 +247,9 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
             
             {/* Music info row - only show if story has music */}
             {currentStory.music && currentStory.music.preview_url && (
-              <div className="flex items-center gap-1.5 ml-10">
-                <Music className="w-3.5 h-3.5 text-white" />
-                <span className="text-white text-xs">
+              <div className="flex items-center gap-1.5 ml-10 max-w-[calc(100%-3rem)] overflow-hidden">
+                <Music className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                <span className="text-white text-xs truncate">
                   {currentStory.music.artist || 'Unknown Artist'} • {currentStory.music.title || 'Unknown Song'}
                 </span>
               </div>
