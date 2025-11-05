@@ -256,7 +256,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-4 px-4">
         <div className="flex items-center justify-between mt-3">
-          <div className="flex flex-col gap-1 flex-1">
+          <div className="flex flex-col gap-0 flex-1">
             {/* User info row */}
             <div className="flex items-center gap-2">
               <img
@@ -278,7 +278,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
             
             {/* Music info row - only show if story has music */}
             {currentStory.music && currentStory.music.preview_url && (
-              <div className="flex items-center gap-1.5 ml-10 max-w-[55%] overflow-hidden">
+              <div className="flex items-center gap-1.5 ml-10 max-w-[55%] overflow-hidden -mt-0.5">
                 <Music className="w-3.5 h-3.5 text-white flex-shrink-0" />
                 <div className="overflow-hidden whitespace-nowrap relative flex-1">
                   <span 
