@@ -78,7 +78,7 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
             {/* Thumbnail or static image representation */}
-            <div className="w-full h-full relative bg-gray-100">
+            <div className="w-full h-full relative bg-gray-100 rounded-lg">
               {(() => {
                 const thumbnail = getPostThumbnail(poll);
                 const isVideo = hasVideoContent(poll);
