@@ -27,6 +27,8 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
       console.log('     - Tipo:', currentStory.media_type);
       console.log('     - URL:', currentStory.media_url);
       console.log('     - Thumbnail:', currentStory.thumbnail_url);
+      console.log('     - created_at:', currentStory.created_at);
+      console.log('     - timeAgo:', formatTimeAgo(currentStory.created_at));
       console.log('     - Music:', currentStory.music);
     }
   }, [currentUserIndex, currentStoryIndex, storiesGroups]);
