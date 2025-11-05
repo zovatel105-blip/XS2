@@ -225,23 +225,37 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-4 px-4">
         <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-2">
-            <img
-              src={getAvatarUrl(currentGroup.user)}
-              alt={currentGroup.user.username}
-              className="w-8 h-8 rounded-full border-2 border-white object-cover"
-              onError={(e) => {
-                console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
-                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentGroup.user.username)}&background=667eea&color=fff`;
-              }}
-            />
-            <span className="text-white font-semibold text-sm">
-              {currentGroup.user.username}
-            </span>
-            <span className="text-white/60 text-xs">
-              {formatTimeAgo(currentStory.created_at)}
-            </span>
+          <div className="flex flex-col gap-1 flex-1">
+            {/* User info row */}
+            <div className="flex items-center gap-2">
+              <img
+                src={getAvatarUrl(currentGroup.user)}
+                alt={currentGroup.user.username}
+                className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                onError={(e) => {
+                  console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentGroup.user.username)}&background=667eea&color=fff`;
+                }}
+              />
+              <span className="text-white font-semibold text-sm">
+                {currentGroup.user.username}
+              </span>
+              <span className="text-white/60 text-xs">
+                {formatTimeAgo(currentStory.created_at)}
+              </span>
+            </div>
+            
+            {/* Music info row - only show if story has music */}
+            {currentStory.music && currentStory.music.preview_url && (
+              <div className="flex items-center gap-1.5 ml-10">
+                <Music className="w-3.5 h-3.5 text-white" />
+                <span className="text-white text-xs">
+                  {currentStory.music.artist || 'Unknown Artist'} • {currentStory.music.title || 'Unknown Song'}
+                </span>
+              </div>
+            )}
           </div>
+          
           <div className="flex items-center gap-2">
             {/* Mute/Unmute button - only show if story has music */}
             {currentStory.music && currentStory.music.preview_url && (
