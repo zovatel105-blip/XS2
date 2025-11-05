@@ -2,6 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight, Volume2, VolumeX, Music } from 'lucide-react';
 import AppConfig from '../config/config';
 
+// Add CSS animation for marquee effect
+const marqueeStyles = `
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .animate-marquee {
+    display: inline-block;
+    padding-right: 2rem;
+    animation: marquee 8s linear infinite;
+  }
+  
+  .animate-marquee::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 100%;
+    padding-left: 2rem;
+  }
+`;
+
 const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   const [currentUserIndex, setCurrentUserIndex] = useState(initialUserIndex);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
