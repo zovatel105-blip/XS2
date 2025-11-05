@@ -118,7 +118,10 @@ const FollowingPage = () => {
 
   // Helper function to format time ago
   const formatTimeAgo = (date) => {
-    const seconds = Math.floor((new Date() - date) / 1000);
+    // Ensure we're working with a Date object
+    const dateObj = date instanceof Date ? date : new Date(date);
+    const now = new Date();
+    const seconds = Math.floor((now - dateObj) / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
@@ -126,6 +129,7 @@ const FollowingPage = () => {
     if (days > 0) return `Hace ${days}d`;
     if (hours > 0) return `Hace ${hours}h`;
     if (minutes > 0) return `Hace ${minutes}m`;
+    if (seconds > 0) return `Hace ${seconds}s`;
     return 'Ahora';
   };
 
