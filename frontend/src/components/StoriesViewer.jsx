@@ -100,7 +100,15 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   // Helper function to format time ago (relative time)
   const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
-    const date = new Date(dateString);
+    
+    // Parse the date - backend sends UTC datetime
+    // If the string doesn't end with 'Z', add it to indicate UTC
+    let dateStr = dateString;
+    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+      dateStr = dateStr + 'Z';
+    }
+    
+    const date = new Date(dateStr);
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
     const minutes = Math.floor(seconds / 60);
