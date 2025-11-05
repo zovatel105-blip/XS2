@@ -459,7 +459,7 @@ const AudioDetailPage = () => {
         
         {/* Audio Info */}
         <div 
-          className="max-w-md mx-auto rounded-lg p-1 transition-colors duration-500"
+          className="max-w-md mx-auto rounded-lg p-2 transition-colors duration-500"
           style={{ backgroundColor: dominantColor }}
         >
           <div className="bg-white rounded-lg p-5">
