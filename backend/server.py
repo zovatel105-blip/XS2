@@ -8786,7 +8786,7 @@ async def get_stories(
             "user_id": {"$in": all_user_ids},
             "is_active": True,
             "expires_at": {"$gt": current_time}
-        }).sort("created_at", -1)
+        }).sort("created_at", 1)
         
         stories = await stories_cursor.to_list(length=1000)
         
