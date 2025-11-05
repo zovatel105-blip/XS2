@@ -68,11 +68,7 @@ const AudioDetailPage = () => {
         g = Math.floor(g / count);
         b = Math.floor(b / count);
         
-        // Make color extremely light like "Editar perfil" - almost white with barely visible tint
-        r = Math.floor(r + (255 - r) * 0.92);
-        g = Math.floor(g + (255 - g) * 0.92);
-        b = Math.floor(b + (255 - b) * 0.92);
-        
+        // Use the true color without lightening for gradient effect
         setDominantColor(`rgb(${r}, ${g}, ${b})`);
       } catch (error) {
         console.error('Error extracting color:', error);
