@@ -174,14 +174,23 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
       {/* Header */}
       <div className="absolute top-4 left-0 right-0 z-10 flex items-center justify-between px-4 pt-2">
         <div className="flex items-center gap-3">
-          <img
-            src={currentUser.userAvatar || '/default-avatar.svg'}
-            alt={currentUser.username}
-            className="w-10 h-10 rounded-full border-2 border-white object-cover"
-            onError={(e) => {
-              e.target.src = '/default-avatar.svg';
-            }}
-          />
+          {currentUser.userAvatar ? (
+            <img
+              src={currentUser.userAvatar}
+              alt={currentUser.username}
+              className="w-10 h-10 rounded-full border-2 border-white object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextElementSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div 
+            className="w-10 h-10 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center"
+            style={{ display: currentUser.userAvatar ? 'none' : 'flex' }}
+          >
+            <User className="w-6 h-6 text-gray-600" />
+          </div>
           <div className="flex flex-col">
             <span className="text-white font-semibold text-sm">{currentUser.username}</span>
             <span className="text-white/70 text-xs">{currentStory.timeAgo}</span>
