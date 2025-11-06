@@ -1309,14 +1309,12 @@ const MessagesMainPage = () => {
                           e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                         }}
                       />
-                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-2xl font-bold text-gray-600" style={{ display: 'none' }}>
-                        {otherUser?.display_name?.charAt(0) || '👤'}
+                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+                        <User className="w-10 h-10 text-gray-600" />
                       </div>
                     </>
                   ) : (
-                    <span className="text-2xl font-semibold text-gray-600">
-                      {otherUser?.display_name?.charAt(0) || '👤'}
-                    </span>
+                    <User className="w-10 h-10 text-gray-600" />
                   );
                 })()}
               </div>
