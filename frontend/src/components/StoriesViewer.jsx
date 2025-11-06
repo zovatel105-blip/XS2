@@ -277,28 +277,32 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
               >
                 <User className="w-5 h-5 text-gray-600" />
               </div>
-              <span className="text-white font-semibold text-sm">
-                {currentGroup.user.username}
-              </span>
-              <span className="text-white/60 text-xs">
-                {formatTimeAgo(currentStory.created_at)}
-              </span>
-            </div>
-            
-            {/* Music info row - only show if story has music */}
-            {currentStory.music && currentStory.music.preview_url && (
-              <div className="flex items-center gap-1.5 ml-10 max-w-[55%] overflow-hidden -mt-0.5">
-                <Music className="w-3.5 h-3.5 text-white flex-shrink-0" />
-                <div className="overflow-hidden whitespace-nowrap relative flex-1">
-                  <span 
-                    className="text-white text-xs inline-block animate-marquee relative"
-                    data-text={musicText}
-                  >
-                    {musicText}
+              <div className="flex flex-col gap-0 min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-semibold text-sm">
+                    {currentGroup.user.username}
+                  </span>
+                  <span className="text-white/60 text-xs">
+                    {formatTimeAgo(currentStory.created_at)}
                   </span>
                 </div>
+                
+                {/* Music info row - only show if story has music */}
+                {currentStory.music && currentStory.music.preview_url && (
+                  <div className="flex items-center gap-1.5 max-w-[70%] overflow-hidden">
+                    <Music className="w-3 h-3 text-white flex-shrink-0" />
+                    <div className="overflow-hidden whitespace-nowrap relative flex-1">
+                      <span 
+                        className="text-white text-xs inline-block animate-marquee relative"
+                        data-text={musicText}
+                      >
+                        {musicText}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
