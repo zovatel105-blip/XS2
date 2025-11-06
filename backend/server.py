@@ -8897,13 +8897,13 @@ async def get_user_stories(
 ):
     """Get all stories from a specific user"""
     try:
-        # Get active stories from user
+        # Get active stories from user (oldest first)
         current_time = datetime.utcnow()
         stories_cursor = db.stories.find({
             "user_id": user_id,
             "is_active": True,
             "expires_at": {"$gt": current_time}
-        }).sort("created_at", -1)
+        }).sort("created_at", 1)
         
         stories = await stories_cursor.to_list(length=100)
         
