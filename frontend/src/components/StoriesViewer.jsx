@@ -115,8 +115,10 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   // Helper function for avatar URLs
   const getAvatarUrl = (user) => {
     if (!user) return '/default-avatar.svg';
-    if (user.profile_picture) {
-      return getFullMediaUrl(user.profile_picture);
+    // Backend returns avatar_url, but fallback to profile_picture and avatar for compatibility
+    const avatarPath = user.avatar_url || user.profile_picture || user.avatar;
+    if (avatarPath) {
+      return getFullMediaUrl(avatarPath);
     }
     // Fallback a avatar por defecto con silueta de persona
     return '/default-avatar.svg';
