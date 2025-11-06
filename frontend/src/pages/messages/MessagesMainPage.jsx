@@ -1571,14 +1571,12 @@ const MessagesMainPage = () => {
                                 e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                               }}
                             />
-                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-semibold text-gray-600" style={{ display: 'none' }}>
-                              {result.display_name?.charAt(0) || result.username?.charAt(0) || '👤'}
+                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+                              <User className="w-6 h-6 text-gray-600" />
                             </div>
                           </>
                         ) : (
-                          <span className="text-lg font-semibold text-gray-600">
-                            {result.display_name?.charAt(0) || result.username?.charAt(0) || '👤'}
-                          </span>
+                          <User className="w-6 h-6 text-gray-600" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
