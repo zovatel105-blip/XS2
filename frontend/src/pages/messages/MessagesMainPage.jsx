@@ -1187,8 +1187,8 @@ const MessagesMainPage = () => {
                                 e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                               }}
                             />
-                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600" style={{ display: 'none' }}>
-                              {otherUser.display_name ? otherUser.display_name.charAt(0).toUpperCase() : '👤'}
+                            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+                              <User className="w-8 h-8 text-gray-600" />
                             </div>
                           </>
                         ) : (
