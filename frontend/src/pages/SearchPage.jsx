@@ -1327,8 +1327,15 @@ const SearchPage = () => {
                       <div className="flex items-center space-x-3 flex-1 min-w-0">
                         {/* Avatar/Icon - Circular for users, Square with rounded corners for sounds */}
                         <div 
-                          className={`w-12 h-12 ${result.type === 'user' ? 'rounded-full' : 'rounded-lg'} bg-gradient-to-br ${
-                            result.type === 'user' ? 'from-green-400 to-blue-500' : 'from-purple-400 to-pink-500'
+                          className={`w-12 h-12 ${result.type === 'user' ? 'rounded-full' : 'rounded-lg'} ${
+                            // Solo aplicar gradiente si hay imagen, de lo contrario usar fondo gris simple
+                            (result.type === 'user' && (result.avatar_url || result.image_url)) 
+                              ? 'bg-transparent' 
+                              : result.type === 'sound' && result.thumbnail_url
+                                ? 'bg-transparent'
+                                : result.type === 'user' 
+                                  ? 'bg-gray-200'
+                                  : 'bg-gradient-to-br from-purple-400 to-pink-500'
                           } flex items-center justify-center overflow-hidden flex-shrink-0`}
                         >
                           {result.type === 'user' && (result.avatar_url || result.image_url) ? (
@@ -1344,7 +1351,7 @@ const SearchPage = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="text-white">
+                            <div className={result.type === 'user' ? 'text-gray-600' : 'text-white'}>
                               {result.type === 'user' ? (
                                 <User size={24} />
                               ) : (
