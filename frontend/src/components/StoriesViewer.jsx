@@ -261,7 +261,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
           <div className="flex flex-col gap-0 flex-1">
             {/* User info row */}
             <div className="flex items-center gap-2">
-              {currentGroup.user.profile_picture ? (
+              {(currentGroup.user.avatar_url || currentGroup.user.profile_picture || currentGroup.user.avatar) ? (
                 <img
                   src={getAvatarUrl(currentGroup.user)}
                   alt={currentGroup.user.username}
@@ -275,7 +275,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
               ) : null}
               <div 
                 className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
-                style={{ display: currentGroup.user.profile_picture ? 'none' : 'flex' }}
+                style={{ display: (currentGroup.user.avatar_url || currentGroup.user.profile_picture || currentGroup.user.avatar) ? 'none' : 'flex' }}
               >
                 <User className="w-5 h-5 text-gray-600" />
               </div>
