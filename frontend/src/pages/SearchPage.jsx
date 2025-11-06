@@ -1454,9 +1454,9 @@ const SearchPage = () => {
                             className="w-full h-full object-cover"
                           />
                         ) : null}
-                        <span className={`text-gray-600 text-xs font-semibold ${(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? 'hidden' : ''}`}>
-                          {(result.username || result.author?.username || result.author_username || '?').charAt(0).toUpperCase()}
-                        </span>
+                        <div className={`flex items-center justify-center text-gray-600 ${(result.avatar_url || result.author?.avatar_url || result.author_avatar_url) ? 'hidden' : ''}`}>
+                          <User className="w-3 h-3" />
+                        </div>
                       </div>
                       {/* Display Name */}
                       <span className="text-xs text-gray-400 truncate flex-1 min-w-0">
