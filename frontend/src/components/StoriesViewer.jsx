@@ -263,7 +263,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
                 <img
                   src={getAvatarUrl(currentGroup.user)}
                   alt={currentGroup.user.username}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                  className="w-8 h-8 rounded-full object-cover"
                   onError={(e) => {
                     console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
                     e.target.style.display = 'none';
@@ -272,7 +272,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
                 />
               ) : null}
               <div 
-                className="w-8 h-8 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
                 style={{ display: currentGroup.user.profile_picture ? 'none' : 'flex' }}
               >
                 <User className="w-5 h-5 text-gray-600" />
