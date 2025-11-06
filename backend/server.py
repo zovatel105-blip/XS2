@@ -8847,6 +8847,9 @@ async def get_stories(
             
             user_response = UserResponse(**user_data)
             
+            # Sort user stories by created_at (oldest first)
+            user_stories.sort(key=lambda x: x["created_at"])
+            
             # Convert stories to StoryResponse
             story_responses = []
             has_unviewed = False
