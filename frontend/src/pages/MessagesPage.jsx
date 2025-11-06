@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Plus, Search, ArrowLeft, Send, Camera, Mic, Smile, Users, Bell, MessageCircle, Phone } from 'lucide-react';
+import { Plus, Search, ArrowLeft, Send, Camera, Mic, Smile, Users, Bell, MessageCircle, Phone, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../hooks/use-toast';
 import { cn } from '../lib/utils';
