@@ -702,11 +702,6 @@ const FollowingPage = () => {
                 const isOwnStory = story.isOwnStory;
                 const hasStories = story.storiesCount > 0;
                 
-                // Get initial for avatar
-                const username = story.username || 'U';
-                const displayName = story.username || 'Usuario';
-                const initial = displayName.charAt(0).toUpperCase();
-                
                 return (
                   <button
                     key={story.userId}
@@ -732,7 +727,7 @@ const FollowingPage = () => {
                                 alt={story.username}
                                 className="w-full h-full rounded-full object-cover"
                                 onError={(e) => {
-                                  // Fallback to gradient with initial
+                                  // Fallback to user icon
                                   e.target.style.display = 'none';
                                   if (e.target.nextSibling) {
                                     e.target.nextSibling.style.display = 'flex';
@@ -740,12 +735,12 @@ const FollowingPage = () => {
                                 }}
                               />
                             ) : null}
-                            {/* Fallback gradient avatar with initial (like ProfilePage) */}
+                            {/* Fallback gradient avatar with user icon */}
                             <div 
-                              className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium text-xs ${story.userAvatar ? 'hidden' : 'flex'}`}
+                              className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 ${story.userAvatar ? 'hidden' : 'flex'}`}
                               style={{ display: story.userAvatar ? 'none' : 'flex' }}
                             >
-                              {initial}
+                              <User className="w-4 h-4" />
                             </div>
                           </div>
                         </div>
@@ -762,7 +757,7 @@ const FollowingPage = () => {
                               alt={story.username}
                               className="w-full h-full rounded-full object-cover"
                               onError={(e) => {
-                                // Fallback to gradient with initial
+                                // Fallback to user icon
                                 e.target.style.display = 'none';
                                 if (e.target.nextSibling) {
                                   e.target.nextSibling.style.display = 'flex';
@@ -770,12 +765,12 @@ const FollowingPage = () => {
                               }}
                             />
                           ) : null}
-                          {/* Fallback gradient avatar with initial (like ProfilePage) */}
+                          {/* Fallback gradient avatar with user icon */}
                           <div 
-                            className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 font-medium text-xs ${story.userAvatar ? 'hidden' : 'flex'}`}
+                            className={`w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-600 ${story.userAvatar ? 'hidden' : 'flex'}`}
                             style={{ display: story.userAvatar ? 'none' : 'flex' }}
                           >
-                            {initial}
+                            <User className="w-4 h-4" />
                           </div>
                         </div>
                         
