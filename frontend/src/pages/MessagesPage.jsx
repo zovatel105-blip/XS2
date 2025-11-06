@@ -781,9 +781,7 @@ const MessagesPage = () => {
                               className="w-full h-full rounded-full object-cover"
                             />
                           ) : (
-                            <span className="text-sm font-semibold text-gray-600">
-                              {message.sender?.display_name?.charAt(0) || '👤'}
-                            </span>
+                            <User className="w-4 h-4 text-gray-600" />
                           )}
                         </div>
                       )}
