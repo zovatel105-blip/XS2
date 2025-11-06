@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Pause, Play, Volume2, VolumeX, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Pause, Play, Volume2, VolumeX, ChevronLeft, ChevronRight, User } from 'lucide-react';
 
 const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
   const [currentUserIndex, setCurrentUserIndex] = useState(initialIndex);
