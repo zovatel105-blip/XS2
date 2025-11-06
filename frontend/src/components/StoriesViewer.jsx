@@ -140,10 +140,10 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 0) return `hace ${days}d`;
-    if (hours > 0) return `hace ${hours}h`;
-    if (minutes > 0) return `hace ${minutes}m`;
-    if (seconds > 0) return `hace ${seconds}s`;
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    if (minutes > 0) return `${minutes}m`;
+    if (seconds > 0) return `${seconds}s`;
     return 'ahora';
   };
 
