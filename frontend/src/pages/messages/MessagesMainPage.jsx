@@ -1192,8 +1192,8 @@ const MessagesMainPage = () => {
                             </div>
                           </>
                         ) : (
-                          <div className="w-full h-full rounded-full flex items-center justify-center text-xl font-bold text-gray-600">
-                            {getAvatarForUser(otherUser)}
+                          <div className="w-full h-full rounded-full flex items-center justify-center">
+                            <User className="w-8 h-8 text-gray-600" />
                           </div>
                         )}
                       </div>
