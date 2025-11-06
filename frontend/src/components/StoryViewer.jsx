@@ -191,9 +191,20 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
           >
             <User className="w-6 h-6 text-gray-600" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-white font-semibold text-sm">{currentUser.username}</span>
-            <span className="text-white/70 text-xs">{currentStory.timeAgo}</span>
+          <div className="flex flex-col gap-0 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-semibold text-sm">{currentUser.username}</span>
+              <span className="text-white/70 text-xs">{currentStory.timeAgo}</span>
+            </div>
+            {/* Music info - only show if story has music */}
+            {currentStory.music && currentStory.music.preview_url && (
+              <div className="flex items-center gap-1.5 max-w-[200px] overflow-hidden">
+                <Volume2 className="w-3 h-3 text-white flex-shrink-0" />
+                <span className="text-white text-xs truncate">
+                  {currentStory.music.artist || 'Unknown Artist'} • {currentStory.music.title || 'Unknown Song'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
         
