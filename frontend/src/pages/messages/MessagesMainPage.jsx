@@ -80,7 +80,8 @@ const MessagesMainPage = () => {
 
   // Helper function for avatar rendering with error handling
   const renderAvatar = (avatarUrl, displayName, username, size = 'w-8 h-8') => {
-    const fallbackText = displayName?.charAt(0) || username?.charAt(0) || '👤';
+    // Determinar el tamaño del icono basado en el tamaño del avatar
+    const iconSize = size.includes('w-12') ? 'w-6 h-6' : size.includes('w-10') ? 'w-5 h-5' : 'w-4 h-4';
     
     return (
       <div className={`${size} rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 relative overflow-hidden`}>
@@ -97,13 +98,13 @@ const MessagesMainPage = () => {
                 if (fallback) fallback.style.display = 'flex';
               }}
             />
-            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-sm font-semibold text-gray-600" style={{ display: 'none' }}>
-              {fallbackText}
+            <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+              <User className={`${iconSize} text-gray-600`} />
             </div>
           </>
         ) : (
-          <div className="w-full h-full rounded-full flex items-center justify-center text-sm font-semibold text-gray-600">
-            {fallbackText}
+          <div className="w-full h-full rounded-full flex items-center justify-center">
+            <User className={`${iconSize} text-gray-600`} />
           </div>
         )}
       </div>
