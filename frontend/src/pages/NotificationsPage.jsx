@@ -3,7 +3,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { Bell, Heart, MessageCircle, Users, Vote, Trophy, Clock } from 'lucide-react';
+import { Bell, Heart, MessageCircle, Users, Vote, Trophy, Clock, User } from 'lucide-react';
 
 const NotificationItem = ({ type, user, message, time, poll, isNew = false }) => {
   const getIcon = () => {
