@@ -114,12 +114,12 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
   
   // Helper function for avatar URLs
   const getAvatarUrl = (user) => {
-    if (!user) return 'https://customer-assets.emergentagent.com/job_cf5fa05b-aa8c-431e-aaef-a5f9a59e15fd/artifacts/sqpwhq7l_Screenshot_2025-11-06-11-17-06-81_1c337646f29875672b5a61192b9010f9.jpg';
+    if (!user) return '/default-avatar.svg';
     if (user.profile_picture) {
       return getFullMediaUrl(user.profile_picture);
     }
     // Fallback a avatar por defecto con silueta de persona
-    return 'https://customer-assets.emergentagent.com/job_cf5fa05b-aa8c-431e-aaef-a5f9a59e15fd/artifacts/sqpwhq7l_Screenshot_2025-11-06-11-17-06-81_1c337646f29875672b5a61192b9010f9.jpg';
+    return '/default-avatar.svg';
   };
 
   // Helper function to format time ago (relative time)
