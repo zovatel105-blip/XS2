@@ -265,7 +265,7 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
                 className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 onError={(e) => {
                   console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentGroup.user.username)}&background=667eea&color=fff`;
+                  e.target.src = 'https://customer-assets.emergentagent.com/job_cf5fa05b-aa8c-431e-aaef-a5f9a59e15fd/artifacts/sqpwhq7l_Screenshot_2025-11-06-11-17-06-81_1c337646f29875672b5a61192b9010f9.jpg';
                 }}
               />
               <span className="text-white font-semibold text-sm">
