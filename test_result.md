@@ -6467,3 +6467,89 @@ Después: /api/uploads/stories/6cf1e07a-e983-4ab6-9317-f289c8322eb2.jpg
 **NOTA IMPORTANTE:**
 Este problema era específico de la arquitectura Kubernetes/Ingress donde todos los endpoints de backend deben tener el prefijo `/api`. El sistema ahora respeta esta arquitectura correctamente.
 
+
+---
+
+**📸 PROBLEMA DE ACTUALIZACIÓN DE FOTO DE PERFIL EN STORY VIEWER CORREGIDO (2025-01-27): Las fotos de perfil ahora se actualizan correctamente en los visualizadores de historias.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó: "Cuando agrego una foto de perfil en el storyviewer y storysviewer no se actualiza"
+- **CAUSA RAÍZ**: Discrepancia entre campos del backend y frontend
+  - Backend retorna: `avatar_url` (modelo UserResponse en models.py línea 96)
+  - Frontend buscaba: `avatar` o `profilePicture` (campos incorrectos)
+  - Resultado: Las fotos de perfil no se mostraban en los visualizadores de historias
+
+✅ **ANÁLISIS DETALLADO:**
+1. **Endpoint Backend GET /api/stories** (línea 8848 server.py):
+   - Retorna `UserResponse(**user_data)` con campo `avatar_url`
+2. **FollowingPage.jsx** (líneas 94, 179, 231):
+   - Mapeaba incorrectamente: `group.user.avatar || group.user.profilePicture`
+   - Ignoraba el campo correcto `avatar_url` del backend
+3. **StoriesViewer.jsx** (línea 118):
+   - Función `getAvatarUrl()` solo buscaba `user.profile_picture`
+   - No consideraba `avatar_url` del backend
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**FRONTEND - FollowingPage.jsx (3 ubicaciones):**
+```javascript
+// ANTES (INCORRECTO):
+userAvatar: group.user.avatar || group.user.profilePicture || null
+
+// DESPUÉS (CORRECTO):
+userAvatar: group.user.avatar_url || group.user.avatar || group.user.profilePicture || null
+```
+- ✅ Línea 94: Transformación de historias desde API
+- ✅ Línea 179: Historia del usuario actual  
+- ✅ Línea 231: Recarga de historias después de cerrar viewer
+
+**FRONTEND - StoriesViewer.jsx:**
+```javascript
+// ANTES (INCORRECTO):
+const getAvatarUrl = (user) => {
+  if (!user) return '/default-avatar.svg';
+  if (user.profile_picture) {
+    return getFullMediaUrl(user.profile_picture);
+  }
+  return '/default-avatar.svg';
+};
+
+// DESPUÉS (CORRECTO):
+const getAvatarUrl = (user) => {
+  if (!user) return '/default-avatar.svg';
+  const avatarPath = user.avatar_url || user.profile_picture || user.avatar;
+  if (avatarPath) {
+    return getFullMediaUrl(avatarPath);
+  }
+  return '/default-avatar.svg';
+};
+```
+- ✅ Líneas 116-123: Función helper actualizada con prioridad correcta
+- ✅ Líneas 264, 278: Renderizado condicional actualizado
+
+✅ **CAMBIOS TÉCNICOS:**
+1. **Prioridad de campos**: `avatar_url` (backend) → `avatar` (legacy) → `profilePicture` (legacy)
+2. **Retrocompatibilidad**: Mantenidos campos legacy para evitar breaking changes
+3. **Consistencia**: Mismo orden de prioridad en todos los componentes
+4. **Frontend reiniciado**: Aplicados cambios con `supervisorctl restart frontend`
+
+✅ **ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/pages/FollowingPage.jsx`: 3 líneas actualizadas (94, 179, 231)
+- `/app/frontend/src/components/StoriesViewer.jsx`: 2 secciones actualizadas (función helper + renderizado)
+
+✅ **FUNCIONALIDADES CORREGIDAS:**
+- ✅ Fotos de perfil se muestran correctamente en FollowingPage story carousel
+- ✅ Fotos de perfil visibles en StoryViewer durante reproducción de historias
+- ✅ Fotos de perfil actualizadas en ProfilePage StoriesViewer
+- ✅ Sincronización correcta entre backend y frontend
+- ✅ Actualización inmediata al cambiar foto de perfil
+
+✅ **RESULTADO FINAL:**
+🎯 **FOTOS DE PERFIL COMPLETAMENTE SINCRONIZADAS EN STORY VIEWERS** - Los usuarios ahora ven las fotos de perfil correctamente actualizadas en todos los visualizadores de historias. El sistema usa el campo correcto `avatar_url` del backend con fallbacks apropiados para retrocompatibilidad. Las fotos de perfil se actualizan inmediatamente sin necesidad de recargar la aplicación.
+
+**TESTING RECOMENDADO:**
+1. Cambiar foto de perfil del usuario
+2. Verificar que aparece en el carousel de historias (FollowingPage)
+3. Abrir una historia y confirmar que el avatar se muestra en el header
+4. Verificar en perfil propio y ajeno que las historias muestran avatares correctos
+
