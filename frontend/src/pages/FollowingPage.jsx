@@ -176,7 +176,7 @@ const FollowingPage = () => {
     const currentUserStory = {
       userId: user.id,
       username: user.username || user.name || 'Tú',
-      userAvatar: user.avatar || user.profilePicture || null,
+      userAvatar: user.avatar_url || user.avatar || user.profilePicture || null,
       hasViewed: false,
       storiesCount: 0, // Will be updated if user has stories
       isOwnStory: true, // Flag to identify own story
