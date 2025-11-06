@@ -259,15 +259,24 @@ const StoriesViewer = ({ storiesGroups, onClose, initialUserIndex = 0 }) => {
           <div className="flex flex-col gap-0 flex-1">
             {/* User info row */}
             <div className="flex items-center gap-2">
-              <img
-                src={getAvatarUrl(currentGroup.user)}
-                alt={currentGroup.user.username}
-                className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                onError={(e) => {
-                  console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
-                  e.target.src = '/default-avatar.svg';
-                }}
-              />
+              {currentGroup.user.profile_picture ? (
+                <img
+                  src={getAvatarUrl(currentGroup.user)}
+                  alt={currentGroup.user.username}
+                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                  onError={(e) => {
+                    console.error('❌ [StoriesViewer] Error cargando avatar:', e.target.src);
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div 
+                className="w-8 h-8 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center"
+                style={{ display: currentGroup.user.profile_picture ? 'none' : 'flex' }}
+              >
+                <User className="w-5 h-5 text-gray-600" />
+              </div>
               <span className="text-white font-semibold text-sm">
                 {currentGroup.user.username}
               </span>
