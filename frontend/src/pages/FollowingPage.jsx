@@ -91,7 +91,7 @@ const FollowingPage = () => {
         const transformedStories = storiesData.map(group => ({
           userId: group.user.id,
           username: group.user.username || group.user.name || 'Usuario',
-          userAvatar: group.user.avatar || group.user.profilePicture || null,
+          userAvatar: group.user.avatar_url || group.user.avatar || group.user.profilePicture || null,
           hasViewed: !group.has_unviewed, // If has_unviewed is false, it means all are viewed
           storiesCount: group.total_stories,
           stories: group.stories.map(story => ({
