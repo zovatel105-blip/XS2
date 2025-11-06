@@ -175,11 +175,11 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
       <div className="absolute top-4 left-0 right-0 z-10 flex items-center justify-between px-4 pt-2">
         <div className="flex items-center gap-3">
           <img
-            src={currentUser.userAvatar || 'https://customer-assets.emergentagent.com/job_cf5fa05b-aa8c-431e-aaef-a5f9a59e15fd/artifacts/sqpwhq7l_Screenshot_2025-11-06-11-17-06-81_1c337646f29875672b5a61192b9010f9.jpg'}
+            src={currentUser.userAvatar || '/default-avatar.svg'}
             alt={currentUser.username}
             className="w-10 h-10 rounded-full border-2 border-white object-cover"
             onError={(e) => {
-              e.target.src = 'https://customer-assets.emergentagent.com/job_cf5fa05b-aa8c-431e-aaef-a5f9a59e15fd/artifacts/sqpwhq7l_Screenshot_2025-11-06-11-17-06-81_1c337646f29875672b5a61192b9010f9.jpg';
+              e.target.src = '/default-avatar.svg';
             }}
           />
           <div className="flex flex-col">
