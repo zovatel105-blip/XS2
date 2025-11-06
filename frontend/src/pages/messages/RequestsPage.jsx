@@ -203,13 +203,13 @@ const RequestsPage = () => {
                           e.target.parentNode.querySelector('.avatar-fallback').style.display = 'flex';
                         }}
                       />
-                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center text-lg font-bold" style={{ display: 'none' }}>
-                        {request.fallbackAvatar}
+                      <div className="avatar-fallback w-full h-full rounded-full flex items-center justify-center" style={{ display: 'none' }}>
+                        <User className="w-6 h-6 text-gray-600" />
                       </div>
                     </>
                   ) : (
-                    <div className="w-full h-full rounded-full flex items-center justify-center text-lg font-bold">
-                      {request.fallbackAvatar}
+                    <div className="w-full h-full rounded-full flex items-center justify-center">
+                      <User className="w-6 h-6 text-gray-600" />
                     </div>
                   )}
                 </div>
