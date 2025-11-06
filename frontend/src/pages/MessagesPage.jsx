@@ -970,9 +970,7 @@ const MessagesPage = () => {
                             className="w-full h-full rounded-full object-cover"
                           />
                         ) : (
-                          <span className="text-sm font-semibold text-gray-600">
-                            {user.display_name?.charAt(0) || user.username?.charAt(0) || '?'}
-                          </span>
+                          <User className="w-5 h-5 text-gray-600" />
                         )}
                       </div>
                       <div className="flex-1">
