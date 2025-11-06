@@ -178,7 +178,7 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
             <img
               src={currentUser.userAvatar}
               alt={currentUser.username}
-              className="w-10 h-10 rounded-full border-2 border-white object-cover"
+              className="w-10 h-10 rounded-full object-cover"
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextElementSibling.style.display = 'flex';
@@ -186,7 +186,7 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose, onStoryView }) => {
             />
           ) : null}
           <div 
-            className="w-10 h-10 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center"
             style={{ display: currentUser.userAvatar ? 'none' : 'flex' }}
           >
             <User className="w-6 h-6 text-gray-600" />
