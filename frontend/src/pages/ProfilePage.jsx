@@ -2364,8 +2364,8 @@ const ProfilePage = () => {
 
       {/* Modals - Combined Followers/Following Modal */}
       {(showFollowersModal || showFollowingModal) && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[85vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 md:p-4">
+          <div className="bg-white w-full h-full md:rounded-lg md:shadow-2xl md:max-w-md md:w-full md:max-h-[85vh] overflow-hidden flex flex-col">
             {/* Header con Back Button y Username */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
               <button
