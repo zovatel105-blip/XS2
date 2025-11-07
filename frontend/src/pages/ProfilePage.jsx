@@ -2362,169 +2362,203 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Modals */}
-      {showFollowersModal && (
+      {/* Modals - Combined Followers/Following Modal */}
+      {(showFollowersModal || showFollowingModal) && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div className="flex items-center gap-3">
-                <UserPlus className="w-6 h-6 text-blue-600" />
-                <h2 className="text-xl font-bold text-gray-900">
-                  {followersList.length} Seguidores
-                </h2>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFollowersModal(false)}
-                className="hover:bg-gray-100 rounded-full"
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[85vh] overflow-hidden flex flex-col">
+            {/* Header con Back Button y Username */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+              <button
+                onClick={() => {
+                  setShowFollowersModal(false);
+                  setShowFollowingModal(false);
+                }}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
-                ✕
-              </Button>
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <h2 className="text-base font-semibold text-gray-900 absolute left-1/2 transform -translate-x-1/2">
+                {profileData?.username || 'Usuario'}
+              </h2>
+              <div className="w-9"></div> {/* Spacer for centering */}
             </div>
-            
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
-              {followersLoading ? (
-                <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="animate-pulse flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : followersList.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <UserPlus className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Sin seguidores aún</h3>
-                  <p className="text-gray-500">Crea contenido increíble para atraer seguidores</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {followersList.map((follower) => (
-                    <div key={follower.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={follower.avatar_url} alt={follower.username} />
-                          <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-semibold">
-                            {follower.display_name?.charAt(0) || follower.username?.charAt(0) || '?'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-gray-900 truncate">
-                              {follower.display_name || follower.username}
-                            </h4>
-                            {follower.is_verified && (
-                              <Check className="w-4 h-4 text-blue-500" />
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-500">@{follower.username}</p>
-                        </div>
-                      </div>
-                      {follower.id !== authUser?.id && (
-                        <Button
-                          size="sm"
-                          variant={isFollowing(follower.id) ? "outline" : "default"}
-                          onClick={() => handleFollowToggle(follower)}
-                          className={isFollowing(follower.id) ? 
-                            "hover:bg-red-50 hover:text-red-600 hover:border-red-300" : 
-                            "bg-blue-600 hover:bg-blue-700"
-                          }
-                        >
-                          {isFollowing(follower.id) ? "Siguiendo" : "Seguir"}
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Following Modal */}
-      {showFollowingModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div className="flex items-center gap-3">
-                <UserCheck className="w-6 h-6 text-green-600" />
-                <h2 className="text-xl font-bold text-gray-900">
-                  {followingList.length} Siguiendo
-                </h2>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFollowingModal(false)}
-                className="hover:bg-gray-100 rounded-full"
+            {/* Tabs Navigation */}
+            <div className="flex border-b border-gray-200 flex-shrink-0">
+              <button
+                onClick={() => {
+                  setShowFollowingModal(true);
+                  setShowFollowersModal(false);
+                }}
+                className={cn(
+                  "flex-1 py-3 text-sm font-medium transition-colors relative",
+                  showFollowingModal
+                    ? "text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
+                )}
               >
-                ✕
-              </Button>
+                Siguiendo {followingCount}
+                {showFollowingModal && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900"></div>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  setShowFollowersModal(true);
+                  setShowFollowingModal(false);
+                }}
+                className={cn(
+                  "flex-1 py-3 text-sm font-medium transition-colors relative",
+                  showFollowersModal
+                    ? "text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
+                )}
+              >
+                Seguidores {followersCount}
+                {showFollowersModal && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900"></div>
+                )}
+              </button>
             </div>
+
+            {/* Privacy Notice (optional) */}
+            {isOwnProfile && (
+              <div className="px-4 py-2 text-xs text-gray-500 text-center bg-gray-50 flex-shrink-0">
+                Solo tú puedes ver todos tus {showFollowersModal ? 'seguidores' : 'seguidos'}
+              </div>
+            )}
             
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
-              {followingLoading ? (
-                <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="animate-pulse flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+            {/* Content Area */}
+            <div className="flex-1 overflow-y-auto">
+              {showFollowersModal ? (
+                // Followers Content
+                followersLoading ? (
+                  <div className="space-y-0">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="animate-pulse flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded mb-2 w-32"></div>
+                          <div className="h-3 bg-gray-200 rounded w-24"></div>
+                        </div>
+                        <div className="w-20 h-8 bg-gray-200 rounded-full"></div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : followingList.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <UserCheck className="w-8 h-8 text-gray-400" />
+                    ))}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No sigues a nadie aún</h3>
-                  <p className="text-gray-500">Busca usuarios interesantes para seguir</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {followingList.map((followedUser) => (
-                    <div key={followedUser.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={followedUser.avatar_url} alt={followedUser.username} />
-                          <AvatarFallback className="bg-gradient-to-br from-green-500 to-blue-500 text-white font-semibold">
-                            {followedUser.display_name?.charAt(0) || followedUser.username?.charAt(0) || '?'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-gray-900 truncate">
-                              {followedUser.display_name || followedUser.username}
-                            </h4>
-                            {followedUser.is_verified && (
-                              <Check className="w-4 h-4 text-blue-500" />
+                ) : followersList.length === 0 ? (
+                  <div className="text-center py-16 px-4">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <UserPlus className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-1">Sin seguidores aún</h3>
+                    <p className="text-sm text-gray-500">Crea contenido increíble para atraer seguidores</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-100">
+                    {followersList.map((follower) => (
+                      <div key={follower.id} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            {follower.avatar_url ? (
+                              <img 
+                                src={follower.avatar_url} 
+                                alt={follower.username}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <User className="w-6 h-6 text-gray-600" />
                             )}
                           </div>
-                          <p className="text-sm text-gray-500">@{followedUser.username}</p>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1">
+                              <h4 className="font-semibold text-sm text-gray-900 truncate">
+                                {follower.display_name || follower.username}
+                              </h4>
+                              {follower.is_verified && (
+                                <Check className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-500 truncate">@{follower.username}</p>
+                          </div>
                         </div>
+                        {follower.id !== authUser?.id && (
+                          <button
+                            onClick={() => handleFollowToggle(follower)}
+                            className={cn(
+                              "px-6 py-1.5 rounded-md text-sm font-medium transition-colors flex-shrink-0 ml-2",
+                              isFollowing(follower.id)
+                                ? "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
+                                : "bg-rose-500 text-white hover:bg-rose-600"
+                            )}
+                          >
+                            {isFollowing(follower.id) ? "Siguiendo" : "Seguir"}
+                          </button>
+                        )}
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleFollowToggle(followedUser)}
-                        className="hover:bg-red-50 hover:text-red-600 hover:border-red-300"
-                      >
-                        Siguiendo
-                      </Button>
+                    ))}
+                  </div>
+                )
+              ) : (
+                // Following Content
+                followingLoading ? (
+                  <div className="space-y-0">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="animate-pulse flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="h-4 bg-gray-200 rounded mb-2 w-32"></div>
+                          <div className="h-3 bg-gray-200 rounded w-24"></div>
+                        </div>
+                        <div className="w-20 h-8 bg-gray-200 rounded-full"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : followingList.length === 0 ? (
+                  <div className="text-center py-16 px-4">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <UserCheck className="w-8 h-8 text-gray-400" />
                     </div>
-                  ))}
-                </div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-1">No sigues a nadie aún</h3>
+                    <p className="text-sm text-gray-500">Busca usuarios interesantes para seguir</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-100">
+                    {followingList.map((followedUser) => (
+                      <div key={followedUser.id} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            {followedUser.avatar_url ? (
+                              <img 
+                                src={followedUser.avatar_url} 
+                                alt={followedUser.username}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <User className="w-6 h-6 text-gray-600" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1">
+                              <h4 className="font-semibold text-sm text-gray-900 truncate">
+                                {followedUser.display_name || followedUser.username}
+                              </h4>
+                              {followedUser.is_verified && (
+                                <Check className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-500 truncate">@{followedUser.username}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleFollowToggle(followedUser)}
+                          className="px-6 py-1.5 rounded-md text-sm font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300 transition-colors flex-shrink-0 ml-2"
+                        >
+                          Siguiendo
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )
               )}
             </div>
           </div>
