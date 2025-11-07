@@ -2378,7 +2378,7 @@ const ProfilePage = () => {
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <h2 className="text-base font-semibold text-gray-900 absolute left-1/2 transform -translate-x-1/2">
-                {profileData?.username || 'Usuario'}
+                {viewedUser?.username || authUser?.username || 'Usuario'}
               </h2>
               <div className="w-9"></div> {/* Spacer for centering */}
             </div>
