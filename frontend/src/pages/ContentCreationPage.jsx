@@ -842,32 +842,39 @@ const ContentCreationPage = () => {
     console.log('handleCropCancel called but should use inline crop');
   };
 
-  // Process image file (after crop)
+  // Process image file (NO BASE64 - just store File object)
   const processImageFile = async (file, base64 = null) => {
     try {
-      let mediaData;
-      
-      if (!base64) {
-        base64 = await fileToBase64(file);
+      // ⚡ OPTIMIZACIÓN: Create local preview URL (blob URL) instead of base64
+      let previewURL;
+      if (base64) {
+        // If coming from crop, use the provided base64 (it's already processed)
+        previewURL = base64;
+      } else {
+        // Create local blob URL for preview (no conversion needed!)
+        previewURL = URL.createObjectURL(file);
       }
       
-      mediaData = {
-        url: base64,
+      const mediaData = {
+        url: previewURL,
         type: 'image',
-        file: file
+        file: file,  // ⚡ CRÍTICO: Guardamos el File object para upload posterior
+        needsUpload: true,  // Flag para saber que necesita upload
+        size: file.size,
+        name: file.name
       };
 
       updateOption(currentSlotIndex, 'media', mediaData);
 
       toast({
-        title: "Imagen cargada",
-        description: "La imagen se ha agregado exitosamente",
+        title: "✅ Imagen lista",
+        description: `Imagen preparada (${(file.size / 1024).toFixed(0)}KB) - Se subirá al publicar`,
       });
     } catch (error) {
       console.error('Error processing image:', error);
       toast({
         title: "Error",
-        description: error.message || "No se pudo cargar la imagen. Intenta con otra imagen.",
+        description: error.message || "No se pudo procesar la imagen. Intenta con otra.",
         variant: "destructive"
       });
     }
