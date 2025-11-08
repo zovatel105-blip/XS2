@@ -505,7 +505,25 @@ const ContentPublishPage = () => {
       </div>
 
       {/* Bottom Action Bar */}
+      {/* Bottom Action Bar with Progress */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+        {/* Progress Bar */}
+        {isPublishing && uploadProgress > 0 && (
+          <div className="max-w-lg mx-auto mb-3">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs text-gray-600">{uploadStatus}</span>
+              <span className="text-xs font-semibold text-blue-600">{uploadProgress}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+              <div 
+                className="bg-blue-500 h-full rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
+        
+        {/* Action Buttons */}
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button className="px-6 py-2 text-gray-600 bg-gray-100 rounded-full font-medium">
             Drafts
@@ -518,7 +536,7 @@ const ContentPublishPage = () => {
             {isPublishing ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Publishing...
+                {uploadProgress > 0 ? `${uploadProgress}%` : 'Publicando...'}
               </>
             ) : (
               "Post"
