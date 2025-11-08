@@ -138,6 +138,53 @@ class UploadService {
     };
   }
 
+  // Upload multiple files with progress tracking
+  async uploadMultipleFiles(files, uploadType = 'poll_options', progressCallback = null) {
+    try {
+      console.log(`📤 Uploading ${files.length} files...`);
+      const uploadResults = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        console.log(`📤 Uploading file ${i + 1}/${files.length}: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        
+        // Create form data for this file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_type', uploadType);
+        
+        // Upload file
+        const response = await fetch(`${this.baseURL}/upload`, {
+          method: 'POST',
+          headers: this.getAuthHeadersFormData(),
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: 'Upload failed' }));
+          throw new Error(errorData.detail || `Upload failed for file ${file.name}`);
+        }
+        
+        const result = await response.json();
+        uploadResults.push(result);
+        
+        // Call progress callback if provided
+        if (progressCallback) {
+          const overallProgress = Math.round(((i + 1) / files.length) * 100);
+          progressCallback(overallProgress, i, 100);
+        }
+        
+        console.log(`✅ File ${i + 1}/${files.length} uploaded successfully`);
+      }
+      
+      console.log(`✅ All ${files.length} files uploaded successfully`);
+      return uploadResults;
+    } catch (error) {
+      console.error('❌ Upload error:', error);
+      throw error;
+    }
+  }
+
   // Get optimized public URL with transformations
   getPublicUrl(path, options = {}) {
     if (!path) return null;
