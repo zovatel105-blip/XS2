@@ -129,9 +129,65 @@ const ContentPublishPage = () => {
     }
 
     setIsPublishing(true);
+    setUploadProgress(0);
+    setUploadStatus('Preparando archivos...');
 
     try {
-      // Combine mentioned users from content and title mentions
+      console.log('🚀 Starting optimized upload process...');
+      
+      // ⚡ PASO 1: Identificar archivos que necesitan subirse
+      const filesToUpload = contentData.options
+        .filter(opt => opt.file && opt.needsUpload !== false)
+        .map(opt => opt.file);
+      
+      console.log(`📦 Found ${filesToUpload.length} files to upload`);
+      
+      let uploadedOptions = [...contentData.options];
+      
+      // ⚡ PASO 2: Subir archivos usando multipart/form-data (RÁPIDO)
+      if (filesToUpload.length > 0) {
+        setUploadStatus(`Subiendo ${filesToUpload.length} archivos...`);
+        
+        const uploadResults = await uploadService.uploadMultipleFiles(
+          filesToUpload,
+          'poll_options',
+          (progress, index, fileProgress) => {
+            setUploadProgress(progress);
+            setUploadStatus(`Subiendo archivo ${index + 1}/${filesToUpload.length}... ${fileProgress}%`);
+          }
+        );
+        
+        console.log('✅ All files uploaded:', uploadResults);
+        
+        // ⚡ PASO 3: Reemplazar URLs locales con URLs del servidor
+        let uploadIndex = 0;
+        uploadedOptions = contentData.options.map(opt => {
+          if (opt.file && opt.needsUpload !== false) {
+            const uploadResult = uploadResults[uploadIndex++];
+            return {
+              text: opt.text || '',
+              media_type: uploadResult.file_type === 'video' ? 'video' : 'image',
+              media_url: uploadResult.public_url,  // ⚡ URL del servidor
+              thumbnail_url: uploadResult.thumbnail_url || uploadResult.public_url,
+              media_transform: opt.media_transform || null,
+              mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(u => u.id) : []
+            };
+          }
+          return {
+            text: opt.text || '',
+            media_type: opt.media_type,
+            media_url: opt.media_url,
+            thumbnail_url: opt.thumbnail_url || opt.media_url,
+            media_transform: opt.media_transform || null,
+            mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(u => u.id) : []
+          };
+        });
+      }
+      
+      setUploadStatus('Creando publicación...');
+      setUploadProgress(90);
+      
+      // ⚡ PASO 4: Crear poll con las URLs ya subidas
       const allMentionedUsers = [
         ...contentData.mentioned_users,
         ...mentionedUsers.map(user => user.id)
@@ -140,20 +196,22 @@ const ContentPublishPage = () => {
       const pollData = {
         title: title.trim(),
         description: null,
-        options: contentData.options,
+        options: uploadedOptions,
         music_id: contentData.music_id,
         tags: hashtagsList.map(tag => tag.startsWith('#') ? tag : `#${tag}`),
         category: 'general',
-        mentioned_users: [...new Set(allMentionedUsers)], // Remove duplicates
+        mentioned_users: [...new Set(allMentionedUsers)],
         video_playbook_settings: null,
         layout: contentData.layout,
         comments_enabled: commentsEnabled
       };
 
-      console.log('Creating poll with data:', pollData);
+      console.log('📤 Creating poll with uploaded URLs:', pollData);
 
-      // Create poll using API
       const newPoll = await pollService.createPoll(pollData);
+      
+      setUploadProgress(100);
+      setUploadStatus('¡Publicado!');
 
       toast({
         title: "🎉 ¡Publicación creada!",
@@ -163,10 +221,10 @@ const ContentPublishPage = () => {
       // Navigate to feed after successful publication
       setTimeout(() => {
         navigate('/feed');
-      }, 1500);
+      }, 1000);
 
     } catch (error) {
-      console.error('Error creating content:', error);
+      console.error('❌ Error creating content:', error);
       
       let errorMessage = "No se pudo crear la publicación. Inténtalo de nuevo.";
       
@@ -176,6 +234,8 @@ const ContentPublishPage = () => {
           setTimeout(() => navigate('/'), 2000);
         } else if (error.message.includes('validation')) {
           errorMessage = "Error en los datos. Verifica que todos los campos estén correctos.";
+        } else if (error.message.includes('Upload failed') || error.message.includes('Network error')) {
+          errorMessage = "Error al subir archivos. Verifica tu conexión e intenta de nuevo.";
         } else {
           errorMessage = error.message;
         }
@@ -186,6 +246,9 @@ const ContentPublishPage = () => {
         description: errorMessage,
         variant: "destructive",
       });
+      
+      setUploadStatus('');
+      setUploadProgress(0);
     } finally {
       setIsPublishing(false);
     }
