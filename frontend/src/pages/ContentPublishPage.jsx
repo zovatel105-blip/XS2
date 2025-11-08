@@ -20,6 +20,8 @@ const ContentPublishPage = () => {
   const [commentsEnabled, setCommentsEnabled] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
   const [contentData, setContentData] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);  // ⚡ Upload progress
+  const [uploadStatus, setUploadStatus] = useState('');  // ⚡ Upload status message
   
   // Modal states
   const [showHashtagModal, setShowHashtagModal] = useState(false);
