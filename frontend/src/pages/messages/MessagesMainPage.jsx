@@ -244,7 +244,9 @@ const MessagesMainPage = () => {
       try {
         const activityResponse = await apiRequest('/api/users/activity/recent');
         activityCount = activityResponse?.length || 0;
+        console.log('✅ Activity loaded:', activityCount, 'activities');
       } catch (e) {
+        console.error('❌ Activity API error:', e.message, e.status);
         console.log('Activity API not available');
       }
 
