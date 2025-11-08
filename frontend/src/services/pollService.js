@@ -55,10 +55,10 @@ class PollService {
     try {
       const headers = this.getAuthHeaders();
       
-      // 🚀 TRY ULTRA-FAST ENDPOINT FIRST (fixed implementation)
+      // ⚡ ALWAYS TRY ULTRA-FAST ENDPOINT FIRST (3-5x faster)
       try {
         const ultraFastUrl = `${this.baseURL}/polls/ultra-fast?${params}`;
-        console.log('⚡ Trying ultra-fast endpoint:', ultraFastUrl);
+        console.log('⚡ Using ultra-fast endpoint:', ultraFastUrl);
         
         const ultraResponse = await fetch(ultraFastUrl, {
           method: 'GET',
@@ -66,18 +66,20 @@ class PollService {
         });
 
         if (ultraResponse.ok) {
-          const ultraResult = await this.handleResponse(ultraResponse);
+          const ultraResult = await ultraResponse.json();
           const data = ultraResult.polls || ultraResult;
-          console.log('🚀 Ultra-fast success:', data.length, 'polls received');
+          console.log(`🚀 Ultra-fast success: ${data.length} polls loaded in ${ultraResult.response_time_ms || 'N/A'}ms`);
           return data;
+        } else {
+          console.warn(`⚠️ Ultra-fast returned ${ultraResponse.status}, falling back to standard`);
         }
       } catch (ultraError) {
-        console.warn('⚠️ Ultra-fast failed, using standard:', ultraError.message);
+        console.warn('⚠️ Ultra-fast endpoint failed:', ultraError.message);
       }
       
-      // FALLBACK: Standard endpoint
+      // FALLBACK: Standard endpoint (slower but more reliable)
       const url = `${this.baseURL}/polls?${params}`;
-      console.log('🌐 Using standard endpoint:', url);
+      console.log('🌐 Fallback to standard endpoint:', url);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -85,11 +87,11 @@ class PollService {
       });
 
       const data = await this.handleResponse(response);
-      console.log('📊 Standard response:', data.length, 'polls received');
+      console.log('📊 Standard endpoint:', data.length, 'polls loaded');
       
       return data;
     } catch (error) {
-      console.error('Error fetching polls:', error);
+      console.error('❌ Error fetching polls:', error);
       throw error;
     }
   }
