@@ -4608,21 +4608,51 @@ async def get_image_dimensions(file_path: Path) -> tuple[Optional[int], Optional
         return None, None
 
 async def get_thumbnail_for_media_url(media_url: str) -> Optional[str]:
-    """Get thumbnail URL from uploaded_files collection based on media URL"""
+    """Get thumbnail URL from uploaded_files collection - Generate if doesn't exist"""
     try:
         if not media_url:
             return None
             
-        # Extract filename from media URL
+        # Extract filename and category from media URL
         # URLs are like: /api/uploads/general/filename.mp4
         if "/api/uploads/" in media_url:
-            filename = media_url.split("/")[-1]
-            
-            # Query uploaded_files collection
-            uploaded_file = await db.uploaded_files.find_one({"filename": filename})
-            
-            if uploaded_file and uploaded_file.get("thumbnail_url"):
-                return uploaded_file["thumbnail_url"]
+            parts = media_url.split("/")
+            if len(parts) >= 4:
+                category = parts[-2]  # e.g., "general", "poll_options"
+                filename = parts[-1]
+                
+                # Query uploaded_files collection
+                uploaded_file = await db.uploaded_files.find_one({"filename": filename})
+                
+                if uploaded_file:
+                    # If thumbnail exists in DB, return it
+                    if uploaded_file.get("thumbnail_url"):
+                        return uploaded_file["thumbnail_url"]
+                    
+                    # If no thumbnail but it's a video, try to generate it
+                    if uploaded_file.get("file_type") == "video":
+                        file_path = uploaded_file.get("file_path")
+                        if file_path and Path(file_path).exists():
+                            # Map category to UploadType
+                            upload_type_map = {
+                                "avatars": UploadType.AVATAR,
+                                "poll_options": UploadType.POLL_OPTION,
+                                "poll_backgrounds": UploadType.POLL_BACKGROUND,
+                                "general": UploadType.GENERAL
+                            }
+                            upload_type = upload_type_map.get(category, UploadType.GENERAL)
+                            
+                            # Generate thumbnail
+                            thumbnail_url = get_video_thumbnail_url(file_path, upload_type)
+                            
+                            # Update database with thumbnail URL
+                            if thumbnail_url:
+                                await db.uploaded_files.update_one(
+                                    {"filename": filename},
+                                    {"$set": {"thumbnail_url": thumbnail_url}}
+                                )
+                                print(f"✅ Generated and saved thumbnail for {filename}: {thumbnail_url}")
+                                return thumbnail_url
                 
         return None
         
