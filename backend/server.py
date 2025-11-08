@@ -4192,7 +4192,10 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         return activities[:30]  # Return max 30 activities
         
     except Exception as e:
-        # Return empty list if error
+        # Log error and return empty list
+        print(f"❌ Error in get_recent_activity: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return []
 
 # =============  COMMENT ENDPOINTS =============
