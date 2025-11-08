@@ -4687,7 +4687,7 @@ async def get_video_info(file_path: Path) -> tuple[Optional[int], Optional[int],
         return 1280, 720, 30.0
 
 def get_video_thumbnail_url(file_path: str, upload_type: UploadType = UploadType.GENERAL) -> Optional[str]:
-    """Generate thumbnail URL for video files"""
+    """Generate thumbnail URL for video files - Creates thumbnail if it doesn't exist"""
     try:
         file_path_obj = Path(file_path)
         thumbnail_filename = f"{file_path_obj.stem}_thumbnail.jpg"
@@ -4702,8 +4702,47 @@ def get_video_thumbnail_url(file_path: str, upload_type: UploadType = UploadType
         
         category = category_map.get(upload_type, "general")
         
-        # Check if thumbnail file exists
-        thumbnail_path = file_path_obj.parent / "thumbnails" / thumbnail_filename
+        # Create thumbnails directory if it doesn't exist
+        thumbnails_dir = file_path_obj.parent / "thumbnails"
+        thumbnails_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Full path for thumbnail
+        thumbnail_path = thumbnails_dir / thumbnail_filename
+        
+        # Generate thumbnail if it doesn't exist
+        if not thumbnail_path.exists():
+            try:
+                import subprocess
+                # Use ffmpeg to extract frame at 1 second
+                # -ss 1: seek to 1 second
+                # -i: input file
+                # -vframes 1: extract 1 frame
+                # -vf scale=...: scale to max 720px width while maintaining aspect ratio
+                # -q:v 2: high quality JPEG
+                result = subprocess.run([
+                    'ffmpeg',
+                    '-ss', '1',  # Extract frame at 1 second
+                    '-i', str(file_path_obj),
+                    '-vframes', '1',  # Extract only 1 frame
+                    '-vf', 'scale=720:-2',  # Scale to 720px width, maintain aspect ratio
+                    '-q:v', '2',  # High quality JPEG
+                    '-y',  # Overwrite if exists
+                    str(thumbnail_path)
+                ], capture_output=True, timeout=10)
+                
+                if result.returncode != 0:
+                    print(f"⚠️ FFmpeg error generating thumbnail: {result.stderr.decode()}")
+                    return None
+                else:
+                    print(f"✅ Thumbnail generated successfully: {thumbnail_path}")
+            except subprocess.TimeoutExpired:
+                print(f"⚠️ Timeout generating thumbnail for {file_path}")
+                return None
+            except Exception as e:
+                print(f"⚠️ Error generating thumbnail with ffmpeg: {e}")
+                return None
+        
+        # Check if thumbnail was created successfully
         if thumbnail_path.exists():
             return f"/api/uploads/{category}/thumbnails/{thumbnail_filename}"
         
