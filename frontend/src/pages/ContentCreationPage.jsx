@@ -1024,7 +1024,10 @@ const ContentCreationPage = () => {
         media_url: opt.media.url,
         thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
         media_transform: opt.media.transform || null, // ✅ Include crop transform data
-        mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : []
+        mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : [],
+        // ⚡ CRITICAL FIX: Include file object and upload flag so ContentPublishPage can upload the actual files
+        file: opt.media.file || null, // File object for upload
+        needsUpload: opt.media.needsUpload || false // Flag to indicate if file needs uploading
       };
     });
 
