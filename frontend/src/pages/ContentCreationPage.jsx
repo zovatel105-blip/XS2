@@ -873,19 +873,18 @@ const ContentCreationPage = () => {
     }
   };
 
-  // Process video file
+  // Process video file (NO BASE64 - just store File object)
   const processVideoFile = async (file) => {
     try {
-      console.log('🎥 Processing video with base64...');
-      const base64 = await fileToBase64(file);
+      console.log('🎥 Processing video (optimized - no base64)...');
         
-      // Create a video element to generate real thumbnail
+      // Create a video element to generate local thumbnail preview
       const video = document.createElement('video');
       video.preload = 'metadata';
       video.muted = true;
       video.playsInline = true;
       
-      // Create object URL for the video file
+      // Create object URL for the video file (temporary local preview)
       const videoURL = URL.createObjectURL(file);
       video.src = videoURL;
       
@@ -912,32 +911,35 @@ const ContentCreationPage = () => {
       // Draw the video frame
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      // Get thumbnail as data URL
-      const thumbnail = canvas.toDataURL('image/jpeg', 0.8);
+      // Get thumbnail as data URL (only for local preview)
+      const thumbnail = canvas.toDataURL('image/jpeg', 0.7);
       
-      // Clean up
-      URL.revokeObjectURL(videoURL);
-      
+      // ⚡ OPTIMIZACIÓN CRÍTICA: NO convertir video a base64
+      // Solo guardamos el File object y el preview local
       const mediaData = {
         type: 'video',
-        url: base64,
-        thumbnail: thumbnail,
-        file: file,
+        url: videoURL,  // Local blob URL (temporal)
+        thumbnail: thumbnail,  // Local thumbnail (solo para preview)
+        file: file,  // ⚡ CRÍTICO: Guardamos el File object para upload posterior
         name: file.name,
-        size: file.size
+        size: file.size,
+        needsUpload: true  // Flag para saber que necesita upload
       };
       
       updateOption(currentSlotIndex, 'media', mediaData);
 
       toast({
-        title: "✅ Video agregado",
-        description: `Video agregado a la opción ${String.fromCharCode(65 + currentSlotIndex)}`,
+        title: "✅ Video listo",
+        description: `Video preparado (${(file.size / 1024 / 1024).toFixed(1)}MB) - Se subirá al publicar`,
       });
+      
+      // ⚠️ NO revocamos el URL aquí porque se necesita para el preview
+      // Se revocará cuando se limpie el componente o se suba
     } catch (error) {
-      console.error('❌ Video upload error:', error);
+      console.error('❌ Video processing error:', error);
       toast({
         title: "Error",
-        description: error.message || "No se pudo cargar el video. Intenta con otro video.",
+        description: error.message || "No se pudo procesar el video. Intenta con otro.",
         variant: "destructive"
       });
     }
