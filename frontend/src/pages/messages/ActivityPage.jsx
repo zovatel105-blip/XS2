@@ -109,7 +109,9 @@ const ActivityPage = () => {
   const loadActivities = async () => {
     try {
       setLoading(true);
+      console.log('📊 Loading activities from /api/users/activity/recent...');
       const activityResponse = await apiRequest('/api/users/activity/recent');
+      console.log('✅ Activities response:', activityResponse);
       
       const activitiesData = activityResponse.map(activity => ({
         id: `activity-${activity.id}`,
@@ -125,10 +127,12 @@ const ActivityPage = () => {
         isSystem: false
       }));
 
+      console.log('✅ Activities processed:', activitiesData.length, 'items');
       setActivities(activitiesData);
       setActivityCount(activitiesData.length);
     } catch (error) {
-      console.log('Error loading activities:', error.message);
+      console.error('❌ Error loading activities:', error.message, error.status);
+      console.log('Error details:', error);
       setActivities([]);
       setActivityCount(0);
     } finally {
