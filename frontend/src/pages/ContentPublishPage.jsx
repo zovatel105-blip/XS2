@@ -5,6 +5,7 @@ import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import UserMentionInput from '../components/UserMentionInput';
 import pollService from '../services/pollService';
+import uploadService from '../services/uploadService';  // ⚡ Import upload service
 
 const ContentPublishPage = () => {
   const navigate = useNavigate();
