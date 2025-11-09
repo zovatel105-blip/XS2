@@ -251,6 +251,75 @@ Feed Post Layout (Posts PROPIOS):
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+
+**🎵 AUDIO ORIGINAL EN LAYOUT CARRUSEL IMPLEMENTADO (2025-01-27): Los videos en el layout carrusel ahora usan su audio original cuando no hay música global asignada.**
+
+✅ **FUNCIONALIDAD IMPLEMENTADA:**
+
+**REQUISITO DEL USUARIO:**
+- En el layout carrusel, cada video debe usar su audio original solo si NO hay música global asignada
+- Si hay música viral/global asignada, todos los videos usan esa música
+- Si no hay música, entonces cada video mantiene su audio original
+- El audio original también puede usarse con el botón "Use Sound"
+
+**CAMBIOS IMPLEMENTADOS EN CarouselLayout.jsx:**
+
+1. ✅ **Detección de música global:**
+   - Agregada variable `hasGlobalMusic` que detecta si `poll.music` existe
+   - Condicional: `const hasGlobalMusic = !!(poll.music && poll.music.preview_url);`
+
+2. ✅ **Atributo muted dinámico:**
+   - Modificado el tag `<video>` para que `muted={hasGlobalMusic}`
+   - **Si hay música global** → `muted={true}` (videos silenciados)
+   - **Si NO hay música global** → `muted={false}` (audio original habilitado)
+
+3. ✅ **Gestión inteligente de audio:**
+   - Agregada lógica en `useEffect` para controlar el estado de audio:
+     ```javascript
+     if (!hasGlobalMusic && videoElement.muted) {
+       videoElement.muted = false;
+       videoElement.volume = 0.7; // Volumen al 70%
+     } else if (hasGlobalMusic && !videoElement.muted) {
+       videoElement.muted = true;
+     }
+     ```
+
+4. ✅ **Manejo robusto de reproducción:**
+   - Si NO hay música global, intenta reproducir con audio habilitado
+   - Si falla el autoplay con audio (políticas del navegador), hace fallback a muted
+   - Si SÍ hay música global, reproduce videos en muted directamente
+   - Logging detallado para debugging
+
+**COMPORTAMIENTO RESULTANTE:**
+
+**CASO 1: Poll con música global (poll.music existe)**
+- 🎵 Música global se reproduce para todo el poll
+- 🔇 Todos los videos en el carrusel están silenciados (muted)
+- ✅ Comportamiento actual preservado
+
+**CASO 2: Poll sin música global (poll.music no existe)**
+- 🔊 Cada video usa su audio original embebido
+- 🎚️ Volumen configurado al 70%
+- 🎯 Solo el video visible (currentSlide) reproduce su audio
+- 🎵 Audio original disponible para "Use Sound"
+
+**SINCRONIZACIÓN:**
+- Solo el slide actual reproduce audio (cuando `isActive && currentSlide === optionIndex`)
+- Al cambiar de slide, el video anterior se pausa y el nuevo reproduce
+- Transición suave entre videos con sus respectivos audios originales
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/layouts/CarouselLayout.jsx` (líneas 98-172, 204)
+
+**RESULTADO FINAL:**
+🎯 **AUDIO ORIGINAL COMPLETAMENTE FUNCIONAL EN LAYOUT CARRUSEL** - Los usuarios ahora experimentan:
+- Videos con audio original cuando no hay música global asignada
+- Música global viral cuando está configurada (comportamiento existente)
+- Audio sincronizado con el slide visible
+- Compatibilidad con sistema "Use Sound"
+
+---
+
 **📖 PROBLEMA CRÍTICO DE HISTORIAS DE USUARIOS SEGUIDOS CORREGIDO (2025-01-27): Las historias de los usuarios seguidos ahora aparecen correctamente en la página Following - bug de colección incorrecta resuelto.**
 
 ✅ **PROBLEMA IDENTIFICADO:**
