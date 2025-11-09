@@ -1342,127 +1342,86 @@ const TikTokScrollView = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeIndex, polls.length, onExitTikTok]);
 
-  // Ultra-optimized touch/swipe support with momentum and inertia
+  // 👆 Touch gesture detection with velocity and momentum
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let startY = 0;
-    let startTime = 0;
-    let startScrollTop = 0;
-    let isDragging = false;
-    let momentum = 0;
-    let lastY = 0;
-    let lastTime = 0;
-
+    if (!containerRef.current) return;
+    
+    const state = gestureState.current;
+    
     const handleTouchStart = (e) => {
-      // Get the first touch point
-      const touch = e.touches[0];
-      startY = touch.clientY;
-      lastY = touch.clientY;
-      startTime = Date.now();
-      lastTime = startTime;
-      startScrollTop = container.scrollTop;
-      isDragging = true;
-      momentum = 0;
+      if (isTransitioning) return;
       
-      // Stop any ongoing smooth scrolling
-      container.style.scrollBehavior = 'auto';
+      const touch = e.touches[0];
+      state.startY = touch.clientY;
+      state.lastY = touch.clientY;
+      state.startTime = Date.now();
+      state.lastTime = state.startTime;
+      state.isGesturing = true;
+      state.velocity = 0;
     };
-
+    
     const handleTouchMove = (e) => {
-      if (!isDragging) return;
+      if (!state.isGesturing) return;
       
       const touch = e.touches[0];
       const currentY = touch.clientY;
       const currentTime = Date.now();
-      const deltaY = lastY - currentY;
-      const deltaTime = currentTime - lastTime;
+      const deltaY = state.lastY - currentY;
+      const deltaTime = currentTime - state.lastTime;
       
-      // Calculate momentum for smooth inertia
+      // Calculate instantaneous velocity
       if (deltaTime > 0) {
-        momentum = deltaY / deltaTime;
+        state.velocity = deltaY / deltaTime;
       }
       
-      lastY = currentY;
-      lastTime = currentTime;
+      state.lastY = currentY;
+      state.lastTime = currentTime;
       
-      // Prevent default behavior for better control
-      if (Math.abs(touch.clientY - startY) > 15) {
+      // Prevent page scroll when swiping
+      if (Math.abs(touch.clientY - state.startY) > 10) {
         e.preventDefault();
       }
     };
-
+    
     const handleTouchEnd = (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      
-      // Re-enable smooth scrolling
-      container.style.scrollBehavior = 'smooth';
+      if (!state.isGesturing) return;
+      state.isGesturing = false;
       
       const endY = e.changedTouches[0].clientY;
       const endTime = Date.now();
-      const totalDeltaY = startY - endY;
-      const totalDeltaTime = endTime - startTime;
+      const totalDeltaY = state.startY - endY;
+      const totalDeltaTime = endTime - state.startTime;
       
-      // Enhanced swipe detection with momentum consideration
-      const averageVelocity = Math.abs(totalDeltaY) / totalDeltaTime;
-      const instantVelocity = Math.abs(momentum);
+      // Calculate average velocity
+      const avgVelocity = Math.abs(totalDeltaY) / totalDeltaTime;
+      const instVelocity = Math.abs(state.velocity);
       
-      // Multiple detection methods for better responsiveness
-      const isQuickSwipe = totalDeltaTime < 300 && averageVelocity > 0.4;
-      const isMomentumSwipe = instantVelocity > 1.5;
+      // Multi-criteria swipe detection
+      const isQuickFlick = totalDeltaTime < 300 && avgVelocity > 0.5;
+      const isMomentumSwipe = instVelocity > 1.5;
       const isLongSwipe = Math.abs(totalDeltaY) > 80;
-      const isShortFlick = Math.abs(totalDeltaY) > 30 && averageVelocity > 0.8;
-
-      if (isQuickSwipe || isMomentumSwipe || isLongSwipe || isShortFlick) {
-        const targetIndex = totalDeltaY > 0 
-          ? Math.min(activeIndex + 1, polls.length - 1)  // Swipe up - next
-          : Math.max(activeIndex - 1, 0);               // Swipe down - previous
-
-        if (targetIndex !== activeIndex) {
-          // Add slight momentum-based easing
-          const easingDuration = isMomentumSwipe ? 200 : 300;
-          
-          container.scrollTo({
-            top: targetIndex * container.clientHeight,
-            behavior: 'smooth'
-          });
-          
-          // Immediately update active index for better responsiveness
-          setTimeout(() => {
-            setActiveIndex(targetIndex);
-          }, easingDuration / 2);
-        }
-      } else {
-        // Snap to current position if no significant swipe detected
-        const currentPosition = container.scrollTop / container.clientHeight;
-        const snapIndex = Math.round(currentPosition);
-        
-        container.scrollTo({
-          top: snapIndex * container.clientHeight,
-          behavior: 'smooth'
-        });
+      const isShortFlick = Math.abs(totalDeltaY) > 40 && avgVelocity > 0.8;
+      
+      if (isQuickFlick || isMomentumSwipe || isLongSwipe || isShortFlick) {
+        const direction = totalDeltaY > 0 ? 1 : -1;
+        const newIndex = activeIndex + direction;
+        navigateToIndex(newIndex);
       }
     };
-
-    // Optimize event listeners for better performance
-    const options = { 
-      passive: false, 
-      capture: false,
-      once: false
-    };
-
+    
+    const container = containerRef.current;
+    const options = { passive: false };
+    
     container.addEventListener('touchstart', handleTouchStart, options);
     container.addEventListener('touchmove', handleTouchMove, options);
     container.addEventListener('touchend', handleTouchEnd, { passive: true });
-
+    
     return () => {
       container.removeEventListener('touchstart', handleTouchStart);
       container.removeEventListener('touchmove', handleTouchMove);
       container.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [activeIndex, polls.length]);
+  }, [activeIndex, isTransitioning, navigateToIndex]);
 
   // No polls state - Show loading spinner
   if (!polls.length) {
