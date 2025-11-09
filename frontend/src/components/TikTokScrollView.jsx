@@ -988,12 +988,23 @@ const TikTokScrollView = ({
 }) => {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [savedPolls, setSavedPolls] = useState(new Set()); // Track saved polls locally
-  const [commentedPolls, setCommentedPolls] = useState(new Set()); // Track polls user has commented on
-  const [sharedPolls, setSharedPolls] = useState(new Set()); // Track polls user has shared
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [savedPolls, setSavedPolls] = useState(new Set());
+  const [commentedPolls, setCommentedPolls] = useState(new Set());
+  const [sharedPolls, setSharedPolls] = useState(new Set());
   const { user: currentUser } = useAuth();
   const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
+  const controls = useAnimation();
+  
+  // Track touch/wheel state for gesture detection
+  const gestureState = useRef({
+    startY: 0,
+    startTime: 0,
+    lastY: 0,
+    lastTime: 0,
+    velocity: 0,
+    isGesturing: false
+  });
 
   // Load user's saved polls on component mount
   useEffect(() => {
