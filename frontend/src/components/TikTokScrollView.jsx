@@ -496,7 +496,7 @@ const TikTokPollCard = ({
   const winningOption = getWinningOption();
 
   return (
-    <div className="w-full min-h-screen h-screen flex flex-col relative snap-start snap-always bg-black overflow-hidden" 
+    <div className="w-full min-h-screen h-screen flex flex-col relative bg-black overflow-hidden" 
          style={{
            height: '100vh',
            height: '100dvh', // Dynamic viewport height for better mobile support
