@@ -367,6 +367,41 @@ Feed Post Layout (Posts PROPIOS):
 
 ---
 
+**🔧 ERROR HTTP 500 EN REGISTRO CORREGIDO - BACKEND ARGON2 FALTANTE (2025-01-27): Resuelto error de autenticación por falta de backend argon2-cffi.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó error "HTTP 500" durante el registro
+- Backend funcionando pero registro fallando internamente
+- **CAUSA RAÍZ**: `passlib.exc.MissingBackendError: argon2: no backends available`
+
+**ERROR ESPECÍFICO:**
+```
+File "/app/backend/auth.py", line 36, in get_password_hash
+  return pwd_context.hash(password)
+passlib.exc.MissingBackendError: argon2: no backends available
+```
+
+**SOLUCIÓN IMPLEMENTADA:**
+1. ✅ **Instalación de argon2-cffi:**
+   ```bash
+   pip install argon2-cffi argon2-cffi-bindings
+   ```
+   - argon2-cffi v25.1.0 instalado
+   - argon2-cffi-bindings v25.1.0 instalado
+
+2. ✅ **Verificación de requirements.txt:**
+   - Confirmado que ambos módulos ya estaban listados
+   - Problema era que no estaban instalados en el entorno actual
+
+3. ✅ **Reinicio de backend:**
+   - Backend reiniciado exitosamente
+   - Logs confirmando: "Application startup complete"
+
+**RESULTADO:**
+🎯 **REGISTRO COMPLETAMENTE FUNCIONAL** - El sistema de autenticación con argon2 ahora está operativo. Los usuarios pueden registrarse sin errores HTTP 500. El hash de contraseñas funciona correctamente.
+
+---
+
 ---
 
 **📖 PROBLEMA CRÍTICO DE HISTORIAS DE USUARIOS SEGUIDOS CORREGIDO (2025-01-27): Las historias de los usuarios seguidos ahora aparecen correctamente en la página Following - bug de colección incorrecta resuelto.**
