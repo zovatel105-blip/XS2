@@ -191,11 +191,7 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
             e.target.style.display = 'none';
           }}
         />
-        {/* Indicador de carrusel */}
-        <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-          <span>🎠</span>
-          <span>{options.length}</span>
-        </div>
+        {/* Indicador de carrusel - Eliminado por solicitud del usuario */}
         
         {/* Modal de votación rápida - Layout carrusel horizontal */}
         {showQuickVote && (
