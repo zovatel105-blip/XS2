@@ -1306,30 +1306,17 @@ const TikTokScrollView = ({
     };
   }, [activeIndex, isTransitioning, navigateToIndex]);
 
-  // Enhanced keyboard navigation with better UX
+  // ⌨️ Enhanced keyboard navigation
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const container = containerRef.current;
-      if (!container) return;
-
       if (event.key === 'ArrowDown' || event.key === ' ') {
         event.preventDefault();
         const nextIndex = Math.min(activeIndex + 1, polls.length - 1);
-        if (nextIndex !== activeIndex) {
-          container.scrollTo({
-            top: nextIndex * container.clientHeight,
-            behavior: 'smooth'
-          });
-        }
+        navigateToIndex(nextIndex);
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
         const prevIndex = Math.max(activeIndex - 1, 0);
-        if (prevIndex !== activeIndex) {
-          container.scrollTo({
-            top: prevIndex * container.clientHeight,
-            behavior: 'smooth'
-          });
-        }
+        navigateToIndex(prevIndex);
       } else if (event.key === 'Escape') {
         console.log('⌨️ ESCAPE KEY PRESSED - Stopping audio');
         audioManager.stop().then(() => {
@@ -1340,7 +1327,7 @@ const TikTokScrollView = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIndex, polls.length, onExitTikTok]);
+  }, [activeIndex, polls.length, onExitTikTok, navigateToIndex]);
 
   // 👆 Touch gesture detection with velocity and momentum
   useEffect(() => {
