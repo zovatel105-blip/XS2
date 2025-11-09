@@ -145,16 +145,7 @@ const CarouselLayout = ({
     });
   }, [isActive, currentSlide, poll.options]);
 
-  // Auto-advance carousel every 5 seconds when active (fixed dependencies)
-  useEffect(() => {
-    if (!isActive || totalSlides <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isActive, totalSlides]); // Removed currentSlide dependency to prevent reset
+  // Auto-advance deshabilitado - Navegación completamente manual por solicitud del usuario
 
   const getPercentage = (votes) => {
     if (poll.userVote && poll.totalVotes > 0) {
