@@ -1563,8 +1563,8 @@ const TikTokScrollView = ({
         {/* Loading indicator when preloading more content */}
         {isLoadingMore && (
           <div 
-            className="w-full h-screen flex items-center justify-center snap-start snap-always bg-black"
-            style={{ minHeight: '100vh' }}
+            className="w-full h-screen flex items-center justify-center bg-black"
+            style={{ minHeight: '100vh', height: '100vh', height: '100dvh' }}
           >
             <div className="flex flex-col items-center gap-4">
               <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent"></div>
@@ -1576,8 +1576,8 @@ const TikTokScrollView = ({
         {/* End of content indicator */}
         {!hasMoreContent && polls.length > 0 && (
           <div 
-            className="w-full h-screen flex items-center justify-center snap-start snap-always bg-black"
-            style={{ minHeight: '100vh' }}
+            className="w-full h-screen flex items-center justify-center bg-black"
+            style={{ minHeight: '100vh', height: '100vh', height: '100dvh' }}
           >
             <div className="flex flex-col items-center gap-4 text-center px-6">
               <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
