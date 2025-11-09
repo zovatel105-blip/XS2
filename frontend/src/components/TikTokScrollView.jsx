@@ -1480,16 +1480,8 @@ const TikTokScrollView = ({
                transform: 'translateY(-50%)'
              }}>
           <Button
-            onClick={() => {
-              const container = containerRef.current;
-              if (container && activeIndex > 0) {
-                container.scrollTo({
-                  top: (activeIndex - 1) * container.clientHeight,
-                  behavior: 'smooth'
-                });
-              }
-            }}
-            disabled={activeIndex === 0}
+            onClick={() => navigateToIndex(activeIndex - 1)}
+            disabled={activeIndex === 0 || isTransitioning}
             className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
             size="sm"
           >
@@ -1497,16 +1489,8 @@ const TikTokScrollView = ({
           </Button>
           
           <Button
-            onClick={() => {
-              const container = containerRef.current;
-              if (container && activeIndex < polls.length - 1) {
-                container.scrollTo({
-                  top: (activeIndex + 1) * container.clientHeight,
-                  behavior: 'smooth'
-                });
-              }
-            }}
-            disabled={activeIndex === polls.length - 1}
+            onClick={() => navigateToIndex(activeIndex + 1)}
+            disabled={activeIndex === polls.length - 1 || isTransitioning}
             className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
             size="sm"
           >
