@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useAnimation, PanInfo } from 'framer-motion';
 import PollCard from './PollCard';
 import MusicPlayer from './MusicPlayer';
 import MusicDisplay from './MusicDisplay';
