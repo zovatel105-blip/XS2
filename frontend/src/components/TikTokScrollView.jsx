@@ -1272,73 +1272,39 @@ const TikTokScrollView = ({
     }
   }, [activeIndex, polls.length, isTransitioning, controls, onLoadMore, hasMoreContent, isLoadingMore]);
 
-  // 🚀 ULTRA-OPTIMIZED scroll listener with smart throttling
+  // 🖱️ Mouse wheel detection with smooth threshold
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let scrollTimeout;
-    let rafId;
-    let lastScrollTop = 0;
-    let velocity = 0;
-    let isScrolling = false;
-
-    const ultraOptimizedScrollHandler = () => {
-      if (isScrolling) return; // Prevent overlapping calls
+    if (!containerRef.current) return;
+    
+    let wheelTimeout;
+    let accumulatedDelta = 0;
+    const wheelThreshold = 50; // Minimum scroll distance to trigger navigation
+    
+    const handleWheel = (e) => {
+      if (isTransitioning) return;
       
-      isScrolling = true;
-      const currentScrollTop = container.scrollTop;
-      velocity = Math.abs(currentScrollTop - lastScrollTop);
-      lastScrollTop = currentScrollTop;
+      e.preventDefault();
+      accumulatedDelta += e.deltaY;
       
-      setIsScrolling(true);
-      clearTimeout(scrollTimeout);
-      
-      // Cancel previous RAF for better performance
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      
-      // Use RAF for 60fps smooth updates
-      rafId = requestAnimationFrame(() => {
-        // Adaptive timeout based on scroll velocity
-        const timeoutDelay = velocity > 50 ? 100 : 30;
-        
-        scrollTimeout = setTimeout(() => {
-          setIsScrolling(false);
-          handleScroll();
-          
-          // Auto-snap to nearest position if close enough
-          const scrollTop = container.scrollTop;
-          const containerHeight = container.clientHeight;
-          const nearestIndex = Math.round(scrollTop / containerHeight);
-          const currentPosition = scrollTop / containerHeight;
-          
-          // Snap if within 15% of target position for better UX
-          if (Math.abs(currentPosition - nearestIndex) > 0.15) {
-            container.scrollTo({
-              top: nearestIndex * containerHeight,
-              behavior: 'smooth'
-            });
-          }
-        }, timeoutDelay);
-      });
+      clearTimeout(wheelTimeout);
+      wheelTimeout = setTimeout(() => {
+        if (Math.abs(accumulatedDelta) >= wheelThreshold) {
+          const direction = accumulatedDelta > 0 ? 1 : -1;
+          const newIndex = activeIndex + direction;
+          navigateToIndex(newIndex);
+        }
+        accumulatedDelta = 0;
+      }, 150);
     };
-
-    // Use passive listeners for better performance
-    container.addEventListener('scroll', ultraOptimizedScrollHandler, { 
-      passive: true,
-      capture: false 
-    });
+    
+    const container = containerRef.current;
+    container.addEventListener('wheel', handleWheel, { passive: false });
     
     return () => {
-      container.removeEventListener('scroll', ultraOptimizedScrollHandler);
-      clearTimeout(scrollTimeout);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
+      container.removeEventListener('wheel', handleWheel);
+      clearTimeout(wheelTimeout);
     };
-  }, [handleScroll]);
+  }, [activeIndex, isTransitioning, navigateToIndex]);
 
   // Enhanced keyboard navigation with better UX
   useEffect(() => {
