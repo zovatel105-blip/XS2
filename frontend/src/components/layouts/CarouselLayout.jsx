@@ -94,6 +94,9 @@ const CarouselLayout = ({
     setCurrentSlide(0);
   }, [poll.id]);
 
+  // 🎵 Determinar si hay música global asignada
+  const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
+  
   // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive o currentSlide cambian
   useEffect(() => {
     if (!poll.options) return;
@@ -103,6 +106,16 @@ const CarouselLayout = ({
         const videoElement = videoRefs.current.get(option.id);
         if (videoElement) {
           const shouldPlay = isActive && currentSlide === optionIndex;
+          
+          // 🎵 Si NO hay música global, habilitar audio original del video
+          if (!hasGlobalMusic && videoElement.muted) {
+            console.log(`🔊 Carrusel: Habilitando audio original del video ${optionIndex}`);
+            videoElement.muted = false;
+            videoElement.volume = 0.7; // Volumen al 70%
+          } else if (hasGlobalMusic && !videoElement.muted) {
+            console.log(`🔇 Carrusel: Silenciando video ${optionIndex} (música global activa)`);
+            videoElement.muted = true;
+          }
           
           if (shouldPlay) {
             // ✅ MEJORADO: Asegurar que el video tenga src antes de reproducir
@@ -117,11 +130,25 @@ const CarouselLayout = ({
               if (videoElement.readyState >= 2) { // HAVE_CURRENT_DATA o superior
                 videoElement.play().catch(err => {
                   console.warn(`⚠️ Carrusel: No se pudo reproducir video automáticamente:`, err);
-                  // Intentar con muted como fallback
-                  videoElement.muted = true;
-                  videoElement.play().catch(err2 => {
-                    console.error(`❌ Carrusel: Falló reproducción con muted:`, err2);
-                  });
+                  // Si falla y NO hay música global, intentar con audio habilitado
+                  if (!hasGlobalMusic) {
+                    console.log(`🔊 Carrusel: Reintentando con audio habilitado...`);
+                    videoElement.muted = false;
+                    videoElement.play().catch(err2 => {
+                      // Como último recurso, intentar con muted
+                      console.warn(`⚠️ Carrusel: Fallback a muted...`);
+                      videoElement.muted = true;
+                      videoElement.play().catch(err3 => {
+                        console.error(`❌ Carrusel: Falló reproducción completamente:`, err3);
+                      });
+                    });
+                  } else {
+                    // Si HAY música global, intentar con muted
+                    videoElement.muted = true;
+                    videoElement.play().catch(err2 => {
+                      console.error(`❌ Carrusel: Falló reproducción con muted:`, err2);
+                    });
+                  }
                 });
               } else {
                 // Si no está listo, esperar el evento canplay
@@ -143,7 +170,7 @@ const CarouselLayout = ({
         }
       }
     });
-  }, [isActive, currentSlide, poll.options]);
+  }, [isActive, currentSlide, poll.options, hasGlobalMusic]);
 
   // Auto-advance deshabilitado - Navegación completamente manual por solicitud del usuario
 
