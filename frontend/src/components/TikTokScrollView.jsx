@@ -1591,9 +1591,10 @@ const TikTokScrollView = ({
             </div>
           </div>
         )}
+        </motion.div>
       </div>
 
-      {/* Enhanced CSS for ultra-smooth scroll behavior and optimal performance */}
+      {/* Enhanced CSS for Framer Motion animations and performance */}
       <style jsx>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
