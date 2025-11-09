@@ -378,29 +378,7 @@ const CarouselLayout = ({
         </div>
       )}
 
-      {/* Navigation arrows - Only show when active (not in profile grid) */}
-      {isActive && totalSlides > 1 && (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevSlide();
-            }}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl z-20 transition-all duration-200 hover:scale-110"
-          >
-            ‹
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextSlide();
-            }}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white text-2xl z-20 transition-all duration-200 hover:scale-110"
-          >
-            ›
-          </button>
-        </>
-      )}
+      {/* Navigation arrows - Eliminados por solicitud del usuario */}
 
       {/* Slide counter - Only show when active (not in profile grid) */}
       {isActive && (
