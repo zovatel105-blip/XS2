@@ -42,6 +42,7 @@ emergentintegrations
 # User agent parsing
 user-agents
 ua-parser>=0.18.0
+ua-parser-builtins>=0.18.0
 
 # Utilities
 tzdata>=2024.2
@@ -50,8 +51,3 @@ propcache>=0.4.0
 aiohappyeyeballs>=2.6.1
 aiosignal>=1.4.0
 frozenlist>=1.8.0
-ua-parser-builtins>=0.18.0
-httpx
-user_agents
--e aiofiles
-Pillow
