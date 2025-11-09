@@ -228,7 +228,8 @@ const CarouselLayout = ({
                       className="w-full h-full object-cover object-center rounded-lg"
                       // ✅ FIXED: Play video for current slide when active
                       autoPlay={isActive && currentSlide === optionIndex}
-                      muted
+                      // 🎵 NUEVO: Muted solo si hay música global, sino usar audio original
+                      muted={hasGlobalMusic}
                       loop
                       playsInline
                       // 🚀 PERFORMANCE: Smart preloading for carousel
