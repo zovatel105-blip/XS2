@@ -1174,22 +1174,15 @@ const TikTokScrollView = ({
     };
   }, []);
 
-  // Scroll to initial index when component mounts (for AudioDetailPage)
+  // Initialize position when component mounts
   useEffect(() => {
-    if (initialIndex > 0 && containerRef.current) {
-      setTimeout(() => {
-        if (containerRef.current) {
-          const targetScroll = initialIndex * window.innerHeight;
-          containerRef.current.scrollTo({
-            top: targetScroll,
-            behavior: 'auto' // Use 'auto' for instant positioning on mount
-          });
-          setActiveIndex(initialIndex);
-          setLastActiveIndex(initialIndex);
-        }
-      }, 100); // Small delay to ensure component is fully rendered
+    if (initialIndex > 0) {
+      // Set position instantly without animation
+      controls.set({ y: `-${initialIndex * 100}vh` });
+      setActiveIndex(initialIndex);
+      setLastActiveIndex(initialIndex);
     }
-  }, [initialIndex]);
+  }, [initialIndex, controls]);
 
   // Update active index when initialIndex changes (Search Page dynamic loading)
   useEffect(() => {
