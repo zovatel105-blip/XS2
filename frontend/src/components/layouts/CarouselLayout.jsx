@@ -380,12 +380,7 @@ const CarouselLayout = ({
 
       {/* Navigation arrows - Eliminados por solicitud del usuario */}
 
-      {/* Slide counter - Only show when active (not in profile grid) */}
-      {isActive && (
-        <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm z-20">
-          {currentSlide + 1} / {totalSlides}
-        </div>
-      )}
+      {/* Slide counter - Eliminado por solicitud del usuario */}
     </div>
   );
 };
