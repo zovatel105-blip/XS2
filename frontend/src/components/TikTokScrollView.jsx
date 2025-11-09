@@ -1238,56 +1238,39 @@ const TikTokScrollView = ({
     }
   }, [activeIndex, lastActiveIndex, onIndexChange, polls.length]);
 
-  // 🚀 ULTRA-OPTIMIZED scroll detection with video performance focus
-  const handleScroll = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const scrollTop = container.scrollTop;
-    const containerHeight = container.clientHeight;
+  // 🎯 Navigate to specific index with smooth animation
+  const navigateToIndex = useCallback(async (newIndex) => {
+    if (isTransitioning) return;
+    if (newIndex < 0 || newIndex >= polls.length) return;
+    if (newIndex === activeIndex) return;
     
-    // More precise index calculation
-    const exactIndex = scrollTop / containerHeight;
-    const newIndex = Math.round(exactIndex);
+    console.log(`🎬 Navigating from index ${activeIndex} to ${newIndex}`);
+    setIsTransitioning(true);
     
-    // Optimized threshold for video content
-    const threshold = 0.3; // Slightly higher threshold for video stability
-    const indexDifference = Math.abs(exactIndex - newIndex);
-    
-    // Update index with video optimization
-    if (indexDifference < threshold && 
-        newIndex !== activeIndex && 
-        newIndex >= 0 && 
-        newIndex < polls.length) {
-      
-      const currentPoll = polls[newIndex];
-      const hasVideo = currentPoll?.layout === '2x2' || currentPoll?.options?.some(opt => opt.media_type === 'video');
-      
-      if (hasVideo) {
-        // For video content, add slight delay to prevent rapid switching
-        setTimeout(() => {
-          if (container.scrollTop === scrollTop) { // Only update if user stopped scrolling
-            setActiveIndex(newIndex);
-          }
-        }, 100);
-      } else {
-        // Immediate update for non-video content
-        setActiveIndex(newIndex);
+    // Animate to new position
+    await controls.start({
+      y: `-${newIndex * 100}vh`,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+        mass: 0.8
       }
-    }
-
-    // 🚀 AGGRESSIVE PRELOAD LOGIC: Load more content early for seamless experience
+    });
+    
+    setActiveIndex(newIndex);
+    setTimeout(() => setIsTransitioning(false), 100);
+    
+    // Preload logic
     if (onLoadMore && hasMoreContent && !isLoadingMore) {
       const remainingItems = polls.length - newIndex;
-      // More aggressive preloading for video content
-      const preloadThreshold = 8; // Start loading when 8 items remaining (was 5)
-
+      const preloadThreshold = 8;
       if (remainingItems <= preloadThreshold) {
-        console.log(`⚡ SMART PRELOAD: ${remainingItems} items remaining, triggering early preload`);
+        console.log(`⚡ SMART PRELOAD: ${remainingItems} items remaining`);
         onLoadMore();
       }
     }
-  }, [activeIndex, polls.length, onLoadMore, hasMoreContent, isLoadingMore]);
+  }, [activeIndex, polls.length, isTransitioning, controls, onLoadMore, hasMoreContent, isLoadingMore]);
 
   // 🚀 ULTRA-OPTIMIZED scroll listener with smart throttling
   useEffect(() => {
