@@ -1471,33 +1471,7 @@ const TikTokScrollView = ({
         </div>
       )}
 
-      {/* Navigation hints - Enhanced design and positioning - OCULTAR cuando viene de AudioDetailPage */}
-      {!fromAudioDetailPage && (
-        <div className="fixed z-40 flex flex-col gap-4 transition-opacity duration-300"
-             style={{
-               left: 'max(1rem, env(safe-area-inset-left))',
-               top: '50%',
-               transform: 'translateY(-50%)'
-             }}>
-          <Button
-            onClick={() => navigateToIndex(activeIndex - 1)}
-            disabled={activeIndex === 0 || isTransitioning}
-            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
-            size="sm"
-          >
-            <ChevronUp className="w-5 h-5" />
-          </Button>
-          
-          <Button
-            onClick={() => navigateToIndex(activeIndex + 1)}
-            disabled={activeIndex === polls.length - 1 || isTransitioning}
-            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full disabled:opacity-20 transition-all duration-200 hover:scale-110 shadow-xl"
-            size="sm"
-          >
-            <ChevronDown className="w-5 h-5" />
-          </Button>
-        </div>
-      )}
+      {/* Navigation hints - Botones de navegación eliminados por solicitud del usuario */}
 
       {/* Main container - Framer Motion paginated scroll */}
       <div 
