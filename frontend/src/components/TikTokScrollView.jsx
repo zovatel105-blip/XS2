@@ -1499,27 +1499,34 @@ const TikTokScrollView = ({
         </div>
       )}
 
-      {/* Main scroll container - Perfect full screen with enhanced snap */}
+      {/* Main container - Framer Motion paginated scroll */}
       <div 
         ref={containerRef}
-        className="w-full h-full overflow-y-scroll overflow-x-hidden scrollbar-hide snap-y snap-mandatory"
+        className="w-full h-full overflow-hidden"
         style={{
           height: '100vh',
           height: '100dvh',
           width: '100vw',
           width: '100dvw',
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch',
-          scrollSnapType: 'y mandatory',
-          scrollSnapStop: 'always',
-          // Enhanced TikTok-style scrolling
-          scrollPaddingTop: '0px',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          overscrollBehavior: 'none'
+          position: 'relative'
         }}
       >
-        {preloadedPolls.map((poll, index) => (
+        <motion.div
+          animate={controls}
+          initial={{ y: 0 }}
+          style={{
+            height: `${polls.length * 100}vh`,
+            width: '100%',
+            willChange: 'transform'
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+            mass: 0.8
+          }}
+        >
+          {preloadedPolls.map((poll, index) => (
           <TikTokPollCard
             key={poll.id}
             poll={poll}
