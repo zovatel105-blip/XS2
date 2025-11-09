@@ -53,3 +53,5 @@ frozenlist>=1.8.0
 ua-parser-builtins>=0.18.0
 httpx
 user_agents
+-e aiofiles
+Pillow
