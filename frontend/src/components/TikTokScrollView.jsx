@@ -1596,29 +1596,6 @@ const TikTokScrollView = ({
 
       {/* Enhanced CSS for Framer Motion animations and performance */}
       <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        
-        /* Ultra-optimized snap behavior with momentum preservation */
-        .snap-y {
-          scroll-snap-type: y mandatory;
-          scroll-snap-stop: always;
-        }
-        
-        .snap-start {
-          scroll-snap-align: start;
-          scroll-snap-stop: always;
-        }
-        
-        .snap-always {
-          scroll-snap-stop: always;
-        }
-
         /* Perfect full screen support with hardware acceleration */
         @supports (height: 100dvh) {
           .h-screen {
@@ -1629,28 +1606,19 @@ const TikTokScrollView = ({
         /* Advanced mobile optimizations */
         body {
           overscroll-behavior: none;
-          -webkit-overflow-scrolling: touch;
           touch-action: pan-y;
           -webkit-transform: translateZ(0);
           transform: translateZ(0);
         }
 
-        /* GPU acceleration for smooth scrolling */
-        .w-full.h-full.overflow-y-scroll {
+        /* GPU acceleration for Framer Motion animations */
+        .overflow-hidden {
           -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
           -webkit-perspective: 1000px;
           perspective: 1000px;
-          will-change: scroll-position;
-        }
-
-        /* Optimize scroll container performance */
-        .overflow-y-scroll {
-          contain: layout style paint;
-          -webkit-overflow-scrolling: touch;
-          scroll-behavior: smooth;
         }
 
         /* Enhanced mobile viewport handling */
@@ -1665,14 +1633,6 @@ const TikTokScrollView = ({
             height: 100dvh;
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
-          }
-          
-          /* Mobile scroll optimizations */
-          .overflow-y-scroll {
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: y mandatory;
-            scroll-snap-stop: always;
-            overscroll-behavior-y: contain;
           }
         }
 
@@ -1694,12 +1654,6 @@ const TikTokScrollView = ({
           transform: translateZ(0);
         }
 
-        /* Optimize snap scrolling performance */
-        .snap-start.snap-always {
-          contain: layout style paint;
-          will-change: transform;
-        }
-
         /* Allow text selection for content while maintaining performance */
         .text-white, .text-gray-400, h2, h3, p {
           -webkit-user-select: auto;
@@ -1710,20 +1664,17 @@ const TikTokScrollView = ({
           contain: layout style;
         }
 
-        /* Prevent scroll chaining and improve momentum */
-        .overflow-y-scroll.scrollbar-hide {
-          overscroll-behavior: contain;
-          -ms-scroll-chaining: none;
-          scroll-padding: 0;
-          scroll-margin: 0;
-        }
-
         /* Hardware acceleration for video elements */
         video {
           -webkit-transform: translateZ(0);
           transform: translateZ(0);
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
+        }
+
+        /* Optimize Framer Motion container */
+        [style*="will-change: transform"] {
+          contain: layout style paint;
         }
       `}</style>
     </div>
