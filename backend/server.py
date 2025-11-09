@@ -397,8 +397,13 @@ try:
     from pydub import AudioSegment
     from pydub.utils import which
     PYDUB_AVAILABLE = True
+    # Configure FFmpeg path for pydub
+    AudioSegment.converter = "/usr/bin/ffmpeg"
+    AudioSegment.ffmpeg = "/usr/bin/ffmpeg"
+    AudioSegment.ffprobe = "/usr/bin/ffprobe"
 except ImportError:
     PYDUB_AVAILABLE = False
+    AudioSegment = None
     print("⚠️  pydub not available - basic audio processing disabled")
 
 try:
@@ -408,11 +413,6 @@ try:
 except ImportError:
     LIBROSA_AVAILABLE = False  
     print("⚠️  librosa not available - advanced audio analysis disabled")
-
-# Configure FFmpeg path for pydub
-AudioSegment.converter = "/usr/bin/ffmpeg"
-AudioSegment.ffmpeg = "/usr/bin/ffmpeg"
-AudioSegment.ffprobe = "/usr/bin/ffprobe"
 
 def process_audio_file(file_path: str, max_duration: int = 60) -> dict:
     """
