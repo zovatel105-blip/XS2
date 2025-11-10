@@ -281,6 +281,143 @@ def get_unique_filename(user_id: str, original_filename: str) -> str:
     
     return f"audio_{user_id}_{timestamp}_{unique_id}_{base_name}"
 
+def extract_audio_from_video(
+    video_path: str,
+    output_dir: str,
+    target_filename: str,
+    max_duration: int = MAX_DURATION
+) -> Dict:
+    """
+    Extrae el audio de un archivo de video usando ffmpeg
+    
+    Args:
+        video_path: Ruta del archivo de video
+        output_dir: Directorio donde guardar el audio extraído
+        target_filename: Nombre base para el archivo de salida
+        max_duration: Duración máxima en segundos
+    
+    Returns:
+        Dict con información del audio extraído
+        
+    Raises:
+        AudioProcessingError: Si falla la extracción
+    """
+    try:
+        # Crear directorio de salida si no existe
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Verificar que el video existe
+        if not os.path.exists(video_path):
+            raise AudioProcessingError(f"Video file not found: {video_path}")
+        
+        # Ruta temporal para el audio extraído
+        temp_audio_path = os.path.join(output_dir, f"{target_filename}_temp.mp3")
+        
+        # Comando ffmpeg para extraer audio
+        # -vn: no video, -acodec: codec de audio, -ar: sample rate, -ab: bitrate
+        import subprocess
+        
+        ffmpeg_cmd = [
+            'ffmpeg',
+            '-i', video_path,           # Input video
+            '-vn',                       # No video
+            '-acodec', 'libmp3lame',     # MP3 codec
+            '-ar', str(TARGET_SAMPLE_RATE),  # Sample rate
+            '-ab', TARGET_BITRATE,       # Bitrate
+            '-t', str(max_duration),     # Limitar duración
+            '-y',                        # Sobrescribir sin preguntar
+            temp_audio_path
+        ]
+        
+        logger.info(f"🎵 Extracting audio from video: {video_path}")
+        
+        # Ejecutar ffmpeg
+        result = subprocess.run(
+            ffmpeg_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=120  # Timeout de 2 minutos
+        )
+        
+        if result.returncode != 0:
+            error_msg = result.stderr.decode('utf-8', errors='ignore')
+            
+            # Verificar si el video no tiene audio
+            if 'Output file is empty' in error_msg or 'does not contain any stream' in error_msg:
+                raise AudioProcessingError("Video does not contain audio track")
+            
+            raise AudioProcessingError(f"FFmpeg extraction failed: {error_msg[:200]}")
+        
+        # Verificar que el archivo se creó
+        if not os.path.exists(temp_audio_path) or os.path.getsize(temp_audio_path) == 0:
+            raise AudioProcessingError("Extracted audio file is empty or not created")
+        
+        logger.info(f"✅ Audio extracted successfully: {temp_audio_path}")
+        
+        # Procesar el audio extraído (optimizar, generar waveform, etc.)
+        processed_result = process_audio_file(
+            temp_audio_path,
+            output_dir,
+            target_filename,
+            max_duration
+        )
+        
+        # Limpiar archivo temporal
+        cleanup_temp_files(temp_audio_path)
+        
+        logger.info(f"✅ Audio processing completed: {processed_result['filename']}")
+        
+        return processed_result
+        
+    except subprocess.TimeoutExpired:
+        raise AudioProcessingError("Audio extraction timed out (>2 minutes)")
+    except AudioProcessingError:
+        raise
+    except Exception as e:
+        logger.error(f"Error extracting audio from video: {str(e)}")
+        raise AudioProcessingError(f"Failed to extract audio: {str(e)}")
+
+def check_video_has_audio(video_path: str) -> bool:
+    """
+    Verifica si un video tiene una pista de audio
+    
+    Args:
+        video_path: Ruta del archivo de video
+        
+    Returns:
+        True si el video tiene audio, False si no
+    """
+    try:
+        import subprocess
+        
+        # Usar ffprobe para detectar streams de audio
+        ffprobe_cmd = [
+            'ffprobe',
+            '-v', 'error',
+            '-select_streams', 'a:0',
+            '-show_entries', 'stream=codec_type',
+            '-of', 'default=noprint_wrappers=1:nokey=1',
+            video_path
+        ]
+        
+        result = subprocess.run(
+            ffprobe_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=10
+        )
+        
+        # Si stdout contiene 'audio', el video tiene audio
+        output = result.stdout.decode('utf-8').strip()
+        has_audio = 'audio' in output.lower()
+        
+        logger.info(f"🔍 Video {video_path}: has_audio={has_audio}")
+        return has_audio
+        
+    except Exception as e:
+        logger.warning(f"Could not check video audio: {e}. Assuming it has audio.")
+        return True  # Asumir que sí tiene audio por defecto
+
 # Test function
 def test_audio_processing():
     """
