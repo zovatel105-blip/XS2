@@ -125,31 +125,20 @@ const CarouselLayout = ({
             // Esperar un momento para que el video cargue si es necesario
             const tryPlay = () => {
               if (videoElement.readyState >= 2) { // HAVE_CURRENT_DATA o superior
+                // 🎵 Videos siempre en muted para carrusel
+                videoElement.muted = true;
                 videoElement.play().catch(err => {
                   console.warn(`⚠️ Carrusel: No se pudo reproducir video automáticamente:`, err);
-                  // Si falla y NO hay música global, intentar con audio habilitado
-                  if (!hasGlobalMusic) {
-                    console.log(`🔊 Carrusel: Reintentando con audio habilitado...`);
-                    videoElement.muted = false;
-                    videoElement.play().catch(err2 => {
-                      // Como último recurso, intentar con muted
-                      console.warn(`⚠️ Carrusel: Fallback a muted...`);
-                      videoElement.muted = true;
-                      videoElement.play().catch(err3 => {
-                        console.error(`❌ Carrusel: Falló reproducción completamente:`, err3);
-                      });
-                    });
-                  } else {
-                    // Si HAY música global, intentar con muted
-                    videoElement.muted = true;
-                    videoElement.play().catch(err2 => {
-                      console.error(`❌ Carrusel: Falló reproducción con muted:`, err2);
-                    });
-                  }
+                  // Segundo intento
+                  videoElement.muted = true;
+                  videoElement.play().catch(err2 => {
+                    console.error(`❌ Carrusel: Falló reproducción con muted:`, err2);
+                  });
                 });
               } else {
                 // Si no está listo, esperar el evento canplay
                 videoElement.addEventListener('canplay', function onCanPlay() {
+                  videoElement.muted = true;
                   videoElement.play().catch(err => {
                     console.warn(`⚠️ Carrusel: No se pudo reproducir después de canplay:`, err);
                   });
