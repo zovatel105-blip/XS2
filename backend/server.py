@@ -6038,13 +6038,97 @@ async def create_poll(
             print(f"DEBUG: Error validating mentioned users: {e}")
             valid_mentioned_users = []
 
+    # 🎵 CAROUSEL VIDEO AUDIO EXTRACTION
+    # Si es layout carrusel y no tiene música asignada, extraer audio del video
+    extracted_audio_id = None
+    if poll_data.layout == 'off' and not poll_data.music_id:
+        try:
+            from audio_utils import extract_audio_from_video, check_video_has_audio
+            
+            print(f"🎠 Carousel post detected, checking for video audio to extract...")
+            
+            # Buscar el primer video con audio en las opciones
+            video_with_audio = None
+            for i, option in enumerate(options):
+                if option.media_type == 'video' and option.media_url:
+                    # Convertir URL a ruta de archivo local
+                    # Asumiendo que media_url es algo como /api/uploads/videos/filename.mp4
+                    if '/api/uploads/' in option.media_url:
+                        video_filename = option.media_url.split('/api/uploads/')[-1]
+                        video_path = UPLOAD_DIR / video_filename
+                        
+                        if video_path.exists():
+                            print(f"🔍 Checking video {i}: {video_path}")
+                            if check_video_has_audio(str(video_path)):
+                                video_with_audio = (i, str(video_path), option)
+                                print(f"✅ Found video with audio at option {i}")
+                                break
+                            else:
+                                print(f"⏭️ Video {i} has no audio, skipping")
+            
+            if video_with_audio:
+                video_index, video_path, video_option = video_with_audio
+                
+                print(f"🎵 Extracting audio from video: {video_path}")
+                
+                # Generar nombre único para el audio
+                unique_filename = f"carousel_audio_{current_user.id}_{int(datetime.utcnow().timestamp())}"
+                
+                # Extraer audio del video
+                extraction_result = extract_audio_from_video(
+                    video_path=video_path,
+                    output_dir=str(AUDIO_UPLOAD_DIR),
+                    target_filename=unique_filename,
+                    max_duration=60
+                )
+                
+                # Crear entrada en user_audio collection
+                audio_title = poll_data.title or f"Audio de video"
+                audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
+                
+                user_audio_data = {
+                    "id": str(uuid.uuid4()),
+                    "title": audio_title[:100],  # Limitar longitud
+                    "artist": current_user.display_name or current_user.username,
+                    "original_filename": extraction_result['filename'],
+                    "filename": extraction_result['filename'],
+                    "file_format": "mp3",
+                    "file_size": extraction_result['file_size'],
+                    "duration": int(extraction_result['duration']),
+                    "uploader_id": current_user.id,
+                    "file_path": extraction_result['processed_path'],
+                    "public_url": audio_public_url,
+                    "waveform": extraction_result.get('waveform', []),
+                    "cover_url": video_option.thumbnail_url,  # Usar thumbnail del video como portada
+                    "privacy": "public",  # Público para que otros lo puedan usar
+                    "uses_count": 1,  # Este post ya lo está usando
+                    "created_at": datetime.utcnow(),
+                    "updated_at": datetime.utcnow()
+                }
+                
+                # Insertar en base de datos
+                await db.user_audio.insert_one(user_audio_data)
+                
+                extracted_audio_id = f"user_audio_{user_audio_data['id']}"
+                
+                print(f"✅ Audio extracted and saved: {extracted_audio_id}")
+                print(f"   Title: {audio_title}")
+                print(f"   Duration: {extraction_result['duration']:.1f}s")
+                print(f"   File: {extraction_result['filename']}")
+                
+        except Exception as e:
+            print(f"⚠️ Failed to extract audio from carousel video: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            # Continuar sin audio si falla la extracción
+
     # Create poll
     poll = Poll(
         title=poll_data.title,
         author_id=current_user.id,
         description=poll_data.description,
         options=[opt.model_dump() for opt in options],  # Store as dict in MongoDB - Pydantic v2
-        music_id=poll_data.music_id,
+        music_id=extracted_audio_id or poll_data.music_id,  # Usar audio extraído si existe
         tags=poll_data.tags,
         category=poll_data.category,
         mentioned_users=valid_mentioned_users,  # Only save validated user IDs
