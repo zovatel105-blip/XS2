@@ -94,7 +94,7 @@ const CarouselLayout = ({
     setCurrentSlide(0);
   }, [poll.id]);
 
-  // 🎵 Determinar si hay música global asignada
+  // 🎵 CARRUSEL: Videos siempre silenciados, audio se reproduce en MusicPlayer
   const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
   
   // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive o currentSlide cambian
@@ -107,13 +107,10 @@ const CarouselLayout = ({
         if (videoElement) {
           const shouldPlay = isActive && currentSlide === optionIndex;
           
-          // 🎵 Si NO hay música global, habilitar audio original del video
-          if (!hasGlobalMusic && videoElement.muted) {
-            console.log(`🔊 Carrusel: Habilitando audio original del video ${optionIndex}`);
-            videoElement.muted = false;
-            videoElement.volume = 0.7; // Volumen al 70%
-          } else if (hasGlobalMusic && !videoElement.muted) {
-            console.log(`🔇 Carrusel: Silenciando video ${optionIndex} (música global activa)`);
+          // 🎵 NUEVO: Videos SIEMPRE silenciados en carrusel
+          // El audio se extrae y reproduce por MusicPlayer
+          if (!videoElement.muted) {
+            console.log(`🔇 Carrusel: Silenciando video ${optionIndex} (audio en MusicPlayer)`);
             videoElement.muted = true;
           }
           
