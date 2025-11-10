@@ -156,7 +156,7 @@ const CarouselLayout = ({
         }
       }
     });
-  }, [isActive, currentSlide, poll.options, hasGlobalMusic]);
+  }, [isActive, currentSlide, poll.options]);
 
   // Auto-advance deshabilitado - Navegación completamente manual por solicitud del usuario
 
