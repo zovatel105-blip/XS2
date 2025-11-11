@@ -175,6 +175,11 @@ const TikTokPollCard = ({
     setCarouselThumbnail(thumbnailUrl);
   };
   
+  // 🔄 Reset carousel thumbnail cuando cambia el poll
+  useEffect(() => {
+    setCarouselThumbnail(null);
+  }, [poll.id]);
+  
   // Feed menu state
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
