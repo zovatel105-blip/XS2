@@ -239,6 +239,9 @@ class PollService {
         text: option.text,
         votes: option.votes,
         mentioned_users: option.mentioned_users || [],  // ✅ CRITICAL FIX: Include option-specific mentioned_users
+        extracted_audio_id: option.extracted_audio_id,  // 🎵 NUEVO: Include extracted_audio_id for carousel audio
+        thumbnail_url: option.thumbnail_url,  // 🖼️ NUEVO: Include thumbnail_url for dynamic carousel covers
+        media_type: option.media_type,  // 🎥 NUEVO: Include media_type for video detection
         media: option.media ? {
           ...option.media,
           url: this.normalizeMediaUrl(option.media.url),
