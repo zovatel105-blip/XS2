@@ -251,6 +251,67 @@ Feed Post Layout (Posts PROPIOS):
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+**🎨 PORTADA DINÁMICA EN CARRUSEL CON AUDIO ORIGINAL IMPLEMENTADA (2025-01-27): En publicaciones tipo carrusel con audio original, la portada del reproductor de música ahora se actualiza dinámicamente para mostrar el thumbnail del video que se está reproduciendo.**
+
+✅ **FUNCIONALIDAD IMPLEMENTADA:**
+
+**REQUISITO DEL USUARIO:**
+- En publicaciones tipo carrusel (layout='off') con audio original (extracted_audio_id)
+- La portada/thumbnail del reproductor de música debe cambiar dinámicamente
+- Debe mostrar el thumbnail del video del slide que está reproduciendo actualmente
+- Se actualiza conforme el usuario navega entre slides del carrusel
+
+**CAMBIOS IMPLEMENTADOS:**
+
+**1. CAROUSELLAYOUT.JSX (/app/frontend/src/components/layouts/CarouselLayout.jsx):**
+- ✅ **Nuevo prop agregado**: `onThumbnailChange` - Callback para notificar cambios de thumbnail
+- ✅ **Detección de audio original**: Cuando cambia `currentSlide` y existe `extracted_audio_id`
+- ✅ **Notificación automática**: Llama a `onThumbnailChange(currentOption.thumbnail_url)` en línea 110
+- ✅ **Logging detallado**: Console logs para debugging de cambios de thumbnail
+- ✅ **Integración con audio**: Se ejecuta en el mismo useEffect que maneja reproducción de audio
+
+**2. LAYOUTRENDERER.JSX (/app/frontend/src/components/layouts/LayoutRenderer.jsx):**
+- ✅ **Propagación de prop**: Agregado `onThumbnailChange` a la interfaz del componente
+- ✅ **Paso a CarouselLayout**: El callback se pasa solo para layout tipo 'off' (carrusel)
+- ✅ **Arquitectura limpia**: Otros layouts (grid, vertical, etc.) no se ven afectados
+
+**3. TIKTOKSCROLLVIEW.JSX (/app/frontend/src/components/TikTokScrollView.jsx):**
+- ✅ **Estado nuevo**: `carouselThumbnail` - Guarda el thumbnail dinámico del slide actual
+- ✅ **Handler implementado**: `handleCarouselThumbnailChange` - Captura y actualiza el thumbnail
+- ✅ **Reset automático**: `useEffect` resetea thumbnail cuando cambia el poll (evita thumbnails antiguos)
+- ✅ **Integración con MusicPlayer**: Línea 899 - `authorAvatar={carouselThumbnail || poll.author?.avatar_url}`
+- ✅ **Priorización correcta**: Si hay `carouselThumbnail`, lo usa; sino, usa avatar del autor
+
+**COMPORTAMIENTO RESULTANTE:**
+
+**CASO 1: Carrusel con audio original (extracted_audio_id existe)**
+- 🎵 Audio original del video se reproduce para cada slide
+- 🖼️ Thumbnail del MusicPlayer se actualiza dinámicamente al cambiar de slide
+- 🔄 Al navegar Slide 1 → Slide 2 → Slide 3, la portada cambia automáticamente
+- ✅ Sincronización perfecta entre audio y portada visual
+
+**CASO 2: Carrusel con música global (poll.music existe)**
+- 🎵 Música global/viral se reproduce para todo el carrusel
+- 🎭 Avatar del autor se mantiene en el MusicPlayer (comportamiento existente)
+- ✅ Sin cambios en funcionalidad actual
+
+**CASO 3: Posts sin carrusel (otros layouts)**
+- ✅ Sin cambios - comportamiento existente preservado
+- ✅ MusicPlayer funciona normalmente
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/layouts/CarouselLayout.jsx` (líneas 8, 14, 103-112, 153)
+- `/app/frontend/src/components/layouts/LayoutRenderer.jsx` (líneas 31, 56)
+- `/app/frontend/src/components/TikTokScrollView.jsx` (líneas 138-140, 172-179, 642, 899)
+
+**RESULTADO FINAL:**
+🎯 **PORTADA DINÁMICA COMPLETAMENTE FUNCIONAL EN CARRUSEL CON AUDIO ORIGINAL** - Los usuarios ahora experimentan una interfaz más coherente donde:
+- La portada del reproductor de música refleja visualmente el video que genera el audio
+- Transiciones suaves al navegar entre slides del carrusel
+- Mejor experiencia de usuario con feedback visual correcto
+- Sistema robusto que maneja automáticamente resets al cambiar de publicación
+
+---
 
 **🎵 AUDIO ORIGINAL EN LAYOUT CARRUSEL IMPLEMENTADO (2025-01-27): Los videos en el layout carrusel ahora usan su audio original cuando no hay música global asignada.**
 
