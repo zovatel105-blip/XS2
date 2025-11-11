@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
+import audioManager from '../../services/AudioManager';
 
 const CarouselLayout = ({ 
   poll, 
