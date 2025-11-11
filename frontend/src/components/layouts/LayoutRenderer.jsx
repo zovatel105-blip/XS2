@@ -55,6 +55,7 @@ const LayoutRenderer = ({
         onSlideChange={onSlideChange}
         handleTouchStart={handleTouchStart}
         handleTouchEnd={handleTouchEnd}
+        onThumbnailChange={onThumbnailChange}
         // 🚀 PERFORMANCE: Carousel optimization
         optimizeVideo={optimizeVideo}
         renderPriority={renderPriority}
