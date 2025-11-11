@@ -6531,6 +6531,7 @@ async def get_poll_by_id(
                     "followers": "1K"  # Placeholder
                 },
                 "mentioned_users": option.get("mentioned_users", []),  # Include mentioned users
+                "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
                 "media": {
                     "type": option.get("media_type"),
                     "url": media_url,
