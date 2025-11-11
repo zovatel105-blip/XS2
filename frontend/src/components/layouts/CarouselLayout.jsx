@@ -110,6 +110,13 @@ const CarouselLayout = ({
     if (extractedAudioId) {
       console.log(`🎵 Carousel slide ${currentSlide} has extracted audio: ${extractedAudioId}`);
       
+      // 🎨 NUEVO: Notificar cambio de thumbnail para el MusicPlayer
+      // Cuando hay audio original, la portada debe ser del video que se está reproduciendo
+      if (onThumbnailChange && currentOption.thumbnail_url) {
+        console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
+        onThumbnailChange(currentOption.thumbnail_url);
+      }
+      
       // Cargar info del audio y reproducir
       const loadAndPlayAudio = async () => {
         try {
@@ -149,7 +156,7 @@ const CarouselLayout = ({
       console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
     }
     
-  }, [currentSlide, isActive, poll.options, poll.id]);
+  }, [currentSlide, isActive, poll.options, poll.id, onThumbnailChange]);
 
   // 🎵 CARRUSEL: Videos siempre silenciados, audio se reproduce en MusicPlayer
   const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
