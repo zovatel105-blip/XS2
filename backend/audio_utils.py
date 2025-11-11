@@ -18,6 +18,12 @@ try:
     import librosa
     import soundfile as sf
     import numpy as np
+    
+    # Configurar ffmpeg path
+    AudioSegment.converter = "/usr/bin/ffmpeg"
+    AudioSegment.ffmpeg = "/usr/bin/ffmpeg"
+    AudioSegment.ffprobe = "/usr/bin/ffprobe"
+    
 except ImportError as e:
     print(f"Warning: Audio processing libraries not available: {e}")
     print("Install with: pip install pydub librosa soundfile")
