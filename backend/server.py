@@ -5213,6 +5213,7 @@ async def get_polls(
                         "followers": "1K"  # Placeholder
                     },
                     "mentioned_users": option_mentioned_users_data,  # ✅ CRITICAL FIX: Include resolved mentioned users for each option
+                    "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
                     "media": {
                         "type": option.get("media_type"),
                         "url": media_url,
