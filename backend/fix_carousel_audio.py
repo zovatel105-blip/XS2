@@ -11,6 +11,12 @@ import uuid
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Configurar ffmpeg antes de importar audio_utils
+from pydub import AudioSegment
+AudioSegment.converter = "/usr/bin/ffmpeg"
+AudioSegment.ffmpeg = "/usr/bin/ffmpeg"
+AudioSegment.ffprobe = "/usr/bin/ffprobe"
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from audio_utils import extract_audio_from_video, check_video_has_audio
 
