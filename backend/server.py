@@ -7437,6 +7437,7 @@ async def get_posts_using_audio(
                             "votes": option.get("votes", 0),
                             "user": option_user.dict() if option_user else None,
                             "mentioned_users": option.get("mentioned_users", []),
+                            "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
                             "media": {
                                 "type": option.get("media_type"),
                                 "url": media_url,
