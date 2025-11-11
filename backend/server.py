@@ -8400,6 +8400,7 @@ async def get_saved_polls(
                                 },
                                 "mentioned_users": option.get("mentioned_users", []),
                                 "media": {
+                                "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
                                     "type": option.get("media_type"),
                                     "url": media_url,
                                     "thumbnail": thumbnail_url or media_url,
