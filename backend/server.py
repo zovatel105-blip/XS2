@@ -5742,6 +5742,7 @@ async def get_following_polls(
                         "id": option_user["id"]
                     },
                     "mentioned_users": option.get("mentioned_users", []),
+                    "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
                     "media": {
                         "type": option.get("media_type"),
                         "url": media_url,
