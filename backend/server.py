@@ -6039,85 +6039,102 @@ async def create_poll(
             valid_mentioned_users = []
 
     # 🎵 CAROUSEL VIDEO AUDIO EXTRACTION
-    # Si es layout carrusel y no tiene música asignada, extraer audio del video
+    # Si es layout carrusel y no tiene música asignada, extraer audio de TODOS los videos
     extracted_audio_id = None
     if poll_data.layout == 'off' and not poll_data.music_id:
         try:
             from audio_utils import extract_audio_from_video, check_video_has_audio
             
-            print(f"🎠 Carousel post detected, checking for video audio to extract...")
+            print(f"🎠 Carousel post detected, extracting audio from ALL videos...")
             
-            # Buscar el primer video con audio en las opciones
-            video_with_audio = None
+            # Extraer audio de TODOS los videos con audio
+            extracted_audios = []
             for i, option in enumerate(options):
                 if option.media_type == 'video' and option.media_url:
                     # Convertir URL a ruta de archivo local
-                    # Asumiendo que media_url es algo como /api/uploads/videos/filename.mp4
                     if '/api/uploads/' in option.media_url:
                         video_filename = option.media_url.split('/api/uploads/')[-1]
                         video_path = UPLOAD_DIR / video_filename
                         
                         if video_path.exists():
                             print(f"🔍 Checking video {i}: {video_path}")
-                            if check_video_has_audio(str(video_path)):
-                                video_with_audio = (i, str(video_path), option)
-                                print(f"✅ Found video with audio at option {i}")
-                                break
-                            else:
+                            
+                            # Verificar si tiene audio
+                            if not check_video_has_audio(str(video_path)):
                                 print(f"⏭️ Video {i} has no audio, skipping")
+                                continue
+                            
+                            print(f"✅ Video {i} has audio, extracting...")
+                            
+                            try:
+                                # Generar nombre único para cada audio
+                                timestamp = int(datetime.utcnow().timestamp())
+                                unique_filename = f"carousel_audio_{current_user.id}_{timestamp}_opt{i}"
+                                
+                                # Extraer audio del video
+                                extraction_result = extract_audio_from_video(
+                                    video_path=video_path,
+                                    output_dir=str(AUDIO_UPLOAD_DIR),
+                                    target_filename=unique_filename,
+                                    max_duration=60
+                                )
+                                
+                                # Crear título para este audio específico
+                                option_text = option.text or f"Video {i+1}"
+                                audio_title = f"{poll_data.title or 'Audio'} - {option_text}"[:100]
+                                audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
+                                
+                                user_audio_data = {
+                                    "id": str(uuid.uuid4()),
+                                    "title": audio_title,
+                                    "artist": current_user.display_name or current_user.username,
+                                    "original_filename": extraction_result['filename'],
+                                    "filename": extraction_result['filename'],
+                                    "file_format": "mp3",
+                                    "file_size": extraction_result['file_size'],
+                                    "duration": int(extraction_result['duration']),
+                                    "uploader_id": current_user.id,
+                                    "file_path": extraction_result['processed_path'],
+                                    "public_url": audio_public_url,
+                                    "waveform": extraction_result.get('waveform', []),
+                                    "cover_url": option.thumbnail_url,
+                                    "privacy": "public",  # Público para que otros lo puedan usar
+                                    "uses_count": 1,
+                                    "created_at": datetime.utcnow(),
+                                    "updated_at": datetime.utcnow()
+                                }
+                                
+                                # Insertar en base de datos
+                                await db.user_audio.insert_one(user_audio_data)
+                                
+                                audio_id = f"user_audio_{user_audio_data['id']}"
+                                
+                                # Guardar el audio_id en la opción
+                                option.extracted_audio_id = audio_id
+                                
+                                extracted_audios.append({
+                                    'option_index': i,
+                                    'audio_id': audio_id,
+                                    'title': audio_title,
+                                    'duration': extraction_result['duration']
+                                })
+                                
+                                print(f"   ✅ Audio {i} extracted: {audio_id}")
+                                print(f"      Title: {audio_title}")
+                                print(f"      Duration: {extraction_result['duration']:.1f}s")
+                                
+                            except Exception as e:
+                                print(f"   ⚠️ Failed to extract audio from video {i}: {str(e)}")
+                                continue
             
-            if video_with_audio:
-                video_index, video_path, video_option = video_with_audio
-                
-                print(f"🎵 Extracting audio from video: {video_path}")
-                
-                # Generar nombre único para el audio
-                unique_filename = f"carousel_audio_{current_user.id}_{int(datetime.utcnow().timestamp())}"
-                
-                # Extraer audio del video
-                extraction_result = extract_audio_from_video(
-                    video_path=video_path,
-                    output_dir=str(AUDIO_UPLOAD_DIR),
-                    target_filename=unique_filename,
-                    max_duration=60
-                )
-                
-                # Crear entrada en user_audio collection
-                audio_title = poll_data.title or f"Audio de video"
-                audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
-                
-                user_audio_data = {
-                    "id": str(uuid.uuid4()),
-                    "title": audio_title[:100],  # Limitar longitud
-                    "artist": current_user.display_name or current_user.username,
-                    "original_filename": extraction_result['filename'],
-                    "filename": extraction_result['filename'],
-                    "file_format": "mp3",
-                    "file_size": extraction_result['file_size'],
-                    "duration": int(extraction_result['duration']),
-                    "uploader_id": current_user.id,
-                    "file_path": extraction_result['processed_path'],
-                    "public_url": audio_public_url,
-                    "waveform": extraction_result.get('waveform', []),
-                    "cover_url": video_option.thumbnail_url,  # Usar thumbnail del video como portada
-                    "privacy": "public",  # Público para que otros lo puedan usar
-                    "uses_count": 1,  # Este post ya lo está usando
-                    "created_at": datetime.utcnow(),
-                    "updated_at": datetime.utcnow()
-                }
-                
-                # Insertar en base de datos
-                await db.user_audio.insert_one(user_audio_data)
-                
-                extracted_audio_id = f"user_audio_{user_audio_data['id']}"
-                
-                print(f"✅ Audio extracted and saved: {extracted_audio_id}")
-                print(f"   Title: {audio_title}")
-                print(f"   Duration: {extraction_result['duration']:.1f}s")
-                print(f"   File: {extraction_result['filename']}")
+            # El primer audio extraído será el music_id principal del poll
+            if extracted_audios:
+                extracted_audio_id = extracted_audios[0]['audio_id']
+                print(f"\n✅ Total audios extracted: {len(extracted_audios)}")
+                print(f"   Primary music_id: {extracted_audio_id}")
                 
         except Exception as e:
-            print(f"⚠️ Failed to extract audio from carousel video: {str(e)}")
+            print(f"⚠️ Failed to extract audio from carousel videos: {str(e)}")
             import traceback
             traceback.print_exc()
             # Continuar sin audio si falla la extracción
