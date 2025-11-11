@@ -31,6 +31,8 @@ const LayoutRenderer = ({
   handleTouchEnd,
   index,
   showLogo,
+  // 🎵 NUEVO: Callback para notificar cambio de thumbnail en carrusel con audio original
+  onThumbnailChange,
   // 🚀 PERFORMANCE: Layout optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
