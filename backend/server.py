@@ -6181,6 +6181,7 @@ async def create_poll(
                 "followers": "1K"  # Placeholder
             },
             "mentioned_users": option.mentioned_users,  # Include mentioned users in option
+            "extracted_audio_id": option.extracted_audio_id,  # 🎵 Include extracted audio ID
             "media": {
                 "type": option.media_type,
                 "url": option.media_url,
