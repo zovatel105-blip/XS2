@@ -95,6 +95,60 @@ const CarouselLayout = ({
     setCurrentSlide(0);
   }, [poll.id]);
 
+  // 🎵 Cambiar audio según el slide actual en carrusel
+  useEffect(() => {
+    if (!isActive || !poll.options) return;
+    
+    const currentOption = poll.options[currentSlide];
+    if (!currentOption) return;
+    
+    // Verificar si esta opción tiene audio extraído
+    const extractedAudioId = currentOption.extracted_audio_id;
+    
+    if (extractedAudioId) {
+      console.log(`🎵 Carousel slide ${currentSlide} has extracted audio: ${extractedAudioId}`);
+      
+      // Cargar info del audio y reproducir
+      const loadAndPlayAudio = async () => {
+        try {
+          // Obtener info del audio
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/audio/${extractedAudioId}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          
+          if (response.ok) {
+            const audioData = await response.json();
+            console.log(`🎵 Audio data loaded:`, audioData);
+            
+            // Reproducir el audio
+            await audioManager.stop(); // Detener audio anterior
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            await audioManager.play(audioData.url, {
+              startTime: 0,
+              loop: true,
+              volume: 0.7,
+              postId: `${poll.id}_slide_${currentSlide}` // ID único para este slide
+            });
+            
+            console.log(`✅ Playing audio for slide ${currentSlide}`);
+          } else {
+            console.warn(`⚠️ Failed to load audio for slide ${currentSlide}`);
+          }
+        } catch (error) {
+          console.error(`❌ Error loading/playing audio:`, error);
+        }
+      };
+      
+      loadAndPlayAudio();
+    } else {
+      console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
+    }
+    
+  }, [currentSlide, isActive, poll.options, poll.id]);
+
   // 🎵 CARRUSEL: Videos siempre silenciados, audio se reproduce en MusicPlayer
   const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
   
