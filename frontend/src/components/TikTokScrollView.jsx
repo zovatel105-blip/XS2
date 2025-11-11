@@ -136,6 +136,9 @@ const TikTokPollCard = ({
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   
+  // 🎵 NUEVO: Estado para thumbnail dinámico del carrusel con audio original
+  const [carouselThumbnail, setCarouselThumbnail] = useState(null);
+  
   // Story state for author avatar ring
   const [authorHasStories, setAuthorHasStories] = useState(false);
   const [authorStoriesData, setAuthorStoriesData] = useState(null);
