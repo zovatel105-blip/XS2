@@ -427,6 +427,7 @@ class PollOption(BaseModel):
     thumbnail_url: Optional[str] = None
     media_transform: Optional[dict] = None  # ✅ Transform data for image cropping/positioning
     mentioned_users: List[str] = []  # List of user IDs mentioned in this option
+    extracted_audio_id: Optional[str] = None  # 🎵 Audio extraído de video del carrusel
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class Poll(BaseModel):
