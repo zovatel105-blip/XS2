@@ -889,7 +889,7 @@ const TikTokPollCard = ({
               onTogglePlay={handleMusicToggle}
               autoPlay={true}  // ✅ REPRODUCCIÓN AUTOMÁTICA ACTIVADA
               loop={true}     // 🔄 LOOP AUTOMÁTICO HABILITADO
-              authorAvatar={poll.author?.avatar_url}
+              authorAvatar={carouselThumbnail || poll.author?.avatar_url}
               authorUsername={poll.author?.username || poll.author?.display_name}
               className="flex-shrink-0"
             />
