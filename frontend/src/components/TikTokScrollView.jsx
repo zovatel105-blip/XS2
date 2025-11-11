@@ -169,6 +169,12 @@ const TikTokPollCard = ({
     setTouchStart(null);
   };
   
+  // 🎵 NUEVO: Handler para cuando cambia el thumbnail del carrusel con audio original
+  const handleCarouselThumbnailChange = (thumbnailUrl) => {
+    console.log('🖼️ TikTokScrollView: Thumbnail del carrusel actualizado:', thumbnailUrl);
+    setCarouselThumbnail(thumbnailUrl);
+  };
+  
   // Feed menu state
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
