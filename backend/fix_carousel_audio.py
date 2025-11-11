@@ -48,11 +48,23 @@ async def fix_carousel_posts():
             print(f"\n🎠 Procesando post: {post['id']}")
             print(f"   Título: {post.get('title', 'Sin título')}")
             
-            # Buscar video con audio en las opciones
-            video_with_audio = None
+            # Extraer audio de TODOS los videos con audio
+            extracted_audios = []
+            updated_options = []
+            
+            # Buscar info del usuario
+            author_id = post.get('author_id', 'unknown')
+            user = await db.users.find_one({"id": author_id})
+            artist_name = "Usuario"
+            if user:
+                artist_name = user.get('display_name') or user.get('username', 'Usuario')
+            
             for i, option in enumerate(post.get('options', [])):
                 media_url = option.get('media_url')
                 media_type = option.get('media_type')
+                
+                # Copiar la opción para actualización
+                updated_option = option.copy()
                 
                 if media_type == 'video' and media_url:
                     # Convertir URL a path
@@ -62,79 +74,96 @@ async def fix_carousel_posts():
                         
                         if video_path.exists():
                             print(f"   🔍 Verificando video {i}: {video_path.name}")
-                            if check_video_has_audio(str(video_path)):
-                                video_with_audio = (i, str(video_path), option)
-                                print(f"   ✅ Video {i} tiene audio")
-                                break
-                            else:
+                            
+                            if not check_video_has_audio(str(video_path)):
                                 print(f"   ⏭️ Video {i} no tiene audio")
+                                updated_options.append(updated_option)
+                                continue
+                            
+                            print(f"   ✅ Video {i} tiene audio, extrayendo...")
+                            
+                            try:
+                                # Generar nombre único para cada audio
+                                timestamp = int(datetime.utcnow().timestamp())
+                                unique_filename = f"carousel_audio_{author_id}_{timestamp}_opt{i}"
+                                
+                                # Extraer audio
+                                extraction_result = extract_audio_from_video(
+                                    video_path=video_path,
+                                    output_dir=str(AUDIO_UPLOAD_DIR),
+                                    target_filename=unique_filename,
+                                    max_duration=60
+                                )
+                                
+                                # Crear título para este audio específico
+                                option_text = option.get('text', '') or f"Video {i+1}"
+                                audio_title = f"{post.get('title', 'Audio')} - {option_text}"[:100]
+                                audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
+                                
+                                user_audio_data = {
+                                    "id": str(uuid.uuid4()),
+                                    "title": audio_title,
+                                    "artist": artist_name,
+                                    "original_filename": extraction_result['filename'],
+                                    "filename": extraction_result['filename'],
+                                    "file_format": "mp3",
+                                    "file_size": extraction_result['file_size'],
+                                    "duration": int(extraction_result['duration']),
+                                    "uploader_id": author_id,
+                                    "file_path": extraction_result['processed_path'],
+                                    "public_url": audio_public_url,
+                                    "waveform": extraction_result.get('waveform', []),
+                                    "cover_url": option.get('thumbnail_url'),
+                                    "privacy": "public",
+                                    "uses_count": 1,
+                                    "created_at": datetime.utcnow(),
+                                    "updated_at": datetime.utcnow()
+                                }
+                                
+                                # Insertar en base de datos
+                                await db.user_audio.insert_one(user_audio_data)
+                                
+                                audio_id = f"user_audio_{user_audio_data['id']}"
+                                
+                                # Agregar audio_id a la opción actualizada
+                                updated_option['extracted_audio_id'] = audio_id
+                                
+                                extracted_audios.append({
+                                    'option_index': i,
+                                    'audio_id': audio_id,
+                                    'title': audio_title,
+                                    'duration': extraction_result['duration']
+                                })
+                                
+                                print(f"      ✅ Audio {i} extraído: {audio_id}")
+                                print(f"         Título: {audio_title}")
+                                print(f"         Duración: {extraction_result['duration']:.1f}s")
+                                
+                            except Exception as e:
+                                print(f"      ⚠️ Error extrayendo audio del video {i}: {str(e)}")
+                
+                updated_options.append(updated_option)
             
-            if not video_with_audio:
-                print(f"   ⚠️ No se encontró video con audio en este post")
+            if not extracted_audios:
+                print(f"   ⚠️ No se encontró ningún video con audio en este post")
                 continue
             
-            video_index, video_path, video_option = video_with_audio
+            # El primer audio será el music_id principal
+            primary_audio_id = extracted_audios[0]['audio_id']
             
-            print(f"   🎵 Extrayendo audio del video...")
-            
-            # Generar nombre único
-            author_id = post.get('author_id', 'unknown')
-            unique_filename = f"carousel_audio_{author_id}_{int(datetime.utcnow().timestamp())}"
-            
-            # Extraer audio
-            extraction_result = extract_audio_from_video(
-                video_path=video_path,
-                output_dir=str(AUDIO_UPLOAD_DIR),
-                target_filename=unique_filename,
-                max_duration=60
-            )
-            
-            # Crear entrada en user_audio
-            audio_title = post.get('title', 'Audio de video')[:100]
-            audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
-            
-            # Buscar info del usuario
-            user = await db.users.find_one({"id": author_id})
-            artist_name = "Usuario"
-            if user:
-                artist_name = user.get('display_name') or user.get('username', 'Usuario')
-            
-            user_audio_data = {
-                "id": str(uuid.uuid4()),
-                "title": audio_title,
-                "artist": artist_name,
-                "original_filename": extraction_result['filename'],
-                "filename": extraction_result['filename'],
-                "file_format": "mp3",
-                "file_size": extraction_result['file_size'],
-                "duration": int(extraction_result['duration']),
-                "uploader_id": author_id,
-                "file_path": extraction_result['processed_path'],
-                "public_url": audio_public_url,
-                "waveform": extraction_result.get('waveform', []),
-                "cover_url": video_option.get('thumbnail_url'),
-                "privacy": "public",
-                "uses_count": 1,
-                "created_at": datetime.utcnow(),
-                "updated_at": datetime.utcnow()
-            }
-            
-            # Insertar en base de datos
-            await db.user_audio.insert_one(user_audio_data)
-            
-            extracted_audio_id = f"user_audio_{user_audio_data['id']}"
-            
-            # Actualizar el post con el music_id
+            # Actualizar el post con las opciones actualizadas y el music_id
             await db.polls.update_one(
                 {"id": post['id']},
-                {"$set": {"music_id": extracted_audio_id}}
+                {
+                    "$set": {
+                        "music_id": primary_audio_id,
+                        "options": updated_options
+                    }
+                }
             )
             
-            print(f"   ✅ Audio extraído y guardado")
-            print(f"      ID: {extracted_audio_id}")
-            print(f"      Título: {audio_title}")
-            print(f"      Duración: {extraction_result['duration']:.1f}s")
-            print(f"      Archivo: {extraction_result['filename']}")
+            print(f"   ✅ Total audios extraídos: {len(extracted_audios)}")
+            print(f"      Music ID principal: {primary_audio_id}")
             
             fixed_count += 1
             
