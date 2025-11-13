@@ -253,12 +253,21 @@ Feed Post Layout (Posts PROPIOS):
 
 **🎨 PORTADA DINÁMICA Y REPRODUCCIÓN DE AUDIO EN CARRUSEL CORREGIDA (2025-01-27): Resueltos problemas críticos en carruseles con audio original - portada dinámica y reproducción de audio por slide ahora funcionando correctamente.**
 
-✅ **FUNCIONALIDAD IMPLEMENTADA:**
+✅ **PROBLEMAS IDENTIFICADOS Y RESUELTOS:**
 
-**REQUISITO DEL USUARIO:**
+**PROBLEMA 1: Portada no cambiaba entre slides**
+- La portada del reproductor de música se mantenía estática
+- No reflejaba el video del slide actual
+
+**PROBLEMA 2: Audio no se reproducía para cada slide**
+- El audio original de los videos no se reproducía al cambiar de slide
+- Error en el parseo de la respuesta del endpoint /api/audio/{audio_id}
+- Falta de campos en la transformación de datos del poll
+
+**REQUISITOS DEL USUARIO:**
 - En publicaciones tipo carrusel (layout='off') con audio original (extracted_audio_id)
 - La portada/thumbnail del reproductor de música debe cambiar dinámicamente
-- Debe mostrar el thumbnail del video del slide que está reproduciendo actualmente
+- El audio debe reproducirse para cada slide que tenga audio extraído
 - Se actualiza conforme el usuario navega entre slides del carrusel
 
 **CAMBIOS IMPLEMENTADOS:**
