@@ -128,14 +128,25 @@ const CarouselLayout = ({
           });
           
           if (response.ok) {
-            const audioData = await response.json();
-            console.log(`🎵 Audio data loaded:`, audioData);
+            const responseData = await response.json();
+            console.log(`🎵 Audio data loaded:`, responseData);
+            
+            // El backend retorna { success: true, audio: {...} }
+            const audioData = responseData.audio || responseData;
+            const audioUrl = audioData.public_url || audioData.url || audioData.preview_url;
+            
+            if (!audioUrl) {
+              console.error(`❌ No audio URL found in response for slide ${currentSlide}`);
+              return;
+            }
+            
+            console.log(`🎵 Playing audio URL: ${audioUrl}`);
             
             // Reproducir el audio
             await audioManager.stop(); // Detener audio anterior
             await new Promise(resolve => setTimeout(resolve, 100));
             
-            await audioManager.play(audioData.url, {
+            await audioManager.play(audioUrl, {
               startTime: 0,
               loop: true,
               volume: 0.7,
@@ -144,7 +155,9 @@ const CarouselLayout = ({
             
             console.log(`✅ Playing audio for slide ${currentSlide}`);
           } else {
-            console.warn(`⚠️ Failed to load audio for slide ${currentSlide}`);
+            console.warn(`⚠️ Failed to load audio for slide ${currentSlide}. Status: ${response.status}`);
+            const errorText = await response.text();
+            console.error(`Error response:`, errorText);
           }
         } catch (error) {
           console.error(`❌ Error loading/playing audio:`, error);
