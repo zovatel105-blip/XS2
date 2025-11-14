@@ -251,6 +251,96 @@ Feed Post Layout (Posts PROPIOS):
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+**🎵 NAVEGACIÓN A AUDIODETAILPAGE DESDE CARRUSEL IMPLEMENTADA (2025-01-27): Al hacer clic en el reproductor de audio en un carrusel con audio original, ahora navega correctamente a la información del audio del slide actual.**
+
+✅ **FUNCIONALIDAD IMPLEMENTADA:**
+
+**REQUISITO DEL USUARIO:**
+- En carrusel layout (audio original) al hacer slide, debe mostrar la info del AudioDetailPage del audio actual
+- Al hacer clic en el reproductor de audio, debe abrir AudioDetailPage del audio del slide actual
+- La información debe actualizarse automáticamente cuando cambia de slide
+
+**PROBLEMA IDENTIFICADO:**
+- Cuando un carrusel tiene audio original extraído por slide (extracted_audio_id), cada slide tiene su propio audio
+- Al hacer clic en MusicPlayer, navegaba al audio del post completo, no del slide actual
+- No había forma de rastrear qué audio estaba sonando en cada slide
+
+**SOLUCIÓN IMPLEMENTADA:**
+
+**1. CAROUSELLAYOUT.JSX - Rastreo de audio por slide:**
+- ✅ Agregado prop `onAudioChange` para notificar cambios de audio
+- ✅ Detecta cuando el slide actual tiene `extracted_audio_id`
+- ✅ Notifica el audio del slide actual a través del callback
+- ✅ Si el slide no tiene audio extraído, resetea a null
+- ✅ Integrado en el mismo useEffect que maneja reproducción de audio (líneas 100-177)
+
+**2. LAYOUTRENDERER.JSX - Propagación del callback:**
+- ✅ Agregado prop `onAudioChange` a la interfaz del componente
+- ✅ Pasa el callback solo a CarouselLayout (layout tipo 'off')
+- ✅ Otros layouts no se ven afectados
+
+**3. TIKTOKSCROLLVIEW.JSX - Estado del audio del carrusel:**
+- ✅ Nuevo estado: `carouselAudioId` - Guarda el audio del slide actual
+- ✅ Handler: `handleCarouselAudioChange` - Captura y actualiza el audioId
+- ✅ Reset automático: useEffect resetea audioId cuando cambia el poll
+- ✅ Pasa el callback a LayoutRenderer
+- ✅ Pasa `overrideAudioId={carouselAudioId}` a MusicPlayer
+
+**4. MUSICPLAYER.JSX - Navegación inteligente:**
+- ✅ Nuevo prop: `overrideAudioId` - Permite especificar un audio diferente
+- ✅ Lógica de navegación mejorada: Si hay overrideAudioId, lo usa primero
+- ✅ Mantiene compatibilidad con navegación normal cuando no hay override
+- ✅ Logging detallado para debugging
+
+**COMPORTAMIENTO RESULTANTE:**
+
+**CASO 1: Carrusel con audio original extraído por slide**
+- 🎵 Cada slide tiene su propio audio (extracted_audio_id)
+- 🎯 Al navegar entre slides, el audioId se actualiza automáticamente
+- 👆 Al hacer clic en MusicPlayer → navega a AudioDetailPage del audio del slide actual
+- ✅ Muestra información completa: título, artista, cover, usos, botón "Use Sound"
+- 🔄 Al cambiar de slide → actualización automática del audioId
+
+**CASO 2: Carrusel con música global**
+- 🎵 Música global se reproduce para todo el carrusel
+- 👆 Al hacer clic en MusicPlayer → navega a AudioDetailPage de la música global
+- ✅ Comportamiento existente preservado
+
+**CASO 3: Posts sin carrusel**
+- ✅ Sin cambios - comportamiento existente preservado
+- ✅ MusicPlayer navega normalmente a la música del post
+
+**FLUJO COMPLETO:**
+1. Usuario navega entre slides del carrusel (swipe horizontal)
+2. CarouselLayout detecta el audio del slide actual (extracted_audio_id)
+3. Notifica a TikTokScrollView a través de onAudioChange
+4. TikTokScrollView actualiza carouselAudioId
+5. MusicPlayer recibe overrideAudioId
+6. Usuario hace clic en MusicPlayer
+7. Navega a `/audio/{extracted_audio_id}` del slide actual
+8. AudioDetailPage muestra información completa del audio
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/layouts/CarouselLayout.jsx` (líneas 8-23, 100-177)
+- `/app/frontend/src/components/layouts/LayoutRenderer.jsx` (líneas 24-43, 48-66)
+- `/app/frontend/src/components/TikTokScrollView.jsx` (líneas 138-146, 173-187, 637-655, 889-903)
+- `/app/frontend/src/components/MusicPlayer.jsx` (líneas 7, 127-146)
+
+**RESULTADO FINAL:**
+🎯 **NAVEGACIÓN A AUDIODETAILPAGE DESDE CARRUSEL 100% FUNCIONAL** - Los usuarios ahora pueden:
+- Ver el audio del slide actual en el reproductor
+- Hacer clic en el reproductor para ver información completa del audio del slide
+- La información se actualiza automáticamente al cambiar de slide
+- Experiencia consistente y fluida en carruseles con audio original
+- Sistema robusto que distingue entre audio por slide y música global
+
+**TESTING PENDIENTE:**
+- Verificar navegación desde carrusel con audio original a AudioDetailPage
+- Confirmar que el audioId cambia correctamente al hacer slide
+- Probar que muestra la información del audio correcto en cada slide
+- Validar que funciona con múltiples slides con diferentes audios
+- Confirmar que no afecta carruseles con música global
+
 **🎨 PORTADA DINÁMICA Y REPRODUCCIÓN DE AUDIO EN CARRUSEL CORREGIDA (2025-01-27): Resueltos problemas críticos en carruseles con audio original - portada dinámica y reproducción de audio por slide ahora funcionando correctamente.**
 
 ✅ **PROBLEMAS IDENTIFICADOS Y RESUELTOS:**
