@@ -119,6 +119,12 @@ const CarouselLayout = ({
         onThumbnailChange(currentOption.thumbnail_url);
       }
       
+      // 🎵 NUEVO: Notificar cambio de audio para que MusicPlayer pueda navegar correctamente
+      if (onAudioChange) {
+        console.log(`🎵 Notificando cambio de audio para slide ${currentSlide}:`, extractedAudioId);
+        onAudioChange(extractedAudioId);
+      }
+      
       // Cargar info del audio y reproducir
       const loadAndPlayAudio = async () => {
         try {
