@@ -33,6 +33,8 @@ const LayoutRenderer = ({
   showLogo,
   // 🎵 NUEVO: Callback para notificar cambio de thumbnail en carrusel con audio original
   onThumbnailChange,
+  // 🎵 NUEVO: Callback para notificar cambio de audio en carrusel con audio original
+  onAudioChange,
   // 🚀 PERFORMANCE: Layout optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
