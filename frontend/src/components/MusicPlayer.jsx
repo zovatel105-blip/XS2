@@ -4,7 +4,7 @@ import { Play, Pause, Music, Loader2 } from 'lucide-react';
 import audioManager from '../services/AudioManager';
 import realMusicService from '../services/realMusicService';
 
-const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', autoPlay = false, loop = false, authorAvatar = null, authorUsername = null }) => {
+const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', autoPlay = false, loop = false, authorAvatar = null, authorUsername = null, overrideAudioId = null }) => {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
