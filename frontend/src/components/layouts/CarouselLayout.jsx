@@ -14,6 +14,8 @@ const CarouselLayout = ({
   handleTouchEnd: externalTouchEnd,
   // 🎵 NUEVO: Callback para notificar cambio de thumbnail en carrusel con audio original
   onThumbnailChange,
+  // 🎵 NUEVO: Callback para notificar cambio de audio en carrusel con audio original
+  onAudioChange,
   // 🚀 PERFORMANCE: Carousel optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
