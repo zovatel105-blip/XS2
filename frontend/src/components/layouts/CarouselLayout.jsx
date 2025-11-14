@@ -175,9 +175,13 @@ const CarouselLayout = ({
       loadAndPlayAudio();
     } else {
       console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
+      // Si no hay audio extraído en este slide, resetear
+      if (onAudioChange) {
+        onAudioChange(null);
+      }
     }
     
-  }, [currentSlide, isActive, poll.options, poll.id, onThumbnailChange]);
+  }, [currentSlide, isActive, poll.options, poll.id, onThumbnailChange, onAudioChange]);
 
   // 🎵 CARRUSEL: Videos siempre silenciados, audio se reproduce en MusicPlayer
   const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
