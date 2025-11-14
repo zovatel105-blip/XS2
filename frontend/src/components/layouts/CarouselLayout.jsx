@@ -106,23 +106,18 @@ const CarouselLayout = ({
     const currentOption = poll.options[currentSlide];
     if (!currentOption) return;
     
-    // 🎨 SIEMPRE notificar cambio de thumbnail para el MusicPlayer
-    // La portada debe mostrar el thumbnail del video actual en el carrusel
-    if (onThumbnailChange) {
-      if (currentOption.thumbnail_url) {
-        console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
-        onThumbnailChange(currentOption.thumbnail_url);
-      } else {
-        console.log(`🖼️ Slide ${currentSlide} no tiene thumbnail, reseteando`);
-        onThumbnailChange(null);
-      }
-    }
-    
     // Verificar si esta opción tiene audio extraído
     const extractedAudioId = currentOption.extracted_audio_id;
     
     if (extractedAudioId) {
       console.log(`🎵 Carousel slide ${currentSlide} has extracted audio: ${extractedAudioId}`);
+      
+      // 🎨 Notificar cambio de thumbnail para el MusicPlayer
+      // Solo cuando hay audio extraído, la portada debe ser del video que genera ese audio
+      if (onThumbnailChange && currentOption.thumbnail_url) {
+        console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
+        onThumbnailChange(currentOption.thumbnail_url);
+      }
       
       // 🎵 Notificar cambio de audio para que MusicPlayer pueda navegar correctamente
       if (onAudioChange) {
