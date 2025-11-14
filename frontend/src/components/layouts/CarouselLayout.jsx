@@ -99,12 +99,19 @@ const CarouselLayout = ({
     setCurrentSlide(0);
   }, [poll.id]);
 
-  // 🎵 Cambiar audio según el slide actual en carrusel
+  // 🎵 Cambiar audio y thumbnail según el slide actual en carrusel
   useEffect(() => {
     if (!isActive || !poll.options) return;
     
     const currentOption = poll.options[currentSlide];
     if (!currentOption) return;
+    
+    // 🎨 SIEMPRE notificar cambio de thumbnail para el MusicPlayer
+    // La portada debe mostrar el thumbnail del video actual en el carrusel
+    if (onThumbnailChange && currentOption.thumbnail_url) {
+      console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
+      onThumbnailChange(currentOption.thumbnail_url);
+    }
     
     // Verificar si esta opción tiene audio extraído
     const extractedAudioId = currentOption.extracted_audio_id;
@@ -112,14 +119,7 @@ const CarouselLayout = ({
     if (extractedAudioId) {
       console.log(`🎵 Carousel slide ${currentSlide} has extracted audio: ${extractedAudioId}`);
       
-      // 🎨 NUEVO: Notificar cambio de thumbnail para el MusicPlayer
-      // Cuando hay audio original, la portada debe ser del video que se está reproduciendo
-      if (onThumbnailChange && currentOption.thumbnail_url) {
-        console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
-        onThumbnailChange(currentOption.thumbnail_url);
-      }
-      
-      // 🎵 NUEVO: Notificar cambio de audio para que MusicPlayer pueda navegar correctamente
+      // 🎵 Notificar cambio de audio para que MusicPlayer pueda navegar correctamente
       if (onAudioChange) {
         console.log(`🎵 Notificando cambio de audio para slide ${currentSlide}:`, extractedAudioId);
         onAudioChange(extractedAudioId);
