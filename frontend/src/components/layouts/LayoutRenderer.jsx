@@ -58,6 +58,7 @@ const LayoutRenderer = ({
         handleTouchStart={handleTouchStart}
         handleTouchEnd={handleTouchEnd}
         onThumbnailChange={onThumbnailChange}
+        onAudioChange={onAudioChange}
         // 🚀 PERFORMANCE: Carousel optimization
         optimizeVideo={optimizeVideo}
         renderPriority={renderPriority}
