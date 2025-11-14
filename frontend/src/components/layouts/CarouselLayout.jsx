@@ -108,9 +108,14 @@ const CarouselLayout = ({
     
     // 🎨 SIEMPRE notificar cambio de thumbnail para el MusicPlayer
     // La portada debe mostrar el thumbnail del video actual en el carrusel
-    if (onThumbnailChange && currentOption.thumbnail_url) {
-      console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
-      onThumbnailChange(currentOption.thumbnail_url);
+    if (onThumbnailChange) {
+      if (currentOption.thumbnail_url) {
+        console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
+        onThumbnailChange(currentOption.thumbnail_url);
+      } else {
+        console.log(`🖼️ Slide ${currentSlide} no tiene thumbnail, reseteando`);
+        onThumbnailChange(null);
+      }
     }
     
     // Verificar si esta opción tiene audio extraído
