@@ -178,9 +178,16 @@ const TikTokPollCard = ({
     setCarouselThumbnail(thumbnailUrl);
   };
   
-  // 🔄 Reset carousel thumbnail cuando cambia el poll
+  // 🎵 NUEVO: Handler para cuando cambia el audio del carrusel con audio original
+  const handleCarouselAudioChange = (audioId) => {
+    console.log('🎵 TikTokScrollView: Audio del carrusel actualizado:', audioId);
+    setCarouselAudioId(audioId);
+  };
+  
+  // 🔄 Reset carousel thumbnail y audio cuando cambia el poll
   useEffect(() => {
     setCarouselThumbnail(null);
+    setCarouselAudioId(null);
   }, [poll.id]);
   
   // Feed menu state
