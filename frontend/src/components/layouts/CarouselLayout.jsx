@@ -175,7 +175,11 @@ const CarouselLayout = ({
       loadAndPlayAudio();
     } else {
       console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
-      // Si no hay audio extraído en este slide, resetear
+      // Si no hay audio extraído en este slide, resetear thumbnail y audio
+      if (onThumbnailChange) {
+        console.log(`🖼️ Reseteando thumbnail (no hay audio extraído)`);
+        onThumbnailChange(null);
+      }
       if (onAudioChange) {
         onAudioChange(null);
       }
