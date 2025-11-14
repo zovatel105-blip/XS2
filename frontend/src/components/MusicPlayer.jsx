@@ -155,7 +155,8 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
 
   // Determinar si es original sound o música externa
   const isOriginalSound = music.isOriginal || music.source === 'User Upload' || !music.cover;
-  const displayImage = isOriginalSound && authorAvatar ? authorAvatar : music.cover;
+  // Si forceUseAvatar es true (audio de carrusel), siempre usar authorAvatar si existe
+  const displayImage = (forceUseAvatar && authorAvatar) || (isOriginalSound && authorAvatar) ? authorAvatar : music.cover;
   
   return (
     <div className={`flex-shrink-0 ${className}`}>
