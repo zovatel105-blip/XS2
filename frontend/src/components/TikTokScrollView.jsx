@@ -653,6 +653,7 @@ const TikTokPollCard = ({
           handleTouchStart={handleTouchStart}
           handleTouchEnd={handleTouchEnd}
           onThumbnailChange={handleCarouselThumbnailChange}
+          onAudioChange={handleCarouselAudioChange}
           index={index}
           showLogo={showLogo}
           // 🚀 PERFORMANCE: Layout-specific optimization props
