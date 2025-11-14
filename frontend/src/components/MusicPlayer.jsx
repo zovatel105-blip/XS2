@@ -128,8 +128,16 @@ const MusicPlayer = ({ music, isVisible = true, onTogglePlay, className = '', au
     console.log('🎵 MusicPlayer clicked!', {
       target: e.target.tagName,
       music: music?.id,
+      overrideAudioId: overrideAudioId,
       event: 'navigation_to_audio_page'
     });
+    
+    // Si hay un audio override del carrusel, usarlo en lugar del audio del poll
+    if (overrideAudioId) {
+      console.log('✅ Navegando a audio del carrusel:', '/audio/' + overrideAudioId);
+      navigate(`/audio/${overrideAudioId}`);
+      return;
+    }
     
     if (music?.id) {
       let audioId = music.id;
