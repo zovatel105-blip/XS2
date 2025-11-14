@@ -908,6 +908,7 @@ const TikTokPollCard = ({
               authorAvatar={carouselThumbnail || poll.author?.avatar_url}
               authorUsername={poll.author?.username || poll.author?.display_name}
               overrideAudioId={carouselAudioId}  // 🎵 NUEVO: Audio del slide actual en carrusel
+              forceUseAvatar={!!carouselAudioId}  // 🎨 NUEVO: Forzar uso de thumbnail en carrusel con audio original
               className="flex-shrink-0"
             />
           )}
