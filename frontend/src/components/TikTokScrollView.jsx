@@ -907,6 +907,7 @@ const TikTokPollCard = ({
               loop={true}     // 🔄 LOOP AUTOMÁTICO HABILITADO
               authorAvatar={carouselThumbnail || poll.author?.avatar_url}
               authorUsername={poll.author?.username || poll.author?.display_name}
+              overrideAudioId={carouselAudioId}  // 🎵 NUEVO: Audio del slide actual en carrusel
               className="flex-shrink-0"
             />
           )}
