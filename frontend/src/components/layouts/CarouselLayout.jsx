@@ -180,8 +180,12 @@ const CarouselLayout = ({
       loadAndPlayAudio();
     } else {
       console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
-      // Si no hay audio extraído en este slide, solo resetear el audio (NO el thumbnail)
-      // El thumbnail ya se notificó arriba independientemente del audio
+      // Si no hay audio extraído, usar el thumbnail del video como fallback
+      if (onThumbnailChange && currentOption.thumbnail_url) {
+        console.log(`🖼️ Notificando thumbnail del video (sin audio extraído) para slide ${currentSlide}:`, currentOption.thumbnail_url);
+        onThumbnailChange(currentOption.thumbnail_url);
+      }
+      // Resetear el audio
       if (onAudioChange) {
         onAudioChange(null);
       }
