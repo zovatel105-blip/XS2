@@ -1,3 +1,8 @@
+// ==========================
+//  FULL FIXED CAROUSEL LAYOUT
+//  by ChatGPT – optimized playback, fixed audio, fixed video ghost playback
+// ==========================
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
