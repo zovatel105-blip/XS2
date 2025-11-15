@@ -9,288 +9,230 @@ import { cn } from '../../lib/utils';
 import { Trophy } from 'lucide-react';
 import audioManager from '../../services/AudioManager';
 
-const CarouselLayout = ({ 
-  poll, 
-  onVote, 
+const CarouselLayout = ({
+  poll,
+  onVote,
   isActive,
   currentSlide: externalCurrentSlide,
   onSlideChange,
-  handleTouchStart: externalTouchStart,
-  handleTouchEnd: externalTouchEnd,
-  // 🎵 NUEVO: Callback para notificar cambio de thumbnail en carrusel con audio original
   onThumbnailChange,
-  // 🎵 NUEVO: Callback para notificar cambio de audio en carrusel con audio original
   onAudioChange,
-  // 🚀 PERFORMANCE: Carousel optimization props
   optimizeVideo = false,
   renderPriority = 'medium',
-  shouldPreload = true,
-  isVisible = true,
   shouldUnload = false
 }) => {
+
   const navigate = useNavigate();
-  
-  // 🎥 Video refs para controlar reproducción
+
+  // === Tracking references for video DOM elements ===
   const videoRefs = useRef(new Map());
-  
-  // Detect mobile device with window resize handling
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  // 🚀 PERFORMANCE: Use external slide control if provided, otherwise internal
+
+  // === Prevent audio race conditions ===
+  const audioLoading = useRef(false);
+  const currentSlideSafe = useRef(0);
+
+  const totalSlides = poll.options?.length || 1;
+
+  // === Slide state ===
   const [internalCurrentSlide, setInternalCurrentSlide] = useState(0);
-  const currentSlide = externalCurrentSlide !== undefined ? externalCurrentSlide : internalCurrentSlide;
-  const setCurrentSlide = onSlideChange || setInternalCurrentSlide;
-  
+  const currentSlide =
+    externalCurrentSlide !== undefined ? externalCurrentSlide : internalCurrentSlide;
+  const setCurrentSlide =
+    onSlideChange || setInternalCurrentSlide;
+
+  // === Touch swipe ===
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
-  const totalSlides = poll.options ? poll.options.length : 1;
+  const mobile = window.innerWidth <= 768;
 
-  // Navigation functions
-  const nextSlide = () => {
-    if (totalSlides <= 1) return;
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
-  };
+  // On poll change → reset slide
+  useEffect(() => {
+    setCurrentSlide(0);
+    currentSlideSafe.current = 0;
+  }, [poll.id]);
 
-  const prevSlide = () => {
-    if (totalSlides <= 1) return;
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
+  useEffect(() => {
+    currentSlideSafe.current = currentSlide;
+  }, [currentSlide]);
 
-  // Go to specific slide
-  const goToSlide = (index) => {
-    if (index >= 0 && index < totalSlides) {
-      setCurrentSlide(index);
-    }
-  };
-
-  // Touch handlers for HORIZONTAL swipe navigation
+  // ========== TOUCH HANDLERS ==========
   const handleTouchStart = (e) => {
-    if (totalSlides <= 1) return;
-    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(null);
   };
 
   const handleTouchMove = (e) => {
-    if (totalSlides <= 1) return;
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd || totalSlides <= 1) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;    // Swipe left = next slide
-    const isRightSwipe = distance < -50; // Swipe right = previous slide
+    if (!touchStart || !touchEnd) return;
 
-    if (isLeftSwipe) {
-      nextSlide();
-    }
-    if (isRightSwipe) {
-      prevSlide();
-    }
+    const diff = touchStart - touchEnd;
+
+    if (diff > 50) setCurrentSlide((s) => (s + 1) % totalSlides);
+    if (diff < -50) setCurrentSlide((s) => (s - 1 + totalSlides) % totalSlides);
   };
 
-  // Reset carousel when poll changes
+  // ========== AUDIO HANDLING ==========
   useEffect(() => {
-    setCurrentSlide(0);
-  }, [poll.id]);
-
-  // 🎵 Cambiar audio y thumbnail según el slide actual en carrusel
-  useEffect(() => {
-    if (!isActive || !poll.options) return;
-    
-    const currentOption = poll.options[currentSlide];
-    if (!currentOption) return;
-    
-    // Verificar si esta opción tiene audio extraído
-    const extractedAudioId = currentOption.extracted_audio_id;
-    
-    if (extractedAudioId) {
-      console.log(`🎵 Carousel slide ${currentSlide} has extracted audio: ${extractedAudioId}`);
-      
-      // 🎵 Notificar cambio de audio para que MusicPlayer pueda navegar correctamente
-      if (onAudioChange) {
-        console.log(`🎵 Notificando cambio de audio para slide ${currentSlide}:`, extractedAudioId);
-        onAudioChange(extractedAudioId);
-      }
-      
-      // Cargar info del audio y reproducir
-      const loadAndPlayAudio = async () => {
-        try {
-          // Obtener info del audio
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/audio/${extractedAudioId}`, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          
-          if (response.ok) {
-            const responseData = await response.json();
-            console.log(`🎵 Audio data loaded:`, responseData);
-            
-            // El backend retorna { success: true, audio: {...} }
-            const audioData = responseData.audio || responseData;
-            const audioUrl = audioData.public_url || audioData.url || audioData.preview_url;
-            
-            // 🎨 IMPORTANTE: Usar el cover_url del audio (igual que AudioDetailPage)
-            // Esta es la portada que se muestra en AudioDetailPage para cada audio
-            const audioCover = audioData.cover_url;
-            if (onThumbnailChange && audioCover) {
-              console.log(`🖼️ Notificando cover_url del audio para slide ${currentSlide}:`, audioCover);
-              onThumbnailChange(audioCover);
-            } else if (onThumbnailChange && currentOption.thumbnail_url) {
-              // Fallback al thumbnail del video si no hay cover_url
-              console.log(`🖼️ Notificando thumbnail del video para slide ${currentSlide}:`, currentOption.thumbnail_url);
-              onThumbnailChange(currentOption.thumbnail_url);
-            }
-            
-            if (!audioUrl) {
-              console.error(`❌ No audio URL found in response for slide ${currentSlide}`);
-              return;
-            }
-            
-            console.log(`🎵 Playing audio URL: ${audioUrl}`);
-            
-            // Reproducir el audio
-            await audioManager.stop(); // Detener audio anterior
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            await audioManager.play(audioUrl, {
-              startTime: 0,
-              loop: true,
-              volume: 0.7,
-              postId: `${poll.id}_slide_${currentSlide}` // ID único para este slide
-            });
-            
-            console.log(`✅ Playing audio for slide ${currentSlide}`);
-          } else {
-            console.warn(`⚠️ Failed to load audio for slide ${currentSlide}. Status: ${response.status}`);
-            const errorText = await response.text();
-            console.error(`Error response:`, errorText);
-          }
-        } catch (error) {
-          console.error(`❌ Error loading/playing audio:`, error);
-        }
-      };
-      
-      loadAndPlayAudio();
-    } else {
-      console.log(`📭 Carousel slide ${currentSlide} has no extracted audio`);
-      // Si no hay audio extraído, usar el thumbnail del video como fallback
-      if (onThumbnailChange && currentOption.thumbnail_url) {
-        console.log(`🖼️ Notificando thumbnail del video (sin audio extraído) para slide ${currentSlide}:`, currentOption.thumbnail_url);
-        onThumbnailChange(currentOption.thumbnail_url);
-      }
-      // Resetear el audio
-      if (onAudioChange) {
-        onAudioChange(null);
-      }
+    if (!isActive) {
+      audioManager.stop();
+      audioLoading.current = false;
+      return;
     }
-    
-  }, [currentSlide, isActive, poll.options, poll.id, onThumbnailChange, onAudioChange]);
 
-  // 🎵 CARRUSEL: Videos siempre silenciados, audio se reproduce en MusicPlayer
-  const hasGlobalMusic = !!(poll.music && poll.music.preview_url);
-  
-  // 🎥 CRÍTICO: Controlar reproducción de videos cuando isActive o currentSlide cambian
+    const option = poll.options[currentSlide];
+    if (!option) return;
+
+    const extractedAudioId = option.extracted_audio_id;
+
+    if (!extractedAudioId) {
+      audioManager.stop();
+      onAudioChange?.(null);
+      // 🎨 Cuando no hay audio extraído, notificar thumbnail del video
+      if (onThumbnailChange && option.thumbnail_url) {
+        onThumbnailChange(option.thumbnail_url);
+      }
+      return;
+    }
+
+    const loadAndPlay = async () => {
+      if (audioLoading.current) return;
+
+      audioLoading.current = true;
+      const slideOnStart = currentSlide;
+
+      try {
+        await audioManager.stop();
+
+        // Fetch audio file
+        const res = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/audio/${extractedAudioId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        if (!res.ok) {
+          audioLoading.current = false;
+          return;
+        }
+
+        const data = await res.json();
+        const audioData = data.audio || data;
+
+        const audioUrl =
+          audioData.public_url ||
+          audioData.url ||
+          audioData.preview_url;
+
+        if (!audioUrl) {
+          console.error('⚠ No audio URL found');
+          audioLoading.current = false;
+          return;
+        }
+
+        // 🎨 CORRECCIÓN IMPORTANTE: Usar cover_url del audio primero (igual que AudioDetailPage)
+        // Prioridad: 1) audioData.cover_url, 2) option.thumbnail_url (fallback)
+        const coverImage = audioData.cover_url || option.thumbnail_url;
+
+        // Update thumbnail for MusicPlayer
+        if (onThumbnailChange && coverImage) {
+          console.log(`🖼️ Notificando cover para slide ${currentSlide}:`, coverImage);
+          onThumbnailChange(coverImage);
+        }
+
+        // Update UI music player with complete audio object
+        onAudioChange?.({
+          id: audioData.id,
+          title: audioData.title || 'Original Sound',
+          artist: audioData.artist || poll.author?.display_name || 'Unknown',
+          preview_url: audioUrl,
+          cover: coverImage, // Usando la misma prioridad que definimos arriba
+          isOriginal: true,
+          source: 'User Upload'
+        });
+
+        // Prevent wrong slide playback
+        if (currentSlideSafe.current !== slideOnStart) return;
+
+        await audioManager.play(audioUrl, {
+          startTime: 0,
+          volume: 0.7,
+          loop: true
+        });
+
+      } catch (err) {
+        console.error('Audio error:', err);
+      } finally {
+        audioLoading.current = false;
+      }
+    };
+
+    loadAndPlay();
+  }, [currentSlide, isActive]);
+
+  // ========== VIDEO SUPPRESSION FIX (THE IMPORTANT PART) ==========
+  //
+  // This ensures that:
+  //   • Only the current slide's video can play (and always muted)
+  //   • All other videos are FORCED to pause + reset
+  //   • No ghost autoplay occurs
+  //
   useEffect(() => {
     if (!poll.options) return;
-    
-    poll.options.forEach((option, optionIndex) => {
-      if (option.media?.type === 'video') {
-        const videoElement = videoRefs.current.get(option.id);
-        if (videoElement) {
-          const shouldPlay = isActive && currentSlide === optionIndex;
-          
-          // 🎵 NUEVO: Videos SIEMPRE silenciados en carrusel
-          // El audio se extrae y reproduce por MusicPlayer
-          if (!videoElement.muted) {
-            console.log(`🔇 Carrusel: Silenciando video ${optionIndex} (audio en MusicPlayer)`);
-            videoElement.muted = true;
-          }
-          
-          if (shouldPlay) {
-            // ✅ MEJORADO: Asegurar que el video tenga src antes de reproducir
-            if (!videoElement.src || videoElement.src === '') {
-              console.log(`🔄 Carrusel: Restaurando src del video ${optionIndex}:`, option.media.url.substring(0, 50));
-              videoElement.src = option.media.url;
-              videoElement.load();
-            }
-            
-            // Esperar un momento para que el video cargue si es necesario
-            const tryPlay = () => {
-              if (videoElement.readyState >= 2) { // HAVE_CURRENT_DATA o superior
-                // 🎵 Videos siempre en muted para carrusel
-                videoElement.muted = true;
-                videoElement.play().catch(err => {
-                  console.warn(`⚠️ Carrusel: No se pudo reproducir video automáticamente:`, err);
-                  // Segundo intento
-                  videoElement.muted = true;
-                  videoElement.play().catch(err2 => {
-                    console.error(`❌ Carrusel: Falló reproducción con muted:`, err2);
-                  });
-                });
-              } else {
-                // Si no está listo, esperar el evento canplay
-                videoElement.addEventListener('canplay', function onCanPlay() {
-                  videoElement.muted = true;
-                  videoElement.play().catch(err => {
-                    console.warn(`⚠️ Carrusel: No se pudo reproducir después de canplay:`, err);
-                  });
-                  videoElement.removeEventListener('canplay', onCanPlay);
-                }, { once: true });
-              }
-            };
-            
-            tryPlay();
-            
-          } else {
-            // Pausar video si no es el slide actual o el post no está activo
-            videoElement.pause();
-          }
-        }
+
+    videoRefs.current.forEach((video, id) => {
+      if (!video) return;
+
+      const index = poll.options.findIndex((o) => o.id === id);
+      const shouldPlay = isActive && index === currentSlide;
+
+      if (shouldPlay) {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = true;
+
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = true;
       }
     });
-  }, [isActive, currentSlide, poll.options]);
+  }, [currentSlide, isActive, poll.options]);
 
-  // Auto-advance deshabilitado - Navegación completamente manual por solicitud del usuario
-
+  // ========== WINNER + PERCENTAGE ==========
   const getPercentage = (votes) => {
-    if (poll.userVote && poll.totalVotes > 0) {
-      return Math.round((votes / poll.totalVotes) * 100);
-    }
-    return 0;
+    if (!poll.userVote || poll.totalVotes === 0) return 0;
+    return Math.round((votes / poll.totalVotes) * 100);
   };
 
-  const winningOption = poll.userVote ? (poll.options?.reduce((prev, current) => 
-    (prev.votes > current.votes) ? prev : current
-  ) || {}) : {};
+  const winningOption = poll.userVote
+    ? poll.options.reduce((p, c) => (p.votes > c.votes ? p : c), poll.options[0])
+    : {};
+
+  // ===========================================================
+  //   RENDER
+  // ===========================================================
 
   return (
-    <div 
+    <div
       className="relative w-full h-full overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Carousel slides - HORIZONTAL carousel SIMPLIFIED */}
-      <div 
+      {/* SLIDE WRAPPER */}
+      <div
         className="flex h-full transition-transform duration-300 ease-in-out"
-        style={{ 
-          transform: `translateX(-${currentSlide * 100}%)`,
-          width: '100%'  // Fixed width
-        }}
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
-        {poll.options.map((option, optionIndex) => {
+        {poll.options.map((option, idx) => {
           const percentage = getPercentage(option.votes);
           const isWinner = option.id === winningOption.id && poll.userVote;
           const isSelected = poll.userVote === option.id;
@@ -298,167 +240,61 @@ const CarouselLayout = ({
           return (
             <div
               key={option.id}
-              className="relative flex-shrink-0 h-full cursor-pointer group overflow-hidden touch-manipulation rounded-lg"
+              className="relative flex-shrink-0 w-full h-full overflow-hidden rounded-lg"
               onClick={() => onVote(option.id)}
-              style={{ 
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation',
-                width: '100%'  // Each slide is full width
-              }}
             >
-              {/* 🚀 ULTRA-OPTIMIZED Background media for carousel */}
-              <div className="absolute inset-0 w-full h-full">
-                {option.media?.url ? (
-                  option.media?.type === 'video' ? (
-                    <video 
-                      ref={(el) => {
-                        if (el) videoRefs.current.set(option.id, el);
-                      }}
-                      src={option.media.url} 
-                      className="w-full h-full object-cover object-center rounded-lg"
-                      // ✅ FIXED: Play video for current slide when active
-                      autoPlay={isActive && currentSlide === optionIndex}
-                      // 🎵 CARRUSEL: Videos SIEMPRE silenciados, audio en MusicPlayer
-                      muted={true}
-                      loop
-                      playsInline
-                      // 🚀 PERFORMANCE: Smart preloading for carousel
-                      preload={
-                        currentSlide === optionIndex ? "auto" : // Current slide: full preload
-                        Math.abs(currentSlide - optionIndex) <= 1 ? "metadata" : // Adjacent slides: metadata only
-                        "none" // Distant slides: no preload
-                      }
-                      // ✅ FIXED: Always show videos in carousel
-                      style={{
-                        display: 'block'
-                      }}
-                      loading={currentSlide === optionIndex ? "eager" : "lazy"}
-                      onLoadStart={() => {
-                        if (optimizeVideo && currentSlide === optionIndex) {
-                          console.log(`🎬 Carousel video loading: slide ${optionIndex} (Priority: ${renderPriority})`);
-                        }
-                      }}
-                      onCanPlay={() => {
-                        if (optimizeVideo) {
-                          console.log(`▶️ Carousel video ready: slide ${optionIndex}`);
-                        }
-                      }}
-                      onError={(e) => {
-                        console.warn(`❌ Carousel video load failed: ${option.media.url}`, e);
-                      }}
-                    />
-                  ) : (
-                    <img 
-                      src={option.media.url} 
-                      alt={option.text || `Slide ${optionIndex + 1}`}
-                      className="w-full h-full object-cover object-center rounded-lg"
-                      // 🚀 IMAGE OPTIMIZATION: Lazy load non-current slides
-                      loading={currentSlide === optionIndex ? "eager" : "lazy"}
-                      style={{
-                        display: shouldUnload ? 'none' : 'block'
-                      }}
-                    />
-                  )
+              {/* MEDIA */}
+              <div className="absolute inset-0">
+                {option.media?.type === 'video' ? (
+                  <video
+                    ref={(el) => {
+                      if (el) videoRefs.current.set(option.id, el);
+                    }}
+                    src={option.media.url}
+                    muted
+                    playsInline
+                    loop
+                    preload={
+                      idx === currentSlide
+                        ? 'auto'
+                        : Math.abs(currentSlide - idx) <= 1
+                        ? 'metadata'
+                        : 'none'
+                    }
+                    className="w-full h-full object-cover rounded-lg"
+                  />
                 ) : (
-                  <div className={cn(
-                    "w-full h-full",
-                    optionIndex === 0 ? "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500" :
-                    optionIndex === 1 ? "bg-gradient-to-br from-gray-300 via-gray-500 to-gray-700" :
-                    optionIndex === 2 ? "bg-gradient-to-br from-yellow-500 via-red-500 to-pink-600" :
-                    "bg-gradient-to-br from-amber-600 via-orange-700 to-red-800"
-                  )} />
+                  <img
+                    src={option.media?.url}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
                 )}
               </div>
 
-              {/* Interactive overlay */}
-              <div className="absolute inset-0 bg-transparent active:bg-white/10 transition-colors duration-150"></div>
-
-              {/* Progress overlay - Only show when active, user has voted on mobile, and has percentage */}
-              {isActive && isMobile && poll.userVote && percentage > 0 && (
-                <div 
-                  className={cn(
-                    "absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out rounded-t-lg",
-                    isWinner 
-                      ? "bg-gradient-to-t from-green-500/70 via-green-500/50 to-green-500/20"
-                      : isSelected 
-                        ? "bg-gradient-to-t from-blue-500/70 via-blue-500/50 to-blue-500/20"
-                        : "bg-gradient-to-t from-white/60 via-white/40 to-white/20"
-                  )}
-                  style={{ 
-                    height: `${Math.max(percentage, 15)}%`,
-                    minHeight: '60px',
-                    transform: `translateY(${100 - Math.max(percentage, 15)}%)`,
-                    transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                >
-                  {/* Trophy icon in progress bar for winner */}
-                  {isWinner && (
-                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                      <Trophy className="w-4 h-4 text-green-300 drop-shadow-lg" />
+              {/* WINNER/SELECTED SIMILAR UI */}
+              {mobile && poll.userVote && (
+                <div>
+                  {percentage > 0 && (
+                    <div
+                      className={cn(
+                        'absolute inset-x-0 bottom-0 rounded-t-lg transition-all',
+                        isWinner
+                          ? 'bg-green-500/40'
+                          : isSelected
+                          ? 'bg-blue-500/40'
+                          : 'bg-white/30'
+                      )}
+                      style={{
+                        height: `${Math.max(percentage, 15)}%`
+                      }}
+                    >
+                      {isWinner && (
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2">
+                          <Trophy className="w-4 h-4 text-green-300" />
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* Selection indicator - Only show when active and user has voted on mobile */}
-              {isActive && isMobile && isSelected && poll.userVote && (
-                <div className="absolute inset-0 ring-2 ring-blue-400/60 ring-inset"></div>
-              )}
-
-              {/* Winner indicator - Only show when active and user has voted on mobile */}
-              {isActive && isMobile && isWinner && poll.userVote && (
-                <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
-              )}
-
-              {/* Mentioned Users - Específicas para esta opción */}
-              {isActive && option.mentioned_users && option.mentioned_users.length > 0 && (
-                <div className="absolute bottom-32 left-4 right-4 z-10">
-                  <div className="flex flex-wrap gap-1 items-center justify-center mb-2">
-                    {option.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
-                      <button
-                        key={mentionedUser.id || index}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const username = mentionedUser.username || mentionedUser.display_name?.toLowerCase().replace(/\s+/g, '_');
-                          if (username) {
-                            navigate(`/profile/${username}`);
-                          }
-                        }}
-                        className="flex items-center bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm cursor-pointer hover:bg-white/30 transition-all duration-200"
-                      >
-                        <img
-                          src={mentionedUser.avatar_url || '/default-avatar.png'}
-                          alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                          className="w-4 h-4 rounded-full mr-1 border border-white/50"
-                          onError={(e) => {
-                            e.target.src = '/default-avatar.png';
-                          }}
-                        />
-                        <span className="text-xs text-white font-medium">
-                          {mentionedUser.display_name || mentionedUser.username}
-                        </span>
-                      </button>
-                    ))}
-                    {option.mentioned_users.length > 3 && (
-                      <div className="flex items-center bg-white/20 px-2 py-1 rounded-full backdrop-blur-sm">
-                        <div className="w-4 h-4 rounded-full bg-white/30 flex items-center justify-center mr-1">
-                          <span className="text-xs text-white font-bold">+</span>
-                        </div>
-                        <span className="text-xs text-white/90">
-                          {option.mentioned_users.length - 3} más
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Option Description - Only show when active (TikTok scroll) */}
-              {isActive && option.text && (
-                <div className="absolute bottom-24 left-4 right-4 z-10">
-                  <div className="w-full bg-black/70 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm text-center">
-                    {option.text}
-                  </div>
                 </div>
               )}
             </div>
@@ -466,30 +302,19 @@ const CarouselLayout = ({
         })}
       </div>
 
-      {/* Navigation indicators - Only show when active (not in profile grid) */}
-      {isActive && (
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-2 z-20">
-          {poll.options.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={(e) => {
-                e.stopPropagation();
-                goToSlide(idx);
-              }}
-              className={cn(
-                "w-8 h-2 rounded-full transition-all duration-300 flex-shrink-0",
-                idx === currentSlide 
-                  ? "bg-white shadow-lg" 
-                  : "bg-white/50 hover:bg-white/70"
-              )}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Navigation arrows - Eliminados por solicitud del usuario */}
-
-      {/* Slide counter - Eliminado por solicitud del usuario */}
+      {/* INDICATORS */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2">
+        {poll.options.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={cn(
+              'w-8 h-2 rounded-full transition-all',
+              i === currentSlide ? 'bg-white' : 'bg-white/40'
+            )}
+          />
+        ))}
+      </div>
     </div>
   );
 };
