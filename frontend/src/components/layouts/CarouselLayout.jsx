@@ -106,13 +106,6 @@ const CarouselLayout = ({
     const currentOption = poll.options[currentSlide];
     if (!currentOption) return;
     
-    // 🎨 SIEMPRE notificar cambio de thumbnail para el MusicPlayer
-    // La portada debe mostrar el thumbnail del video actual, independientemente del audio
-    if (onThumbnailChange && currentOption.thumbnail_url) {
-      console.log(`🖼️ Notificando cambio de thumbnail para slide ${currentSlide}:`, currentOption.thumbnail_url);
-      onThumbnailChange(currentOption.thumbnail_url);
-    }
-    
     // Verificar si esta opción tiene audio extraído
     const extractedAudioId = currentOption.extracted_audio_id;
     
@@ -142,6 +135,18 @@ const CarouselLayout = ({
             // El backend retorna { success: true, audio: {...} }
             const audioData = responseData.audio || responseData;
             const audioUrl = audioData.public_url || audioData.url || audioData.preview_url;
+            
+            // 🎨 IMPORTANTE: Usar el cover_url del audio (igual que AudioDetailPage)
+            // Esta es la portada que se muestra en AudioDetailPage para cada audio
+            const audioCover = audioData.cover_url;
+            if (onThumbnailChange && audioCover) {
+              console.log(`🖼️ Notificando cover_url del audio para slide ${currentSlide}:`, audioCover);
+              onThumbnailChange(audioCover);
+            } else if (onThumbnailChange && currentOption.thumbnail_url) {
+              // Fallback al thumbnail del video si no hay cover_url
+              console.log(`🖼️ Notificando thumbnail del video para slide ${currentSlide}:`, currentOption.thumbnail_url);
+              onThumbnailChange(currentOption.thumbnail_url);
+            }
             
             if (!audioUrl) {
               console.error(`❌ No audio URL found in response for slide ${currentSlide}`);
