@@ -179,8 +179,13 @@ const TikTokPollCard = ({
   };
   
   // 🎵 NUEVO: Handler para cuando cambia el audio del carrusel con audio original
-  const handleCarouselAudioChange = (audioId) => {
-    console.log('🎵 TikTokScrollView: Audio del carrusel actualizado:', audioId);
+  const handleCarouselAudioChange = (audioData) => {
+    // audioData puede ser un objeto completo o null
+    const audioId = audioData?.id || null;
+    console.log('🎵 TikTokScrollView: Audio del carrusel actualizado:', {
+      audioData,
+      extractedId: audioId
+    });
     setCarouselAudioId(audioId);
   };
   
