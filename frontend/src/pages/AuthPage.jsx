@@ -200,22 +200,22 @@ const AuthPage = () => {
           {/* Register-only fields */}
           {!isLogin && (
             <>
-              {/* Username Field */}
+              {/* Username Field - Instagram style */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-black block">
+                <label className="text-sm font-medium text-black hidden md:block">
                   Usuario
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hidden md:block" />
                   <input
                     type="text"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border-2 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors ${
-                      errors.username ? 'border-red-500' : 'border-gray-200'
+                    className={`w-full md:pl-10 px-4 py-3 border text-sm md:text-base text-black placeholder-gray-400 bg-gray-50 md:bg-white rounded-md md:rounded-none focus:outline-none focus:border-purple-600 md:focus:border-black transition-colors ${
+                      errors.username ? 'border-red-500' : 'border-gray-300 md:border-gray-200'
                     }`}
-                    placeholder="usuario123"
+                    placeholder="username"
                     disabled={loading}
                   />
                 </div>
@@ -224,22 +224,22 @@ const AuthPage = () => {
                 )}
               </div>
 
-              {/* Display Name Field */}
+              {/* Display Name Field - Instagram style */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-black block">
+                <label className="text-sm font-medium text-black hidden md:block">
                   Nombre
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hidden md:block" />
                   <input
                     type="text"
                     name="display_name"
                     value={formData.display_name}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-3 border-2 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors ${
-                      errors.display_name ? 'border-red-500' : 'border-gray-200'
+                    className={`w-full md:pl-10 px-4 py-3 border text-sm md:text-base text-black placeholder-gray-400 bg-gray-50 md:bg-white rounded-md md:rounded-none focus:outline-none focus:border-purple-600 md:focus:border-black transition-colors ${
+                      errors.display_name ? 'border-red-500' : 'border-gray-300 md:border-gray-200'
                     }`}
-                    placeholder="Tu Nombre"
+                    placeholder="Full Name"
                     disabled={loading}
                   />
                 </div>
