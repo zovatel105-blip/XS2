@@ -117,6 +117,7 @@ const TikTokProfileGrid = ({ polls, onPollClick, onUpdatePoll, onDeletePoll, cur
                       onVote={handleDummyVote} 
                       isActive={false} // Not active in profile grid
                       disableVideo={true} // Prevent video autoplay
+                      isThumbnail={true} // 🖼️ Ocultar indicadores de progreso en miniaturas
                     />
                   </div>
                 );
