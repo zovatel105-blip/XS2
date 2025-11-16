@@ -150,7 +150,7 @@ const AuthPage = () => {
             <img 
               src="https://customer-assets.emergentagent.com/job_979c19d8-b9c0-4e35-80df-e411a6f88938/artifacts/qk9i0x5a_file_00000000a8a071f5befc3375a0b68179.png"
               alt="Logo"
-              className="w-32 h-32 md:w-40 md:h-40 object-contain"
+              className="w-48 h-48 md:w-40 md:h-40 object-contain"
             />
           </div>
           {/* Title - Hidden on mobile for Instagram style */}
