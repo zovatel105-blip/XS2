@@ -282,15 +282,27 @@ const AuthPage = () => {
             )}
           </div>
 
-          {/* Submit Button */}
+          {/* Forgot Password - Mobile only, Instagram style */}
+          {isLogin && (
+            <div className="text-right md:hidden -mt-2">
+              <button
+                type="button"
+                className="text-sm text-purple-600 font-semibold hover:text-purple-800 transition-colors"
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
+
+          {/* Submit Button - Purple on mobile, Black on desktop */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-4 font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-purple-600 md:bg-black text-white py-3.5 md:py-4 font-semibold rounded-lg md:rounded-none hover:bg-purple-700 md:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 md:focus:ring-black focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading 
               ? (isLogin ? 'Iniciando...' : 'Creando...') 
-              : (isLogin ? 'Iniciar Sesión' : 'Crear Cuenta')
+              : (isLogin ? 'Log in' : 'Sign up')
             }
           </button>
 
