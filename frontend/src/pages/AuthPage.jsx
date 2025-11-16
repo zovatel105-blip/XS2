@@ -250,28 +250,28 @@ const AuthPage = () => {
             </>
           )}
 
-          {/* Password Field */}
+          {/* Password Field - Instagram style */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-black block">
+            <label className="text-sm font-medium text-black hidden md:block">
               Contraseña
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hidden md:block" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-12 py-3 border-2 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors ${
-                  errors.password ? 'border-red-500' : 'border-gray-200'
+                className={`w-full md:pl-10 px-4 pr-12 py-3 border text-sm md:text-base text-black placeholder-gray-400 bg-gray-50 md:bg-white rounded-md md:rounded-none focus:outline-none focus:border-purple-600 md:focus:border-black transition-colors ${
+                  errors.password ? 'border-red-500' : 'border-gray-300 md:border-gray-200'
                 }`}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Password"
                 disabled={loading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-black transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-purple-600 md:hover:text-black transition-colors"
                 disabled={loading}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
