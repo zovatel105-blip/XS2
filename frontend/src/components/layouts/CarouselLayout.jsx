@@ -19,7 +19,8 @@ const CarouselLayout = ({
   onAudioChange,
   optimizeVideo = false,
   renderPriority = 'medium',
-  shouldUnload = false
+  shouldUnload = false,
+  isThumbnail = false // Nuevo prop para ocultar UI en miniaturas
 }) => {
 
   const navigate = useNavigate();
