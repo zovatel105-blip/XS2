@@ -41,7 +41,9 @@ const LayoutRenderer = ({
   shouldPreload = true,
   isVisible = true,
   shouldUnload = false,
-  layout = null
+  layout = null,
+  // 🖼️ NUEVO: Para ocultar UI en miniaturas del perfil
+  isThumbnail = false
 }) => {
   // Obtener el layout type del poll, con fallback a 'vertical'
   const layoutType = poll.layout || 'vertical';
