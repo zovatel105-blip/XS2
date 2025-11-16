@@ -6082,8 +6082,8 @@ async def create_poll(
                                 )
                                 
                                 # Crear título para este audio específico
-                                option_text = option.text or f"Video {i+1}"
-                                audio_title = f"{poll_data.title or 'Audio'} - {option_text}"[:100]
+                                # Usar formato "(original sound-@username)" en lugar del título de la publicación
+                                audio_title = f"original sound-@{current_user.username}"
                                 audio_public_url = f"/api/uploads/audio/{extraction_result['filename']}"
                                 
                                 user_audio_data = {
