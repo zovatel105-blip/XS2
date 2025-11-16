@@ -303,19 +303,21 @@ const CarouselLayout = ({
         })}
       </div>
 
-      {/* INDICATORS */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2">
-        {poll.options.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentSlide(i)}
-            className={cn(
-              'w-8 h-2 rounded-full transition-all',
-              i === currentSlide ? 'bg-white' : 'bg-white/40'
-            )}
-          />
-        ))}
-      </div>
+      {/* INDICATORS - Solo visible cuando NO es thumbnail */}
+      {!isThumbnail && (
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2">
+          {poll.options.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentSlide(i)}
+              className={cn(
+                'w-8 h-2 rounded-full transition-all',
+                i === currentSlide ? 'bg-white' : 'bg-white/40'
+              )}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
