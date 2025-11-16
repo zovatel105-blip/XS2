@@ -173,22 +173,22 @@ const AuthPage = () => {
             </div>
           )}
 
-          {/* Email Field */}
+          {/* Email Field - Instagram style */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-black block">
+            <label className="text-sm font-medium text-black hidden md:block">
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hidden md:block" />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-4 py-3 border-2 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors ${
-                  errors.email ? 'border-red-500' : 'border-gray-200'
+                className={`w-full md:pl-10 px-4 py-3 border text-sm md:text-base text-black placeholder-gray-400 bg-gray-50 md:bg-white rounded-md md:rounded-none focus:outline-none focus:border-purple-600 md:focus:border-black transition-colors ${
+                  errors.email ? 'border-red-500' : 'border-gray-300 md:border-gray-200'
                 }`}
-                placeholder="tu@email.com"
+                placeholder="username, email or mobile number"
                 disabled={loading}
               />
             </div>
