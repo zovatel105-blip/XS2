@@ -67,6 +67,8 @@ const LayoutRenderer = ({
         shouldPreload={shouldPreload}
         isVisible={isVisible}
         shouldUnload={shouldUnload}
+        // 🖼️ Ocultar UI en miniaturas
+        isThumbnail={isThumbnail}
       />
     );
   }
