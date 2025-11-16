@@ -307,16 +307,16 @@ const AuthPage = () => {
           </button>
 
           {/* Divider */}
-          <div className="relative">
+          <div className="relative my-6 md:my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-gray-300 md:border-gray-200" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">o</span>
+              <span className="px-4 bg-white text-gray-500 font-semibold md:font-normal">OR</span>
             </div>
           </div>
 
-          {/* Google OAuth Button */}
+          {/* Google OAuth Button - Instagram style on mobile */}
           <button
             type="button"
             onClick={() => {
@@ -326,7 +326,7 @@ const AuthPage = () => {
               window.location.href = googleAuthUrl;
             }}
             disabled={loading}
-            className="w-full border-2 border-black text-black py-4 font-medium hover:bg-black hover:text-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+            className="w-full border border-purple-600 md:border-2 md:border-black text-purple-600 md:text-black py-3 md:py-4 font-semibold md:font-medium rounded-lg md:rounded-none hover:bg-purple-50 md:hover:bg-black md:hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-600 md:focus:ring-black focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"/>
@@ -334,22 +334,43 @@ const AuthPage = () => {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="currentColor"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor"/>
             </svg>
-            <span>Continuar con Google</span>
+            <span className="hidden md:inline">Continuar con Google</span>
+            <span className="md:hidden">Log in with Google</span>
           </button>
         </form>
 
-        {/* Toggle Auth Mode */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 text-sm">
-            {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
+        {/* Toggle Auth Mode - Instagram style on mobile */}
+        <div className="mt-6 md:mt-8 text-center">
+          <p className="text-gray-600 text-sm md:text-base">
+            {isLogin ? (
+              <>
+                <span className="hidden md:inline">¿No tienes cuenta?</span>
+                <span className="md:hidden">Don't have an account?</span>
+              </>
+            ) : (
+              <>
+                <span className="hidden md:inline">¿Ya tienes cuenta?</span>
+                <span className="md:hidden">Have an account?</span>
+              </>
+            )}
             {' '}
             <button
               type="button"
               onClick={toggleMode}
               disabled={loading}
-              className="text-black font-medium hover:underline transition-colors disabled:opacity-50"
+              className="text-purple-600 md:text-black font-semibold md:font-medium hover:underline transition-colors disabled:opacity-50"
             >
-              {isLogin ? 'Crear una' : 'Iniciar sesión'}
+              {isLogin ? (
+                <>
+                  <span className="hidden md:inline">Crear una</span>
+                  <span className="md:hidden">Sign up</span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden md:inline">Iniciar sesión</span>
+                  <span className="md:hidden">Log in</span>
+                </>
+              )}
             </button>
           </p>
         </div>
