@@ -162,14 +162,14 @@ const AuthPage = () => {
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Form - Instagram style spacing on mobile */}
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
           
           {/* General Error */}
           {errors.general && (
-            <div className="p-4 border border-black bg-gray-50 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-black mt-0.5 flex-shrink-0" />
-              <span className="text-black text-sm">{errors.general}</span>
+            <div className="p-3 md:p-4 border border-red-500 md:border-black bg-red-50 md:bg-gray-50 rounded-md md:rounded-none flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 md:text-black mt-0.5 flex-shrink-0" />
+              <span className="text-red-700 md:text-black text-sm">{errors.general}</span>
             </div>
           )}
 
