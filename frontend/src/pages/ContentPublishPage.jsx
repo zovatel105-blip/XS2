@@ -552,16 +552,16 @@ const ContentPublishPage = () => {
 
       {/* Mention Modal */}
       {showMentionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
-          <div className="bg-white w-full rounded-t-xl max-h-[80vh] overflow-hidden">
-            <div className="p-4 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end">
+          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[80vh] overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-800">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Mencionar Usuarios</h3>
+                <h3 className="text-white text-base font-semibold">Tag people</h3>
                 <button
                   onClick={() => setShowMentionModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full"
+                  className="w-8 h-8 flex items-center justify-center hover:bg-gray-800 rounded-full transition-colors"
                 >
-                  ×
+                  <span className="text-gray-400 text-2xl leading-none">×</span>
                 </button>
               </div>
             </div>
@@ -570,23 +570,23 @@ const ContentPublishPage = () => {
                 value={mentionInput}
                 onChange={setMentionInput}
                 onMentionSelect={handleMentionSelect}
-                placeholder="Buscar usuarios para mencionar..."
-                className="w-full"
+                placeholder="Search users to mention..."
+                className="w-full bg-gray-800 text-white"
               />
               
               {mentionedUsers.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 font-medium">Usuarios mencionados:</p>
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-400 font-medium">Tagged users:</p>
                   <div className="flex flex-wrap gap-2">
                     {mentionedUsers.map((user) => (
                       <span 
                         key={user.id} 
-                        className="bg-green-50 text-green-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                        className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 transition-colors"
                       >
                         @{user.username}
                         <button
                           onClick={() => handleRemoveMention(user.id)}
-                          className="text-green-500 hover:text-green-700"
+                          className="text-gray-400 hover:text-white text-lg"
                         >
                           ×
                         </button>
