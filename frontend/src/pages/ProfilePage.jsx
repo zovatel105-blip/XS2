@@ -1186,10 +1186,9 @@ const ProfilePage = () => {
       </div>
     );
   }
-
-  const likedPolls = polls.filter(poll => poll.userLiked);
   
   // Mentioned polls are now loaded from API via mentionedPolls state
+  // Liked polls are now loaded from API via likedPolls state
   
 
   
