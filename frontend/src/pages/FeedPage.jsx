@@ -615,7 +615,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={56} />
+          <LogoWithQuickActions size={96} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -643,7 +643,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={56} />
+          <LogoWithQuickActions size={96} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -681,7 +681,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={56} />
+          <LogoWithQuickActions size={96} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -729,7 +729,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={56} />
+          <LogoWithQuickActions size={96} />
         </div>
         
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -761,7 +761,7 @@ const FeedPage = () => {
             zIndex: 9999,
           }}
         >
-          <LogoWithQuickActions size={56} />
+          <LogoWithQuickActions size={96} />
         </div>
 
         {/* Stories overlay - REMOVED (Stories feature disabled) */}
