@@ -280,16 +280,16 @@ const ContentPublishPage = () => {
         <div className="w-9"></div> {/* Spacer for centering */}
       </div>
 
-      {/* Main Content - Responsive Layout */}
-      <div className="px-4 pt-4 pb-32">
+      {/* Main Content - Fixed Two Column Layout */}
+      <div className="px-3 sm:px-4 pt-4 pb-32">
         
-        {/* Mobile: Stacked Layout | Desktop: Two Column Layout */}
-        <div className="flex flex-col md:flex-row gap-4">
+        {/* Two Column Layout - Always the same */}
+        <div className="flex gap-3 sm:gap-4">
           
-          {/* Preview - Top on mobile, Left on desktop */}
-          <div className="flex justify-center md:block md:w-32 md:flex-shrink-0">
-            <div className="md:sticky md:top-4">
-              <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-24 h-32 md:w-28 md:h-36">
+          {/* Left Column - Preview */}
+          <div className="w-24 sm:w-28 flex-shrink-0">
+            <div className="sticky top-4">
+              <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-full h-32 sm:h-36">
                 {contentData && contentData.options && contentData.options.length > 0 ? (
                   <div className="relative w-full h-full">
                     {contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
@@ -332,13 +332,13 @@ const ContentPublishPage = () => {
                     
                     {/* Edit cover overlay */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-                      <p className="text-white text-[10px] md:text-xs text-center font-medium">Preview</p>
+                      <p className="text-white text-[10px] sm:text-xs text-center font-medium">Preview</p>
                     </div>
                   </div>
                 ) : (
                   <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                     <div className="text-center text-gray-500">
-                      <div className="text-lg md:text-xl mb-1">📱</div>
+                      <div className="text-lg sm:text-xl mb-1">📱</div>
                     </div>
                   </div>
                 )}
@@ -346,17 +346,17 @@ const ContentPublishPage = () => {
             </div>
           </div>
 
-          {/* Description and Options */}
+          {/* Right Column - Description and Options */}
           <div className="flex-1 min-w-0">
             
             {/* Description Input */}
-            <div className="mb-5 md:mb-6">
+            <div className="mb-5">
               <textarea
                 id="title-input"
                 placeholder="Add description..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full text-white text-sm md:text-base placeholder-gray-500 bg-transparent border-none outline-none resize-none leading-relaxed"
+                className="w-full text-white text-sm sm:text-base placeholder-gray-500 bg-transparent border-none outline-none resize-none leading-relaxed"
                 rows={5}
                 maxLength={200}
               />
@@ -371,53 +371,53 @@ const ContentPublishPage = () => {
               {/* Hashtags */}
               <button 
                 onClick={() => setShowHashtagModal(true)}
-                className="w-full flex items-center justify-between py-3 px-2 md:px-0 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
+                className="w-full flex items-center justify-between py-2.5 sm:py-3 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
               >
-                <div className="flex items-center gap-2.5 md:gap-3">
-                  <Hash className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Hashtags</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Hash className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-xs sm:text-sm">Hashtags</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {hashtagsList.length > 0 && (
                     <span className="text-xs text-gray-500">{hashtagsList.length}</span>
                   )}
-                  <span className="text-gray-500 text-xl">›</span>
+                  <span className="text-gray-500 text-lg sm:text-xl">›</span>
                 </div>
               </button>
 
               {/* Mention */}
               <button 
                 onClick={() => setShowMentionModal(true)}
-                className="w-full flex items-center justify-between py-3 px-2 md:px-0 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
+                className="w-full flex items-center justify-between py-2.5 sm:py-3 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
               >
-                <div className="flex items-center gap-2.5 md:gap-3">
-                  <AtSign className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Mention</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <AtSign className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-xs sm:text-sm">Mention</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {mentionedUsers.length > 0 && (
                     <span className="text-xs text-gray-500">{mentionedUsers.length}</span>
                   )}
-                  <span className="text-gray-500 text-xl">›</span>
+                  <span className="text-gray-500 text-lg sm:text-xl">›</span>
                 </div>
               </button>
 
               {/* Everyone can view */}
-              <div className="w-full flex items-center justify-between py-3 px-2 md:px-0">
-                <div className="flex items-center gap-2.5 md:gap-3">
-                  <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-full flex items-center justify-between py-2.5 sm:py-3">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
-                  <span className="text-gray-300 text-sm">Everyone can view this post</span>
+                  <span className="text-gray-300 text-xs sm:text-sm">Everyone can view this post</span>
                 </div>
               </div>
 
               {/* Allow comments */}
-              <div className="w-full flex items-center justify-between py-3 px-2 md:px-0">
-                <div className="flex items-center gap-2.5 md:gap-3">
-                  <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Allow comments</span>
+              <div className="w-full flex items-center justify-between py-2.5 sm:py-3">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
+                  <span className="text-gray-300 text-xs sm:text-sm">Allow comments</span>
                 </div>
                 <button
                   onClick={() => setCommentsEnabled(!commentsEnabled)}
