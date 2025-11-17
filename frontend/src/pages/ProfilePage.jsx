@@ -1412,11 +1412,16 @@ const ProfilePage = () => {
     }
 
     try {
+      // Get the poll that's being liked
+      const targetPoll = polls.find(p => p.id === pollId) || 
+                         tikTokPolls.find(p => p.id === pollId) ||
+                         likedPolls.find(p => p.id === pollId);
+      
+      const wasLiked = targetPoll?.userLiked || false;
+
       // Optimistic update for main polls array
-      let wasLiked = false;
       setPolls(prev => prev.map(poll => {
         if (poll.id === pollId) {
-          wasLiked = poll.userLiked;
           return {
             ...poll,
             userLiked: !poll.userLiked,
@@ -1437,6 +1442,21 @@ const ProfilePage = () => {
         }
         return poll;
       }));
+
+      // Update likedPolls - add or remove based on action
+      if (wasLiked) {
+        // Remove from likedPolls
+        setLikedPolls(prev => prev.filter(poll => poll.id !== pollId));
+      } else {
+        // Add to likedPolls if we have the poll data
+        if (targetPoll) {
+          setLikedPolls(prev => [{
+            ...targetPoll,
+            userLiked: true,
+            likes: targetPoll.likes + 1
+          }, ...prev]);
+        }
+      }
 
       // Send like to backend
       const result = await pollService.toggleLike(pollId);
@@ -1463,6 +1483,27 @@ const ProfilePage = () => {
         }
         return poll;
       }));
+
+      // Sync likedPolls with server response
+      if (result.liked) {
+        // Ensure poll is in likedPolls with correct data
+        setLikedPolls(prev => {
+          const exists = prev.some(p => p.id === pollId);
+          if (!exists && targetPoll) {
+            return [{
+              ...targetPoll,
+              userLiked: true,
+              likes: result.likes
+            }, ...prev];
+          }
+          return prev.map(poll => 
+            poll.id === pollId ? { ...poll, userLiked: true, likes: result.likes } : poll
+          );
+        });
+      } else {
+        // Remove from likedPolls
+        setLikedPolls(prev => prev.filter(poll => poll.id !== pollId));
+      }
       
       toast({
         title: result.liked ? "¡Te gusta!" : "Like removido",
@@ -1493,6 +1534,16 @@ const ProfilePage = () => {
         }
         return poll;
       }));
+
+      // Reload liked polls to ensure consistency
+      if (authUser && isOwnProfile) {
+        try {
+          const likedData = await pollService.getLikedPolls(authUser.id);
+          setLikedPolls(likedData || []);
+        } catch (reloadError) {
+          console.error('Error reloading liked polls:', reloadError);
+        }
+      }
       
       toast({
         title: "Error",
