@@ -283,8 +283,68 @@ const ContentPublishPage = () => {
       {/* Main Content - Two Column Layout */}
       <div className="flex px-4 pt-4 pb-32">
         
-        {/* Left Column - Description and Options */}
-        <div className="flex-1 pr-4">
+        {/* Left Column - Preview */}
+        <div className="w-32 flex-shrink-0 pr-4">
+          <div className="sticky top-4">
+            <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-28 h-36">
+              {contentData && contentData.options && contentData.options.length > 0 ? (
+                <div className="relative w-full h-full">
+                  {contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
+                    <div className="flex h-full">
+                      {contentData.options.slice(0, 2).map((option, index) => (
+                        <div key={index} className="flex-1 relative">
+                          {option.media_type?.startsWith('image') ? (
+                            <img 
+                              src={option.media_url} 
+                              alt="Preview"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <video 
+                              src={option.media_url}
+                              className="w-full h-full object-cover"
+                              muted
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="relative w-full h-full">
+                      {contentData.options[0].media_type?.startsWith('image') ? (
+                        <img 
+                          src={contentData.options[0].media_url} 
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <video 
+                          src={contentData.options[0].media_url}
+                          className="w-full h-full object-cover"
+                          muted
+                        />
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Edit cover overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+                    <p className="text-white text-xs text-center font-medium">Preview</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <div className="text-xl mb-1">📱</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Description and Options */}
+        <div className="flex-1">
           
           {/* Description Input */}
           <div className="mb-6">
@@ -372,66 +432,6 @@ const ContentPublishPage = () => {
 
           </div>
 
-        </div>
-
-        {/* Right Column - Preview */}
-        <div className="w-32 flex-shrink-0">
-          <div className="sticky top-4">
-            <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-28 h-36">
-              {contentData && contentData.options && contentData.options.length > 0 ? (
-                <div className="relative w-full h-full">
-                  {contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
-                    <div className="flex h-full">
-                      {contentData.options.slice(0, 2).map((option, index) => (
-                        <div key={index} className="flex-1 relative">
-                          {option.media_type?.startsWith('image') ? (
-                            <img 
-                              src={option.media_url} 
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <video 
-                              src={option.media_url}
-                              className="w-full h-full object-cover"
-                              muted
-                            />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="relative w-full h-full">
-                      {contentData.options[0].media_type?.startsWith('image') ? (
-                        <img 
-                          src={contentData.options[0].media_url} 
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <video 
-                          src={contentData.options[0].media_url}
-                          className="w-full h-full object-cover"
-                          muted
-                        />
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* Edit cover overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-                    <p className="text-white text-xs text-center font-medium">Preview</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <div className="text-xl mb-1">📱</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
       </div>
