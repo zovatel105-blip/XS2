@@ -488,16 +488,16 @@ const ContentPublishPage = () => {
 
       {/* Hashtag Modal */}
       {showHashtagModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
-          <div className="bg-white w-full rounded-t-xl max-h-[80vh] overflow-hidden">
-            <div className="p-4 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end">
+          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[80vh] overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-800">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Agregar Hashtags</h3>
+                <h3 className="text-white text-base font-semibold">Add hashtags</h3>
                 <button
                   onClick={() => setShowHashtagModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full"
+                  className="w-8 h-8 flex items-center justify-center hover:bg-gray-800 rounded-full transition-colors"
                 >
-                  ×
+                  <span className="text-gray-400 text-2xl leading-none">×</span>
                 </button>
               </div>
             </div>
@@ -505,30 +505,30 @@ const ContentPublishPage = () => {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Escribe un hashtag (sin #)"
+                  placeholder="Type hashtag (without #)"
                   value={hashtagInput}
                   onChange={(e) => setHashtagInput(e.target.value)}
                   onKeyPress={handleHashtagKeyPress}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2.5 bg-gray-800 text-white placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  autoFocus
                 />
                 <button
                   onClick={handleAddHashtag}
                   disabled={!hashtagInput.trim()}
-                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg font-medium"
+                  className="px-5 py-2.5 bg-pink-500 hover:bg-pink-600 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition-colors"
                 >
-                  Agregar
+                  Add
                 </button>
               </div>
               
               {hashtagsList.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 font-medium">Hashtags agregados:</p>
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-400 font-medium">Added hashtags:</p>
                   <div className="flex flex-wrap gap-2">
                     {hashtagsList.map((hashtag, index) => (
                       <span 
                         key={index} 
-                        className="bg-blue-50 text-blue-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 cursor-pointer hover:bg-blue-100 transition-colors"
-                        onClick={() => navigate(`/search?q=${encodeURIComponent(hashtag)}&filter=hashtags`)}
+                        className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 transition-colors"
                       >
                         #{hashtag}
                         <button
@@ -536,7 +536,7 @@ const ContentPublishPage = () => {
                             e.stopPropagation();
                             handleRemoveHashtag(hashtag);
                           }}
-                          className="text-blue-500 hover:text-blue-700"
+                          className="text-gray-400 hover:text-white text-lg"
                         >
                           ×
                         </button>
