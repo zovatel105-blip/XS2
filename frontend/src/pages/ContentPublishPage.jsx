@@ -280,154 +280,159 @@ const ContentPublishPage = () => {
         <div className="w-9"></div> {/* Spacer for centering */}
       </div>
 
-      {/* Main Content - Two Column Layout */}
-      <div className="flex px-4 pt-4 pb-32">
+      {/* Main Content - Responsive Layout */}
+      <div className="px-4 pt-4 pb-32">
         
-        {/* Left Column - Preview */}
-        <div className="w-32 flex-shrink-0 pr-4">
-          <div className="sticky top-4">
-            <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-28 h-36">
-              {contentData && contentData.options && contentData.options.length > 0 ? (
-                <div className="relative w-full h-full">
-                  {contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
-                    <div className="flex h-full">
-                      {contentData.options.slice(0, 2).map((option, index) => (
-                        <div key={index} className="flex-1 relative">
-                          {option.media_type?.startsWith('image') ? (
-                            <img 
-                              src={option.media_url} 
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <video 
-                              src={option.media_url}
-                              className="w-full h-full object-cover"
-                              muted
-                            />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="relative w-full h-full">
-                      {contentData.options[0].media_type?.startsWith('image') ? (
-                        <img 
-                          src={contentData.options[0].media_url} 
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <video 
-                          src={contentData.options[0].media_url}
-                          className="w-full h-full object-cover"
-                          muted
-                        />
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* Edit cover overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-                    <p className="text-white text-xs text-center font-medium">Preview</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <div className="text-xl mb-1">📱</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Description and Options */}
-        <div className="flex-1">
+        {/* Mobile: Stacked Layout | Desktop: Two Column Layout */}
+        <div className="flex flex-col md:flex-row gap-4">
           
-          {/* Description Input */}
-          <div className="mb-6">
-            <textarea
-              id="title-input"
-              placeholder="Add description..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full text-white text-base placeholder-gray-500 bg-transparent border-none outline-none resize-none leading-relaxed"
-              rows={6}
-              maxLength={200}
-            />
-            <div className="flex justify-end mt-1">
-              <span className="text-xs text-gray-500">{title.length}/200</span>
+          {/* Preview - Top on mobile, Left on desktop */}
+          <div className="flex justify-center md:block md:w-32 md:flex-shrink-0">
+            <div className="md:sticky md:top-4">
+              <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-24 h-32 md:w-28 md:h-36">
+                {contentData && contentData.options && contentData.options.length > 0 ? (
+                  <div className="relative w-full h-full">
+                    {contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
+                      <div className="flex h-full">
+                        {contentData.options.slice(0, 2).map((option, index) => (
+                          <div key={index} className="flex-1 relative">
+                            {option.media_type?.startsWith('image') ? (
+                              <img 
+                                src={option.media_url} 
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <video 
+                                src={option.media_url}
+                                className="w-full h-full object-cover"
+                                muted
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="relative w-full h-full">
+                        {contentData.options[0].media_type?.startsWith('image') ? (
+                          <img 
+                            src={contentData.options[0].media_url} 
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <video 
+                            src={contentData.options[0].media_url}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Edit cover overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+                      <p className="text-white text-[10px] md:text-xs text-center font-medium">Preview</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <div className="text-lg md:text-xl mb-1">📱</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Action Items - Minimalist Design */}
-          <div className="space-y-1">
+          {/* Description and Options */}
+          <div className="flex-1 min-w-0">
             
-            {/* Hashtags */}
-            <button 
-              onClick={() => setShowHashtagModal(true)}
-              className="w-full flex items-center justify-between py-3 hover:bg-gray-900 rounded-lg transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <Hash className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                <span className="text-gray-300 text-sm">Hashtags</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {hashtagsList.length > 0 && (
-                  <span className="text-xs text-gray-500">{hashtagsList.length}</span>
-                )}
-                <span className="text-gray-500 text-xl">›</span>
-              </div>
-            </button>
-
-            {/* Mention */}
-            <button 
-              onClick={() => setShowMentionModal(true)}
-              className="w-full flex items-center justify-between py-3 hover:bg-gray-900 rounded-lg transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <AtSign className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-                <span className="text-gray-300 text-sm">Mention</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {mentionedUsers.length > 0 && (
-                  <span className="text-xs text-gray-500">{mentionedUsers.length}</span>
-                )}
-                <span className="text-gray-500 text-xl">›</span>
-              </div>
-            </button>
-
-            {/* Everyone can view */}
-            <div className="w-full flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <span className="text-gray-300 text-sm">Everyone can view this post</span>
+            {/* Description Input */}
+            <div className="mb-5 md:mb-6">
+              <textarea
+                id="title-input"
+                placeholder="Add description..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full text-white text-sm md:text-base placeholder-gray-500 bg-transparent border-none outline-none resize-none leading-relaxed"
+                rows={5}
+                maxLength={200}
+              />
+              <div className="flex justify-end mt-1">
+                <span className="text-xs text-gray-500">{title.length}/200</span>
               </div>
             </div>
 
-            {/* Allow comments */}
-            <div className="w-full flex items-center justify-between py-3">
-              <div className="flex items-center gap-3">
-                <MessageCircle className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-300 text-sm">Allow comments</span>
-              </div>
-              <button
-                onClick={() => setCommentsEnabled(!commentsEnabled)}
-                className={`relative w-11 h-6 rounded-full transition-colors ${
-                  commentsEnabled ? 'bg-pink-500' : 'bg-gray-700'
-                }`}
+            {/* Action Items - Minimalist Design */}
+            <div className="space-y-0.5">
+              
+              {/* Hashtags */}
+              <button 
+                onClick={() => setShowHashtagModal(true)}
+                className="w-full flex items-center justify-between py-3 px-2 md:px-0 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
               >
-                <div
-                  className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                    commentsEnabled ? 'translate-x-5' : 'translate-x-0.5'
-                  }`}
-                />
+                <div className="flex items-center gap-2.5 md:gap-3">
+                  <Hash className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Hashtags</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hashtagsList.length > 0 && (
+                    <span className="text-xs text-gray-500">{hashtagsList.length}</span>
+                  )}
+                  <span className="text-gray-500 text-xl">›</span>
+                </div>
               </button>
+
+              {/* Mention */}
+              <button 
+                onClick={() => setShowMentionModal(true)}
+                className="w-full flex items-center justify-between py-3 px-2 md:px-0 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
+              >
+                <div className="flex items-center gap-2.5 md:gap-3">
+                  <AtSign className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Mention</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {mentionedUsers.length > 0 && (
+                    <span className="text-xs text-gray-500">{mentionedUsers.length}</span>
+                  )}
+                  <span className="text-gray-500 text-xl">›</span>
+                </div>
+              </button>
+
+              {/* Everyone can view */}
+              <div className="w-full flex items-center justify-between py-3 px-2 md:px-0">
+                <div className="flex items-center gap-2.5 md:gap-3">
+                  <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <span className="text-gray-300 text-sm">Everyone can view this post</span>
+                </div>
+              </div>
+
+              {/* Allow comments */}
+              <div className="w-full flex items-center justify-between py-3 px-2 md:px-0">
+                <div className="flex items-center gap-2.5 md:gap-3">
+                  <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Allow comments</span>
+                </div>
+                <button
+                  onClick={() => setCommentsEnabled(!commentsEnabled)}
+                  className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation ${
+                    commentsEnabled ? 'bg-pink-500' : 'bg-gray-700'
+                  }`}
+                >
+                  <div
+                    className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
+                      commentsEnabled ? 'translate-x-5' : 'translate-x-0.5'
+                    }`}
+                  />
+                </button>
+              </div>
+
             </div>
 
           </div>
