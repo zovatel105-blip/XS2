@@ -365,59 +365,65 @@ const ContentPublishPage = () => {
               </div>
             </div>
 
-            {/* Action Items - Minimalist Design */}
-            <div className="space-y-0.5">
+            {/* Action Items - Mobile Optimized */}
+            <div className="space-y-1">
               
               {/* Hashtags */}
               <button 
                 onClick={() => setShowHashtagModal(true)}
-                className="w-full flex items-center justify-between py-2.5 sm:py-3 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
+                className="w-full flex items-center justify-between py-3 px-2 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation min-h-[48px]"
               >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Hash className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-xs sm:text-sm">Hashtags</span>
+                <div className="flex items-center gap-2.5">
+                  <Hash className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Hashtags</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {hashtagsList.length > 0 && (
-                    <span className="text-xs text-gray-500">{hashtagsList.length}</span>
+                    <span className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">{hashtagsList.length}</span>
                   )}
-                  <span className="text-gray-500 text-lg sm:text-xl">›</span>
+                  <span className="text-gray-500 text-xl">›</span>
                 </div>
               </button>
 
               {/* Mention */}
               <button 
                 onClick={() => setShowMentionModal(true)}
-                className="w-full flex items-center justify-between py-2.5 sm:py-3 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation"
+                className="w-full flex items-center justify-between py-3 px-2 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation min-h-[48px]"
               >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <AtSign className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-xs sm:text-sm">Mention</span>
+                <div className="flex items-center gap-2.5">
+                  <AtSign className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Tag people</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {mentionedUsers.length > 0 && (
-                    <span className="text-xs text-gray-500">{mentionedUsers.length}</span>
+                    <span className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">{mentionedUsers.length}</span>
                   )}
-                  <span className="text-gray-500 text-lg sm:text-xl">›</span>
+                  <span className="text-gray-500 text-xl">›</span>
                 </div>
               </button>
 
-              {/* Everyone can view */}
-              <div className="w-full flex items-center justify-between py-2.5 sm:py-3">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* Privacy divider */}
+              <div className="h-px bg-gray-800 my-2"></div>
+
+              {/* Who can view */}
+              <div className="w-full flex items-center justify-between py-3 px-2 min-h-[48px]">
+                <div className="flex items-center gap-2.5">
+                  <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
-                  <span className="text-gray-300 text-xs sm:text-sm">Everyone can view this post</span>
+                  <div className="flex flex-col">
+                    <span className="text-gray-300 text-sm">Who can view</span>
+                    <span className="text-gray-500 text-xs">Everyone</span>
+                  </div>
                 </div>
               </div>
 
               {/* Allow comments */}
-              <div className="w-full flex items-center justify-between py-2.5 sm:py-3">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-300 text-xs sm:text-sm">Allow comments</span>
+              <div className="w-full flex items-center justify-between py-3 px-2 min-h-[48px]">
+                <div className="flex items-center gap-2.5">
+                  <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">Comments</span>
                 </div>
                 <button
                   onClick={() => setCommentsEnabled(!commentsEnabled)}
