@@ -555,43 +555,43 @@ const ContentPublishPage = () => {
         </div>
       )}
 
-      {/* Mention Modal */}
+      {/* Mention Modal - Mobile Optimized */}
       {showMentionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end">
-          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[80vh] overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-800">
+          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[85vh] overflow-hidden safe-area-inset-bottom">
+            <div className="px-3 md:px-4 py-3 border-b border-gray-800">
               <div className="flex items-center justify-between">
                 <h3 className="text-white text-base font-semibold">Tag people</h3>
                 <button
                   onClick={() => setShowMentionModal(false)}
-                  className="w-8 h-8 flex items-center justify-center hover:bg-gray-800 rounded-full transition-colors"
+                  className="w-9 h-9 flex items-center justify-center hover:bg-gray-800 active:bg-gray-700 rounded-full transition-colors touch-manipulation"
                 >
                   <span className="text-gray-400 text-2xl leading-none">×</span>
                 </button>
               </div>
             </div>
-            <div className="p-4 space-y-4">
+            <div className="p-3 md:p-4 space-y-3 md:space-y-4 overflow-y-auto max-h-[calc(85vh-60px)]">
               <UserMentionInput
                 value={mentionInput}
                 onChange={setMentionInput}
                 onMentionSelect={handleMentionSelect}
                 placeholder="Search users to mention..."
-                className="w-full bg-gray-800 text-white"
+                className="w-full bg-gray-800 text-white text-sm md:text-base"
               />
               
               {mentionedUsers.length > 0 && (
-                <div className="space-y-3">
-                  <p className="text-sm text-gray-400 font-medium">Tagged users:</p>
+                <div className="space-y-2 md:space-y-3">
+                  <p className="text-xs md:text-sm text-gray-400 font-medium">Tagged users:</p>
                   <div className="flex flex-wrap gap-2">
                     {mentionedUsers.map((user) => (
                       <span 
                         key={user.id} 
-                        className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 transition-colors"
+                        className="bg-gray-800 text-white px-3 py-1.5 md:py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 active:bg-gray-600 transition-colors"
                       >
                         @{user.username}
                         <button
                           onClick={() => handleRemoveMention(user.id)}
-                          className="text-gray-400 hover:text-white text-lg"
+                          className="text-gray-400 hover:text-white active:text-white text-lg touch-manipulation"
                         >
                           ×
                         </button>
