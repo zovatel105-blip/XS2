@@ -445,6 +445,52 @@ class PollService {
     }
   }
 
+  // Get user's liked polls
+  async getLikedPolls(userId = null, skip = 0, limit = 20) {
+    try {
+      // Get current user ID from token if not provided
+      if (!userId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+        
+        // Decode token to get user ID (simple base64 decode of JWT payload)
+        const tokenParts = token.split('.');
+        if (tokenParts.length !== 3) {
+          throw new Error('Invalid token format');
+        }
+        
+        const payload = JSON.parse(atob(tokenParts[1]));
+        userId = payload.sub;
+        
+        if (!userId) {
+          throw new Error('User ID not found in token');
+        }
+      }
+      
+      const response = await fetch(`${this.baseURL}/users/${userId}/liked-polls?skip=${skip}&limit=${limit}`, {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const rawLikedPolls = result.liked_polls || [];
+      
+      // Transform backend poll data to frontend format
+      return rawLikedPolls.map(poll => this.transformPollData(poll));
+    } catch (error) {
+      console.error('Error getting liked polls:', error);
+      throw error;
+    }
+  }
+
+
   // Get polls where a specific user is mentioned
   async getUserMentionedPolls(userId, limit = 20, offset = 0) {
     try {
