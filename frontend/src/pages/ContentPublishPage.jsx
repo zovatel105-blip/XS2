@@ -491,22 +491,22 @@ const ContentPublishPage = () => {
         </div>
       </div>
 
-      {/* Hashtag Modal */}
+      {/* Hashtag Modal - Mobile Optimized */}
       {showHashtagModal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end">
-          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[80vh] overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-800">
+          <div className="bg-gray-900 w-full rounded-t-2xl max-h-[85vh] overflow-hidden safe-area-inset-bottom">
+            <div className="px-3 md:px-4 py-3 border-b border-gray-800">
               <div className="flex items-center justify-between">
                 <h3 className="text-white text-base font-semibold">Add hashtags</h3>
                 <button
                   onClick={() => setShowHashtagModal(false)}
-                  className="w-8 h-8 flex items-center justify-center hover:bg-gray-800 rounded-full transition-colors"
+                  className="w-9 h-9 flex items-center justify-center hover:bg-gray-800 active:bg-gray-700 rounded-full transition-colors touch-manipulation"
                 >
                   <span className="text-gray-400 text-2xl leading-none">×</span>
                 </button>
               </div>
             </div>
-            <div className="p-4 space-y-4">
+            <div className="p-3 md:p-4 space-y-3 md:space-y-4 overflow-y-auto max-h-[calc(85vh-60px)]">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -514,26 +514,26 @@ const ContentPublishPage = () => {
                   value={hashtagInput}
                   onChange={(e) => setHashtagInput(e.target.value)}
                   onKeyPress={handleHashtagKeyPress}
-                  className="flex-1 px-4 py-2.5 bg-gray-800 text-white placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  className="flex-1 min-w-0 px-3 md:px-4 py-2.5 bg-gray-800 text-white text-sm md:text-base placeholder-gray-500 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                   autoFocus
                 />
                 <button
                   onClick={handleAddHashtag}
                   disabled={!hashtagInput.trim()}
-                  className="px-5 py-2.5 bg-pink-500 hover:bg-pink-600 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition-colors"
+                  className="px-4 md:px-5 py-2.5 bg-pink-500 hover:bg-pink-600 active:bg-pink-700 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg font-medium transition-colors flex-shrink-0 touch-manipulation text-sm md:text-base"
                 >
                   Add
                 </button>
               </div>
               
               {hashtagsList.length > 0 && (
-                <div className="space-y-3">
-                  <p className="text-sm text-gray-400 font-medium">Added hashtags:</p>
+                <div className="space-y-2 md:space-y-3">
+                  <p className="text-xs md:text-sm text-gray-400 font-medium">Added hashtags:</p>
                   <div className="flex flex-wrap gap-2">
                     {hashtagsList.map((hashtag, index) => (
                       <span 
                         key={index} 
-                        className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 transition-colors"
+                        className="bg-gray-800 text-white px-3 py-1.5 md:py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-gray-700 active:bg-gray-600 transition-colors"
                       >
                         #{hashtag}
                         <button
@@ -541,7 +541,7 @@ const ContentPublishPage = () => {
                             e.stopPropagation();
                             handleRemoveHashtag(hashtag);
                           }}
-                          className="text-gray-400 hover:text-white text-lg"
+                          className="text-gray-400 hover:text-white active:text-white text-lg touch-manipulation"
                         >
                           ×
                         </button>
