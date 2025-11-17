@@ -441,14 +441,14 @@ const ContentPublishPage = () => {
 
       </div>
 
-      {/* Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-4 py-3">
+      {/* Bottom Action Bar - Mobile Optimized */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 px-3 md:px-4 py-3 safe-area-inset-bottom">
         {/* Progress Bar */}
         {isPublishing && uploadProgress > 0 && (
-          <div className="mb-3">
+          <div className="mb-2.5 md:mb-3">
             <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs text-gray-400">{uploadStatus}</span>
-              <span className="text-xs font-semibold text-pink-500">{uploadProgress}%</span>
+              <span className="text-xs text-gray-400 truncate pr-2">{uploadStatus}</span>
+              <span className="text-xs font-semibold text-pink-500 flex-shrink-0">{uploadProgress}%</span>
             </div>
             <div className="w-full bg-gray-800 rounded-full h-1 overflow-hidden">
               <div 
@@ -460,31 +460,31 @@ const ContentPublishPage = () => {
         )}
         
         {/* Action Buttons */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-2 md:gap-3">
           <button 
-            className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors text-sm"
+            className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gray-800 hover:bg-gray-700 active:bg-gray-600 text-white rounded-lg font-medium transition-colors text-sm touch-manipulation"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
             </svg>
-            Drafts
+            <span className="hidden sm:inline">Drafts</span>
           </button>
           <button
             onClick={handleFinalPublish}
             disabled={isPublishing || !title.trim()}
-            className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 disabled:from-gray-700 disabled:to-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm"
+            className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 active:from-pink-700 active:to-red-700 disabled:from-gray-700 disabled:to-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm touch-manipulation min-h-[44px]"
           >
             {isPublishing ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>{uploadProgress > 0 ? `${uploadProgress}%` : 'Publishing...'}</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                <span className="truncate">{uploadProgress > 0 ? `${uploadProgress}%` : 'Publishing...'}</span>
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
-                Post
+                <span>Post</span>
               </>
             )}
           </button>
