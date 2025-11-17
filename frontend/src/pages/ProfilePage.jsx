@@ -70,6 +70,8 @@ const ProfilePage = () => {
   const [viewedUser, setViewedUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [savedPolls, setSavedPolls] = useState([]);
+  const [likedPolls, setLikedPolls] = useState([]);
+  const [likedPollsLoading, setLikedPollsLoading] = useState(true);
   const [pollsLoading, setPollsLoading] = useState(true);
   const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
