@@ -497,6 +497,31 @@ const ProfilePage = () => {
     loadSavedPolls();
   }, [authUser, isOwnProfile]);
 
+  // Load liked polls on component mount
+  useEffect(() => {
+    const loadLikedPolls = async () => {
+      if (!authUser || !isOwnProfile) {
+        setLikedPolls([]);
+        setLikedPollsLoading(false);
+        return;
+      }
+
+      try {
+        setLikedPollsLoading(true);
+        const likedData = await pollService.getLikedPolls(authUser.id);
+        setLikedPolls(likedData || []);
+      } catch (error) {
+        console.error('Error loading liked polls:', error);
+        setLikedPolls([]);
+      } finally {
+        setLikedPollsLoading(false);
+      }
+    };
+
+    loadLikedPolls();
+  }, [authUser, isOwnProfile]);
+
+
   // Load mentioned polls when user changes
   useEffect(() => {
     const loadMentionedPolls = async () => {
