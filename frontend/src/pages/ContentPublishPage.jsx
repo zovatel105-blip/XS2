@@ -367,43 +367,6 @@ const ContentPublishPage = () => {
 
             {/* Action Items - Mobile Optimized */}
             <div className="space-y-1">
-              
-              {/* Hashtags */}
-              <button 
-                onClick={() => setShowHashtagModal(true)}
-                className="w-full flex items-center justify-between py-3 px-2 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation min-h-[48px]"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Hash className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Hashtags</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hashtagsList.length > 0 && (
-                    <span className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">{hashtagsList.length}</span>
-                  )}
-                  <span className="text-gray-500 text-xl">›</span>
-                </div>
-              </button>
-
-              {/* Mention */}
-              <button 
-                onClick={() => setShowMentionModal(true)}
-                className="w-full flex items-center justify-between py-3 px-2 hover:bg-gray-900 active:bg-gray-800 rounded-lg transition-colors group touch-manipulation min-h-[48px]"
-              >
-                <div className="flex items-center gap-2.5">
-                  <AtSign className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Tag people</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {mentionedUsers.length > 0 && (
-                    <span className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">{mentionedUsers.length}</span>
-                  )}
-                  <span className="text-gray-500 text-xl">›</span>
-                </div>
-              </button>
-
-              {/* Privacy divider */}
-              <div className="h-px bg-gray-800 my-2"></div>
 
               {/* Who can view */}
               <div className="w-full flex items-center justify-between py-3 px-2 min-h-[48px]">
