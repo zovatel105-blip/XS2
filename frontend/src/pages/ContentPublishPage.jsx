@@ -17,6 +17,7 @@ const ContentPublishPage = () => {
   const [hashtagsList] = useState([]);
   const [mentionedUsers] = useState([]);
   const [commentsEnabled, setCommentsEnabled] = useState(true);
+  const [allowReuse, setAllowReuse] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [contentData, setContentData] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);  // ⚡ Upload progress
