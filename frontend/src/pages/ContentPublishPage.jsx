@@ -430,8 +430,6 @@ const ContentPublishPage = () => {
           </button>
         </div>
       </div>
-
-      {/* Hashtag Modal - Mobile Optimized */}
       {showHashtagModal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-end">
           <div className="bg-gray-900 w-full rounded-t-2xl max-h-[85vh] overflow-hidden safe-area-inset-bottom">
