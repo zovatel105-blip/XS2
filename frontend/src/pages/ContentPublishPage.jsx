@@ -45,35 +45,6 @@ const ContentPublishPage = () => {
     navigate('/content-creation');
   };
 
-  const handleMentionSelect = (user) => {
-    if (!mentionedUsers.find(u => u.id === user.id)) {
-      setMentionedUsers(prev => [...prev, user]);
-    }
-    setMentionInput('');
-  };
-
-  const handleRemoveMention = (userId) => {
-    setMentionedUsers(prev => prev.filter(u => u.id !== userId));
-  };
-
-  const handleAddHashtag = () => {
-    if (hashtagInput.trim() && !hashtagsList.includes(hashtagInput.trim())) {
-      setHashtagsList(prev => [...prev, hashtagInput.trim()]);
-      setHashtagInput('');
-    }
-  };
-
-  const handleRemoveHashtag = (hashtag) => {
-    setHashtagsList(prev => prev.filter(h => h !== hashtag));
-  };
-
-  const handleHashtagKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddHashtag();
-    }
-  };
-
   const handleFinalPublish = async () => {
     if (!title.trim()) {
       toast({
