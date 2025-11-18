@@ -10,23 +10,17 @@ const ContentPublishPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // States
   const [title, setTitle] = useState('');
-  const [hashtagsList, setHashtagsList] = useState([]);
-  const [mentionedUsers, setMentionedUsers] = useState([]);
+  const [hashtagsList] = useState([]);
+  const [mentionedUsers] = useState([]);
   const [commentsEnabled, setCommentsEnabled] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
   const [contentData, setContentData] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);  // ⚡ Upload progress
   const [uploadStatus, setUploadStatus] = useState('');  // ⚡ Upload status message
-  
-  // Modal states
-  const [showHashtagModal, setShowHashtagModal] = useState(false);
-  const [showMentionModal, setShowMentionModal] = useState(false);
-  const [hashtagInput, setHashtagInput] = useState('');
-  const [mentionInput, setMentionInput] = useState('');
 
   // Redirect if not authenticated
   useEffect(() => {
