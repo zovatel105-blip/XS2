@@ -308,6 +308,24 @@ const ContentPublishPage = () => {
                   </div>
                 )}
               </div>
+              
+              {/* Hashtag and Mention Quick Buttons */}
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={handleAddHashtagSymbol}
+                  className="flex-1 flex items-center justify-center py-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-600 rounded-lg transition-colors touch-manipulation"
+                  title="Add hashtag"
+                >
+                  <Hash className="w-4 h-4 text-gray-300" />
+                </button>
+                <button
+                  onClick={handleAddMentionSymbol}
+                  className="flex-1 flex items-center justify-center py-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-600 rounded-lg transition-colors touch-manipulation"
+                  title="Add mention"
+                >
+                  <AtSign className="w-4 h-4 text-gray-300" />
+                </button>
+              </div>
             </div>
           </div>
 
