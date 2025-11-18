@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Hash, AtSign, MessageCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
-import UserMentionInput from '../components/UserMentionInput';
 import pollService from '../services/pollService';
 import uploadService from '../services/uploadService';  // ⚡ Import upload service
 
