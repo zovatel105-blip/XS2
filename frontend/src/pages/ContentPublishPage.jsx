@@ -80,34 +80,6 @@ const ContentPublishPage = () => {
     }
   };
 
-  // Function to add # to title field
-  const handleAddHashtagSymbol = () => {
-    setTitle(prev => prev + '#');
-    // Focus on the title input
-    setTimeout(() => {
-      const titleInput = document.getElementById('title-input');
-      if (titleInput) {
-        titleInput.focus();
-        // Move cursor to end
-        titleInput.selectionStart = titleInput.selectionEnd = titleInput.value.length;
-      }
-    }, 0);
-  };
-
-  // Function to add @ to title field
-  const handleAddMentionSymbol = () => {
-    setTitle(prev => prev + '@');
-    // Focus on the title input
-    setTimeout(() => {
-      const titleInput = document.getElementById('title-input');
-      if (titleInput) {
-        titleInput.focus();
-        // Move cursor to end
-        titleInput.selectionStart = titleInput.selectionEnd = titleInput.value.length;
-      }
-    }, 0);
-  };
-
   const handleFinalPublish = async () => {
     if (!title.trim()) {
       toast({
