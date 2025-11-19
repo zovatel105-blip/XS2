@@ -349,7 +349,7 @@ const ContentPublishPage = () => {
             </div>
 
             {/* Action Items - Mobile Optimized */}
-            <div className="space-y-1">
+            <div className="space-y-1 -mx-3 md:mx-0">
 
               {/* Location */}
               <button 
