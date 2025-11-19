@@ -330,10 +330,10 @@ const ContentPublishPage = () => {
           </div>
 
           {/* Right Column - Description and Options */}
-          <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex-1 min-w-0">
             
-            {/* Description Input - Fixed at top */}
-            <div className="mb-5 flex-shrink-0">
+            {/* Description Input - Sticky on mobile */}
+            <div className="mb-5 sticky top-0 bg-black z-10 pb-2 -mt-4 pt-4">
               <textarea
                 id="title-input"
                 placeholder="Add description..."
@@ -348,8 +348,8 @@ const ContentPublishPage = () => {
               </div>
             </div>
 
-            {/* Action Items - Mobile Optimized - Scrollable */}
-            <div className="space-y-1 -mx-3 md:mx-0 flex-1 overflow-y-auto">
+            {/* Action Items - Mobile Optimized */}
+            <div className="space-y-1 -mx-3 md:mx-0">
 
               {/* Location */}
               <button 
