@@ -349,11 +349,7 @@ const ContentPublishPage = () => {
             </div>
 
             {/* Action Items - Mobile Optimized - Full width on mobile */}
-            <div className="space-y-1 md:static md:w-auto" style={{ 
-              marginLeft: 'calc(-1 * (100vw - 100%))', 
-              marginRight: 'calc(-1 * (100vw - 100%))', 
-              width: '100vw' 
-            }}>
+            <div className="space-y-1 md:ml-0 md:mr-0" style={{ marginLeft: '-120px', marginRight: '-12px' }}>
 
               {/* Location */}
               <button 
