@@ -413,27 +413,27 @@ const ContentPublishPage = () => {
                 </button>
               </div>
 
-              {/* Allow reuse of content */}
+              {/* Show vote count */}
               <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <div className="flex flex-col">
-                      <span className="text-gray-300 text-sm">Allow reuse of content</span>
-                      <span className="text-gray-500 text-xs">Duet, Stitch, stickers, and add to Story</span>
+                      <span className="text-gray-300 text-sm">Show vote count</span>
+                      <span className="text-gray-500 text-xs">Display the number of votes publicly</span>
                     </div>
                   </div>
                   <button
-                    onClick={() => setAllowReuse(!allowReuse)}
+                    onClick={() => setShowVoteCount(!showVoteCount)}
                     className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
-                      allowReuse ? 'bg-[#00D9FF]' : 'bg-gray-700'
+                      showVoteCount ? 'bg-[#00D9FF]' : 'bg-gray-700'
                     }`}
                   >
                     <div
                       className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                        allowReuse ? 'translate-x-5' : 'translate-x-0.5'
+                        showVoteCount ? 'translate-x-5' : 'translate-x-0.5'
                       }`}
                     />
                   </button>
