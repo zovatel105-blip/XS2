@@ -412,7 +412,7 @@ const ContentPublishPage = () => {
               </div>
 
               {/* Allow reuse of content */}
-              <div className="w-full py-3 px-2 min-h-[48px]">
+              <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
