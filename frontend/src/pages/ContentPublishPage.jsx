@@ -352,7 +352,7 @@ const ContentPublishPage = () => {
             <div className="space-y-1 md:ml-0 md:mr-0" style={{ marginLeft: '-120px', marginRight: '-12px' }}>
 
               {/* Separator line */}
-              <div className="border-t border-gray-800"></div>
+              <div className="border-t border-gray-800 my-3"></div>
 
               {/* Location */}
               <button 
