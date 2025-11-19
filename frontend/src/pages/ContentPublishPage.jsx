@@ -392,7 +392,7 @@ const ContentPublishPage = () => {
               </button>
 
               {/* Allow comments */}
-              <div className="w-full flex items-center justify-between py-3 px-2 min-h-[48px]">
+              <div className="w-full flex items-center justify-between py-3 px-5 md:px-2 min-h-[48px]">
                 <div className="flex items-center gap-2.5">
                   <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-300 text-sm">Allow comments</span>
