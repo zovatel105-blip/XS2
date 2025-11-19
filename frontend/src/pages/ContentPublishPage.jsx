@@ -509,19 +509,11 @@ const ContentPublishPage = () => {
         )}
         
         {/* Action Buttons */}
-        <div className="flex items-center justify-between gap-2 md:gap-3">
-          <button 
-            className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gray-800 hover:bg-gray-700 active:bg-gray-600 text-white rounded-lg font-medium transition-colors text-sm touch-manipulation"
-          >
-            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-            </svg>
-            <span className="hidden sm:inline">Drafts</span>
-          </button>
+        <div className="flex items-center justify-center">
           <button
             onClick={handleFinalPublish}
             disabled={isPublishing || !title.trim()}
-            className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 active:from-pink-700 active:to-red-700 disabled:from-gray-700 disabled:to-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm touch-manipulation min-h-[44px]"
+            className="w-full flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 active:from-pink-700 active:to-red-700 disabled:from-gray-700 disabled:to-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm touch-manipulation min-h-[44px]"
           >
             {isPublishing ? (
               <>
