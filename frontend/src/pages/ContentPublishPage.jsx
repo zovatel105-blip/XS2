@@ -351,6 +351,9 @@ const ContentPublishPage = () => {
             {/* Action Items - Mobile Optimized - Full width on mobile */}
             <div className="space-y-1 md:ml-0 md:mr-0" style={{ marginLeft: '-120px', marginRight: '-12px' }}>
 
+              {/* Separator line */}
+              <div className="border-t border-gray-800"></div>
+
               {/* Location */}
               <button 
                 className="w-full flex items-center justify-start md:justify-between py-3 px-5 md:px-2 hover:bg-gray-900 active:bg-gray-800 md:rounded-lg transition-colors group touch-manipulation min-h-[48px]"
