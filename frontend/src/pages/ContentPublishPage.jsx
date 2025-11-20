@@ -442,21 +442,83 @@ const ContentPublishPage = () => {
                 </div>
               </div>
 
-              {/* More options */}
-              <button 
-                className="w-full flex items-center justify-between py-3 px-5 md:px-2 hover:bg-gray-900 active:bg-gray-800 md:rounded-lg transition-colors group touch-manipulation min-h-[48px]"
-              >
-                <div className="flex items-center gap-2.5">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              {/* Mature content */}
+              <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <div className="flex flex-col items-start">
-                    <span className="text-gray-300 text-sm">More options</span>
-                    <span className="text-gray-500 text-xs">Content disclosure</span>
+                  <div className="flex flex-col">
+                    <span className="text-gray-300 text-sm">Mature content (Sensitive media)</span>
+                    <span className="text-gray-500 text-xs">Classify the sensitivity level</span>
                   </div>
                 </div>
-                <span className="text-gray-500 text-xl">›</span>
-              </button>
+                <div className="flex gap-2 pl-0 md:pl-8">
+                  <button
+                    onClick={() => setMatureContent('none')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors touch-manipulation ${
+                      matureContent === 'none'
+                        ? 'bg-[#00D9FF] text-white'
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}
+                  >
+                    None
+                  </button>
+                  <button
+                    onClick={() => setMatureContent('mild')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors touch-manipulation ${
+                      matureContent === 'mild'
+                        ? 'bg-yellow-500 text-white'
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}
+                  >
+                    Mild
+                  </button>
+                  <button
+                    onClick={() => setMatureContent('strong')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors touch-manipulation ${
+                      matureContent === 'strong'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}
+                  >
+                    Strong
+                  </button>
+                </div>
+                {matureContent === 'mild' && (
+                  <p className="text-xs text-gray-500 mt-2 pl-0 md:pl-8">Edits with blood, dark themes</p>
+                )}
+                {matureContent === 'strong' && (
+                  <p className="text-xs text-gray-500 mt-2 pl-0 md:pl-8">Fictional violence, disturbing content</p>
+                )}
+              </div>
+
+              {/* Allow downloads */}
+              <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <div className="flex flex-col">
+                      <span className="text-gray-300 text-sm">Allow downloads</span>
+                      <span className="text-gray-500 text-xs">Let others download the image or video</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setAllowDownloads(!allowDownloads)}
+                    className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
+                      allowDownloads ? 'bg-[#00D9FF]' : 'bg-gray-700'
+                    }`}
+                  >
+                    <div
+                      className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
+                        allowDownloads ? 'translate-x-5' : 'translate-x-0.5'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
 
               {/* Share to */}
               <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
