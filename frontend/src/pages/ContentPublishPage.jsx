@@ -31,6 +31,14 @@ const ContentPublishPage = () => {
   const [contentData, setContentData] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);  // ⚡ Upload progress
   const [uploadStatus, setUploadStatus] = useState('');  // ⚡ Upload status message
+  
+  // New states for modals and selections
+  const [showAudienceModal, setShowAudienceModal] = useState(false);
+  const [showAuthenticityModal, setShowAuthenticityModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [audienceTarget, setAudienceTarget] = useState('General audience');
+  const [sourceAuthenticity, setSourceAuthenticity] = useState('Original');
+  const [votingPrivacy, setVotingPrivacy] = useState('Público');
 
   // Redirect if not authenticated
   useEffect(() => {
