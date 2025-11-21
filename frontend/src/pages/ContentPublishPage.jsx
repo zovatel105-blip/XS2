@@ -185,7 +185,13 @@ const ContentPublishPage = () => {
         mentioned_users: [...new Set(allMentionedUsers)],
         video_playbook_settings: null,
         layout: contentData.layout,
-        comments_enabled: commentsEnabled
+        comments_enabled: commentsEnabled,
+        audience_target: audienceTarget,
+        source_authenticity: sourceAuthenticity,
+        voting_privacy: votingPrivacy,
+        mature_content: matureContent,
+        allow_downloads: allowDownloads,
+        show_vote_count: showVoteCount
       };
 
       console.log('📤 Creating poll with uploaded URLs:', pollData);
