@@ -2511,7 +2511,7 @@ const ProfilePage = () => {
             )}
             
             {/* Content Area */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto scrollbar-hide">
               {showFollowersModal ? (
                 // Followers Content
                 followersLoading ? (
