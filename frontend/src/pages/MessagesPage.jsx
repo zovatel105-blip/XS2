@@ -953,7 +953,7 @@ const MessagesPage = () => {
             </div>
 
             {/* Search Results */}
-            <div className="flex-1 overflow-y-auto px-4 pb-4">
+            <div className="flex-1 overflow-y-auto scrollbar-hide px-4 pb-4">
               {searchResults.length > 0 ? (
                 <div className="space-y-2">
                   {searchResults.map((user) => (
