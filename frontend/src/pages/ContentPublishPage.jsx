@@ -357,7 +357,9 @@ const ContentPublishPage = () => {
                 marginLeft: '-120px', 
                 marginRight: '-12px',
                 maxHeight: 'calc(100vh - 350px)',
-                overscrollBehavior: 'contain'
+                overscrollBehavior: 'contain',
+                scrollbarWidth: 'none', /* Firefox */
+                msOverflowStyle: 'none' /* IE and Edge */
               }}
             >
 
