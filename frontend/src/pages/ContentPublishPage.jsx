@@ -242,6 +242,9 @@ const ContentPublishPage = () => {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Inject CSS for hiding scrollbar */}
+      <style>{scrollableOptionsStyle}</style>
+      
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-black">
         <button
