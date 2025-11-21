@@ -350,8 +350,16 @@ const ContentPublishPage = () => {
               </div>
             </div>
 
-            {/* Action Items - Mobile Optimized - Full width on mobile */}
-            <div className="space-y-1 md:ml-0 md:mr-0" style={{ marginLeft: '-120px', marginRight: '-12px' }}>
+            {/* Action Items - Mobile Optimized - Full width on mobile - SCROLLABLE */}
+            <div 
+              className="space-y-1 md:ml-0 md:mr-0 overflow-y-auto" 
+              style={{ 
+                marginLeft: '-120px', 
+                marginRight: '-12px',
+                maxHeight: 'calc(100vh - 350px)',
+                overscrollBehavior: 'contain'
+              }}
+            >
 
               {/* Separator line */}
               <div className="border-t border-gray-800 mt-8 mb-3"></div>
