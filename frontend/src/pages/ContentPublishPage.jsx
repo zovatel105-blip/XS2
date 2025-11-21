@@ -636,6 +636,166 @@ const ContentPublishPage = () => {
         </div>
       </div>
 
+      {/* Audience Targeting Modal */}
+      {showAudienceModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowAudienceModal(false)}
+          />
+          <div className="relative bg-gray-900 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl max-h-[80vh] overflow-hidden">
+            <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-5 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-white text-lg font-semibold">Público objetivo</h3>
+                <button
+                  onClick={() => setShowAudienceModal(false)}
+                  className="p-1 hover:bg-gray-800 rounded-full transition-colors"
+                >
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-gray-400 text-sm mt-1">Selecciona la audiencia que mejor se adapte a tu contenido</p>
+            </div>
+            <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+              {['General audience', 'Anime fans', 'Gaming', 'Art & Edits', 'Movies & series', 'Photography'].map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setAudienceTarget(option);
+                    setShowAudienceModal(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
+                    audienceTarget === option
+                      ? 'bg-[#00D9FF] text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{option}</span>
+                    {audienceTarget === option && (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Source Authenticity Modal */}
+      {showAuthenticityModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowAuthenticityModal(false)}
+          />
+          <div className="relative bg-gray-900 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl max-h-[80vh] overflow-hidden">
+            <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-5 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-white text-lg font-semibold">Autenticidad del contenido</h3>
+                <button
+                  onClick={() => setShowAuthenticityModal(false)}
+                  className="p-1 hover:bg-gray-800 rounded-full transition-colors"
+                >
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-gray-400 text-sm mt-1">Indica la procedencia de tu contenido</p>
+            </div>
+            <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+              {['Original', 'Fan-made', 'Official', 'AI-generated', 'Mixed'].map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setSourceAuthenticity(option);
+                    setShowAuthenticityModal(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
+                    sourceAuthenticity === option
+                      ? 'bg-[#00D9FF] text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{option}</span>
+                    {sourceAuthenticity === option && (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Voting Privacy Modal */}
+      {showPrivacyModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowPrivacyModal(false)}
+          />
+          <div className="relative bg-gray-900 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl max-h-[80vh] overflow-hidden">
+            <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-5 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-white text-lg font-semibold">Privacidad de votos</h3>
+                <button
+                  onClick={() => setShowPrivacyModal(false)}
+                  className="p-1 hover:bg-gray-800 rounded-full transition-colors"
+                >
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-gray-400 text-sm mt-1">Define quién puede ver los votos de esta publicación</p>
+            </div>
+            <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+              {['Público', 'Solo seguidores', 'Privado'].map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setVotingPrivacy(option);
+                    setShowPrivacyModal(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
+                    votingPrivacy === option
+                      ? 'bg-[#00D9FF] text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-medium">{option}</span>
+                      <span className="text-xs text-gray-400 mt-0.5">
+                        {option === 'Público' && 'Todos pueden ver los votos'}
+                        {option === 'Solo seguidores' && 'Solo tus seguidores pueden ver los votos'}
+                        {option === 'Privado' && 'Solo tú puedes ver los votos'}
+                      </span>
+                    </div>
+                    {votingPrivacy === option && (
+                      <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
