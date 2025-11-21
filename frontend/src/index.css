@@ -69,6 +69,25 @@ code {
   display: none;  /* Chrome, Safari and Opera */
 }
 
+/* Hide scrollbars globally on mobile devices */
+@media (max-width: 768px) {
+  *::-webkit-scrollbar {
+    display: none;
+  }
+  
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Ensure smooth scrolling on iOS */
+  [class*="overflow-y"],
+  [class*="overflow-x"],
+  [class*="overflow-auto"] {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* Inter font import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
