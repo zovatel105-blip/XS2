@@ -6,6 +6,13 @@ import { useAuth } from '../contexts/AuthContext';
 import pollService from '../services/pollService';
 import uploadService from '../services/uploadService';  // ⚡ Import upload service
 
+// CSS para ocultar scrollbar
+const scrollableOptionsStyle = `
+  .scrollable-options::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const ContentPublishPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
