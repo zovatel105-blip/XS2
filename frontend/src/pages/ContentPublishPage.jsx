@@ -387,15 +387,19 @@ const ContentPublishPage = () => {
 
               {/* Audience Targeting */}
               <button 
-                className="w-full flex items-center justify-start md:justify-between py-3 px-5 md:px-2 hover:bg-gray-900 active:bg-gray-800 md:rounded-lg transition-colors group touch-manipulation min-h-[48px]"
+                onClick={() => setShowAudienceModal(true)}
+                className="w-full flex items-center justify-between py-3 px-5 md:px-2 hover:bg-gray-900 active:bg-gray-800 md:rounded-lg transition-colors group touch-manipulation min-h-[48px]"
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 flex-1 min-w-0">
                   <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  <span className="text-gray-300 text-sm">Público objetivo</span>
+                  <div className="flex flex-col items-start min-w-0 flex-1">
+                    <span className="text-gray-300 text-sm">Público objetivo</span>
+                    <span className="text-gray-500 text-xs truncate w-full">{audienceTarget}</span>
+                  </div>
                 </div>
-                <span className="text-gray-500 text-xl hidden md:inline">›</span>
+                <span className="text-gray-500 text-xl flex-shrink-0">›</span>
               </button>
 
               {/* Source Authenticity */}
