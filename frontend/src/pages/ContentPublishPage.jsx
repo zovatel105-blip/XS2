@@ -381,7 +381,7 @@ const ContentPublishPage = () => {
                         return (
                           <div className="grid grid-cols-2 grid-rows-2 h-full gap-0">
                             {contentData.options.slice(0, 4).map((option, index) => (
-                              <div key={index} className="relative">
+                              <div key={index} className="relative overflow-hidden">
                                 {renderMedia(option, index)}
                               </div>
                             ))}
