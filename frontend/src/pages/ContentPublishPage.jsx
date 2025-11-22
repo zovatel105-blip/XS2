@@ -288,6 +288,10 @@ const ContentPublishPage = () => {
               <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg w-full h-32 sm:h-36">
                 {contentData && contentData.options && contentData.options.length > 0 ? (
                   <div className="relative w-full h-full">
+                    {(() => {
+                      console.log('🎨 Preview rendering - Layout:', contentData.layout, 'Options:', contentData.options.length);
+                      return null;
+                    })()}
                     {/* Off (Carousel) - Show first slide with indicator */}
                     {contentData.layout === 'off' ? (
                       <div className="relative w-full h-full">
