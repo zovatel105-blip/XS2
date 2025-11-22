@@ -290,203 +290,138 @@ const ContentPublishPage = () => {
                   <div className="relative w-full h-full">
                     {(() => {
                       console.log('🎨 Preview rendering - Layout:', contentData.layout, 'Options:', contentData.options.length);
-                      return null;
+                      
+                      const renderMedia = (option, key = 0) => {
+                        if (!option) return null;
+                        return option.media_type?.startsWith('image') ? (
+                          <img 
+                            key={key}
+                            src={option.media_url} 
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <video 
+                            key={key}
+                            src={option.media_url}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                        );
+                      };
+
+                      // Off (Carousel) - Show first slide with indicator
+                      if (contentData.layout === 'off') {
+                        return (
+                          <div className="relative w-full h-full">
+                            {renderMedia(contentData.options[0])}
+                            {contentData.options.length > 1 && (
+                              <div className="absolute top-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[8px] text-white">
+                                1/{contentData.options.length}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+                      
+                      // Vertical (Lado a lado) - 2 columns
+                      if (contentData.layout === 'vertical') {
+                        return (
+                          <div className="flex h-full">
+                            {contentData.options.slice(0, 2).map((option, index) => (
+                              <div key={index} className="flex-1 relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Horizontal (Arriba y abajo) - 2 rows
+                      if (contentData.layout === 'horizontal') {
+                        return (
+                          <div className="flex flex-col h-full">
+                            {contentData.options.slice(0, 2).map((option, index) => (
+                              <div key={index} className="flex-1 relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Triptych Vertical - 3 columns
+                      if (contentData.layout === 'triptych-vertical') {
+                        return (
+                          <div className="flex h-full">
+                            {contentData.options.slice(0, 3).map((option, index) => (
+                              <div key={index} className="flex-1 relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Triptych Horizontal - 3 rows
+                      if (contentData.layout === 'triptych-horizontal') {
+                        return (
+                          <div className="flex flex-col h-full">
+                            {contentData.options.slice(0, 3).map((option, index) => (
+                              <div key={index} className="flex-1 relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Grid 2x2 - 4 items
+                      if (contentData.layout === 'grid-2x2') {
+                        return (
+                          <div className="grid grid-cols-2 grid-rows-2 h-full gap-0">
+                            {contentData.options.slice(0, 4).map((option, index) => (
+                              <div key={index} className="relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Grid 3x2 - 6 items in 3 columns, 2 rows
+                      if (contentData.layout === 'grid-3x2') {
+                        return (
+                          <div className="grid grid-cols-3 grid-rows-2 h-full gap-0">
+                            {contentData.options.slice(0, 6).map((option, index) => (
+                              <div key={index} className="relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Grid 2x3 (horizontal-3x2) - 6 items in 2 columns, 3 rows
+                      if (contentData.layout === 'horizontal-3x2') {
+                        return (
+                          <div className="grid grid-cols-2 grid-rows-3 h-full gap-0">
+                            {contentData.options.slice(0, 6).map((option, index) => (
+                              <div key={index} className="relative">
+                                {renderMedia(option, index)}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      
+                      // Default fallback - Show first image
+                      return (
+                        <div className="relative w-full h-full">
+                          {renderMedia(contentData.options[0])}
+                        </div>
+                      );
                     })()}
-                    {/* Off (Carousel) - Show first slide with indicator */}
-                    {contentData.layout === 'off' ? (
-                      <div className="relative w-full h-full">
-                        {contentData.options[0].media_type?.startsWith('image') ? (
-                          <img 
-                            src={contentData.options[0].media_url} 
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <video 
-                            src={contentData.options[0].media_url}
-                            className="w-full h-full object-cover"
-                            muted
-                          />
-                        )}
-                        {contentData.options.length > 1 && (
-                          <div className="absolute top-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[8px] text-white">
-                            1/{contentData.options.length}
-                          </div>
-                        )}
-                      </div>
-                    )
-                    /* Vertical (Lado a lado) - 2 columns */
-                    : contentData.layout === 'vertical' && contentData.options.length >= 2 ? (
-                      <div className="flex h-full">
-                        {contentData.options.slice(0, 2).map((option, index) => (
-                          <div key={index} className="flex-1 relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Horizontal (Arriba y abajo) - 2 rows */
-                    : contentData.layout === 'horizontal' && contentData.options.length >= 2 ? (
-                      <div className="flex flex-col h-full">
-                        {contentData.options.slice(0, 2).map((option, index) => (
-                          <div key={index} className="flex-1 relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Triptych Vertical - 3 columns */
-                    : contentData.layout === 'triptych-vertical' && contentData.options.length >= 3 ? (
-                      <div className="flex h-full">
-                        {contentData.options.slice(0, 3).map((option, index) => (
-                          <div key={index} className="flex-1 relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Triptych Horizontal - 3 rows */
-                    : contentData.layout === 'triptych-horizontal' && contentData.options.length >= 3 ? (
-                      <div className="flex flex-col h-full">
-                        {contentData.options.slice(0, 3).map((option, index) => (
-                          <div key={index} className="flex-1 relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Grid 2x2 - 4 items */
-                    : contentData.layout === 'grid-2x2' && contentData.options.length >= 4 ? (
-                      <div className="grid grid-cols-2 grid-rows-2 h-full">
-                        {contentData.options.slice(0, 4).map((option, index) => (
-                          <div key={index} className="relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Grid 3x2 - 6 items in 3 columns, 2 rows */
-                    : contentData.layout === 'grid-3x2' && contentData.options.length >= 6 ? (
-                      <div className="grid grid-cols-3 grid-rows-2 h-full">
-                        {contentData.options.slice(0, 6).map((option, index) => (
-                          <div key={index} className="relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Grid 2x3 (horizontal-3x2) - 6 items in 2 columns, 3 rows */
-                    : contentData.layout === 'horizontal-3x2' && contentData.options.length >= 6 ? (
-                      <div className="grid grid-cols-2 grid-rows-3 h-full">
-                        {contentData.options.slice(0, 6).map((option, index) => (
-                          <div key={index} className="relative">
-                            {option.media_type?.startsWith('image') ? (
-                              <img 
-                                src={option.media_url} 
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <video 
-                                src={option.media_url}
-                                className="w-full h-full object-cover"
-                                muted
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )
-                    /* Default fallback - Show first image */
-                    : (
-                      <div className="relative w-full h-full">
-                        {contentData.options[0].media_type?.startsWith('image') ? (
-                          <img 
-                            src={contentData.options[0].media_url} 
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <video 
-                            src={contentData.options[0].media_url}
-                            className="w-full h-full object-cover"
-                            muted
-                          />
-                        )}
-                      </div>
-                    )}
                     
                     {/* Edit cover overlay */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
