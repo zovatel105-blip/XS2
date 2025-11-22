@@ -56,6 +56,11 @@ const ContentPublishPage = () => {
       navigate('/content-creation');
       return;
     }
+    console.log('📦 ContentPublishPage - Received contentData:', {
+      layout: data.layout,
+      optionsCount: data.options?.length,
+      data: data
+    });
     setContentData(data);
   }, [location.state, navigate]);
 
