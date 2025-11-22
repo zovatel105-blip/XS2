@@ -342,7 +342,7 @@ const ContentPublishPage = () => {
                         return (
                           <div className="flex flex-col h-full">
                             {contentData.options.slice(0, 2).map((option, index) => (
-                              <div key={index} className="flex-1 relative">
+                              <div key={index} className="flex-1 relative overflow-hidden">
                                 {renderMedia(option, index)}
                               </div>
                             ))}
