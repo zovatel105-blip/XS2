@@ -1171,6 +1171,57 @@ El sistema de chat está completamente listo para producción con nomenclatura p
 
 **7. CONTROLES FUNCIONALES:**
 - ✅ **Navegación horizontal**: Scroll fluido entre slots con mouse/touch
+
+**🎨 PREVIEW DE LAYOUTS HORIZONTALES CORREGIDO EN CONTENTPUBLISHPAGE (2025-01-27): Los layouts de 2 y 3 secciones horizontales ahora se muestran correctamente en el preview.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó que los layouts horizontales (2 filas y 3 filas) no se adaptaban correctamente al marco del preview en ContentPublishPage
+- En ContentCreationPage se veían bien, pero al pasar a ContentPublishPage el preview no mostraba las secciones correctamente
+- Las imágenes/videos no respetaban las dimensiones de cada fila
+
+✅ **CAUSA RAÍZ:**
+- Los contenedores de cada fila/columna no tenían `overflow-hidden`
+- Sin overflow-hidden, las imágenes con `object-cover` no se ajustaban correctamente a sus contenedores
+- Esto causaba que las proporciones no se respetaran y el preview se viera distorsionado
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**LAYOUTS CORREGIDOS:**
+1. ✅ **Layout Horizontal (2 filas)**: Agregado `overflow-hidden` a cada fila
+2. ✅ **Layout Triptych Horizontal (3 filas)**: Agregado `overflow-hidden` a cada fila
+3. ✅ **Layout Vertical (2 columnas)**: Agregado `overflow-hidden` a cada columna
+4. ✅ **Layout Triptych Vertical (3 columnas)**: Agregado `overflow-hidden` a cada columna
+5. ✅ **Grid 2x2**: Agregado `overflow-hidden` a cada celda
+6. ✅ **Grid 3x2**: Agregado `overflow-hidden` a cada celda
+7. ✅ **Grid 2x3**: Agregado `overflow-hidden` a cada celda
+
+**CAMBIO TÉCNICO:**
+```jsx
+// ANTES:
+<div key={index} className="flex-1 relative">
+  {renderMedia(option, index)}
+</div>
+
+// DESPUÉS:
+<div key={index} className="flex-1 relative overflow-hidden">
+  {renderMedia(option, index)}
+</div>
+```
+
+✅ **ARCHIVO MODIFICADO:**
+- `/app/frontend/src/pages/ContentPublishPage.jsx` (líneas 332, 345, 358, 371, 384, 397, 410)
+
+✅ **FUNCIONALIDADES CORREGIDAS:**
+- ✅ Layout horizontal (2 filas) se muestra correctamente en el preview
+- ✅ Layout triptych-horizontal (3 filas) se muestra correctamente en el preview
+- ✅ Todos los layouts mantienen proporciones correctas
+- ✅ Las imágenes/videos se ajustan perfectamente a sus contenedores
+- ✅ El preview coincide exactamente con lo que se ve en ContentCreationPage
+
+✅ **RESULTADO FINAL:**
+🎯 **PREVIEW DE LAYOUTS HORIZONTALES COMPLETAMENTE CORREGIDO** - Los usuarios ahora ven un preview exacto y preciso de sus publicaciones en ContentPublishPage. Los layouts de 2 secciones horizontales (2 filas) y 3 secciones horizontales (3 filas) se adaptan perfectamente al marco del preview, mostrando exactamente lo mismo que se ve durante la creación.
+
+
 - ✅ **Crop y edición**: Sistema `InlineCrop` funciona correctamente en layout horizontal
 - ✅ **Upload de media**: Funcionalidad completa de subida de imágenes/videos por slot
 - ✅ **Controles de texto**: Descripción y menciones por slot individuales
