@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
+import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../lib/utils';
 
 const VotersModal = ({ isOpen, onClose, pollId }) => {
@@ -16,6 +17,7 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
   const modalRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user: currentUser } = useAuth();
 
   // Detectar si es móvil
   useEffect(() => {
