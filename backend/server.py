@@ -6258,7 +6258,10 @@ async def create_poll(
         mentioned_users=mentioned_users_data,  # Include resolved mentioned users
         layout=poll.layout,  # ✅ FIXED: Include layout field in response
         created_at=poll.created_at,
-        time_ago=calculate_time_ago(poll.created_at)
+        time_ago=calculate_time_ago(poll.created_at),
+        # Post settings
+        comments_enabled=poll.comments_enabled,
+        show_vote_count=poll.show_vote_count
     )
 
 @api_router.post("/polls/{poll_id}/vote")
