@@ -203,56 +203,41 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
               )} />
             </div>
 
-            {/* Header con título y stats juntos */}
-            <div className="bg-white px-4 sm:px-6 py-4 flex-shrink-0">
+            {/* Header con título y stats */}
+            <div className="bg-white px-4 sm:px-6 pb-4 flex-shrink-0">
               {/* Título centrado */}
-              <h2 className={cn(
-                "font-semibold text-gray-900 text-center mb-4",
-                isMobile ? "text-base" : "text-lg"
-              )}>
-                Votos y reproducciones
-              </h2>
+              <div className="py-4 border-b border-gray-200">
+                <h2 className={cn(
+                  "font-semibold text-gray-900 text-center",
+                  isMobile ? "text-base" : "text-lg"
+                )}>
+                  Me gusta y reproducciones
+                </h2>
+              </div>
 
               {/* Stats */}
-              <div className="flex items-center justify-center gap-6 sm:gap-8">
+              <div className="flex items-center justify-center gap-8 sm:gap-12 pt-4">
                 <div className="flex items-center gap-2">
                   <Users className={cn(
-                    "text-pink-600",
-                    isMobile ? "w-4 h-4" : "w-5 h-5"
+                    "text-gray-900",
+                    isMobile ? "w-5 h-5" : "w-6 h-6"
                   )} />
                   <span className={cn(
-                    "text-gray-600",
-                    isMobile ? "text-xs" : "text-sm"
-                  )}>
-                    Votos
-                  </span>
-                  <span className={cn(
-                    "font-bold text-gray-900",
-                    isMobile ? "text-xl" : "text-2xl"
+                    "font-normal text-gray-900",
+                    isMobile ? "text-lg" : "text-xl"
                   )}>
                     {totalVotes.toLocaleString()}
                   </span>
                 </div>
                 
-                <div className={cn(
-                  "bg-gray-300",
-                  isMobile ? "w-px h-6" : "w-px h-8"
-                )} />
-                
                 <div className="flex items-center gap-2">
                   <Eye className={cn(
-                    "text-blue-600",
-                    isMobile ? "w-4 h-4" : "w-5 h-5"
+                    "text-gray-900",
+                    isMobile ? "w-5 h-5" : "w-6 h-6"
                   )} />
                   <span className={cn(
-                    "text-gray-600",
-                    isMobile ? "text-xs" : "text-sm"
-                  )}>
-                    Reproducciones
-                  </span>
-                  <span className={cn(
-                    "font-bold text-gray-900",
-                    isMobile ? "text-xl" : "text-2xl"
+                    "font-normal text-gray-900",
+                    isMobile ? "text-lg" : "text-xl"
                   )}>
                     {views.toLocaleString()}
                   </span>
