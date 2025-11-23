@@ -5461,7 +5461,10 @@ async def get_ultra_fast_feed(
                     "layout": poll_data.get("layout"),
                     "music": poll_data.get("music"),
                     "userVote": None,  # Simplified - no user vote lookup for speed
-                    "userLiked": False  # Simplified - no user like lookup for speed
+                    "userLiked": False,  # Simplified - no user like lookup for speed
+                    # Post settings - Include from database
+                    "comments_enabled": poll_data.get("comments_enabled", True),
+                    "show_vote_count": poll_data.get("show_vote_count", True)
                 }
                 result.append(poll_response)
         
