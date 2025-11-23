@@ -5277,7 +5277,10 @@ async def get_polls(
             mentioned_users=mentioned_users_data,  # Include resolved mentioned users
             layout=poll_data.get("layout"),  # Include layout configuration
             created_at=poll_data["created_at"],
-            time_ago=calculate_time_ago(poll_data["created_at"])
+            time_ago=calculate_time_ago(poll_data["created_at"]),
+            # Post settings
+            comments_enabled=poll_data.get("comments_enabled", True),
+            show_vote_count=poll_data.get("show_vote_count", True)
         )
         result.append(poll_response)
     
