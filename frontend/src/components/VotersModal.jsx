@@ -296,27 +296,9 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                     Aún no hay votos en esta publicación
                   </p>
                 </div>
-              ) : filteredVoters.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 px-6">
-                  <div className={cn(
-                    "bg-gray-100 rounded-full flex items-center justify-center mb-3",
-                    isMobile ? "w-12 h-12" : "w-16 h-16"
-                  )}>
-                    <Search className={cn(
-                      "text-gray-400",
-                      isMobile ? "w-6 h-6" : "w-8 h-8"
-                    )} />
-                  </div>
-                  <p className={cn(
-                    "text-gray-500 text-center",
-                    isMobile ? "text-xs" : "text-sm"
-                  )}>
-                    No se encontraron resultados para "{searchQuery}"
-                  </p>
-                </div>
               ) : (
                 <div className="px-4 sm:px-6 pb-2">
-                  {filteredVoters.map((voter) => (
+                  {voters.map((voter) => (
                     <div
                       key={voter.id}
                       className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0"
