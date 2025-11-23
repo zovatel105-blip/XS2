@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for Sounds Search Functionality
-Testing the search for "sounds" in the backend as requested in the review.
+Backend Testing Suite for View Tracking System
+Testing the new poll view tracking system that registers EACH visualization, not just unique users.
 """
 
 import asyncio
 import aiohttp
 import json
 import os
+import uuid
+import time
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 # Configuration
 BACKEND_URL = "https://impression-log.preview.emergentagent.com/api"
