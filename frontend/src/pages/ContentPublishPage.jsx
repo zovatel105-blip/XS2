@@ -588,12 +588,12 @@ const ContentPublishPage = () => {
                   <button
                     onClick={() => setShowVoteCount(!showVoteCount)}
                     className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
-                      showVoteCount ? 'bg-gray-700' : 'bg-[#00D9FF]'
+                      showVoteCount ? 'bg-[#00D9FF]' : 'bg-gray-700'
                     }`}
                   >
                     <div
                       className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                        showVoteCount ? 'translate-x-0.5' : 'translate-x-5'
+                        showVoteCount ? 'translate-x-5' : 'translate-x-0.5'
                       }`}
                     />
                   </button>
