@@ -14,6 +14,7 @@ import VotersModal from './VotersModal';
 import { useFollow } from '../contexts/FollowContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useShare } from '../hooks/useShare';
+import { useViewTracking } from '../hooks/useViewTracking';
 import { cn } from '../lib/utils';
 import AppConfig from '../config/config';
 import { ChevronUp, ChevronDown, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, CheckCircle, User, Home, Search, Plus, Mail, Trophy, Share2, Music, X } from 'lucide-react';
