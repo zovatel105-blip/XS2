@@ -6152,7 +6152,15 @@ async def create_poll(
         category=poll_data.category,
         mentioned_users=valid_mentioned_users,  # Only save validated user IDs
         video_playback_settings=poll_data.video_playback_settings,
-        layout=poll_data.layout  # Include layout configuration
+        layout=poll_data.layout,  # Include layout configuration
+        # Post settings from frontend
+        comments_enabled=poll_data.comments_enabled,
+        show_vote_count=poll_data.show_vote_count,
+        audience_target=poll_data.audience_target,
+        source_authenticity=poll_data.source_authenticity,
+        voting_privacy=poll_data.voting_privacy,
+        mature_content=poll_data.mature_content,
+        allow_downloads=poll_data.allow_downloads
     )
     
     # Insert into database
