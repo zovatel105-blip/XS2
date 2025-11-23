@@ -209,7 +209,7 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                 "font-semibold text-gray-900 text-center",
                 isMobile ? "text-base" : "text-lg"
               )}>
-                Me gusta y reproducciones
+                Votos y reproducciones
               </h2>
             </div>
 
