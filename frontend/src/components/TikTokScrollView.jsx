@@ -678,11 +678,14 @@ const TikTokPollCard = ({
              paddingLeft: 'max(1rem, env(safe-area-inset-left))',
              paddingRight: 'max(1rem, env(safe-area-inset-right))'
            }}>
-        <div className="mb-4">
-          <p className="text-white/90 font-semibold text-base">
-            {formatNumber(poll.totalVotes)} votos
-          </p>
-        </div>
+        {/* Solo mostrar votos si show_vote_count es true (o por defecto si no existe) */}
+        {(poll.show_vote_count !== false && poll.showVoteCount !== false) && (
+          <div className="mb-4">
+            <p className="text-white/90 font-semibold text-base">
+              {formatNumber(poll.totalVotes)} votos
+            </p>
+          </div>
+        )}
 
         <div className="flex items-center justify-between gap-4">
           {/* Social buttons - Left side when no music, or right side when music present */}
