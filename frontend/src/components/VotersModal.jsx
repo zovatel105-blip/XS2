@@ -263,26 +263,6 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
               </div>
             </div>
 
-            {/* Barra de búsqueda */}
-            <div className="px-4 sm:px-6 pb-4 bg-white flex-shrink-0">
-              <div className="relative">
-                <Search className={cn(
-                  "absolute text-gray-400 pointer-events-none",
-                  isMobile ? "left-3 top-2.5 w-4 h-4" : "left-3 top-3 w-5 h-5"
-                )} />
-                <input
-                  type="text"
-                  placeholder="Buscar"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={cn(
-                    "w-full bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500",
-                    isMobile ? "pl-10 pr-4 py-2 text-sm" : "pl-10 pr-4 py-2.5 text-base"
-                  )}
-                />
-              </div>
-            </div>
-
             {/* Voters list */}
             <div className="flex-1 overflow-y-auto">
               {loading ? (
