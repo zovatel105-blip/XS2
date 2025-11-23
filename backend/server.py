@@ -6584,7 +6584,10 @@ async def get_poll_by_id(
         mentioned_users=poll.get("mentioned_users", []),  # Include mentioned users
         layout=poll.get("layout"),  # ✅ CRITICAL FIX: Include layout field for LayoutRenderer
         created_at=poll["created_at"],
-        time_ago=calculate_time_ago(poll["created_at"])
+        time_ago=calculate_time_ago(poll["created_at"]),
+        # Post settings
+        comments_enabled=poll.get("comments_enabled", True),
+        show_vote_count=poll.get("show_vote_count", True)
     )
 
 # =============  USER AUDIO ENDPOINTS =============
