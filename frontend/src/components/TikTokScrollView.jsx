@@ -997,6 +997,13 @@ const TikTokPollCard = ({
         commentsEnabled={poll.comments_enabled !== false && poll.commentsEnabled !== false}
       />
 
+      {/* Modal de votantes */}
+      <VotersModal
+        isOpen={showVotersModal}
+        onClose={() => setShowVotersModal(false)}
+        pollId={poll.id}
+      />
+
       {/* Modal de compartir */}
       <ShareModal
         isOpen={shareModal.isOpen}
