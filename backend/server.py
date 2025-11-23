@@ -199,6 +199,30 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     
     return UserResponse(**user_data)
 
+
+async def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False))
+) -> Optional[UserResponse]:
+    """Get current authenticated user, returns None if not authenticated"""
+    if not credentials:
+        return None
+    
+    try:
+        token = credentials.credentials
+        payload = verify_token(token)
+        if not payload:
+            return None
+        
+        # Get user from database
+        user_data = await db.users.find_one({"id": payload["sub"]})
+        if not user_data:
+            return None
+        
+        return UserResponse(**user_data)
+    except Exception:
+        return None
+
+
 # =============  SECURITY UTILITIES =============
 
 async def track_login_attempt(email: str, ip_address: str, user_agent: str, success: bool, failure_reason: Optional[str] = None):
