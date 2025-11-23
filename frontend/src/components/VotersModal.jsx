@@ -218,7 +218,7 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
               {/* Stats */}
               <div className="flex items-center justify-center gap-8 sm:gap-12 pt-4">
                 <div className="flex items-center gap-2">
-                  <Heart className={cn(
+                  <ThumbsUp className={cn(
                     "text-gray-900",
                     isMobile ? "w-5 h-5" : "w-6 h-6"
                   )} />
