@@ -442,7 +442,9 @@ const TikTokVotingCard = ({
             <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
               <MessageCircle className="w-6 h-6" />
             </div>
-            <span className="text-xs font-semibold">{poll.comments > 999 ? `${(poll.comments/1000).toFixed(1)}K` : poll.comments}</span>
+            {(poll.comments_enabled !== false && poll.commentsEnabled !== false) && (
+              <span className="text-xs font-semibold">{poll.comments > 999 ? `${(poll.comments/1000).toFixed(1)}K` : poll.comments}</span>
+            )}
           </motion.button>
           
           <motion.button
