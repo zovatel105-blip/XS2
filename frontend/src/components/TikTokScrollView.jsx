@@ -994,6 +994,7 @@ const TikTokPollCard = ({
         pollId={poll.id}
         pollTitle={poll.title}
         pollAuthor={poll.author?.display_name || poll.author?.username || 'Usuario'}
+        commentsEnabled={poll.comments_enabled !== false && poll.commentsEnabled !== false}
       />
 
       {/* Modal de compartir */}
