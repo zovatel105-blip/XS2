@@ -310,8 +310,8 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                               console.log('Avatar loaded successfully for:', voter.username);
                             }}
                           />
-                          <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white font-semibold">
-                            {voter.display_name?.charAt(0)?.toUpperCase() || 'U'}
+                          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 flex items-center justify-center">
+                            <User className={cn(isMobile ? "w-5 h-5" : "w-6 h-6")} />
                           </AvatarFallback>
                         </Avatar>
                         
