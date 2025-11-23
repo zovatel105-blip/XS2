@@ -716,20 +716,12 @@ const TikTokPollCard = ({
               onClick={(e) => {
                 e.stopPropagation();
                 
-                // Verificar si los comentarios están deshabilitados
-                const commentsDisabled = poll.comments_enabled === false || poll.commentsEnabled === false;
+                // Siempre abrir el modal de comentarios
+                setShowCommentsModal(true);
                 
-                if (commentsDisabled) {
-                  // Mostrar mensaje de que los comentarios están deshabilitados
-                  toast({
-                    title: "Comentarios deshabilitados",
-                    description: "El autor ha deshabilitado los comentarios en esta publicación.",
-                    variant: "default",
-                  });
-                } else {
-                  // Abrir modal de comentarios normalmente
-                  setShowCommentsModal(true);
-                  // Marcar como comentado cuando abre el modal
+                // Solo marcar como comentado si los comentarios están habilitados
+                const commentsEnabled = poll.comments_enabled !== false && poll.commentsEnabled !== false;
+                if (commentsEnabled) {
                   setCommentedPolls(prev => {
                     const newSet = new Set(prev);
                     newSet.add(poll.id);
