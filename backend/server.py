@@ -6590,6 +6590,7 @@ async def share_poll(
     }
 
 @api_router.post("/polls/{poll_id}/view")
+@api_router.post("/polls/{poll_id}/view")
 async def register_poll_view(
     poll_id: str,
     request: Request,
