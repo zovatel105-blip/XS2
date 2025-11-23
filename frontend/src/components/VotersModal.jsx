@@ -31,11 +31,47 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Cargar votantes cuando el modal se abre
   useEffect(() => {
     if (isOpen && pollId) {
       loadVoters();
+      setSearchQuery(''); // Reset search on open
     }
   }, [isOpen, pollId]);
+
+  // Manejar escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevenir scroll del body
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  // Filtrar votantes según búsqueda
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredVoters(voters);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = voters.filter(voter => 
+        voter.display_name?.toLowerCase().includes(query) ||
+        voter.username?.toLowerCase().includes(query)
+      );
+      setFilteredVoters(filtered);
+    }
+  }, [searchQuery, voters]);
 
   const loadVoters = async () => {
     setLoading(true);
