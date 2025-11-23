@@ -354,6 +354,76 @@ Feed Post Layout (Posts PROPIOS):
 **RESULTADO FINAL:**
 🎯 **BOTÓN SEGUIR OCULTO CORRECTAMENTE** - El botón de seguir ya no aparece cuando el votante es el mismo usuario que está viendo el modal. Esto previene la confusión de intentar seguirse a sí mismo y mejora la experiencia de usuario.
 
+---
+
+**📊 SISTEMA DE REPRODUCCIONES DINÁMICO IMPLEMENTADO (2025-01-27): Las reproducciones ahora se calculan dinámicamente basándose en interacciones reales y el ícono cambió de "ojo" a "play".**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó: "El número de votos cambia perfectamente pero las visitas no porque"
+- El campo `views` en el poll era estático y nunca se actualizaba
+- El término "vistas" (ojo) no era apropiado para videos
+- Usuario sugirió: "Como hay publicaciones de vídeos también debería ser reproducciones tanto para imagen como video"
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**BACKEND - Cálculo Dinámico de Reproducciones:**
+```python
+# Calcular reproducciones desde interacciones reales
+views_set = set()
+
+# Agregar votantes
+for vote in all_votes:
+    if vote.get("user_id"):
+        views_set.add(vote.get("user_id"))
+
+# Agregar comentadores
+comments = await db.comments.find({"poll_id": poll_id}).to_list(length=None)
+for comment in comments:
+    if comment.get("user_id"):
+        views_set.add(comment.get("user_id"))
+
+# Agregar usuarios que dieron like
+likes = await db.poll_likes.find({"poll_id": poll_id}).to_list(length=None)
+for like in likes:
+    if like.get("user_id"):
+        views_set.add(like.get("user_id"))
+
+# Agregar usuarios que compartieron
+shares = await db.poll_shares.find({"poll_id": poll_id}).to_list(length=None)
+for share in shares:
+    if share.get("user_id"):
+        views_set.add(share.get("user_id"))
+
+# Total de reproducciones únicas
+views = len(views_set)
+```
+
+**FRONTEND - Cambio de Ícono:**
+- **ANTES**: Ícono `Eye` (ojo) - concepto de "vistas"
+- **DESPUÉS**: Ícono `Play` (reproducción) - concepto de "reproducciones"
+- **Grosor**: Mantenido strokeWidth={1.5} para consistencia
+
+**CAMBIOS IMPLEMENTADOS:**
+1. ✅ **Backend dinámico**: Las reproducciones se calculan sumando usuarios únicos que interactuaron
+2. ✅ **Interacciones contadas**: Votos + Comentarios + Likes + Compartidos
+3. ✅ **Usuarios únicos**: Se usa Set para evitar duplicados
+4. ✅ **Fallback**: Si no hay interacciones, usa el campo views del poll
+5. ✅ **Ícono actualizado**: Cambiado de Eye a Play en el frontend
+6. ✅ **Término universal**: "Reproducciones" aplica tanto para videos como imágenes
+
+**BENEFICIOS:**
+- ✅ **Datos reales**: Las reproducciones reflejan interacciones reales
+- ✅ **Actualización automática**: Se recalcula cada vez que se abre el modal
+- ✅ **Precisión**: Cuenta solo usuarios únicos que interactuaron
+- ✅ **Término apropiado**: "Reproducciones" funciona para todo tipo de contenido
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/backend/server.py` (líneas 6508-6546): Lógica de cálculo dinámico
+- `/app/frontend/src/components/VotersModal.jsx` (líneas 3, 238-250): Cambio de ícono Eye → Play
+
+**RESULTADO FINAL:**
+🎯 **REPRODUCCIONES DINÁMICAS Y PRECISAS** - El sistema ahora muestra reproducciones reales basadas en interacciones del usuario (votos, comentarios, likes, compartidos). El número se actualiza automáticamente y el ícono de "play" es más apropiado para una plataforma de contenido multimedia que incluye videos e imágenes.
+
 
 **🎵 NAVEGACIÓN A AUDIODETAILPAGE DESDE CARRUSEL IMPLEMENTADA (2025-01-27): Al hacer clic en el reproductor de audio en un carrusel con audio original, ahora navega correctamente a la información del audio del slide actual.**
 
