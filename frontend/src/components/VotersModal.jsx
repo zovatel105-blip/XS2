@@ -1,18 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Eye, Users, Loader2 } from 'lucide-react';
+import { Eye, Users, Loader2, Search } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
+import { cn } from '../lib/utils';
 
 const VotersModal = ({ isOpen, onClose, pollId }) => {
   const [voters, setVoters] = useState([]);
+  const [filteredVoters, setFilteredVoters] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [totalVotes, setTotalVotes] = useState(0);
   const [views, setViews] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const modalRef = useRef(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Detectar si es móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (isOpen && pollId) {
