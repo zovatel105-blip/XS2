@@ -382,73 +382,93 @@ class ViewTrackingTester:
                 "error": str(e)
             })
     
-    async def test_frontend_compatibility(self):
-        """Test that search results are compatible with frontend expectations"""
-        print("\n🎨 Testing Frontend Compatibility...")
+    async def test_voters_endpoint_view_count(self):
+        """FASE 2.1: Test that voters endpoint returns correct view count"""
+        print("\n📊 Testing Voters Endpoint View Count...")
+        
+        if not self.test_poll_id:
+            print("❌ No valid poll ID available for testing")
+            self.test_results.append({
+                "test": "voters_endpoint_view_count",
+                "status": "SKIP",
+                "error": "No valid poll ID"
+            })
+            return
         
         try:
+            # First, register some views to ensure we have data
+            print("🔄 Registering 5 views for testing...")
+            for i in range(5):
+                await self.session.post(
+                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
+                    headers=self.get_auth_headers()
+                )
+                await asyncio.sleep(0.1)
+            
+            # Now test the voters endpoint
             async with self.session.get(
-                f"{BACKEND_URL}/search/universal",
-                params={"q": "poll", "limit": 5},
+                f"{BACKEND_URL}/polls/{self.test_poll_id}/voters",
                 headers=self.get_auth_headers()
             ) as response:
                 
                 if response.status == 200:
                     data = await response.json()
-                    results = data.get("results", [])
                     
-                    post_results = [r for r in results if r.get("type") == "post"]
+                    # Check required fields
+                    required_fields = ["poll_id", "voters", "total_votes", "views"]
+                    missing_fields = [field for field in required_fields if field not in data]
                     
-                    if post_results:
-                        print(f"✅ Testing frontend compatibility with {len(post_results)} poll results")
+                    if not missing_fields:
+                        views_count = data.get("views")
+                        total_votes = data.get("total_votes")
+                        voters = data.get("voters", [])
                         
-                        compatible_count = 0
-                        for result in post_results:
-                            # Test the exact logic from SearchPage.jsx line 979-981
-                            frontend_image = (
-                                result.get("image_url") or 
-                                result.get("thumbnail_url") or 
-                                (result.get("images", [{}])[0].get("url") if result.get("images") else None) or
-                                result.get("media_url")
-                            )
+                        print(f"✅ Voters endpoint returned valid data")
+                        print(f"   📊 Views: {views_count}")
+                        print(f"   🗳️  Total votes: {total_votes}")
+                        print(f"   👥 Voters: {len(voters)}")
+                        
+                        # Verify that views count is from poll_views collection (should be >= 5)
+                        if views_count >= 5:
+                            print(f"✅ Views count reflects poll_views collection data")
                             
-                            if frontend_image:
-                                compatible_count += 1
-                                print(f"  ✅ Poll {result.get('id', 'unknown')}: Frontend will show image")
-                            else:
-                                print(f"  ❌ Poll {result.get('id', 'unknown')}: Frontend will show placeholder")
-                        
-                        compatibility_rate = (compatible_count / len(post_results)) * 100
-                        print(f"🎯 Frontend Compatibility: {compatible_count}/{len(post_results)} ({compatibility_rate:.1f}%)")
-                        
-                        self.test_results.append({
-                            "test": "frontend_compatibility",
-                            "status": "PASS" if compatibility_rate >= 50 else "PARTIAL",
-                            "compatibility_rate": compatibility_rate,
-                            "compatible_polls": compatible_count,
-                            "total_polls": len(post_results),
-                            "details": f"{compatibility_rate:.1f}% of polls have images compatible with frontend"
-                        })
+                            self.test_results.append({
+                                "test": "voters_endpoint_view_count",
+                                "status": "PASS",
+                                "views_count": views_count,
+                                "total_votes": total_votes,
+                                "voters_count": len(voters),
+                                "details": f"Voters endpoint correctly returns views from poll_views collection. Views: {views_count}, Votes: {total_votes}"
+                            })
+                        else:
+                            print(f"❌ Views count ({views_count}) doesn't reflect registered views")
+                            
+                            self.test_results.append({
+                                "test": "voters_endpoint_view_count",
+                                "status": "FAIL",
+                                "views_count": views_count,
+                                "error": f"Views count ({views_count}) less than expected (5+)"
+                            })
                     else:
-                        print("⚠️  No poll results found for compatibility testing")
+                        print(f"❌ Response missing required fields: {missing_fields}")
                         self.test_results.append({
-                            "test": "frontend_compatibility",
-                            "status": "SKIP",
-                            "details": "No poll results available for testing"
+                            "test": "voters_endpoint_view_count",
+                            "status": "FAIL",
+                            "error": f"Missing fields: {missing_fields}"
                         })
                 else:
                     error_text = await response.text()
-                    print(f"❌ Compatibility test failed: {response.status} - {error_text}")
+                    print(f"❌ Voters endpoint failed: {response.status} - {error_text}")
                     self.test_results.append({
-                        "test": "frontend_compatibility",
+                        "test": "voters_endpoint_view_count",
                         "status": "FAIL",
                         "error": f"HTTP {response.status}: {error_text}"
                     })
                     
         except Exception as e:
-            print(f"❌ Frontend compatibility test error: {str(e)}")
+            print(f"❌ Error testing voters endpoint: {str(e)}")
             self.test_results.append({
-                "test": "frontend_compatibility",
+                "test": "voters_endpoint_view_count",
                 "status": "ERROR",
                 "error": str(e)
             })
