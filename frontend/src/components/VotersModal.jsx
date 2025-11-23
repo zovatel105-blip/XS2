@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, Users, Loader2, Search } from 'lucide-react';
+import { Eye, Users, Loader2 } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +9,6 @@ import { cn } from '../lib/utils';
 
 const VotersModal = ({ isOpen, onClose, pollId }) => {
   const [voters, setVoters] = useState([]);
-  const [filteredVoters, setFilteredVoters] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [totalVotes, setTotalVotes] = useState(0);
   const [views, setViews] = useState(0);
