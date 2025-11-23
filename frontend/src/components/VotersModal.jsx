@@ -298,7 +298,18 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                             navigate(`/profile/${voter.username}`);
                           }}
                         >
-                          <AvatarImage src={voter.avatar_url} alt={voter.display_name} />
+                          <AvatarImage 
+                            src={voter.avatar_url} 
+                            alt={voter.display_name}
+                            crossOrigin="anonymous"
+                            onError={(e) => {
+                              console.log('Avatar load error for:', voter.username, voter.avatar_url);
+                              e.target.style.display = 'none';
+                            }}
+                            onLoad={(e) => {
+                              console.log('Avatar loaded successfully for:', voter.username);
+                            }}
+                          />
                           <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white font-semibold">
                             {voter.display_name?.charAt(0)?.toUpperCase() || 'U'}
                           </AvatarFallback>
