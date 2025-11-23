@@ -1311,6 +1311,22 @@ El sistema de chat está completamente listo para producción con nomenclatura p
 
 ✅ **ARCHIVOS MODIFICADOS:**
 - `/app/backend/models.py` (líneas 456-462, 473-479)
+
+**📝 TEXTO "HIDE" CAMBIADO A "SHOW" EN CONTENTPUBLISHPAGE (2025-01-27): Mejorada la claridad de la opción de conteo de votos.**
+
+✅ **CAMBIO IMPLEMENTADO:**
+- Cambiado texto de "Hide vote count" a "Show vote count"
+- Actualizado texto descriptivo de "Only you can see..." a "Everyone can see the total number of votes"
+- Mantenido el mismo ícono (ojo tachado)
+- Mejora de UX: ahora el texto indica la acción positiva en lugar de negativa
+
+✅ **ARCHIVO MODIFICADO:**
+- `/app/frontend/src/pages/ContentPublishPage.jsx` (líneas 567, 575, 576)
+
+✅ **RESULTADO:**
+🎯 **TEXTO MÁS CLARO Y COMPRENSIBLE** - Los usuarios ahora ven "Show vote count" que es más intuitivo que "Hide vote count", manteniendo el mismo ícono visual.
+
+
 - `/app/backend/server.py` (líneas 6155-6162)
 - `/app/frontend/src/components/TikTokScrollView.jsx` (líneas 682-687, 713-735)
 
