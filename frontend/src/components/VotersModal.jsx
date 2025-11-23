@@ -355,18 +355,21 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                         </div>
                       </div>
 
-                      <Button
-                        onClick={() => handleFollowToggle(voter.id, voter.is_following)}
-                        className={cn(
-                          "ml-3 rounded-full font-semibold transition-all flex-shrink-0",
-                          isMobile ? "px-4 py-1 text-xs" : "px-6 py-1.5 text-sm",
-                          voter.is_following
-                            ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                            : 'bg-blue-600 text-white hover:bg-blue-700'
-                        )}
-                      >
-                        {voter.is_following ? 'Siguiendo' : 'Seguir'}
-                      </Button>
+                      {/* Solo mostrar botón de seguir si NO es el usuario actual */}
+                      {currentUser && voter.id !== currentUser.id && (
+                        <Button
+                          onClick={() => handleFollowToggle(voter.id, voter.is_following)}
+                          className={cn(
+                            "ml-3 rounded-full font-semibold transition-all flex-shrink-0",
+                            isMobile ? "px-4 py-1 text-xs" : "px-6 py-1.5 text-sm",
+                            voter.is_following
+                              ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                              : 'bg-blue-600 text-white hover:bg-blue-700'
+                          )}
+                        >
+                          {voter.is_following ? 'Siguiendo' : 'Seguir'}
+                        </Button>
+                      )}
                     </div>
                   ))}
                 </div>
