@@ -266,7 +266,7 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                     "bg-gray-100 rounded-full flex items-center justify-center mb-3",
                     isMobile ? "w-12 h-12" : "w-16 h-16"
                   )}>
-                    <Users className={cn(
+                    <Heart className={cn(
                       "text-gray-400",
                       isMobile ? "w-6 h-6" : "w-8 h-8"
                     )} />
