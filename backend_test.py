@@ -95,90 +95,72 @@ class ViewTrackingTester:
             print(f"❌ Error getting poll ID: {str(e)}")
             return None
     
-    async def test_sounds_search_functionality(self):
-        """Test sounds search functionality with filter=sounds"""
-        print("\n🎵 Testing Sounds Search Functionality...")
+    async def test_authenticated_user_view_registration(self):
+        """FASE 1.1: Test authenticated user registering views"""
+        print("\n👤 Testing Authenticated User View Registration...")
         
-        # Test the specific endpoint mentioned in the review
-        test_queries = [
-            "test",
-            "music", 
-            "audio",
-            "sound",
-            "song",
-            ""  # Empty query to see if there are any sounds at all
-        ]
+        if not self.test_poll_id:
+            print("❌ No valid poll ID available for testing")
+            self.test_results.append({
+                "test": "authenticated_view_registration",
+                "status": "SKIP",
+                "error": "No valid poll ID"
+            })
+            return
         
-        all_results = []
-        
-        for query in test_queries:
-            print(f"\n🔍 Testing sounds search with query: '{query}'")
-            
-            try:
-                # Test the exact endpoint from the review: GET /api/search?q=test&filter=sounds&sort_by=relevance&limit=10
-                params = {
-                    "q": query,
-                    "filter": "sounds",
-                    "sort_by": "relevance", 
-                    "limit": 10
-                }
+        try:
+            # Register a view as authenticated user
+            async with self.session.post(
+                f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
+                headers=self.get_auth_headers()
+            ) as response:
                 
-                async with self.session.get(
-                    f"{BACKEND_URL}/search",
-                    params=params,
-                    headers=self.get_auth_headers()
-                ) as response:
+                if response.status == 200:
+                    data = await response.json()
                     
-                    if response.status == 200:
-                        data = await response.json()
-                        results = data.get("results", [])
-                        
-                        print(f"✅ Search successful - Found {len(results)} results")
-                        
-                        # Filter for sound results
-                        sound_results = [r for r in results if r.get("type") == "sound"]
-                        print(f"🎵 Found {len(sound_results)} sound results")
-                        
-                        # Check required fields for each sound
-                        valid_sounds = 0
-                        for result in sound_results:
-                            is_valid = self.check_sound_result_fields(result, query)
-                            if is_valid:
-                                valid_sounds += 1
-                                all_results.append({
-                                    "query": query,
-                                    "result": result
-                                })
-                        
-                        print(f"✅ Valid sounds: {valid_sounds}/{len(sound_results)}")
+                    # Verify response structure
+                    required_fields = ["success", "poll_id", "total_views", "message"]
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if not missing_fields:
+                        print(f"✅ View registered successfully")
+                        print(f"   📊 Total views: {data.get('total_views')}")
+                        print(f"   📝 Message: {data.get('message')}")
+                        print(f"   🆔 Poll ID: {data.get('poll_id')}")
                         
                         self.test_results.append({
-                            "test": f"sounds_search_{query if query else 'empty'}",
-                            "status": "PASS" if len(sound_results) > 0 or query == "" else "PARTIAL",
-                            "total_results": len(results),
-                            "sound_results": len(sound_results),
-                            "valid_sounds": valid_sounds,
-                            "details": f"Query '{query}' returned {len(results)} results, {len(sound_results)} sounds, {valid_sounds} valid"
+                            "test": "authenticated_view_registration",
+                            "status": "PASS",
+                            "total_views": data.get('total_views'),
+                            "details": f"Successfully registered view for authenticated user. Total views: {data.get('total_views')}"
                         })
                         
+                        return data.get('total_views')
                     else:
-                        error_text = await response.text()
-                        print(f"❌ Search failed: {response.status} - {error_text}")
+                        print(f"❌ Response missing required fields: {missing_fields}")
                         self.test_results.append({
-                            "test": f"sounds_search_{query if query else 'empty'}",
+                            "test": "authenticated_view_registration",
                             "status": "FAIL",
-                            "error": f"HTTP {response.status}: {error_text}"
+                            "error": f"Missing fields: {missing_fields}"
                         })
-                        
-            except Exception as e:
-                print(f"❌ Search error for '{query}': {str(e)}")
-                self.test_results.append({
-                    "test": f"sounds_search_{query if query else 'empty'}",
-                    "status": "ERROR",
-                    "error": str(e)
-                })
+                else:
+                    error_text = await response.text()
+                    print(f"❌ View registration failed: {response.status} - {error_text}")
+                    self.test_results.append({
+                        "test": "authenticated_view_registration",
+                        "status": "FAIL",
+                        "error": f"HTTP {response.status}: {error_text}"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error registering authenticated view: {str(e)}")
+            self.test_results.append({
+                "test": "authenticated_view_registration",
+                "status": "ERROR",
+                "error": str(e)
+            })
         
-        return all_results
+        return None
     
     def check_sound_result_fields(self, result: Dict[str, Any], query: str) -> bool:
         """Check if sound result has the expected fields for frontend"""
