@@ -220,10 +220,13 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
               {/* Stats */}
               <div className="flex items-center justify-center gap-8 sm:gap-12 pt-4">
                 <div className="flex items-center gap-2">
-                  <Vote className={cn(
-                    "text-gray-900",
-                    isMobile ? "w-5 h-5" : "w-6 h-6"
-                  )} />
+                  <Vote 
+                    className={cn(
+                      "text-gray-900",
+                      isMobile ? "w-5 h-5" : "w-6 h-6"
+                    )}
+                    strokeWidth={1.5}
+                  />
                   <span className={cn(
                     "font-normal text-gray-900",
                     isMobile ? "text-lg" : "text-xl"
@@ -233,10 +236,13 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Eye className={cn(
-                    "text-gray-900",
-                    isMobile ? "w-5 h-5" : "w-6 h-6"
-                  )} />
+                  <Eye 
+                    className={cn(
+                      "text-gray-900",
+                      isMobile ? "w-5 h-5" : "w-6 h-6"
+                    )}
+                    strokeWidth={1.5}
+                  />
                   <span className={cn(
                     "font-normal text-gray-900",
                     isMobile ? "text-lg" : "text-xl"
