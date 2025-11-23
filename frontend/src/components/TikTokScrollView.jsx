@@ -748,7 +748,9 @@ const TikTokPollCard = ({
               }`}
             >
               <MessageCircle className={`w-5 h-5 ${commentedPolls.has(poll.id) || poll.userCommented ? 'fill-current' : ''}`} />
-              <span className="font-medium text-sm">{formatNumber(poll.comments)}</span>
+              {(poll.comments_enabled !== false && poll.commentsEnabled !== false) && (
+                <span className="font-medium text-sm">{formatNumber(poll.comments)}</span>
+              )}
             </Button>
 
             <Button
