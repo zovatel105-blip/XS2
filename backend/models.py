@@ -517,6 +517,9 @@ class PollResponse(BaseModel):
     layout: Optional[str] = None  # Layout configuration
     created_at: datetime
     time_ago: str  # Campo calculado como "hace 2 horas"
+    # Post settings
+    comments_enabled: bool = True  # Allow comments on this post
+    show_vote_count: bool = True  # Show vote count to users
 
 class Vote(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
