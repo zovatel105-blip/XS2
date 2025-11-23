@@ -7,7 +7,10 @@ import {
   Globe, 
   Lock, 
   Trash2, 
-  X 
+  X,
+  MessageCircle,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import '../styles/PostManagement.css';
 import { Button } from './ui/button';
