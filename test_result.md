@@ -289,6 +289,32 @@ Feed Post Layout (Posts PROPIOS):
 **RESULTADO FINAL:**
 🎯 **AVATAR CONSISTENTE EN VOTERSMODAL** - Los avatares en VotersModal ahora muestran un ícono de usuario profesional cuando no hay imagen disponible, manteniendo consistencia visual con el resto de la aplicación (ProfilePage). El diseño es más limpio y profesional.
 
+---
+
+**📊 ICONOS FINOS EN VOTERSMODAL (2025-01-27): Los iconos de votos y vistas ahora tienen un grosor más fino y elegante.**
+
+✅ **CAMBIO SOLICITADO:**
+- Usuario solicitó: "Los iconos con el número deben ser finos"
+- Los iconos de Vote y Eye tenían grosor por defecto (2px)
+- Necesitaban ser más delgados para un diseño más elegante
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**ICONOS AJUSTADOS:**
+1. ✅ **Ícono Vote**: Agregado `strokeWidth={1.5}` para grosor fino
+2. ✅ **Ícono Eye**: Agregado `strokeWidth={1.5}` para grosor fino
+3. ✅ **Consistencia**: Ambos iconos mantienen el mismo grosor de línea
+
+**COMPARACIÓN:**
+- **Antes**: strokeWidth por defecto (2px) - iconos más gruesos
+- **Después**: strokeWidth={1.5} - iconos más finos y elegantes
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/VotersModal.jsx` (líneas 223-248)
+
+**RESULTADO FINAL:**
+🎯 **ICONOS FINOS Y ELEGANTES** - Los iconos de estadísticas (votos y vistas) ahora tienen un grosor de línea más fino (1.5px), creando una apariencia más ligera y moderna que complementa mejor los números de estadísticas.
+
 
 **🎵 NAVEGACIÓN A AUDIODETAILPAGE DESDE CARRUSEL IMPLEMENTADA (2025-01-27): Al hacer clic en el reproductor de audio en un carrusel con audio original, ahora navega correctamente a la información del audio del slide actual.**
 
