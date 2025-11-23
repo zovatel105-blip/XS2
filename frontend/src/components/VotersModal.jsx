@@ -208,10 +208,10 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
               {/* Título centrado */}
               <div className="py-4 border-b border-gray-200">
                 <h2 className={cn(
-                  "font-semibold text-gray-900 text-center",
+                  "font-semibold text-gray-900 text-center leading-tight",
                   isMobile ? "text-base" : "text-lg"
                 )}>
-                  Me gusta y reproducciones
+                  Me gusta y<br />reproducciones
                 </h2>
               </div>
 
