@@ -683,9 +683,15 @@ const TikTokPollCard = ({
         {/* Solo mostrar votos si show_vote_count es true (o por defecto si no existe) */}
         {(poll.show_vote_count !== false && poll.showVoteCount !== false) && (
           <div className="mb-4">
-            <p className="text-white/90 font-semibold text-base">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowVotersModal(true);
+              }}
+              className="text-white/90 font-semibold text-base hover:text-white transition-colors cursor-pointer"
+            >
               {formatNumber(poll.totalVotes)} votos
-            </p>
+            </button>
           </div>
         )}
 
