@@ -72,6 +72,8 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Voters data loaded:', data.voters?.length, 'voters');
+        console.log('Sample voter:', data.voters?.[0]);
         setVoters(data.voters || []);
         setTotalVotes(data.total_votes || 0);
         setViews(data.views || 0);
