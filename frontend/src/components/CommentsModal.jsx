@@ -10,7 +10,8 @@ const CommentsModal = ({
   onClose, 
   pollId, 
   pollTitle = "Comentarios",
-  pollAuthor = null 
+  pollAuthor = null,
+  commentsEnabled = true
 }) => {
   const modalRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
