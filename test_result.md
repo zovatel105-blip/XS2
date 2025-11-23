@@ -315,6 +315,45 @@ Feed Post Layout (Posts PROPIOS):
 **RESULTADO FINAL:**
 🎯 **ICONOS FINOS Y ELEGANTES** - Los iconos de estadísticas (votos y vistas) ahora tienen un grosor de línea más fino (1.5px), creando una apariencia más ligera y moderna que complementa mejor los números de estadísticas.
 
+---
+
+**🚫 BOTÓN SEGUIR OCULTO PARA USUARIO ACTUAL EN VOTERSMODAL (2025-01-27): El botón de seguir ahora no aparece cuando el votante es el usuario propietario de la publicación.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó: "Porque aparece el botón de seguir si soy el propietario de la publicación"
+- El botón "Seguir" aparecía para todos los votantes, incluyendo el usuario actual
+- No tiene sentido que un usuario pueda seguirse a sí mismo
+- Faltaba validación para ocultar el botón en este caso
+
+✅ **SOLUCIÓN IMPLEMENTADA:**
+
+**VALIDACIÓN AGREGADA:**
+```jsx
+{/* Solo mostrar botón de seguir si NO es el usuario actual */}
+{currentUser && voter.id !== currentUser.id && (
+  <Button>
+    {voter.is_following ? 'Siguiendo' : 'Seguir'}
+  </Button>
+)}
+```
+
+**CAMBIOS IMPLEMENTADOS:**
+1. ✅ **Importación de AuthContext**: Agregado `useAuth` para obtener el usuario actual
+2. ✅ **Obtención de currentUser**: Extraído `user` del contexto de autenticación
+3. ✅ **Validación condicional**: El botón solo se renderiza si `voter.id !== currentUser.id`
+4. ✅ **Comportamiento esperado**: Si el votante eres tú, no se muestra el botón
+
+**CASOS DE USO:**
+- **Votante es otro usuario**: Muestra botón "Seguir" o "Siguiendo" ✅
+- **Votante es el usuario actual**: NO muestra botón (oculto) ✅
+- **Sin sesión**: No se muestra botón (validación `currentUser &&`) ✅
+
+**ARCHIVOS MODIFICADOS:**
+- `/app/frontend/src/components/VotersModal.jsx` (líneas 8, 19, 356-368)
+
+**RESULTADO FINAL:**
+🎯 **BOTÓN SEGUIR OCULTO CORRECTAMENTE** - El botón de seguir ya no aparece cuando el votante es el mismo usuario que está viendo el modal. Esto previene la confusión de intentar seguirse a sí mismo y mejora la experiencia de usuario.
+
 
 **🎵 NAVEGACIÓN A AUDIODETAILPAGE DESDE CARRUSEL IMPLEMENTADA (2025-01-27): Al hacer clic en el reproductor de audio en un carrusel con audio original, ahora navega correctamente a la información del audio del slide actual.**
 
