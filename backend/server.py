@@ -5427,11 +5427,11 @@ async def get_ultra_fast_feed(
         
         # Get polls with simple sort (fast and reliable)
         if algorithm == "trending":
-            sort_criteria = {"likes_count": -1, "created_at": -1}
+            sort_criteria = [("likes_count", -1), ("created_at", -1)]
         elif algorithm == "recent": 
-            sort_criteria = {"created_at": -1}
+            sort_criteria = [("created_at", -1)]
         else:  # for_you default
-            sort_criteria = {"total_votes": -1, "created_at": -1}
+            sort_criteria = [("total_votes", -1), ("created_at", -1)]
         
         # Execute fast query
         polls_cursor = db.polls.find(filter_query).sort(sort_criteria).skip(offset).limit(limit)
