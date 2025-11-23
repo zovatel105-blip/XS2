@@ -238,7 +238,7 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Eye 
+                  <Play 
                     className={cn(
                       "text-gray-900",
                       isMobile ? "w-5 h-5" : "w-6 h-6"
