@@ -130,6 +130,7 @@ const TikTokPollCard = ({
 }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [showVotersModal, setShowVotersModal] = useState(false);
   const [audioContextActivated, setAudioContextActivated] = useState(false);
   
   // Carousel state for multiple options
