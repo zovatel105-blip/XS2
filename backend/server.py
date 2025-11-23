@@ -6509,8 +6509,39 @@ async def get_poll_voters(
     all_votes = await db.votes.find({"poll_id": poll_id}).to_list(length=None)
     unique_voters = len(set(v.get("user_id") for v in all_votes if v.get("user_id")))
     
-    # Get poll views/plays count
-    views = poll.get("views", 0)
+    # Calculate views dynamically from actual engagement
+    # Views = unique users who interacted (voted, commented, liked, shared)
+    views_set = set()
+    
+    # Add voters
+    for vote in all_votes:
+        if vote.get("user_id"):
+            views_set.add(vote.get("user_id"))
+    
+    # Add commenters
+    comments = await db.comments.find({"poll_id": poll_id}).to_list(length=None)
+    for comment in comments:
+        if comment.get("user_id"):
+            views_set.add(comment.get("user_id"))
+    
+    # Add likers
+    likes = await db.poll_likes.find({"poll_id": poll_id}).to_list(length=None)
+    for like in likes:
+        if like.get("user_id"):
+            views_set.add(like.get("user_id"))
+    
+    # Add sharers
+    shares = await db.poll_shares.find({"poll_id": poll_id}).to_list(length=None)
+    for share in shares:
+        if share.get("user_id"):
+            views_set.add(share.get("user_id"))
+    
+    # Total unique views from actual engagement
+    views = len(views_set)
+    
+    # If no engagement yet, use poll's views field or default to 0
+    if views == 0:
+        views = poll.get("views", 0)
     
     return {
         "poll_id": poll_id,
