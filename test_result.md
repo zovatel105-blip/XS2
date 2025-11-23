@@ -1240,6 +1240,90 @@ El sistema de chat está completamente listo para producción con nomenclatura p
 🎯 **HEADER LIMPIO Y MINIMALISTA** - El header de ContentPublishPage ahora tiene un diseño más simple y elegante sin el título "New post", manteniendo solo el botón funcional de navegación hacia atrás.
 
 
+**⚙️ CONFIGURACIONES DE PUBLICACIÓN IMPLEMENTADAS (2025-01-27): Las opciones de "Permitir comentarios" y "Mostrar votos" ahora funcionan correctamente.**
+
+✅ **PROBLEMA IDENTIFICADO:**
+- Usuario reportó que las opciones de configuración en ContentPublishPage no funcionaban
+- Al desactivar "Permitir comentarios", el botón de comentarios seguía apareciendo
+- Al activar "Ocultar votos", los votos se seguían mostrando
+- Los campos no estaban definidos en el modelo del backend
+- El frontend no verificaba estos campos al renderizar
+
+✅ **CAMPOS IMPLEMENTADOS:**
+1. **comments_enabled**: Controla si se permiten comentarios en la publicación
+2. **show_vote_count**: Controla si se muestra el conteo de votos
+3. **audience_target**: Audiencia objetivo de la publicación
+4. **source_authenticity**: Autenticidad de la fuente del contenido
+5. **voting_privacy**: Configuración de privacidad de votación
+6. **mature_content**: Clasificación de contenido maduro
+7. **allow_downloads**: Permite descargas del contenido
+
+✅ **CAMBIOS EN BACKEND:**
+
+**MODELOS ACTUALIZADOS** (`/app/backend/models.py`):
+- ✅ Agregados 7 nuevos campos al modelo `Poll` (líneas 456-462)
+- ✅ Agregados 7 nuevos campos al modelo `PollCreate` (líneas 473-479)
+- ✅ Valores por defecto configurados correctamente
+
+**ENDPOINT DE CREACIÓN** (`/app/backend/server.py`):
+- ✅ Actualizado `create_poll` para guardar todos los nuevos campos (líneas 6155-6162)
+- ✅ Datos se almacenan correctamente en MongoDB
+
+✅ **CAMBIOS EN FRONTEND:**
+
+**TikTokScrollView.jsx** (`/app/frontend/src/components/TikTokScrollView.jsx`):
+- ✅ Conteo de votos solo se muestra si `show_vote_count !== false` (líneas 682-687)
+- ✅ Botón de comentarios solo se renderiza si `comments_enabled !== false` (líneas 713-735)
+- ✅ Soporte para ambos formatos: snake_case y camelCase
+- ✅ Por defecto muestra votos y comentarios si el campo no existe (retrocompatibilidad)
+
+✅ **LÓGICA IMPLEMENTADA:**
+
+**Mostrar Votos:**
+```jsx
+{(poll.show_vote_count !== false && poll.showVoteCount !== false) && (
+  <div className="mb-4">
+    <p className="text-white/90 font-semibold text-base">
+      {formatNumber(poll.totalVotes)} votos
+    </p>
+  </div>
+)}
+```
+
+**Mostrar Comentarios:**
+```jsx
+{(poll.comments_enabled !== false && poll.commentsEnabled !== false) && (
+  <Button onClick={() => setShowCommentsModal(true)}>
+    <MessageCircle />
+    <span>{formatNumber(poll.comments)}</span>
+  </Button>
+)}
+```
+
+✅ **FLUJO COMPLETO:**
+1. Usuario crea publicación en ContentCreationPage
+2. Usuario configura opciones en ContentPublishPage (comentarios, votos, etc.)
+3. Datos se envían al backend con todos los campos configurados
+4. Backend guarda configuraciones en MongoDB
+5. Frontend lee configuraciones y renderiza condicionalmente:
+   - Oculta votos si `show_vote_count = false`
+   - Oculta botón de comentarios si `comments_enabled = false`
+
+✅ **ARCHIVOS MODIFICADOS:**
+- `/app/backend/models.py` (líneas 456-462, 473-479)
+- `/app/backend/server.py` (líneas 6155-6162)
+- `/app/frontend/src/components/TikTokScrollView.jsx` (líneas 682-687, 713-735)
+
+✅ **RESULTADO FINAL:**
+🎯 **CONFIGURACIONES DE PUBLICACIÓN COMPLETAMENTE FUNCIONALES** - Los usuarios ahora tienen control total sobre sus publicaciones:
+- ✅ Pueden ocultar el conteo de votos
+- ✅ Pueden desactivar los comentarios
+- ✅ Las configuraciones se guardan correctamente en el backend
+- ✅ El frontend respeta las configuraciones al mostrar las publicaciones
+- ✅ Retrocompatibilidad con publicaciones antiguas (muestra votos y comentarios por defecto)
+
+
+
 
 
 - ✅ **Crop y edición**: Sistema `InlineCrop` funciona correctamente en layout horizontal
