@@ -146,15 +146,9 @@ const CommentsModal = ({
             <div className="flex-1 flex flex-col overflow-hidden">
               {!commentsEnabled ? (
                 // Mensaje cuando los comentarios están deshabilitados
-                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-                  <div className="bg-gray-100 rounded-full p-4 mb-4">
-                    <MessageCircle className="w-12 h-12 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Comentarios deshabilitados
-                  </h3>
-                  <p className="text-gray-600 max-w-sm">
-                    El autor de esta publicación ha deshabilitado los comentarios.
+                <div className="flex-1 flex items-center justify-center p-8">
+                  <p className="text-gray-500 text-center text-base">
+                    Este creador desactivó los comentarios
                   </p>
                 </div>
               ) : (
