@@ -20,11 +20,12 @@ TEST_CREDENTIALS = {
     "password": "demo123"
 }
 
-class BackendTester:
+class ViewTrackingTester:
     def __init__(self):
         self.session = None
         self.auth_token = None
         self.test_results = []
+        self.test_poll_id = None
         
     async def setup(self):
         """Initialize HTTP session and authenticate"""
@@ -49,7 +50,8 @@ class BackendTester:
                 if response.status == 200:
                     data = await response.json()
                     self.auth_token = data.get("access_token")
-                    print(f"✅ Authentication successful")
+                    user_data = data.get("user", {})
+                    print(f"✅ Authentication successful - User: {user_data.get('username', 'Unknown')}")
                     return True
                 else:
                     error_text = await response.text()
@@ -64,6 +66,34 @@ class BackendTester:
         if not self.auth_token:
             return {}
         return {"Authorization": f"Bearer {self.auth_token}"}
+    
+    async def get_valid_poll_id(self) -> Optional[str]:
+        """Get a valid poll ID from the feed for testing"""
+        print("🔍 Getting valid poll ID from feed...")
+        
+        try:
+            async with self.session.get(
+                f"{BACKEND_URL}/polls",
+                headers=self.get_auth_headers()
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    polls = data.get("polls", [])
+                    if polls:
+                        poll_id = polls[0].get("id")
+                        poll_title = polls[0].get("title", "Unknown")
+                        print(f"✅ Found poll ID: {poll_id} - '{poll_title}'")
+                        return poll_id
+                    else:
+                        print("❌ No polls found in feed")
+                        return None
+                else:
+                    error_text = await response.text()
+                    print(f"❌ Failed to get polls: {response.status} - {error_text}")
+                    return None
+        except Exception as e:
+            print(f"❌ Error getting poll ID: {str(e)}")
+            return None
     
     async def test_sounds_search_functionality(self):
         """Test sounds search functionality with filter=sounds"""
