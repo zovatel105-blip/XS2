@@ -6452,6 +6452,62 @@ async def toggle_poll_like(
             "likes": updated_poll["likes"]
         }
 
+
+@api_router.get("/polls/{poll_id}/likes")
+async def get_poll_likers(
+    poll_id: str,
+    limit: int = 50,
+    skip: int = 0,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Get list of users who liked a poll"""
+    
+    # Check if poll exists
+    poll = await db.polls.find_one({"id": poll_id, "is_active": True})
+    if not poll:
+        raise HTTPException(status_code=404, detail="Poll not found")
+    
+    # Get likes with user info
+    likes_cursor = db.poll_likes.find({"poll_id": poll_id}).sort("created_at", -1).skip(skip).limit(limit)
+    likes = await likes_cursor.to_list(length=limit)
+    
+    # Get user info for each like
+    likers = []
+    for like in likes:
+        user_id = like.get("user_id")
+        if user_id:
+            user = await db.users.find_one({"id": user_id})
+            if user:
+                # Check if current user follows this liker
+                is_following = await db.follows.find_one({
+                    "follower_id": current_user.id,
+                    "following_id": user_id
+                }) is not None
+                
+                likers.append({
+                    "id": user.get("id"),
+                    "username": user.get("username"),
+                    "display_name": user.get("display_name", user.get("username")),
+                    "avatar_url": user.get("avatar_url"),
+                    "is_verified": user.get("is_verified", False),
+                    "is_following": is_following,
+                    "liked_at": like.get("created_at")
+                })
+    
+    # Get total likes count
+    total_likes = await db.poll_likes.count_documents({"poll_id": poll_id})
+    
+    # Get poll views/plays count
+    views = poll.get("views", 0)
+    
+    return {
+        "poll_id": poll_id,
+        "likers": likers,
+        "total_likes": total_likes,
+        "views": views,
+        "has_more": (skip + len(likers)) < total_likes
+    }
+
 @api_router.post("/polls/{poll_id}/share")
 async def share_poll(
     poll_id: str,
