@@ -545,23 +545,30 @@ const ContentPublishPage = () => {
               </button>
 
               {/* Allow comments */}
-              <div className="w-full flex items-center justify-between py-3 px-5 md:px-2 min-h-[48px]">
-                <div className="flex items-center gap-2.5">
-                  <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-300 text-sm">Allow comments</span>
-                </div>
-                <button
-                  onClick={() => setCommentsEnabled(!commentsEnabled)}
-                  className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation ${
-                    commentsEnabled ? 'bg-[#00D9FF]' : 'bg-gray-700'
-                  }`}
-                >
-                  <div
-                    className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                      commentsEnabled ? 'translate-x-5' : 'translate-x-0.5'
+              <div className="w-full py-3 px-5 md:px-2 min-h-[48px]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <MessageCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    <div className="flex flex-col">
+                      <span className="text-gray-300 text-sm">Allow comments</span>
+                      <span className="text-gray-500 text-xs">
+                        {commentsEnabled ? 'Puede comentar y ver comentarios' : 'No puede comentar; comentarios ocultos'}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setCommentsEnabled(!commentsEnabled)}
+                    className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
+                      commentsEnabled ? 'bg-[#00D9FF]' : 'bg-gray-700'
                     }`}
-                  />
-                </button>
+                  >
+                    <div
+                      className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
+                        commentsEnabled ? 'translate-x-5' : 'translate-x-0.5'
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
 
               {/* Show vote count */}
