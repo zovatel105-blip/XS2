@@ -150,6 +150,9 @@ const TikTokPollCard = ({
   const [authorStoriesData, setAuthorStoriesData] = useState(null);
   const [showAuthorStoryViewer, setShowAuthorStoryViewer] = useState(false);
   
+  // 👁️ View tracking - Registra vista después de 2 segundos si el poll está activo y visible
+  useViewTracking(poll.id, isActive && isVisible);
+  
   // Touch handlers for carousel navigation
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientX);
