@@ -473,6 +473,14 @@ class PollCreate(BaseModel):
     mentioned_users: List[str] = []  # List of user IDs mentioned in the poll
     video_playback_settings: Optional[dict] = None  # Video playback configuration
     layout: Optional[str] = None  # Layout configuration (e.g., 'grid-3x2', 'vertical', etc.)
+    # Post settings
+    comments_enabled: bool = True  # Allow comments on this post
+    show_vote_count: bool = True  # Show vote count to users
+    audience_target: Optional[str] = None  # Target audience
+    source_authenticity: Optional[str] = None  # Content source authenticity
+    voting_privacy: Optional[str] = None  # Voting privacy setting
+    mature_content: Optional[str] = None  # Mature content rating
+    allow_downloads: bool = True  # Allow users to download content
     
     @validator('layout')
     def validate_layout(cls, v):
