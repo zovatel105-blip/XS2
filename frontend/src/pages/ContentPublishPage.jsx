@@ -580,7 +580,9 @@ const ContentPublishPage = () => {
                     </svg>
                     <div className="flex flex-col">
                       <span className="text-gray-300 text-sm">Show vote count</span>
-                      <span className="text-gray-500 text-xs">Everyone can see the total number of votes</span>
+                      <span className="text-gray-500 text-xs">
+                        {showVoteCount ? 'Ve números de votos' : 'No ve números'}
+                      </span>
                     </div>
                   </div>
                   <button
