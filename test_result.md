@@ -1326,6 +1326,38 @@ El sistema de chat está completamente listo para producción con nomenclatura p
 ✅ **RESULTADO:**
 🎯 **TEXTO MÁS CLARO Y COMPRENSIBLE** - Los usuarios ahora ven "Show vote count" que es más intuitivo que "Hide vote count", manteniendo el mismo ícono visual.
 
+**📋 TEXTOS DESCRIPTIVOS MEJORADOS EN CONFIGURACIONES (2025-01-27): Los textos ahora explican claramente qué hace cada opción según su estado.**
+
+✅ **CAMBIOS IMPLEMENTADOS:**
+
+**Allow Comments:**
+- **ON**: "Puede comentar y ver comentarios"
+- **OFF**: "No puede comentar; comentarios ocultos"
+- Texto dinámico que cambia según el estado del toggle
+
+**Show Vote Count:**
+- **ON**: "Ve números de votos"
+- **OFF**: "No ve números"
+- Texto dinámico que cambia según el estado del toggle
+
+✅ **MEJORAS DE UX:**
+- Textos descriptivos más claros y concisos
+- Indica exactamente qué puede y no puede hacer el usuario
+- Feedback visual inmediato al cambiar el estado
+- Estructura consistente con dos líneas: título + descripción dinámica
+
+✅ **ARCHIVO MODIFICADO:**
+- `/app/frontend/src/pages/ContentPublishPage.jsx` (líneas 547-595)
+
+✅ **RESULTADO:**
+🎯 **TEXTOS DESCRIPTIVOS CLAROS Y DINÁMICOS** - Los usuarios ahora comprenden perfectamente qué hace cada configuración:
+- Allow Comments ON → "Puede comentar y ver comentarios"
+- Allow Comments OFF → "No puede comentar; comentarios ocultos"
+- Show Vote Count ON → "Ve números de votos"
+- Show Vote Count OFF → "No ve números"
+
+
+
 
 - `/app/backend/server.py` (líneas 6155-6162)
 - `/app/frontend/src/components/TikTokScrollView.jsx` (líneas 682-687, 713-735)
