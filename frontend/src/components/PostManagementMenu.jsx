@@ -345,6 +345,53 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
                 {/* Separador */}
                 <div className="my-2 border-t border-gray-100" />
 
+                {/* Permitir/Deshabilitar comentarios */}
+                <button
+                  onClick={() => {
+                    handleToggleComments();
+                    handleSetIsOpen(false);
+                  }}
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
+                >
+                  <MessageCircle className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  <div className="flex flex-col">
+                    <div className="text-gray-900 text-base font-medium">
+                      {poll.comments_enabled || poll.commentsEnabled ? 'Deshabilitar comentarios' : 'Habilitar comentarios'}
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      {poll.comments_enabled || poll.commentsEnabled ? 'Los comentarios se ocultarán' : 'Los comentarios serán visibles'}
+                    </div>
+                  </div>
+                </button>
+
+                {/* Mostrar/Ocultar conteo de votos */}
+                <button
+                  onClick={() => {
+                    handleToggleVoteCount();
+                    handleSetIsOpen(false);
+                  }}
+                  disabled={isLoading}
+                  className="w-full px-6 py-4 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 flex items-center gap-4 disabled:opacity-50"
+                >
+                  {poll.show_vote_count || poll.showVoteCount ? (
+                    <EyeOff className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  ) : (
+                    <Eye className="w-6 h-6 text-gray-600 flex-shrink-0" />
+                  )}
+                  <div className="flex flex-col">
+                    <div className="text-gray-900 text-base font-medium">
+                      {poll.show_vote_count || poll.showVoteCount ? 'Ocultar conteo de votos' : 'Mostrar conteo de votos'}
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      {poll.show_vote_count || poll.showVoteCount ? 'Los números de votos se ocultarán' : 'Los números de votos serán visibles'}
+                    </div>
+                  </div>
+                </button>
+
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-100" />
+
                 {/* Eliminar publicación */}
                 <button
                   onClick={() => {
