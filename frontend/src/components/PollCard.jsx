@@ -869,7 +869,9 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                     className="flex items-center gap-2 text-gray-600 hover:text-blue-600 hover:scale-105 transition-transform h-8 px-2"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span className="font-medium text-xs">{formatNumber(poll.comments)}</span>
+                    {(poll.comments_enabled !== false && poll.commentsEnabled !== false) && (
+                      <span className="font-medium text-xs">{formatNumber(poll.comments)}</span>
+                    )}
                   </Button>
                 </motion.div>
               </div>
