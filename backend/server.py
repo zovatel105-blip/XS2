@@ -6592,6 +6592,57 @@ async def share_poll(
         "user_shared": True
     }
 
+@api_router.post("/polls/{poll_id}/view")
+async def register_poll_view(
+    poll_id: str,
+    request: Request,
+    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+):
+    """Register a view for a poll - counts every view, even repeated views from same user"""
+    
+    # Check if poll exists
+    poll = await db.polls.find_one({"id": poll_id, "is_active": True})
+    if not poll:
+        raise HTTPException(status_code=404, detail="Poll not found")
+    
+    # Get user_id if authenticated, otherwise use session_id from request
+    user_id = current_user.id if current_user else None
+    
+    # For non-authenticated users, use a session identifier
+    # This could be from a header, cookie, or client-generated ID
+    session_id = None
+    if not user_id:
+        # Try to get session_id from request body or generate from IP
+        session_id = request.headers.get("X-Session-ID")
+        if not session_id:
+            # Fallback: use IP address as session identifier
+            client_ip = request.client.host if request.client else "unknown"
+            session_id = f"anon_{client_ip}_{datetime.utcnow().timestamp()}"
+    
+    # Register the view (always create a new entry)
+    view_record = {
+        "id": str(uuid.uuid4()),
+        "poll_id": poll_id,
+        "user_id": user_id,
+        "session_id": session_id,
+        "viewed_at": datetime.utcnow().isoformat(),
+        "ip_address": request.client.host if request.client else None
+    }
+    
+    await db.poll_views.insert_one(view_record)
+    
+    # Get total views count for this poll
+    total_views = await db.poll_views.count_documents({"poll_id": poll_id})
+    
+    return {
+        "success": True,
+        "poll_id": poll_id,
+        "total_views": total_views,
+        "message": "View registered successfully"
+    }
+
+
+
 @api_router.get("/polls/{poll_id}", response_model=PollResponse)
 async def get_poll_by_id(
     poll_id: str,
