@@ -7524,7 +7524,10 @@ async def get_posts_using_audio(
                     category=poll_data.get("category"),
                     is_featured=poll_data.get("is_featured", False),
                     time_ago=time_ago,  # ¡Campo faltante!
-                    layout=poll_data.get("layout", "vertical")  # 🎨 CRITICAL: Include layout to prevent split-screen issue
+                    layout=poll_data.get("layout", "vertical"),  # 🎨 CRITICAL: Include layout to prevent split-screen issue
+                    # Post settings
+                    comments_enabled=poll_data.get("comments_enabled", True),
+                    show_vote_count=poll_data.get("show_vote_count", True)
                 )
                 
                 # Convertir a dict y agregar campo user para retrocompatibilidad
