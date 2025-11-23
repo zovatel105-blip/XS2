@@ -272,7 +272,7 @@ const ContentPublishPage = () => {
         >
           <ArrowLeft className="w-5 h-5 text-white" />
         </button>
-        <h1 className="text-white text-sm font-medium">New post</h1>
+        <div className="flex-1"></div> {/* Spacer for centering */}
         <div className="w-9"></div> {/* Spacer for centering */}
       </div>
 
