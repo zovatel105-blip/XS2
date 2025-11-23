@@ -33,7 +33,6 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
   useEffect(() => {
     if (isOpen && pollId) {
       loadVoters();
-      setSearchQuery(''); // Reset search on open
     }
   }, [isOpen, pollId]);
 
@@ -56,20 +55,6 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
-
-  // Filtrar votantes según búsqueda
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredVoters(voters);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = voters.filter(voter => 
-        voter.display_name?.toLowerCase().includes(query) ||
-        voter.username?.toLowerCase().includes(query)
-      );
-      setFilteredVoters(filtered);
-    }
-  }, [searchQuery, voters]);
 
   const loadVoters = async () => {
     setLoading(true);
