@@ -6453,59 +6453,71 @@ async def toggle_poll_like(
         }
 
 
-@api_router.get("/polls/{poll_id}/likes")
-async def get_poll_likers(
+@api_router.get("/polls/{poll_id}/voters")
+async def get_poll_voters(
     poll_id: str,
     limit: int = 50,
     skip: int = 0,
     current_user: UserResponse = Depends(get_current_user)
 ):
-    """Get list of users who liked a poll"""
+    """Get list of users who voted on a poll"""
     
     # Check if poll exists
     poll = await db.polls.find_one({"id": poll_id, "is_active": True})
     if not poll:
         raise HTTPException(status_code=404, detail="Poll not found")
     
-    # Get likes with user info
-    likes_cursor = db.poll_likes.find({"poll_id": poll_id}).sort("created_at", -1).skip(skip).limit(limit)
-    likes = await likes_cursor.to_list(length=limit)
+    # Get votes with user info
+    votes_cursor = db.votes.find({"poll_id": poll_id}).sort("created_at", -1).skip(skip).limit(limit)
+    votes = await votes_cursor.to_list(length=limit)
     
-    # Get user info for each like
-    likers = []
-    for like in likes:
-        user_id = like.get("user_id")
-        if user_id:
+    # Get user info for each vote
+    voters = []
+    seen_users = set()  # To avoid duplicates if user voted multiple times
+    
+    for vote in votes:
+        user_id = vote.get("user_id")
+        if user_id and user_id not in seen_users:
+            seen_users.add(user_id)
             user = await db.users.find_one({"id": user_id})
             if user:
-                # Check if current user follows this liker
+                # Check if current user follows this voter
                 is_following = await db.follows.find_one({
                     "follower_id": current_user.id,
                     "following_id": user_id
                 }) is not None
                 
-                likers.append({
+                # Get which option they voted for
+                option_index = vote.get("option_index")
+                option_text = None
+                if option_index is not None and poll.get("options"):
+                    if 0 <= option_index < len(poll["options"]):
+                        option_text = poll["options"][option_index].get("text", "")
+                
+                voters.append({
                     "id": user.get("id"),
                     "username": user.get("username"),
                     "display_name": user.get("display_name", user.get("username")),
                     "avatar_url": user.get("avatar_url"),
                     "is_verified": user.get("is_verified", False),
                     "is_following": is_following,
-                    "liked_at": like.get("created_at")
+                    "voted_at": vote.get("created_at"),
+                    "voted_option": option_text
                 })
     
-    # Get total likes count
-    total_likes = await db.poll_likes.count_documents({"poll_id": poll_id})
+    # Get total votes count (unique users)
+    all_votes = await db.votes.find({"poll_id": poll_id}).to_list(length=None)
+    unique_voters = len(set(v.get("user_id") for v in all_votes if v.get("user_id")))
     
     # Get poll views/plays count
     views = poll.get("views", 0)
     
     return {
         "poll_id": poll_id,
-        "likers": likers,
-        "total_likes": total_likes,
+        "voters": voters,
+        "total_votes": unique_voters,
         "views": views,
-        "has_more": (skip + len(likers)) < total_likes
+        "has_more": len(seen_users) >= limit
     }
 
 @api_router.post("/polls/{poll_id}/share")
