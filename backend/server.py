@@ -7892,6 +7892,10 @@ async def update_poll(
             update_data["is_archived"] = poll_data["is_archived"]
         if "is_private" in poll_data:
             update_data["is_private"] = poll_data["is_private"]
+        if "comments_enabled" in poll_data:
+            update_data["comments_enabled"] = poll_data["comments_enabled"]
+        if "show_vote_count" in poll_data:
+            update_data["show_vote_count"] = poll_data["show_vote_count"]
         
         update_data["updated_at"] = datetime.utcnow()
         
