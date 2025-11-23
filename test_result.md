@@ -1221,6 +1221,26 @@ El sistema de chat está completamente listo para producción con nomenclatura p
 ✅ **RESULTADO FINAL:**
 🎯 **PREVIEW DE LAYOUTS HORIZONTALES COMPLETAMENTE CORREGIDO** - Los usuarios ahora ven un preview exacto y preciso de sus publicaciones en ContentPublishPage. Los layouts de 2 secciones horizontales (2 filas) y 3 secciones horizontales (3 filas) se adaptan perfectamente al marco del preview, mostrando exactamente lo mismo que se ve durante la creación.
 
+**🧹 TÍTULO "NEW POST" ELIMINADO DEL HEADER EN CONTENTPUBLISHPAGE (2025-01-27): El header ahora tiene un diseño más limpio sin el título.**
+
+✅ **CAMBIO IMPLEMENTADO:**
+- Eliminado el elemento `<h1>` que mostraba "New post" en el header
+- Mantenido el botón de retroceso (flecha izquierda) funcional
+- Reemplazado el título con un espaciador flexible para mantener el balance visual
+
+✅ **ARCHIVO MODIFICADO:**
+- `/app/frontend/src/pages/ContentPublishPage.jsx` (líneas 268-277)
+
+✅ **DISEÑO RESULTANTE:**
+```
+[← Botón Atrás]  [espacio flexible]  [espacio]
+```
+
+✅ **RESULTADO FINAL:**
+🎯 **HEADER LIMPIO Y MINIMALISTA** - El header de ContentPublishPage ahora tiene un diseño más simple y elegante sin el título "New post", manteniendo solo el botón funcional de navegación hacia atrás.
+
+
+
 
 - ✅ **Crop y edición**: Sistema `InlineCrop` funciona correctamente en layout horizontal
 - ✅ **Upload de media**: Funcionalidad completa de subida de imágenes/videos por slot
