@@ -172,7 +172,9 @@ const PollModal = ({ isOpen, onClose, poll, onVote, onLike, onShare, onComment }
                   onClick={handleComment}
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span className="text-sm">{poll.comments || 0}</span>
+                  {(poll.comments_enabled !== false && poll.commentsEnabled !== false) && (
+                    <span className="text-sm">{poll.comments || 0}</span>
+                  )}
                 </Button>
 
                 <Button
