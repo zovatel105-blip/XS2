@@ -152,149 +152,280 @@ const VotersModal = ({ isOpen, onClose, pollId }) => {
     }
   };
 
+  // Click outside para cerrar
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
       onClose();
     }
   };
 
   if (!isOpen) return null;
 
+  // Variantes de animación (igual que CommentsModal)
+  const modalVariants = {
+    hidden: isMobile 
+      ? { opacity: 0, y: "100%" } 
+      : { opacity: 0, scale: 0.85, y: 60 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0 
+    },
+    exit: isMobile 
+      ? { opacity: 0, y: "100%" }
+      : { opacity: 0, scale: 0.85, y: 60 }
+  };
+
   return (
     <AnimatePresence>
-      <div 
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        onClick={handleBackdropClick}
-      >
+      <div className="fixed inset-0 z-50">
+        {/* Backdrop */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ duration: 0.2 }}
-          className="bg-white rounded-3xl w-full max-w-md mx-4 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
-        >
-          {/* Header */}
-          <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
-            {/* Handle bar */}
-            <div className="w-full py-2 flex justify-center">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+          className="absolute inset-0 bg-black/70 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={handleBackdropClick}
+        />
+        
+        {/* Modal Container */}
+        <div className={cn(
+          "flex h-full",
+          isMobile ? "items-end justify-center" : "items-center justify-center p-4"
+        )}>
+          <motion.div
+            ref={modalRef}
+            className={cn(
+              "relative bg-white shadow-2xl overflow-hidden flex flex-col",
+              isMobile 
+                ? "w-full h-[85vh] rounded-t-3xl" 
+                : "w-full max-w-md max-h-[90vh] rounded-2xl"
+            )}
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ 
+              type: "spring", 
+              stiffness: 380, 
+              damping: 30,
+              duration: 0.4 
+            }}
+          >
+            {/* Handle superior */}
+            <div className="w-full py-2 flex justify-center bg-white flex-shrink-0">
+              <div className={cn(
+                "bg-gray-300 rounded-full",
+                isMobile ? "w-10 h-1" : "w-12 h-1"
+              )} />
             </div>
-            
-            {/* Title and close button */}
-            <div className="px-6 pb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">
+
+            {/* Header con título centrado */}
+            <div className="bg-white px-4 sm:px-6 py-3 flex-shrink-0">
+              <h2 className={cn(
+                "font-semibold text-gray-900 text-center",
+                isMobile ? "text-base" : "text-lg"
+              )}>
                 Me gusta y reproducciones
               </h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5 text-gray-500" />
-              </button>
             </div>
 
             {/* Stats section */}
-            <div className="px-6 pb-4 flex items-center justify-center gap-8">
+            <div className="px-4 sm:px-6 pb-4 flex items-center justify-center gap-6 sm:gap-8 bg-white flex-shrink-0">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Users className="w-5 h-5 text-pink-600" />
-                  <span className="text-2xl font-bold text-gray-900">
+                  <Users className={cn(
+                    "text-pink-600",
+                    isMobile ? "w-4 h-4" : "w-5 h-5"
+                  )} />
+                  <span className={cn(
+                    "font-bold text-gray-900",
+                    isMobile ? "text-xl" : "text-2xl"
+                  )}>
                     {totalVotes.toLocaleString()}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600">Votos</p>
+                <p className={cn(
+                  "text-gray-600",
+                  isMobile ? "text-xs" : "text-sm"
+                )}>
+                  Votos
+                </p>
               </div>
               
-              <div className="w-px h-12 bg-gray-300" />
+              <div className={cn(
+                "bg-gray-300",
+                isMobile ? "w-px h-10" : "w-px h-12"
+              )} />
               
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Eye className="w-5 h-5 text-blue-600" />
-                  <span className="text-2xl font-bold text-gray-900">
+                  <Eye className={cn(
+                    "text-blue-600",
+                    isMobile ? "w-4 h-4" : "w-5 h-5"
+                  )} />
+                  <span className={cn(
+                    "font-bold text-gray-900",
+                    isMobile ? "text-xl" : "text-2xl"
+                  )}>
                     {views.toLocaleString()}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600">Reproducciones</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Voters list */}
-          <div className="flex-1 overflow-y-auto">
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 text-gray-400 animate-spin mb-3" />
-                <p className="text-gray-500 text-sm">Cargando votantes...</p>
-              </div>
-            ) : voters.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 px-6">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-                  <Users className="w-8 h-8 text-gray-400" />
-                </div>
-                <p className="text-gray-500 text-center">
-                  Aún no hay votos en esta publicación
+                <p className={cn(
+                  "text-gray-600",
+                  isMobile ? "text-xs" : "text-sm"
+                )}>
+                  Reproducciones
                 </p>
               </div>
-            ) : (
-              <div className="px-6 py-2">
-                {voters.map((voter) => (
-                  <div
-                    key={voter.id}
-                    className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0"
-                  >
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Avatar
-                        className="w-12 h-12 cursor-pointer ring-2 ring-gray-100"
-                        onClick={() => {
-                          onClose();
-                          navigate(`/profile/${voter.username}`);
-                        }}
-                      >
-                        <AvatarImage src={voter.avatar_url} alt={voter.display_name} />
-                        <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white font-semibold">
-                          {voter.display_name?.charAt(0)?.toUpperCase() || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div 
-                        className="flex-1 min-w-0 cursor-pointer"
-                        onClick={() => {
-                          onClose();
-                          navigate(`/profile/${voter.username}`);
-                        }}
-                      >
-                        <div className="flex items-center gap-1">
-                          <p className="font-semibold text-gray-900 truncate">
-                            {voter.display_name}
-                          </p>
-                          {voter.is_verified && (
-                            <svg className="w-4 h-4 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                            </svg>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-500 truncate">
-                          @{voter.username}
-                        </p>
-                      </div>
-                    </div>
+            </div>
 
-                    <Button
-                      onClick={() => handleFollowToggle(voter.id, voter.is_following)}
-                      className={`ml-3 px-6 py-1.5 rounded-full font-semibold text-sm transition-all ${
-                        voter.is_following
-                          ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
-                    >
-                      {voter.is_following ? 'Siguiendo' : 'Seguir'}
-                    </Button>
-                  </div>
-                ))}
+            {/* Barra de búsqueda */}
+            <div className="px-4 sm:px-6 pb-4 bg-white flex-shrink-0">
+              <div className="relative">
+                <Search className={cn(
+                  "absolute text-gray-400 pointer-events-none",
+                  isMobile ? "left-3 top-2.5 w-4 h-4" : "left-3 top-3 w-5 h-5"
+                )} />
+                <input
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={cn(
+                    "w-full bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500",
+                    isMobile ? "pl-10 pr-4 py-2 text-sm" : "pl-10 pr-4 py-2.5 text-base"
+                  )}
+                />
               </div>
-            )}
-          </div>
-        </motion.div>
+            </div>
+
+            {/* Voters list */}
+            <div className="flex-1 overflow-y-auto">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <Loader2 className={cn(
+                    "text-gray-400 animate-spin mb-3",
+                    isMobile ? "w-6 h-6" : "w-8 h-8"
+                  )} />
+                  <p className={cn(
+                    "text-gray-500",
+                    isMobile ? "text-xs" : "text-sm"
+                  )}>
+                    Cargando votantes...
+                  </p>
+                </div>
+              ) : voters.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-6">
+                  <div className={cn(
+                    "bg-gray-100 rounded-full flex items-center justify-center mb-3",
+                    isMobile ? "w-12 h-12" : "w-16 h-16"
+                  )}>
+                    <Users className={cn(
+                      "text-gray-400",
+                      isMobile ? "w-6 h-6" : "w-8 h-8"
+                    )} />
+                  </div>
+                  <p className={cn(
+                    "text-gray-500 text-center",
+                    isMobile ? "text-xs" : "text-sm"
+                  )}>
+                    Aún no hay votos en esta publicación
+                  </p>
+                </div>
+              ) : filteredVoters.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-6">
+                  <div className={cn(
+                    "bg-gray-100 rounded-full flex items-center justify-center mb-3",
+                    isMobile ? "w-12 h-12" : "w-16 h-16"
+                  )}>
+                    <Search className={cn(
+                      "text-gray-400",
+                      isMobile ? "w-6 h-6" : "w-8 h-8"
+                    )} />
+                  </div>
+                  <p className={cn(
+                    "text-gray-500 text-center",
+                    isMobile ? "text-xs" : "text-sm"
+                  )}>
+                    No se encontraron resultados para "{searchQuery}"
+                  </p>
+                </div>
+              ) : (
+                <div className="px-4 sm:px-6 pb-2">
+                  {filteredVoters.map((voter) => (
+                    <div
+                      key={voter.id}
+                      className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <Avatar
+                          className={cn(
+                            "cursor-pointer ring-2 ring-gray-100 flex-shrink-0",
+                            isMobile ? "w-10 h-10" : "w-12 h-12"
+                          )}
+                          onClick={() => {
+                            onClose();
+                            navigate(`/profile/${voter.username}`);
+                          }}
+                        >
+                          <AvatarImage src={voter.avatar_url} alt={voter.display_name} />
+                          <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white font-semibold">
+                            {voter.display_name?.charAt(0)?.toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        
+                        <div 
+                          className="flex-1 min-w-0 cursor-pointer"
+                          onClick={() => {
+                            onClose();
+                            navigate(`/profile/${voter.username}`);
+                          }}
+                        >
+                          <div className="flex items-center gap-1">
+                            <p className={cn(
+                              "font-semibold text-gray-900 truncate",
+                              isMobile ? "text-sm" : "text-base"
+                            )}>
+                              {voter.display_name}
+                            </p>
+                            {voter.is_verified && (
+                              <svg className={cn(
+                                "text-blue-500 flex-shrink-0",
+                                isMobile ? "w-3.5 h-3.5" : "w-4 h-4"
+                              )} viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                              </svg>
+                            )}
+                          </div>
+                          <p className={cn(
+                            "text-gray-500 truncate",
+                            isMobile ? "text-xs" : "text-sm"
+                          )}>
+                            @{voter.username}
+                          </p>
+                        </div>
+                      </div>
+
+                      <Button
+                        onClick={() => handleFollowToggle(voter.id, voter.is_following)}
+                        className={cn(
+                          "ml-3 rounded-full font-semibold transition-all flex-shrink-0",
+                          isMobile ? "px-4 py-1 text-xs" : "px-6 py-1.5 text-sm",
+                          voter.is_following
+                            ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                        )}
+                      >
+                        {voter.is_following ? 'Siguiendo' : 'Seguir'}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </AnimatePresence>
   );
