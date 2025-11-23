@@ -162,52 +162,79 @@ class ViewTrackingTester:
         
         return None
     
-    def check_sound_result_fields(self, result: Dict[str, Any], query: str) -> bool:
-        """Check if sound result has the expected fields for frontend"""
-        print(f"  🔍 Checking sound: {result.get('id', 'unknown')} - '{result.get('title', 'No title')}'")
+    async def test_unauthenticated_user_view_registration(self):
+        """FASE 1.2: Test unauthenticated user registering views"""
+        print("\n🕵️ Testing Unauthenticated User View Registration...")
         
-        # Check all the required fields mentioned in the review
-        required_fields = ["thumbnail_url", "posts_count", "title", "artist", "cover_image"]
+        if not self.test_poll_id:
+            print("❌ No valid poll ID available for testing")
+            self.test_results.append({
+                "test": "unauthenticated_view_registration",
+                "status": "SKIP",
+                "error": "No valid poll ID"
+            })
+            return
         
-        title = result.get("title")
-        artist = result.get("artist") 
-        thumbnail_url = result.get("thumbnail_url")
-        cover_image = result.get("cover_image")
-        posts_count = result.get("posts_count")
-        posts_using_count = result.get("posts_using_count")
-        duration = result.get("duration")
-        author = result.get("author", {})
+        try:
+            # Generate a unique session ID
+            session_id = f"session_{int(time.time())}_test123"
+            print(f"🆔 Using session ID: {session_id}")
+            
+            # Register a view without authentication but with session ID header
+            headers = {"X-Session-ID": session_id}
+            
+            async with self.session.post(
+                f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify response structure
+                    required_fields = ["success", "poll_id", "total_views", "message"]
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if not missing_fields:
+                        print(f"✅ Unauthenticated view registered successfully")
+                        print(f"   📊 Total views: {data.get('total_views')}")
+                        print(f"   📝 Message: {data.get('message')}")
+                        print(f"   🆔 Session ID: {session_id}")
+                        
+                        self.test_results.append({
+                            "test": "unauthenticated_view_registration",
+                            "status": "PASS",
+                            "total_views": data.get('total_views'),
+                            "session_id": session_id,
+                            "details": f"Successfully registered view for unauthenticated user with session ID. Total views: {data.get('total_views')}"
+                        })
+                        
+                        return data.get('total_views')
+                    else:
+                        print(f"❌ Response missing required fields: {missing_fields}")
+                        self.test_results.append({
+                            "test": "unauthenticated_view_registration",
+                            "status": "FAIL",
+                            "error": f"Missing fields: {missing_fields}"
+                        })
+                else:
+                    error_text = await response.text()
+                    print(f"❌ Unauthenticated view registration failed: {response.status} - {error_text}")
+                    self.test_results.append({
+                        "test": "unauthenticated_view_registration",
+                        "status": "FAIL",
+                        "error": f"HTTP {response.status}: {error_text}"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error registering unauthenticated view: {str(e)}")
+            self.test_results.append({
+                "test": "unauthenticated_view_registration",
+                "status": "ERROR",
+                "error": str(e)
+            })
         
-        print(f"    🎵 title: {title}")
-        print(f"    👤 artist: {artist}")
-        print(f"    🖼️  thumbnail_url: {thumbnail_url}")
-        print(f"    🎨 cover_image: {cover_image}")
-        print(f"    📊 posts_count: {posts_count}")
-        print(f"    📊 posts_using_count: {posts_using_count}")
-        print(f"    ⏱️  duration: {duration}")
-        print(f"    👨‍🎤 author: {author}")
-        
-        # Check if all required fields are present
-        has_title = bool(title)
-        has_artist = bool(artist)
-        has_thumbnail_url = bool(thumbnail_url)
-        has_cover_image = bool(cover_image)
-        has_posts_count = posts_count is not None
-        has_author = bool(author and author.get("username"))
-        
-        all_required_present = has_title and has_artist and has_thumbnail_url and has_posts_count
-        
-        if all_required_present:
-            print(f"    ✅ Sound has all required fields - Frontend will display correctly")
-        else:
-            missing_fields = []
-            if not has_title: missing_fields.append("title")
-            if not has_artist: missing_fields.append("artist") 
-            if not has_thumbnail_url: missing_fields.append("thumbnail_url")
-            if not has_posts_count: missing_fields.append("posts_count")
-            print(f"    ❌ Sound missing fields: {', '.join(missing_fields)}")
-        
-        return all_required_present
+        return None
     
     async def test_specific_poll_search(self):
         """Test search for specific polls that should have images"""
