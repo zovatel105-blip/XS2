@@ -330,45 +330,57 @@ class ViewTrackingTester:
                 "error": str(e)
             })
     
-    def analyze_poll_image_extraction(self, poll_result: Dict[str, Any]):
-        """Detailed analysis of how images are extracted from poll options"""
-        print(f"  🔬 Detailed Image Extraction Analysis:")
+    async def test_nonexistent_poll_view(self):
+        """FASE 1.4: Test view registration for nonexistent poll"""
+        print("\n🚫 Testing View Registration for Nonexistent Poll...")
         
-        # Check the raw poll data structure
-        options = poll_result.get("options", [])
-        print(f"    📋 Poll has {len(options)} options")
+        fake_poll_id = "fake-poll-id-999"
         
-        # Analyze each option for media
-        for i, option in enumerate(options):
-            media_url = option.get("media_url")
-            thumbnail_url = option.get("thumbnail_url")
-            
-            if media_url or thumbnail_url:
-                print(f"    Option {i+1}:")
-                if media_url:
-                    print(f"      🎬 media_url: {media_url[:60]}...")
-                if thumbnail_url:
-                    print(f"      🖼️  thumbnail_url: {thumbnail_url[:60]}...")
-        
-        # Check how these were mapped to search result fields
-        result_image_url = poll_result.get("image_url")
-        result_thumbnail_url = poll_result.get("thumbnail_url")
-        result_media_url = poll_result.get("media_url")
-        result_images = poll_result.get("images", [])
-        
-        print(f"    🎯 Search Result Mapping:")
-        print(f"      image_url: {result_image_url[:60] + '...' if result_image_url else 'None'}")
-        print(f"      thumbnail_url: {result_thumbnail_url[:60] + '...' if result_thumbnail_url else 'None'}")
-        print(f"      media_url: {result_media_url[:60] + '...' if result_media_url else 'None'}")
-        print(f"      images array: {len(result_images)} items")
-        
-        # Verify the fix: images should come from options, not legacy fields
-        if options and (result_image_url or result_thumbnail_url or result_media_url or result_images):
-            print(f"    ✅ SUCCESS: Images correctly extracted from poll options")
-        elif result_image_url or result_thumbnail_url or result_media_url or result_images:
-            print(f"    ⚠️  WARNING: Images found but may be from legacy fields")
-        else:
-            print(f"    ❌ ISSUE: No images extracted despite having options")
+        try:
+            async with self.session.post(
+                f"{BACKEND_URL}/polls/{fake_poll_id}/view",
+                headers=self.get_auth_headers()
+            ) as response:
+                
+                if response.status == 404:
+                    data = await response.json()
+                    detail = data.get("detail", "")
+                    
+                    if "Poll not found" in detail:
+                        print(f"✅ Correctly returned 404 for nonexistent poll")
+                        print(f"   📝 Message: {detail}")
+                        
+                        self.test_results.append({
+                            "test": "nonexistent_poll_view",
+                            "status": "PASS",
+                            "response_code": 404,
+                            "details": f"Correctly returned 404 with message: {detail}"
+                        })
+                    else:
+                        print(f"❌ Wrong error message: {detail}")
+                        self.test_results.append({
+                            "test": "nonexistent_poll_view",
+                            "status": "FAIL",
+                            "response_code": 404,
+                            "error": f"Wrong error message: {detail}"
+                        })
+                else:
+                    error_text = await response.text()
+                    print(f"❌ Expected 404, got {response.status}: {error_text}")
+                    self.test_results.append({
+                        "test": "nonexistent_poll_view",
+                        "status": "FAIL",
+                        "response_code": response.status,
+                        "error": f"Expected 404, got {response.status}: {error_text}"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error testing nonexistent poll: {str(e)}")
+            self.test_results.append({
+                "test": "nonexistent_poll_view",
+                "status": "ERROR",
+                "error": str(e)
+            })
     
     async def test_frontend_compatibility(self):
         """Test that search results are compatible with frontend expectations"""
