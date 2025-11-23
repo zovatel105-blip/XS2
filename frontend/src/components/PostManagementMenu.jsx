@@ -40,6 +40,59 @@ const PostManagementMenu = ({ poll, onUpdate, onDelete, currentUser, isOwnProfil
   const [editDescription, setEditDescription] = useState(poll.description || '');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  // New handlers for comments and vote count
+  const handleToggleComments = async () => {
+    setIsLoading(true);
+    try {
+      const updatedPoll = {
+        ...poll,
+        comments_enabled: !poll.comments_enabled,
+        commentsEnabled: !poll.comments_enabled // Support both naming conventions
+      };
+      
+      await onUpdate(poll.id, updatedPoll);
+      
+      toast({
+        title: "Éxito",
+        description: poll.comments_enabled ? "Comentarios deshabilitados" : "Comentarios habilitados"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo cambiar la configuración de comentarios",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleToggleVoteCount = async () => {
+    setIsLoading(true);
+    try {
+      const updatedPoll = {
+        ...poll,
+        show_vote_count: !poll.show_vote_count,
+        showVoteCount: !poll.show_vote_count // Support both naming conventions
+      };
+      
+      await onUpdate(poll.id, updatedPoll);
+      
+      toast({
+        title: "Éxito",
+        description: poll.show_vote_count ? "Conteo de votos oculto" : "Conteo de votos visible"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo cambiar la configuración de votos",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Show menu only in own profile - more reliable than ID matching
   if (!currentUser || !isOwnProfile) {
