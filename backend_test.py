@@ -236,76 +236,99 @@ class ViewTrackingTester:
         
         return None
     
-    async def test_specific_poll_search(self):
-        """Test search for specific polls that should have images"""
-        print("\n🎯 Testing Specific Poll Searches...")
+    async def test_multiple_views_same_user(self):
+        """FASE 1.3: Test multiple views from the same user"""
+        print("\n🔄 Testing Multiple Views from Same User...")
         
-        # Test searches that are likely to return polls with images
-        specific_tests = [
-            {"query": "pizza hamburguesa", "description": "Food comparison poll"},
-            {"query": "color favorito", "description": "Color preference poll"},
-            {"query": "mejor opción", "description": "General preference poll"}
-        ]
+        if not self.test_poll_id:
+            print("❌ No valid poll ID available for testing")
+            self.test_results.append({
+                "test": "multiple_views_same_user",
+                "status": "SKIP",
+                "error": "No valid poll ID"
+            })
+            return
         
-        for test in specific_tests:
-            query = test["query"]
-            description = test["description"]
+        try:
+            initial_views = None
+            views_registered = 0
             
-            print(f"\n🔍 Testing: {description} ('{query}')")
-            
-            try:
-                async with self.session.get(
-                    f"{BACKEND_URL}/search/universal",
-                    params={"q": query, "limit": 10, "filter_type": "posts"},
+            # Register 3 views from the same authenticated user
+            for i in range(3):
+                print(f"🔄 Registering view #{i+1}...")
+                
+                async with self.session.post(
+                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
                     headers=self.get_auth_headers()
                 ) as response:
                     
                     if response.status == 200:
                         data = await response.json()
-                        results = data.get("results", [])
+                        current_views = data.get('total_views')
                         
-                        post_results = [r for r in results if r.get("type") == "post"]
+                        if initial_views is None:
+                            initial_views = current_views - 1  # Subtract the view we just registered
                         
-                        if post_results:
-                            print(f"✅ Found {len(post_results)} poll results")
-                            
-                            # Analyze the first result in detail
-                            first_result = post_results[0]
-                            print(f"📊 Analyzing first result: {first_result.get('title', 'No title')}")
-                            
-                            # Check all image-related fields
-                            self.analyze_poll_image_extraction(first_result)
-                            
-                            self.test_results.append({
-                                "test": f"specific_search_{query.replace(' ', '_')}",
-                                "status": "PASS",
-                                "found_polls": len(post_results),
-                                "details": f"Found {len(post_results)} polls for '{description}'"
-                            })
-                        else:
-                            print(f"⚠️  No poll results found for '{query}'")
-                            self.test_results.append({
-                                "test": f"specific_search_{query.replace(' ', '_')}",
-                                "status": "PARTIAL",
-                                "found_polls": 0,
-                                "details": f"No polls found for '{description}'"
-                            })
+                        views_registered += 1
+                        print(f"   ✅ View #{i+1} registered. Total views: {current_views}")
+                        
+                        # Small delay to ensure different timestamps
+                        await asyncio.sleep(0.1)
                     else:
                         error_text = await response.text()
-                        print(f"❌ Search failed: {response.status} - {error_text}")
-                        self.test_results.append({
-                            "test": f"specific_search_{query.replace(' ', '_')}",
-                            "status": "FAIL",
-                            "error": f"HTTP {response.status}: {error_text}"
-                        })
+                        print(f"   ❌ View #{i+1} failed: {response.status} - {error_text}")
+                        break
+            
+            if views_registered == 3:
+                # Verify that all 3 views were counted
+                async with self.session.post(
+                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
+                    headers=self.get_auth_headers()
+                ) as response:
+                    
+                    if response.status == 200:
+                        data = await response.json()
+                        final_views = data.get('total_views')
+                        views_increase = final_views - initial_views
                         
-            except Exception as e:
-                print(f"❌ Error testing '{query}': {str(e)}")
+                        if views_increase >= 4:  # At least 4 views (3 + 1 verification)
+                            print(f"✅ Multiple views correctly registered")
+                            print(f"   📊 Views increased by: {views_increase}")
+                            print(f"   🎯 Expected: At least 4, Got: {views_increase}")
+                            
+                            self.test_results.append({
+                                "test": "multiple_views_same_user",
+                                "status": "PASS",
+                                "views_registered": views_registered + 1,
+                                "views_increase": views_increase,
+                                "details": f"Successfully registered {views_registered + 1} views from same user. Views increased by {views_increase}"
+                            })
+                        else:
+                            print(f"❌ Views not properly counted")
+                            print(f"   📊 Expected increase: At least 4, Got: {views_increase}")
+                            
+                            self.test_results.append({
+                                "test": "multiple_views_same_user",
+                                "status": "FAIL",
+                                "views_increase": views_increase,
+                                "error": f"Views increase ({views_increase}) less than expected (4+)"
+                            })
+            else:
+                print(f"❌ Only {views_registered}/3 views were registered successfully")
                 self.test_results.append({
-                    "test": f"specific_search_{query.replace(' ', '_')}",
-                    "status": "ERROR",
-                    "error": str(e)
+                    "test": "multiple_views_same_user",
+                    "status": "PARTIAL",
+                    "views_registered": views_registered,
+                    "error": f"Only {views_registered}/3 views registered"
                 })
+                
+        except Exception as e:
+            print(f"❌ Error testing multiple views: {str(e)}")
+            self.test_results.append({
+                "test": "multiple_views_same_user",
+                "status": "ERROR",
+                "error": str(e)
+            })
     
     def analyze_poll_image_extraction(self, poll_result: Dict[str, Any]):
         """Detailed analysis of how images are extracted from poll options"""
