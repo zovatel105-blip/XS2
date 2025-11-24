@@ -370,6 +370,7 @@ const InlineCrop = ({
           src={imageSrc}
           alt="Preview"
           className="w-full h-full object-cover"
+          crossOrigin="anonymous"
           style={{
             objectPosition: `${displayPosition.x}% ${displayPosition.y}%`,
             transform: `scale(${displayScale})`,
