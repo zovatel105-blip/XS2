@@ -1099,6 +1099,79 @@ const ContentCreationPage = () => {
       }
     }
 
+    // ✅ PASO 1: Aplicar recortes a imágenes y thumbnails con transformaciones
+    console.log('🎨 Aplicando recortes a medios con transformaciones...');
+    
+    try {
+      for (let i = 0; i < validOptions.length; i++) {
+        const opt = validOptions[i];
+        
+        // Solo procesar si hay transformaciones aplicadas
+        if (opt.media.transform && (opt.media.transform.scale !== 1 || 
+            opt.media.transform.position.x !== 50 || 
+            opt.media.transform.position.y !== 50)) {
+          
+          console.log(`📐 Opción ${i}: Aplicando crop con transform:`, opt.media.transform);
+          
+          const isVideo = opt.media.type.startsWith('video/');
+          
+          if (isVideo) {
+            // Para videos: recortar el thumbnail
+            if (opt.media.thumbnail) {
+              console.log(`🎬 Recortando thumbnail de video ${i}...`);
+              const croppedThumbnail = await getFinalCroppedImage(
+                opt.media.thumbnail,
+                opt.media.transform,
+                1080, // ancho
+                1920  // alto (formato vertical tipo TikTok)
+              );
+              
+              // Convertir a File para subir
+              const thumbnailFile = dataURLtoFile(croppedThumbnail, `thumbnail_cropped_${i}.jpg`);
+              
+              // Actualizar la opción con thumbnail recortado
+              validOptions[i].media.thumbnail = croppedThumbnail;
+              validOptions[i].media.thumbnailFile = thumbnailFile;
+              
+              console.log(`✅ Thumbnail de video ${i} recortado exitosamente`);
+            }
+          } else {
+            // Para imágenes: recortar la imagen completa
+            console.log(`🖼️ Recortando imagen ${i}...`);
+            const croppedImage = await getFinalCroppedImage(
+              opt.media.url,
+              opt.media.transform,
+              1080, // ancho
+              1920  // alto
+            );
+            
+            // Convertir a File para subir
+            const imageFile = dataURLtoFile(croppedImage, `image_cropped_${i}.jpg`);
+            
+            // Actualizar la opción con imagen recortada
+            validOptions[i].media.url = croppedImage;
+            validOptions[i].media.file = imageFile;
+            validOptions[i].media.needsUpload = true;
+            
+            console.log(`✅ Imagen ${i} recortada exitosamente`);
+          }
+          
+          // Limpiar las transformaciones ya que se aplicaron
+          validOptions[i].media.transform = null;
+        }
+      }
+      
+      console.log('✅ Todos los recortes aplicados correctamente');
+    } catch (error) {
+      console.error('❌ Error al aplicar recortes:', error);
+      toast({
+        title: "Error al procesar imágenes",
+        description: "Hubo un problema al aplicar los ajustes a las imágenes. Inténtalo de nuevo.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Prepare content data for publication page
     const allMentionedUsers = [];
     const processedOptions = validOptions.map((opt, index) => {
@@ -1112,10 +1185,10 @@ const ContentCreationPage = () => {
         media_type: opt.media.type, // Use the actual media type (image or video)
         media_url: opt.media.url,
         thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
-        media_transform: opt.media.transform || null, // ✅ Include crop transform data
+        media_transform: null, // Ya no necesitamos transformaciones porque se aplicaron
         mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(user => user.id) : [],
         // ⚡ CRITICAL FIX: Include file object and upload flag so ContentPublishPage can upload the actual files
-        file: opt.media.file || null, // File object for upload
+        file: opt.media.file || opt.media.thumbnailFile || null, // File object for upload (puede ser imagen o thumbnail)
         needsUpload: opt.media.needsUpload || false // Flag to indicate if file needs uploading
       };
     });
