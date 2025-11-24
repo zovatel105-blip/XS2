@@ -958,6 +958,7 @@ const ContentCreationPage = () => {
 
   /**
    * Función para generar imagen recortada final aplicando transformaciones de crop
+   * Esta función replica el comportamiento de object-fit: cover con object-position y scale
    * @param {string} imageSrc - URL de la imagen original
    * @param {Object} transform - Objeto con position {x, y} y scale
    * @param {number} outputWidth - Ancho deseado de salida (default: 1080)
@@ -981,35 +982,53 @@ const ContentCreationPage = () => {
           // Obtener transformaciones
           const { position = { x: 50, y: 50 }, scale = 1 } = transform || {};
           
-          // Calcular dimensiones escaladas de la imagen
-          const scaledWidth = img.naturalWidth * scale;
-          const scaledHeight = img.naturalHeight * scale;
-          
-          // Convertir position (porcentaje) a píxeles
-          // position.x y position.y son porcentajes (0-100) que representan el punto focal
-          // Calculamos el offset para centrar ese punto en el canvas
-          const offsetX = (position.x / 100) * scaledWidth - (outputWidth / 2);
-          const offsetY = (position.y / 100) * scaledHeight - (outputHeight / 2);
-          
-          // Calcular coordenadas de origen en la imagen escalada
-          const sourceX = offsetX;
-          const sourceY = offsetY;
-          
-          // Dibujar en el canvas: primero escalamos, luego posicionamos
-          ctx.fillStyle = '#000'; // Fondo negro por si hay espacios vacíos
+          // Fondo negro
+          ctx.fillStyle = '#000';
           ctx.fillRect(0, 0, outputWidth, outputHeight);
           
-          // Dibujar la imagen con transformaciones aplicadas
+          // === Simular object-fit: cover ===
+          // Calcular el ratio de la imagen y del contenedor
+          const imgRatio = img.naturalWidth / img.naturalHeight;
+          const containerRatio = outputWidth / outputHeight;
+          
+          let renderWidth, renderHeight;
+          
+          if (imgRatio > containerRatio) {
+            // Imagen más ancha - ajustar por altura
+            renderHeight = outputHeight;
+            renderWidth = renderHeight * imgRatio;
+          } else {
+            // Imagen más alta - ajustar por ancho
+            renderWidth = outputWidth;
+            renderHeight = renderWidth / imgRatio;
+          }
+          
+          // Aplicar scale
+          renderWidth *= scale;
+          renderHeight *= scale;
+          
+          // === Simular object-position ===
+          // Calcular la posición basada en el porcentaje
+          // object-position: X% Y% significa que el punto en X%, Y% de la imagen
+          // se alinea con el punto en X%, Y% del contenedor
+          
+          // Punto focal en la imagen (en píxeles de la imagen renderizada)
+          const focalPointX = (position.x / 100) * renderWidth;
+          const focalPointY = (position.y / 100) * renderHeight;
+          
+          // Punto donde queremos que esté ese focal point en el canvas
+          const targetX = (position.x / 100) * outputWidth;
+          const targetY = (position.y / 100) * outputHeight;
+          
+          // Calcular offset de dibujo
+          const drawX = targetX - focalPointX;
+          const drawY = targetY - focalPointY;
+          
+          // Dibujar la imagen
           ctx.drawImage(
             img,
-            sourceX / scale, // x en imagen original
-            sourceY / scale, // y en imagen original
-            outputWidth / scale, // ancho a tomar de imagen original
-            outputHeight / scale, // alto a tomar de imagen original
-            0, // x destino en canvas
-            0, // y destino en canvas
-            outputWidth, // ancho en canvas
-            outputHeight // alto en canvas
+            0, 0, img.naturalWidth, img.naturalHeight, // source (imagen completa)
+            drawX, drawY, renderWidth, renderHeight // destination (con scale y position aplicados)
           );
           
           // Convertir a data URL (JPEG con calidad 0.92 para balance entre calidad y tamaño)
