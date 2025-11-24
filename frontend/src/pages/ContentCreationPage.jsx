@@ -956,6 +956,95 @@ const ContentCreationPage = () => {
     updateOption(slotIndex, 'media', null);
   };
 
+  /**
+   * Función para generar imagen recortada final aplicando transformaciones de crop
+   * @param {string} imageSrc - URL de la imagen original
+   * @param {Object} transform - Objeto con position {x, y} y scale
+   * @param {number} outputWidth - Ancho deseado de salida (default: 1080)
+   * @param {number} outputHeight - Alto deseado de salida (default: 1920)
+   * @returns {Promise<string>} - Data URL de la imagen recortada
+   */
+  const getFinalCroppedImage = (imageSrc, transform, outputWidth = 1080, outputHeight = 1920) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // Para evitar problemas de CORS
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Configurar tamaño del canvas de salida
+          canvas.width = outputWidth;
+          canvas.height = outputHeight;
+          
+          // Obtener transformaciones
+          const { position = { x: 50, y: 50 }, scale = 1 } = transform || {};
+          
+          // Calcular dimensiones escaladas de la imagen
+          const scaledWidth = img.naturalWidth * scale;
+          const scaledHeight = img.naturalHeight * scale;
+          
+          // Convertir position (porcentaje) a píxeles
+          // position.x y position.y son porcentajes (0-100) que representan el punto focal
+          // Calculamos el offset para centrar ese punto en el canvas
+          const offsetX = (position.x / 100) * scaledWidth - (outputWidth / 2);
+          const offsetY = (position.y / 100) * scaledHeight - (outputHeight / 2);
+          
+          // Calcular coordenadas de origen en la imagen escalada
+          const sourceX = offsetX;
+          const sourceY = offsetY;
+          
+          // Dibujar en el canvas: primero escalamos, luego posicionamos
+          ctx.fillStyle = '#000'; // Fondo negro por si hay espacios vacíos
+          ctx.fillRect(0, 0, outputWidth, outputHeight);
+          
+          // Dibujar la imagen con transformaciones aplicadas
+          ctx.drawImage(
+            img,
+            sourceX / scale, // x en imagen original
+            sourceY / scale, // y en imagen original
+            outputWidth / scale, // ancho a tomar de imagen original
+            outputHeight / scale, // alto a tomar de imagen original
+            0, // x destino en canvas
+            0, // y destino en canvas
+            outputWidth, // ancho en canvas
+            outputHeight // alto en canvas
+          );
+          
+          // Convertir a data URL (JPEG con calidad 0.92 para balance entre calidad y tamaño)
+          const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          resolve(croppedDataUrl);
+        } catch (error) {
+          console.error('❌ Error al crear imagen recortada:', error);
+          reject(error);
+        }
+      };
+      
+      img.onerror = (error) => {
+        console.error('❌ Error al cargar imagen para crop:', error);
+        reject(new Error('No se pudo cargar la imagen'));
+      };
+      
+      img.src = imageSrc;
+    });
+  };
+
+  /**
+   * Convertir data URL a File object
+   */
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
+
   const handleCreate = async () => {
     // Validate authentication
     if (!isAuthenticated) {
