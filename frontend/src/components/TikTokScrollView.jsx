@@ -644,46 +644,7 @@ const TikTokPollCard = ({
           </h2>
         </div>
 
-        {/* Mentioned Users - Display users mentioned in the poll (mobile view) */}
-        {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5 items-center">
-            {poll.mentioned_users.slice(0, 3).map((mentionedUser, idx) => (
-              <button
-                key={mentionedUser.id || idx}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const username = mentionedUser.username || mentionedUser.display_name?.toLowerCase().replace(/\s+/g, '_');
-                  if (username) {
-                    navigate(`/profile/${username}`);
-                  }
-                }}
-                className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full cursor-pointer hover:bg-white/30 transition-all duration-200"
-              >
-                <img
-                  src={mentionedUser.avatar_url || '/default-avatar.png'}
-                  alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                  className="w-5 h-5 rounded-full mr-1.5 border border-white/50"
-                  onError={(e) => {
-                    e.target.src = '/default-avatar.png';
-                  }}
-                />
-                <span className="text-xs text-white font-medium">
-                  {mentionedUser.display_name || mentionedUser.username}
-                </span>
-              </button>
-            ))}
-            {poll.mentioned_users.length > 3 && (
-              <div className="flex items-center bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-                <div className="w-5 h-5 rounded-full bg-white/30 flex items-center justify-center mr-1">
-                  <span className="text-xs text-white font-bold">+</span>
-                </div>
-                <span className="text-xs text-white/90">
-                  {poll.mentioned_users.length - 3} más
-                </span>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Mentioned users moved to options */}
 
       </div>
 
