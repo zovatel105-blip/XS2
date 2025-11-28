@@ -269,6 +269,7 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
+      {renderMentionedUsers()}
       <img 
         src={media.url} 
         alt="Poll option"
