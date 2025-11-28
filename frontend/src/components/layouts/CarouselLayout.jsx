@@ -300,32 +300,43 @@ const CarouselLayout = ({
               )}
 
               {/* Mentioned Users */}
-              {!isThumbnail && option.mentioned_users && option.mentioned_users.length > 0 && (
-                <div className="absolute bottom-64 left-0 right-0 z-20 flex flex-wrap gap-1 justify-center" onClick={(e) => e.stopPropagation()}>
-                  {option.mentioned_users.slice(0, 2).map((user, idx) => (
-                    <div 
-                      key={idx} 
-                      className="relative group/user cursor-pointer transition-transform hover:scale-110"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const username = user.username || user.display_name?.toLowerCase().replace(/\s+/g, '_');
-                        if (username) navigate(`/profile/${username}`);
-                      }}
-                    >
-                      <img 
-                        src={user.avatar_url || '/default-avatar.png'} 
-                        className="w-8 h-8 rounded-full border border-white shadow-sm"
-                        alt={user.display_name}
-                      />
-                    </div>
-                  ))}
-                  {option.mentioned_users.length > 2 && (
-                    <div className="w-8 h-8 rounded-full bg-black/60 text-white text-xs flex items-center justify-center border border-white shadow-sm">
-                      +{option.mentioned_users.length - 2}
-                    </div>
-                  )}
-                </div>
-              )}
+              {(() => {
+                const optionMentions = option.mentioned_users || [];
+                const globalMentions = poll.mentioned_users || [];
+                const allMentionsMap = new Map();
+                globalMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
+                optionMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
+                const displayMentions = Array.from(allMentionsMap.values());
+                
+                if (isThumbnail || displayMentions.length === 0) return null;
+                
+                return (
+                  <div className="absolute bottom-64 left-0 right-0 z-20 flex flex-wrap gap-1 justify-center" onClick={(e) => e.stopPropagation()}>
+                    {displayMentions.slice(0, 2).map((user, idx) => (
+                      <div 
+                        key={idx} 
+                        className="relative group/user cursor-pointer transition-transform hover:scale-110"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const username = user.username || user.display_name?.toLowerCase().replace(/\s+/g, '_');
+                          if (username) navigate(`/profile/${username}`);
+                        }}
+                      >
+                        <img 
+                          src={user.avatar_url || '/default-avatar.png'} 
+                          className="w-8 h-8 rounded-full border border-white shadow-sm"
+                          alt={user.display_name}
+                        />
+                      </div>
+                    ))}
+                    {displayMentions.length > 2 && (
+                      <div className="w-8 h-8 rounded-full bg-black/60 text-white text-xs flex items-center justify-center border border-white shadow-sm">
+                        +{displayMentions.length - 2}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           );
         })}
