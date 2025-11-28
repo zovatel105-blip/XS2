@@ -298,6 +298,34 @@ const CarouselLayout = ({
                   )}
                 </div>
               )}
+
+              {/* Mentioned Users */}
+              {!isThumbnail && option.mentioned_users && option.mentioned_users.length > 0 && (
+                <div className="absolute bottom-24 left-4 z-20 flex flex-wrap gap-1" onClick={(e) => e.stopPropagation()}>
+                  {option.mentioned_users.slice(0, 2).map((user, idx) => (
+                    <div 
+                      key={idx} 
+                      className="relative group/user cursor-pointer transition-transform hover:scale-110"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const username = user.username || user.display_name?.toLowerCase().replace(/\s+/g, '_');
+                        if (username) navigate(`/profile/${username}`);
+                      }}
+                    >
+                      <img 
+                        src={user.avatar_url || '/default-avatar.png'} 
+                        className="w-8 h-8 rounded-full border border-white shadow-sm"
+                        alt={user.display_name}
+                      />
+                    </div>
+                  ))}
+                  {option.mentioned_users.length > 2 && (
+                    <div className="w-8 h-8 rounded-full bg-black/60 text-white text-xs flex items-center justify-center border border-white shadow-sm">
+                      +{option.mentioned_users.length - 2}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
