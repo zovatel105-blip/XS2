@@ -976,47 +976,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
             )}
           </div>
 
-          {/* Mentioned Users Banners - Positioned after title, before content */}
-          {/* Mentioned Users Banners - Final Implementation */}
-          {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-            <div className="px-4 pb-3 space-y-2">
-              {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
-                <button
-                  key={mentionedUser.id || index}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const username = mentionedUser.username || mentionedUser.display_name?.toLowerCase().replace(/\s+/g, '_');
-                    if (username) {
-                      navigate(`/profile/${username}`);
-                    }
-                  }}
-                  className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-4 py-2.5 w-full cursor-pointer hover:bg-opacity-80 transition-all duration-200"
-                >
-                  <img
-                    src={mentionedUser.avatar_url || '/default-avatar.png'}
-                    alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                    className="w-8 h-8 rounded-full border-2 border-white shadow-sm mr-3 flex-shrink-0"
-                    onError={(e) => {
-                      e.target.src = '/default-avatar.png';
-                    }}
-                  />
-                  <span className="text-white text-sm font-medium">
-                    {mentionedUser.display_name || mentionedUser.username}
-                  </span>
-                </button>
-              ))}
-              {poll.mentioned_users.length > 3 && (
-                <div className="flex items-center bg-gray-900 bg-opacity-90 rounded-lg px-4 py-2.5">
-                  <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-xs text-white font-bold mr-3 border-2 border-white flex-shrink-0">
-                    +{poll.mentioned_users.length - 3}
-                  </div>
-                  <span className="text-white text-sm font-medium">
-                    más usuarios mencionados
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Mentioned users moved to options */}
 
           {/* Media Grid - Similar to second reference image */}
           <div className="px-4 pb-4">
