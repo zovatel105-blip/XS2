@@ -301,7 +301,7 @@ const CarouselLayout = ({
 
               {/* Mentioned Users */}
               {!isThumbnail && option.mentioned_users && option.mentioned_users.length > 0 && (
-                <div className="absolute bottom-24 left-4 z-20 flex flex-wrap gap-1" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute bottom-24 left-0 right-0 z-20 flex flex-wrap gap-1 justify-center" onClick={(e) => e.stopPropagation()}>
                   {option.mentioned_users.slice(0, 2).map((user, idx) => (
                     <div 
                       key={idx} 
