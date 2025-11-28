@@ -67,6 +67,36 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
     onClick && onClick();
   };
 
+  const renderMentionedUsers = () => {
+    if (!option.mentioned_users || option.mentioned_users.length === 0) return null;
+    
+    return (
+      <div className="absolute bottom-2 left-2 flex flex-wrap gap-1 z-20" onClick={(e) => e.stopPropagation()}>
+        {option.mentioned_users.slice(0, 2).map((user, idx) => (
+          <div 
+            key={idx} 
+            className="relative group/user cursor-pointer transition-transform hover:scale-110"
+            onClick={(e) => {
+              e.stopPropagation();
+              const username = user.username || user.display_name?.toLowerCase().replace(/\s+/g, '_');
+              if (username) navigate(`/profile/${username}`);
+            }}
+          >
+            <Avatar className="w-6 h-6 border border-white shadow-sm">
+              <AvatarImage src={user.avatar_url || '/default-avatar.png'} />
+              <AvatarFallback className="text-[8px]">{user.display_name?.[0] || 'U'}</AvatarFallback>
+            </Avatar>
+          </div>
+        ))}
+        {option.mentioned_users.length > 2 && (
+          <div className="w-6 h-6 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center border border-white shadow-sm">
+            +{option.mentioned_users.length - 2}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // If no media, render a text-based option with horizontal progress bar
   if (!media) {
     return (
