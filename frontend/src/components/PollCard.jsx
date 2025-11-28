@@ -737,48 +737,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                 </div>
               )}
 
-              {/* Mentioned Users - Same banner style as descriptions */}
-              {poll.mentioned_users && poll.mentioned_users.length > 0 && (
-                <div className="mt-2">
-                  <div className="flex flex-wrap gap-1 items-center">
-                    {poll.mentioned_users.slice(0, 3).map((mentionedUser, index) => (
-                      <button
-                        key={mentionedUser.id || index}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const username = mentionedUser.username || mentionedUser.display_name?.toLowerCase().replace(/\s+/g, '_');
-                          if (username) {
-                            navigate(`/profile/${username}`);
-                          }
-                        }}
-                        className="flex items-center bg-gray-100 px-2 py-1 rounded-full cursor-pointer hover:bg-gray-200 transition-all duration-200"
-                      >
-                        <img
-                          src={mentionedUser.avatar_url || '/default-avatar.png'}
-                          alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                          className="w-4 h-4 rounded-full mr-1 border border-gray-300"
-                          onError={(e) => {
-                            e.target.src = '/default-avatar.png';
-                          }}
-                        />
-                        <span className="text-xs text-gray-600 font-medium">
-                          {mentionedUser.display_name || mentionedUser.username}
-                        </span>
-                      </button>
-                    ))}
-                    {poll.mentioned_users.length > 3 && (
-                      <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
-                        <div className="w-4 h-4 rounded-full bg-gray-400 flex items-center justify-center mr-1">
-                          <span className="text-xs text-white font-bold">+</span>
-                        </div>
-                        <span className="text-xs text-gray-600">
-                          {poll.mentioned_users.length - 3} más
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Mentioned users moved to options */}
               
 
 
