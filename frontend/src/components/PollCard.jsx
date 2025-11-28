@@ -42,7 +42,7 @@ const renderTextWithHashtags = (text, navigate) => {
   });
 };
 
-const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, userVote, fullScreen = false }) => {
+const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, userVote, fullScreen = false, globalMentions = [] }) => {
   // Detect mobile device with window resize handling
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   
