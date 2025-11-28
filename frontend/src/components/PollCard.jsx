@@ -68,11 +68,21 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
   };
 
   const renderMentionedUsers = () => {
-    if (!option.mentioned_users || option.mentioned_users.length === 0) return null;
+    const optionMentions = option.mentioned_users || [];
+    const globalMentionsList = globalMentions || [];
+    
+    // Merge mentions
+    const allMentionsMap = new Map();
+    globalMentionsList.forEach(u => allMentionsMap.set(u.id || u.username, u));
+    optionMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
+    
+    const displayMentions = Array.from(allMentionsMap.values());
+
+    if (displayMentions.length === 0) return null;
     
     return (
       <div className="absolute bottom-2 left-2 flex flex-wrap gap-1 z-20" onClick={(e) => e.stopPropagation()}>
-        {option.mentioned_users.slice(0, 2).map((user, idx) => (
+        {displayMentions.slice(0, 2).map((user, idx) => (
           <div 
             key={idx} 
             className="relative group/user cursor-pointer transition-transform hover:scale-110"
@@ -88,9 +98,9 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
             </Avatar>
           </div>
         ))}
-        {option.mentioned_users.length > 2 && (
+        {displayMentions.length > 2 && (
           <div className="w-6 h-6 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center border border-white shadow-sm">
-            +{option.mentioned_users.length - 2}
+            +{displayMentions.length - 2}
           </div>
         )}
       </div>
