@@ -203,6 +203,7 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.2 }}
       >
+        {renderMentionedUsers()}
         <img 
           src={media.thumbnail} 
           alt="Video thumbnail"
