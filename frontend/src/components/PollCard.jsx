@@ -809,6 +809,7 @@ const PollCard = ({ poll, onVote, onLike, onShare, onComment, onSave, fullScreen
                           totalVotes={poll.totalVotes}
                           userVote={poll.userVote}
                           fullScreen={true}
+                          globalMentions={poll.mentioned_users}
                         />
                       </div>
                       
