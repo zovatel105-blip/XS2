@@ -305,16 +305,11 @@ const GridLayout = ({
               <div className="absolute inset-0 ring-2 ring-green-400 ring-inset"></div>
             )}
 
-            {/* Mentioned Users */}
+            {/* Mentioned Users - only for this option */}
             {isActive && (() => {
               const optionMentions = option.mentioned_users || [];
-              const globalMentions = poll.mentioned_users || [];
-              const allMentionsMap = new Map();
-              globalMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
-              optionMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
-              const displayMentions = Array.from(allMentionsMap.values());
-              
-              if (displayMentions.length === 0) return null;
+
+              if (optionMentions.length === 0) return null;
 
               let mentionPosition;
               
