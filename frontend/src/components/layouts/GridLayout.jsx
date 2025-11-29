@@ -358,10 +358,10 @@ const GridLayout = ({
                         </span>
                       </button>
                     ))}
-                    {displayMentions.length > 2 && (
+                    {optionMentions.length > 2 && (
                       <div className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
                         <span className="text-xs text-white/90">
-                          +{displayMentions.length - 2}
+                          +{optionMentions.length - 2}
                         </span>
                       </div>
                     )}
