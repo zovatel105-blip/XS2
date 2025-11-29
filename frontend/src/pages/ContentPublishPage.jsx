@@ -157,7 +157,12 @@ const ContentPublishPage = () => {
               media_url: uploadResult.public_url,  // ⚡ URL del servidor
               thumbnail_url: uploadResult.thumbnail_url || uploadResult.public_url,
               media_transform: opt.media_transform || null,
-              mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(u => u.id) : []
+              // Usar mentioned_users (shape que viene de ContentCreationPage) y mantener compatibilidad con mentionedUsers
+              mentioned_users: opt.mentioned_users
+                ? opt.mentioned_users.map(u => u.id)
+                : opt.mentionedUsers
+                  ? opt.mentionedUsers.map(u => u.id)
+                  : []
             };
           }
           return {
