@@ -173,8 +173,9 @@ const ContentPublishPage = () => {
             thumbnail_url: opt.thumbnail_url || opt.media_url,
             media_transform: opt.media_transform || null,
             // Usar mentioned_users (shape que viene de ContentCreationPage) y mantener compatibilidad con mentionedUsers
-            mentioned_users: opt.mentioned_users
-              ? opt.mentioned_users.map(u => u.id)
+            // Si mentioned_users ya es un array de IDs (strings), lo usamos tal cual
+            mentioned_users: Array.isArray(opt.mentioned_users) && opt.mentioned_users.length > 0
+              ? opt.mentioned_users
               : opt.mentionedUsers
                 ? opt.mentionedUsers.map(u => u.id)
                 : []
