@@ -171,7 +171,12 @@ const ContentPublishPage = () => {
             media_url: opt.media_url,
             thumbnail_url: opt.thumbnail_url || opt.media_url,
             media_transform: opt.media_transform || null,
-            mentioned_users: opt.mentionedUsers ? opt.mentionedUsers.map(u => u.id) : []
+            // Usar mentioned_users (shape que viene de ContentCreationPage) y mantener compatibilidad con mentionedUsers
+            mentioned_users: opt.mentioned_users
+              ? opt.mentioned_users.map(u => u.id)
+              : opt.mentionedUsers
+                ? opt.mentionedUsers.map(u => u.id)
+                : []
           };
         });
       }
