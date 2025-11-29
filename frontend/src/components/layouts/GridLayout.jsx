@@ -333,7 +333,7 @@ const GridLayout = ({
               return (
                 <div className={`absolute ${mentionPosition} left-2 right-2 z-10`}>
                   <div className="flex flex-wrap gap-1 items-center justify-center mb-1">
-                    {displayMentions.slice(0, 2).map((mentionedUser, index) => (
+                    {optionMentions.slice(0, 2).map((mentionedUser, index) => (
                       <button
                         key={mentionedUser.id || index}
                         onClick={(e) => {
