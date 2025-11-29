@@ -69,20 +69,12 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
 
   const renderMentionedUsers = () => {
     const optionMentions = option.mentioned_users || [];
-    const globalMentionsList = globalMentions || [];
-    
-    // Merge mentions
-    const allMentionsMap = new Map();
-    globalMentionsList.forEach(u => allMentionsMap.set(u.id || u.username, u));
-    optionMentions.forEach(u => allMentionsMap.set(u.id || u.username, u));
-    
-    const displayMentions = Array.from(allMentionsMap.values());
 
-    if (displayMentions.length === 0) return null;
-    
+    if (optionMentions.length === 0) return null;
+
     return (
       <div className="absolute bottom-2 left-2 flex flex-wrap gap-1 z-20" onClick={(e) => e.stopPropagation()}>
-        {displayMentions.slice(0, 2).map((user, idx) => (
+        {optionMentions.slice(0, 2).map((user, idx) => (
           <div 
             key={idx} 
             className="relative group/user cursor-pointer transition-transform hover:scale-110"
