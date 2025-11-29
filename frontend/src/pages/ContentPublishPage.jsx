@@ -158,11 +158,13 @@ const ContentPublishPage = () => {
               thumbnail_url: uploadResult.thumbnail_url || uploadResult.public_url,
               media_transform: opt.media_transform || null,
               // Usar mentioned_users (shape que viene de ContentCreationPage) y mantener compatibilidad con mentionedUsers
-              // Si mentioned_users ya es un array de IDs (strings), lo usamos tal cual
+              // Si mentioned_users ya es un array de IDs (strings), lo usamos tal cual pero filtrando valores nulos/invalidos
               mentioned_users: Array.isArray(opt.mentioned_users) && opt.mentioned_users.length > 0
-                ? opt.mentioned_users
+                ? opt.mentioned_users.filter(id => typeof id === 'string' && id)
                 : opt.mentionedUsers
-                  ? opt.mentionedUsers.map(u => u.id)
+                  ? opt.mentionedUsers
+                      .map(u => u.id)
+                      .filter(id => typeof id === 'string' && id)
                   : []
             };
           }
