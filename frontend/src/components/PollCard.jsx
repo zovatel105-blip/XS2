@@ -90,9 +90,9 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
             </Avatar>
           </div>
         ))}
-        {displayMentions.length > 2 && (
+        {optionMentions.length > 2 && (
           <div className="w-6 h-6 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center border border-white shadow-sm">
-            +{displayMentions.length - 2}
+            +{optionMentions.length - 2}
           </div>
         )}
       </div>
