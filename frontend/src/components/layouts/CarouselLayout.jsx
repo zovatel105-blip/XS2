@@ -306,29 +306,41 @@ const CarouselLayout = ({
                 if (isThumbnail || optionMentions.length === 0) return null;
 
                 return (
-                  <div className="absolute bottom-64 left-0 right-0 z-20 flex flex-wrap gap-1 justify-center" onClick={(e) => e.stopPropagation()}>
-                    {optionMentions.slice(0, 2).map((user, idx) => (
-                      <div
-                        key={idx}
-                        className="relative group/user cursor-pointer transition-transform hover:scale-110"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const username = user.username || user.display_name?.toLowerCase().replace(/\s+/g, '_');
-                          if (username) navigate(`/profile/${username}`);
-                        }}
-                      >
-                        <img
-                          src={user.avatar_url || '/default-avatar.png'}
-                          className="w-8 h-8 rounded-full border border-white shadow-sm"
-                          alt={user.display_name}
-                        />
-                      </div>
-                    ))}
-                    {optionMentions.length > 2 && (
-                      <div className="w-8 h-8 rounded-full bg-black/60 text-white text-xs flex items-center justify-center border border-white shadow-sm">
-                        +{optionMentions.length - 2}
-                      </div>
-                    )}
+                  <div className="absolute bottom-64 left-2 right-2 z-20">
+                    <div className="flex flex-wrap gap-1 items-center justify-center mb-1">
+                      {optionMentions.slice(0, 2).map((mentionedUser, index) => (
+                        <button
+                          key={mentionedUser.id || index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const username = mentionedUser.username || mentionedUser.display_name?.toLowerCase().replace(/\s+/g, '_');
+                            if (username) {
+                              navigate(`/profile/${username}`);
+                            }
+                          }}
+                          className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm cursor-pointer hover:bg-white/30 transition-all duration-200"
+                        >
+                          <img
+                            src={mentionedUser.avatar_url || '/default-avatar.png'}
+                            alt={`@${mentionedUser.username || mentionedUser.display_name}`}
+                            className="w-3 h-3 rounded-full mr-1 border border-white/50"
+                            onError={(e) => {
+                              e.target.src = '/default-avatar.png';
+                            }}
+                          />
+                          <span className="text-xs text-white font-medium">
+                            {(mentionedUser.display_name || mentionedUser.username)?.slice(0, 8)}
+                          </span>
+                        </button>
+                      ))}
+                      {optionMentions.length > 2 && (
+                        <div className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm">
+                          <span className="text-xs text-white/90">
+                            +{optionMentions.length - 2}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })()}
