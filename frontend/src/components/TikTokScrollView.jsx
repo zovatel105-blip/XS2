@@ -584,7 +584,7 @@ const TikTokPollCard = ({
                       className="object-cover" 
                     />
                     <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 flex items-center justify-center">
-                      <User className="w-6 h-6" />
+                      <User className="w-5 h-5" />
                     </AvatarFallback>
                   </Avatar>
                 )}
