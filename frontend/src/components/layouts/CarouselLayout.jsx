@@ -306,7 +306,7 @@ const CarouselLayout = ({
                 if (isThumbnail || optionMentions.length === 0) return null;
 
                 return (
-                  <div className="absolute bottom-64 left-2 right-2 z-20">
+                  <div className="absolute bottom-24 left-2 right-2 z-20">
                     <div className="flex flex-wrap gap-1 items-center justify-center mb-1">
                       {optionMentions.slice(0, 2).map((mentionedUser, index) => (
                         <button
