@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { Trophy } from 'lucide-react';
+import { Trophy, User } from 'lucide-react';
 import videoMemoryManager from '../../services/videoMemoryManager';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 
 const GridLayout = ({ 
   poll, 
