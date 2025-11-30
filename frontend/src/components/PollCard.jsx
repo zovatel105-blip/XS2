@@ -85,8 +85,10 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
             }}
           >
             <Avatar className="w-6 h-6 border border-white shadow-sm">
-              <AvatarImage src={user.avatar_url || '/default-avatar.png'} />
-              <AvatarFallback className="text-[8px]">{user.display_name?.[0] || 'U'}</AvatarFallback>
+              <AvatarImage src={user.avatar_url} />
+              <AvatarFallback className="bg-gray-400 text-white flex items-center justify-center">
+                <User className="w-3 h-3" />
+              </AvatarFallback>
             </Avatar>
           </div>
         ))}
