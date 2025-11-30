@@ -551,7 +551,7 @@ const TikTokPollCard = ({
               <button
                 onClick={handleAvatarClick}
                 className={cn(
-                  "w-14 h-14 rounded-full overflow-hidden relative transition-transform duration-200 hover:scale-110",
+                  "w-12 h-12 rounded-full overflow-hidden relative transition-transform duration-200 hover:scale-110",
                   authorHasStories && authorStoriesData?.has_unviewed
                     ? "p-[1.5px] bg-gradient-to-tr from-[#00FFFF] via-[#8A2BE2] to-[#000000]" 
                     : authorHasStories && !authorStoriesData?.has_unviewed
