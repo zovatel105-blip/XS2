@@ -6,8 +6,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { Trophy } from 'lucide-react';
+import { Trophy, User } from 'lucide-react';
 import audioManager from '../../services/AudioManager';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 
 const CarouselLayout = ({
   poll,
