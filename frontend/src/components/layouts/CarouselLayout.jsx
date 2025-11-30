@@ -321,14 +321,15 @@ const CarouselLayout = ({
                           }}
                           className="flex items-center bg-white/20 px-1 py-0.5 rounded-full backdrop-blur-sm cursor-pointer hover:bg-white/30 transition-all duration-200"
                         >
-                          <img
-                            src={mentionedUser.avatar_url || '/default-avatar.png'}
-                            alt={`@${mentionedUser.username || mentionedUser.display_name}`}
-                            className="w-3 h-3 rounded-full mr-1 border border-white/50"
-                            onError={(e) => {
-                              e.target.src = '/default-avatar.png';
-                            }}
-                          />
+                          <Avatar className="w-3 h-3 mr-1 border border-white/50">
+                            <AvatarImage 
+                              src={mentionedUser.avatar_url} 
+                              alt={`@${mentionedUser.username || mentionedUser.display_name}`}
+                            />
+                            <AvatarFallback className="bg-gray-400 text-white text-[8px] flex items-center justify-center">
+                              <User className="w-2 h-2" />
+                            </AvatarFallback>
+                          </Avatar>
                           <span className="text-xs text-white font-medium">
                             {(mentionedUser.display_name || mentionedUser.username)?.slice(0, 8)}
                           </span>
