@@ -49,9 +49,8 @@ const CarouselLayout = ({
   const setCurrentSlide =
     onSlideChange || setInternalCurrentSlide;
 
-  // === Touch swipe ===
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
+  // === Swiper instance reference ===
+  const swiperRef = useRef(null);
 
   const mobile = window.innerWidth <= 768;
 
