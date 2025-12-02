@@ -1615,6 +1615,19 @@ const TikTokScrollView = ({
         [style*="will-change: transform"] {
           contain: layout style paint;
         }
+
+        /* Swiper custom styles */
+        .swiper-slide {
+          height: 100vh;
+          height: 100dvh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .swiper-wrapper {
+          transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
       `}</style>
     </div>
   );
