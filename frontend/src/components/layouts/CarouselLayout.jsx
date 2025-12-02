@@ -236,11 +236,11 @@ const CarouselLayout = ({
           const isSelected = poll.userVote === option.id;
 
           return (
-            <div
-              key={option.id}
-              className="relative flex-shrink-0 w-full h-full overflow-hidden rounded-lg"
-              onClick={() => onVote(option.id)}
-            >
+            <SwiperSlide key={option.id}>
+              <div
+                className="relative w-full h-full overflow-hidden rounded-lg"
+                onClick={() => onVote(option.id)}
+              >
               {/* MEDIA */}
               <div className="absolute inset-0">
                 {option.media?.type === 'video' ? (
