@@ -1333,18 +1333,10 @@ const TikTokScrollView = ({
   // 🖱️ Mouse wheel detection - Now handled by Swiper Mousewheel module
   // useEffect removed - Swiper handles this natively
 
-  // ⌨️ Enhanced keyboard navigation
+  // ⌨️ Enhanced keyboard navigation - Escape key only (arrows handled by Swiper)
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === 'ArrowDown' || event.key === ' ') {
-        event.preventDefault();
-        const nextIndex = Math.min(activeIndex + 1, polls.length - 1);
-        navigateToIndex(nextIndex);
-      } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        const prevIndex = Math.max(activeIndex - 1, 0);
-        navigateToIndex(prevIndex);
-      } else if (event.key === 'Escape') {
+      if (event.key === 'Escape') {
         console.log('⌨️ ESCAPE KEY PRESSED - Stopping audio');
         audioManager.stop().then(() => {
           onExitTikTok?.();
@@ -1354,7 +1346,7 @@ const TikTokScrollView = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeIndex, polls.length, onExitTikTok, navigateToIndex]);
+  }, [onExitTikTok]);
 
   // 👆 Touch gesture detection with velocity and momentum
   useEffect(() => {
