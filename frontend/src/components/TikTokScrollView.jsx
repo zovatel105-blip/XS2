@@ -1348,86 +1348,8 @@ const TikTokScrollView = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onExitTikTok]);
 
-  // 👆 Touch gesture detection with velocity and momentum
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const state = gestureState.current;
-    
-    const handleTouchStart = (e) => {
-      if (isTransitioning) return;
-      
-      const touch = e.touches[0];
-      state.startY = touch.clientY;
-      state.lastY = touch.clientY;
-      state.startTime = Date.now();
-      state.lastTime = state.startTime;
-      state.isGesturing = true;
-      state.velocity = 0;
-    };
-    
-    const handleTouchMove = (e) => {
-      if (!state.isGesturing) return;
-      
-      const touch = e.touches[0];
-      const currentY = touch.clientY;
-      const currentTime = Date.now();
-      const deltaY = state.lastY - currentY;
-      const deltaTime = currentTime - state.lastTime;
-      
-      // Calculate instantaneous velocity
-      if (deltaTime > 0) {
-        state.velocity = deltaY / deltaTime;
-      }
-      
-      state.lastY = currentY;
-      state.lastTime = currentTime;
-      
-      // Prevent page scroll when swiping
-      if (Math.abs(touch.clientY - state.startY) > 10) {
-        e.preventDefault();
-      }
-    };
-    
-    const handleTouchEnd = (e) => {
-      if (!state.isGesturing) return;
-      state.isGesturing = false;
-      
-      const endY = e.changedTouches[0].clientY;
-      const endTime = Date.now();
-      const totalDeltaY = state.startY - endY;
-      const totalDeltaTime = endTime - state.startTime;
-      
-      // Calculate average velocity
-      const avgVelocity = Math.abs(totalDeltaY) / totalDeltaTime;
-      const instVelocity = Math.abs(state.velocity);
-      
-      // Multi-criteria swipe detection
-      const isQuickFlick = totalDeltaTime < 300 && avgVelocity > 0.5;
-      const isMomentumSwipe = instVelocity > 1.5;
-      const isLongSwipe = Math.abs(totalDeltaY) > 80;
-      const isShortFlick = Math.abs(totalDeltaY) > 40 && avgVelocity > 0.8;
-      
-      if (isQuickFlick || isMomentumSwipe || isLongSwipe || isShortFlick) {
-        const direction = totalDeltaY > 0 ? 1 : -1;
-        const newIndex = activeIndex + direction;
-        navigateToIndex(newIndex);
-      }
-    };
-    
-    const container = containerRef.current;
-    const options = { passive: false };
-    
-    container.addEventListener('touchstart', handleTouchStart, options);
-    container.addEventListener('touchmove', handleTouchMove, options);
-    container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [activeIndex, isTransitioning, navigateToIndex]);
+  // 👆 Touch gesture detection - Now handled by Swiper touch modules
+  // useEffect removed - Swiper handles touch gestures natively with better performance
 
   // No polls state - Show loading spinner
   if (!polls.length) {
