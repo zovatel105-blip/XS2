@@ -1058,6 +1058,7 @@ const TikTokScrollView = ({
   onIndexChange = null
 }) => {
   const containerRef = useRef(null);
+  const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [savedPolls, setSavedPolls] = useState(new Set());
@@ -1066,16 +1067,6 @@ const TikTokScrollView = ({
   const { user: currentUser } = useAuth();
   const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
   const controls = useAnimation();
-  
-  // Track touch/wheel state for gesture detection
-  const gestureState = useRef({
-    startY: 0,
-    startTime: 0,
-    lastY: 0,
-    lastTime: 0,
-    velocity: 0,
-    isGesturing: false
-  });
 
   // Load user's saved polls on component mount
   useEffect(() => {
