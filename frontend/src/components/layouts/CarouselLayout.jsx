@@ -1,6 +1,7 @@
 // ==========================
 //  FULL FIXED CAROUSEL LAYOUT
 //  by ChatGPT – optimized playback, fixed audio, fixed video ghost playback
+//  Updated with Swiper for improved scrolling experience
 // ==========================
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -9,6 +10,12 @@ import { cn } from '../../lib/utils';
 import { Trophy, User } from 'lucide-react';
 import audioManager from '../../services/AudioManager';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
+
+// Swiper imports
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const CarouselLayout = ({
   poll,
