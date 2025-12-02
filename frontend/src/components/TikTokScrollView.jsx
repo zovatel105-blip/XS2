@@ -27,6 +27,11 @@ import LayoutRenderer from './layouts/LayoutRenderer';
 import feedMenuService from '../services/feedMenuService';
 import storyService from '../services/storyService';
 
+// Swiper imports for improved scrolling
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Mousewheel, Keyboard } from 'swiper/modules';
+import 'swiper/css';
+
 // Helper function to render text with clickable hashtags
 const renderTextWithHashtags = (text, navigate) => {
   if (!text) return null;
