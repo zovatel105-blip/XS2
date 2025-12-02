@@ -1277,6 +1277,12 @@ const TikTokScrollView = ({
   // Performance optimization - prevent unnecessary re-renders
   const memoizedActiveIndex = useMemo(() => activeIndex, [activeIndex]);
 
+  // Swiper slide change handler
+  const handleSlideChange = (swiper) => {
+    const newIndex = swiper.activeIndex;
+    setActiveIndex(newIndex);
+  };
+
   // Dynamic loading when user navigates between posts (Search Page functionality)
   useEffect(() => {
     if (onIndexChange && activeIndex !== lastActiveIndex) {
