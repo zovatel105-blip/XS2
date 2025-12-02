@@ -64,23 +64,10 @@ const CarouselLayout = ({
     currentSlideSafe.current = currentSlide;
   }, [currentSlide]);
 
-  // ========== TOUCH HANDLERS ==========
-  const handleTouchStart = (e) => {
-    setTouchStart(e.targetTouches[0].clientX);
-    setTouchEnd(null);
-  };
-
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-
-    const diff = touchStart - touchEnd;
-
-    if (diff > 50) setCurrentSlide((s) => (s + 1) % totalSlides);
-    if (diff < -50) setCurrentSlide((s) => (s - 1 + totalSlides) % totalSlides);
+  // ========== SWIPER SLIDE CHANGE HANDLER ==========
+  const handleSlideChange = (swiper) => {
+    const newIndex = swiper.activeIndex;
+    setCurrentSlide(newIndex);
   };
 
   // ========== AUDIO HANDLING ==========
