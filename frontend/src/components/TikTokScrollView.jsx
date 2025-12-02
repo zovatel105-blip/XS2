@@ -1311,16 +1311,10 @@ const TikTokScrollView = ({
     console.log(`🎬 Navigating from index ${activeIndex} to ${newIndex}`);
     setIsTransitioning(true);
     
-    // Animate to new position
-    await controls.start({
-      y: `-${newIndex * 100}vh`,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-        mass: 0.8
-      }
-    });
+    // Use Swiper to navigate
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(newIndex);
+    }
     
     setActiveIndex(newIndex);
     setTimeout(() => setIsTransitioning(false), 100);
@@ -1334,7 +1328,7 @@ const TikTokScrollView = ({
         onLoadMore();
       }
     }
-  }, [activeIndex, polls.length, isTransitioning, controls, onLoadMore, hasMoreContent, isLoadingMore]);
+  }, [activeIndex, polls.length, isTransitioning, onLoadMore, hasMoreContent, isLoadingMore]);
 
   // 🖱️ Mouse wheel detection with smooth threshold
   useEffect(() => {
