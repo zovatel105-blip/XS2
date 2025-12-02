@@ -1330,39 +1330,8 @@ const TikTokScrollView = ({
     }
   }, [activeIndex, polls.length, isTransitioning, onLoadMore, hasMoreContent, isLoadingMore]);
 
-  // 🖱️ Mouse wheel detection with smooth threshold
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    let wheelTimeout;
-    let accumulatedDelta = 0;
-    const wheelThreshold = 50; // Minimum scroll distance to trigger navigation
-    
-    const handleWheel = (e) => {
-      if (isTransitioning) return;
-      
-      e.preventDefault();
-      accumulatedDelta += e.deltaY;
-      
-      clearTimeout(wheelTimeout);
-      wheelTimeout = setTimeout(() => {
-        if (Math.abs(accumulatedDelta) >= wheelThreshold) {
-          const direction = accumulatedDelta > 0 ? 1 : -1;
-          const newIndex = activeIndex + direction;
-          navigateToIndex(newIndex);
-        }
-        accumulatedDelta = 0;
-      }, 150);
-    };
-    
-    const container = containerRef.current;
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-      clearTimeout(wheelTimeout);
-    };
-  }, [activeIndex, isTransitioning, navigateToIndex]);
+  // 🖱️ Mouse wheel detection - Now handled by Swiper Mousewheel module
+  // useEffect removed - Swiper handles this natively
 
   // ⌨️ Enhanced keyboard navigation
   useEffect(() => {
