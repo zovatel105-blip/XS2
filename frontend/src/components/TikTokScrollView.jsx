@@ -1421,7 +1421,7 @@ const TikTokScrollView = ({
 
       {/* Navigation hints - Botones de navegación eliminados por solicitud del usuario */}
 
-      {/* Main container - Framer Motion paginated scroll */}
+      {/* Main container - Swiper vertical scrolling */}
       <div 
         ref={containerRef}
         className="w-full h-full overflow-hidden"
@@ -1433,23 +1433,35 @@ const TikTokScrollView = ({
           position: 'relative'
         }}
       >
-        <motion.div
-          animate={controls}
-          initial={{ y: 0 }}
-          style={{
-            height: `${polls.length * 100}vh`,
-            width: '100%',
-            willChange: 'transform'
+        <Swiper
+          modules={[Mousewheel, Keyboard]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
           }}
-          transition={{
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-            mass: 0.8
+          onSlideChange={handleSlideChange}
+          direction="vertical"
+          slidesPerView={1}
+          spaceBetween={0}
+          mousewheel={{
+            forceToAxis: true,
+            sensitivity: 1,
+            releaseOnEdges: false,
+          }}
+          keyboard={{
+            enabled: true,
+            onlyInViewport: true,
+          }}
+          speed={500}
+          initialSlide={initialIndex}
+          className="h-full w-full"
+          style={{
+            height: '100vh',
+            height: '100dvh',
           }}
         >
           {preloadedPolls.map((poll, index) => (
-          <TikTokPollCard
+          <SwiperSlide key={poll.id}>
+            <TikTokPollCard
             key={poll.id}
             poll={poll}
             onVote={onVote}
