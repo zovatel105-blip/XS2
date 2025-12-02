@@ -216,16 +216,19 @@ const CarouselLayout = ({
   // ===========================================================
 
   return (
-    <div
-      className="relative w-full h-full overflow-hidden"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* SLIDE WRAPPER */}
-      <div
-        className="flex h-full transition-transform duration-300 ease-in-out"
-        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+    <div className="relative w-full h-full overflow-hidden">
+      {/* SWIPER CAROUSEL */}
+      <Swiper
+        modules={[Pagination]}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
+        onSlideChange={handleSlideChange}
+        initialSlide={currentSlide}
+        spaceBetween={0}
+        slidesPerView={1}
+        speed={300}
+        className="h-full w-full"
       >
         {poll.options.map((option, idx) => {
           const percentage = getPercentage(option.votes);
