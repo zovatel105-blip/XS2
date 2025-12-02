@@ -1238,18 +1238,21 @@ const TikTokScrollView = ({
 
   // Initialize position when component mounts
   useEffect(() => {
-    if (initialIndex > 0) {
+    if (initialIndex > 0 && swiperRef.current) {
       // Set position instantly without animation
-      controls.set({ y: `-${initialIndex * 100}vh` });
+      swiperRef.current.slideTo(initialIndex, 0);
       setActiveIndex(initialIndex);
       setLastActiveIndex(initialIndex);
     }
-  }, [initialIndex, controls]);
+  }, [initialIndex]);
 
   // Update active index when initialIndex changes (Search Page dynamic loading)
   useEffect(() => {
     setActiveIndex(initialIndex);
     setLastActiveIndex(initialIndex);
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(initialIndex, 0);
+    }
   }, [initialIndex]);
 
   // ✅ SIMPLIFIED OPTIMIZATION - Less aggressive, more stable
