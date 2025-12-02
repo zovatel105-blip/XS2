@@ -342,18 +342,22 @@ const CarouselLayout = ({
                   </div>
                 );
               })()}
-            </div>
+              </div>
+            </SwiperSlide>
           );
         })}
-      </div>
+      </Swiper>
 
       {/* INDICATORS - Solo visible cuando NO es thumbnail */}
       {!isThumbnail && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {poll.options.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrentSlide(i)}
+              onClick={() => {
+                setCurrentSlide(i);
+                swiperRef.current?.slideTo(i);
+              }}
               className={cn(
                 'w-8 h-2 rounded-full transition-all',
                 i === currentSlide ? 'bg-white' : 'bg-white/40'
