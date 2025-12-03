@@ -3739,6 +3739,14 @@ async def get_message_requests(current_user: UserResponse = Depends(get_current_
             "status": "pending"
         }).sort("created_at", -1).to_list(50)
         
+        # Get viewed request IDs
+        request_ids = [req["id"] for req in requests]
+        viewed_requests = await db.request_views.find({
+            "user_id": current_user.id,
+            "request_id": {"$in": request_ids}
+        }).to_list(1000)
+        viewed_ids = {v["request_id"] for v in viewed_requests}
+        
         result = []
         for req in requests:
             # Get sender info
@@ -3757,14 +3765,80 @@ async def get_message_requests(current_user: UserResponse = Depends(get_current_
                     "preview": req.get("message", "")[:100] if req.get("message") else "Solicitud de mensaje",
                     "created_at": req["created_at"],
                     "updated_at": req.get("updated_at"),
-                    "unread": True
+                    "unread": req["id"] not in viewed_ids
                 })
         
+        print(f"✅ Returning {len(result)} message requests, {len(viewed_ids)} already viewed")
         return result
         
     except Exception as e:
         print(f"❌ Error getting message requests: {str(e)}")
         return []
+
+
+@api_router.post("/messages/requests/mark-read")
+async def mark_requests_as_read(current_user: UserResponse = Depends(get_current_user)):
+    """Mark all message requests as read for the current user"""
+    try:
+        # Get pending chat requests where current user is the receiver
+        requests = await db.chat_requests.find({
+            "receiver_id": current_user.id,
+            "status": "pending"
+        }).to_list(50)
+        
+        # Mark all as read (insert if not exists)
+        now = datetime.utcnow()
+        marked_count = 0
+        for req in requests:
+            await db.request_views.update_one(
+                {"user_id": current_user.id, "request_id": req["id"]},
+                {"$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "user_id": current_user.id,
+                    "request_id": req["id"],
+                    "viewed_at": now
+                }},
+                upsert=True
+            )
+            marked_count += 1
+        
+        print(f"✅ Marked {marked_count} requests as read for user {current_user.id}")
+        return {"success": True, "marked_count": marked_count}
+        
+    except Exception as e:
+        print(f"❌ Error marking requests as read: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Error marking requests as read")
+
+
+@api_router.get("/messages/requests/unread-count")
+async def get_unread_requests_count(current_user: UserResponse = Depends(get_current_user)):
+    """Get count of unread message requests for the current user"""
+    try:
+        # Get pending chat requests where current user is the receiver
+        requests = await db.chat_requests.find({
+            "receiver_id": current_user.id,
+            "status": "pending"
+        }).to_list(50)
+        
+        request_ids = [req["id"] for req in requests]
+        
+        # Get viewed requests
+        viewed_requests = await db.request_views.find({
+            "user_id": current_user.id,
+            "request_id": {"$in": request_ids}
+        }).to_list(1000)
+        viewed_ids = {v["request_id"] for v in viewed_requests}
+        
+        # Count unread
+        unread_count = len([rid for rid in request_ids if rid not in viewed_ids])
+        
+        return {"unread_count": unread_count, "total_count": len(request_ids)}
+        
+    except Exception as e:
+        print(f"❌ Error getting unread requests count: {str(e)}")
+        return {"unread_count": 0, "total_count": 0}
 
 # =============  CHAT REQUEST ENDPOINTS =============
 
