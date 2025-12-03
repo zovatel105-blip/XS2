@@ -1447,22 +1447,6 @@ const ContentCreationPage = () => {
           align-items: center;
           justify-content: center;
         }
-
-        .swiper-pagination {
-          bottom: 20px !important;
-        }
-
-        .swiper-pagination-bullet {
-          background: rgba(255, 255, 255, 0.5);
-          width: 8px;
-          height: 8px;
-        }
-
-        .swiper-pagination-bullet-active {
-          background: white;
-          width: 24px;
-          border-radius: 4px;
-        }
       `}</style>
     </div>
   );
