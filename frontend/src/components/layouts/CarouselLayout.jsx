@@ -348,9 +348,9 @@ const CarouselLayout = ({
         })}
       </Swiper>
 
-      {/* INDICADORES PERSONALIZADOS - Diseño moderno */}
+      {/* INDICADORES PERSONALIZADOS - Sin marco */}
       {!isThumbnail && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {poll.options.map((_, i) => (
             <button
               key={i}
