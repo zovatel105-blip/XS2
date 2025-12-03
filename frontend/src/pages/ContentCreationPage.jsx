@@ -13,9 +13,7 @@ import config from '../config/config';
 
 // Swiper imports for carousel
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
 import 'swiper/css';
-import 'swiper/css/pagination';
 
 // Layout Icon Components - Estilo minimalista con fondo transparente difuminado
 const LayoutIcon = ({ type }) => {
