@@ -832,12 +832,59 @@ const ProfilePage = () => {
   };
 
   // Eliminar red social
-  const handleRemoveSocialLink = (linkId) => {
-    setSocialLinks(prev => {
-      const newLinks = { ...prev };
-      delete newLinks[linkId];
-      return newLinks;
-    });
+  const handleRemoveSocialLink = async (linkId) => {
+    // Create updated links without the deleted one
+    const updatedLinks = { ...socialLinks };
+    const removedLink = updatedLinks[linkId];
+    delete updatedLinks[linkId];
+    
+    // Update local state first
+    setSocialLinks(updatedLinks);
+    
+    // Save to backend automatically
+    setSavingSocialLinks(true);
+    try {
+      // Convert to array format for API
+      const linksArray = Object.values(updatedLinks).map(linkData => ({
+        name: linkData.name,
+        url: linkData.url,
+        color: linkData.color || '#007bff'
+      }));
+
+      console.log('🗑️ Auto-saving after removal:', linksArray);
+
+      const response = await fetch(config.API_ENDPOINTS.SOCIAL_LINKS.SAVE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          links: linksArray
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      toast({
+        title: "Enlace eliminado",
+        description: removedLink ? `${removedLink.name} ha sido eliminado exitosamente` : "Enlace eliminado exitosamente",
+      });
+
+    } catch (error) {
+      console.error('❌ Error saving after removal:', error);
+      toast({
+        title: "Error al guardar",
+        description: `No se pudo guardar el cambio: ${error.message}`,
+        variant: "destructive",
+      });
+      // Restore the deleted link if save failed
+      setSocialLinks(socialLinks);
+    } finally {
+      setSavingSocialLinks(false);
+    }
   };
 
   // Actualizar URL de red social
