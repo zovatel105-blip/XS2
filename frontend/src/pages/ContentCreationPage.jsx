@@ -260,11 +260,10 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
             {slots.map((slotIndex) => {
               const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
               return (
-                <div
-                  key={slotIndex}
-                  className="relative bg-black overflow-hidden group flex-shrink-0 h-full"
-                  style={{ width: `${100 / slots.length}%` }} // Each slot takes equal width
-                >
+                <SwiperSlide key={slotIndex}>
+                  <div
+                    className="relative bg-black overflow-hidden group h-full w-full"
+                  >
                   {/* Letter identifier removed for cleaner UI */}
                   
                   
