@@ -71,6 +71,18 @@ const RequestsPage = () => {
     });
   };
 
+  // Marcar todas las solicitudes como leídas
+  const markRequestsAsRead = async () => {
+    try {
+      console.log('📖 Marking all message requests as read...');
+      await apiRequest('/api/messages/requests/mark-read', { method: 'POST' });
+      console.log('✅ All message requests marked as read');
+    } catch (error) {
+      console.log('⚠️ Error marking requests as read:', error.message);
+      // No mostrar error al usuario, es una operación en background
+    }
+  };
+
   // Cargar solicitudes de mensajes
   const loadRequests = async () => {
     try {
@@ -82,18 +94,25 @@ const RequestsPage = () => {
         type: 'message_request',
         title: `${request.sender.display_name || request.sender.username}`,
         message: request.preview || 'Te ha enviado una solicitud de mensaje',
-        unreadCount: 1,
+        unreadCount: request.unread ? 1 : 0,
         time: formatTimeForInbox(request.created_at),
         avatar: request.sender.avatar_url, // Usar directamente avatar_url
         fallbackAvatar: getAvatarForUser(request.sender), // Separar el fallback
         userId: request.sender.id,
         requestId: request.id,
         isSystem: false,
-        needsApproval: true
+        needsApproval: request.unread // Solo mostrar badge "Nueva" si no ha sido vista
       }));
 
       setRequests(requestsData);
-      setRequestCount(requestsData.length);
+      
+      // Contar solo las no leídas para el badge
+      const unreadCount = requestsData.filter(r => r.unreadCount > 0).length;
+      setRequestCount(unreadCount);
+      
+      // Marcar todas como leídas después de cargarlas
+      await markRequestsAsRead();
+      
     } catch (error) {
       console.log('Error loading message requests:', error.message);
       setRequests([]);
