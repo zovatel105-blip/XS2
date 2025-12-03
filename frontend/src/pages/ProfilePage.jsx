@@ -746,7 +746,7 @@ const ProfilePage = () => {
   };
 
   // Agregar nueva red social personalizada
-  const handleAddCustomSocialLink = () => {
+  const handleAddCustomSocialLink = async () => {
     if (!newSocialName.trim() || !newSocialUrl.trim()) {
       toast({
         title: "Campos requeridos",
@@ -767,23 +767,68 @@ const ProfilePage = () => {
 
     console.log('➕ Adding new social link:', linkId, newLink);
     
-    setSocialLinks(prev => {
-      const updated = {
-        ...prev,
-        [linkId]: newLink
-      };
-      console.log('🔄 Updated socialLinks state:', updated);
-      return updated;
-    });
+    // Create the updated links object
+    const updatedLinks = {
+      ...socialLinks,
+      [linkId]: newLink
+    };
     
+    // Update local state first
+    setSocialLinks(updatedLinks);
+    console.log('🔄 Updated socialLinks state:', updatedLinks);
+    
+    // Close modal and clear inputs
     setNewSocialName('');
     setNewSocialUrl('');
     setShowAddSocialModal(false);
     
-    toast({
-      title: "Red social agregada",
-      description: `${newSocialName} ha sido agregado a tu perfil`,
-    });
+    // Save to backend automatically
+    setSavingSocialLinks(true);
+    try {
+      // Convert to array format for API
+      const linksArray = Object.values(updatedLinks).map(linkData => ({
+        name: linkData.name,
+        url: linkData.url,
+        color: linkData.color || '#007bff'
+      }));
+
+      console.log('💾 Auto-saving social links:', linksArray);
+
+      const response = await fetch(config.API_ENDPOINTS.SOCIAL_LINKS.SAVE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          links: linksArray
+        })
+      });
+
+      console.log('📡 Save response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Saved successfully:', result);
+      
+      toast({
+        title: "Enlace guardado",
+        description: `${newLink.name} ha sido agregado y guardado exitosamente`,
+      });
+
+    } catch (error) {
+      console.error('❌ Error saving social link:', error);
+      toast({
+        title: "Error al guardar",
+        description: `El enlace se agregó pero no se pudo guardar: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setSavingSocialLinks(false);
+    }
   };
 
   // Eliminar red social
