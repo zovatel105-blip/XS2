@@ -4075,7 +4075,7 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         comments = await db.comments.find({
             "$and": [
                 {"poll_id": {"$in": user_poll_ids}},
-                {"author_id": {"$ne": current_user.id}},  # Exclude self-comments
+                {"user_id": {"$ne": current_user.id}},  # Exclude self-comments (using correct field name)
                 {"created_at": {"$gte": seven_days_ago}}
             ]
         }).sort("created_at", -1).limit(20).to_list(20)
@@ -4083,7 +4083,7 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         print(f"DEBUG Activity: Found {len(comments)} comments on user's polls")
         
         for comment in comments:
-            user = await db.users.find_one({"id": comment["author_id"]})
+            user = await db.users.find_one({"id": comment["user_id"]})  # Using correct field name
             if user:
                 activities.append({
                     "id": f"comment-{comment['id']}",
