@@ -398,10 +398,11 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                       </div>
                     )}
                   </div>
-                </div>
+                  </div>
+                </SwiperSlide>
               );
             })}
-          </div>
+          </Swiper>
         </div>
       ) : (
         /* Regular grid layout */
