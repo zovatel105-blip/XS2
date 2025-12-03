@@ -1969,8 +1969,9 @@ const ProfilePage = () => {
                     className={`h-11 sm:h-12 rounded-2xl font-medium text-sm transition-all ${
                       isFollowing(viewedUser?.id || userId) 
                         ? 'bg-gray-100 text-gray-900 hover:bg-gray-200' 
-                        : 'bg-blue-500 text-white hover:bg-blue-600'
+                        : 'text-white hover:opacity-90'
                     }`}
+                    style={!isFollowing(viewedUser?.id || userId) ? {backgroundColor: '#B061FF'} : {}}
                     onClick={async () => {
                       const targetUserId = viewedUser?.id || userId;
                       try {
