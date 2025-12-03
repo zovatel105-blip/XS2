@@ -2571,8 +2571,9 @@ const ProfilePage = () => {
                               "px-6 py-1.5 rounded-md text-sm font-medium transition-colors flex-shrink-0 ml-2",
                               isFollowing(follower.id)
                                 ? "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300"
-                                : "bg-rose-500 text-white hover:bg-rose-600"
+                                : "text-white hover:opacity-90"
                             )}
+                            style={!isFollowing(follower.id) ? {backgroundColor: '#B061FF'} : {}}
                           >
                             {isFollowing(follower.id) ? "Siguiendo" : "Seguir"}
                           </button>
