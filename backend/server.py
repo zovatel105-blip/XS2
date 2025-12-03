@@ -4080,6 +4080,14 @@ async def get_recent_followers(current_user: UserResponse = Depends(get_current_
             "created_at": {"$gte": seven_days_ago}
         }).sort("created_at", -1).limit(50).to_list(50)
         
+        # Get viewed follower IDs
+        follower_ids = [follow["follower_id"] for follow in recent_follows]
+        viewed_followers = await db.follower_views.find({
+            "user_id": current_user.id,
+            "follower_id": {"$in": follower_ids}
+        }).to_list(1000)
+        viewed_ids = {v["follower_id"] for v in viewed_followers}
+        
         # Get follower details
         followers = []
         for follow in recent_follows:
@@ -4091,15 +4099,88 @@ async def get_recent_followers(current_user: UserResponse = Depends(get_current_
                     "display_name": follower.get("display_name", follower["username"]),
                     "avatar_url": follower.get("avatar_url"),  # Usar foto de perfil real
                     "followed_at": follow["created_at"],
-                    "is_verified": follower.get("is_verified", False)
+                    "is_verified": follower.get("is_verified", False),
+                    "unread": follower["id"] not in viewed_ids
                 })
         
+        print(f"✅ Returning {len(followers)} recent followers, {len(viewed_ids)} already viewed")
         return followers
         
     except Exception as e:
         # Return empty list if no follows collection or error
         print(f"Error getting recent followers: {e}")
         return []
+
+
+@api_router.post("/users/followers/mark-read")
+async def mark_followers_as_read(current_user: UserResponse = Depends(get_current_user)):
+    """Mark all recent followers as read for the current user"""
+    try:
+        # Calculate 7 days ago
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        
+        # Find recent follows
+        recent_follows = await db.follows.find({
+            "following_id": current_user.id,
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(50)
+        
+        # Mark all as read (insert if not exists)
+        now = datetime.utcnow()
+        marked_count = 0
+        for follow in recent_follows:
+            await db.follower_views.update_one(
+                {"user_id": current_user.id, "follower_id": follow["follower_id"]},
+                {"$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "user_id": current_user.id,
+                    "follower_id": follow["follower_id"],
+                    "viewed_at": now
+                }},
+                upsert=True
+            )
+            marked_count += 1
+        
+        print(f"✅ Marked {marked_count} followers as read for user {current_user.id}")
+        return {"success": True, "marked_count": marked_count}
+        
+    except Exception as e:
+        print(f"❌ Error marking followers as read: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Error marking followers as read")
+
+
+@api_router.get("/users/followers/unread-count")
+async def get_unread_followers_count(current_user: UserResponse = Depends(get_current_user)):
+    """Get count of unread new followers for the current user"""
+    try:
+        # Calculate 7 days ago
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        
+        # Find recent follows
+        recent_follows = await db.follows.find({
+            "following_id": current_user.id,
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(50)
+        
+        follower_ids = [follow["follower_id"] for follow in recent_follows]
+        
+        # Get viewed followers
+        viewed_followers = await db.follower_views.find({
+            "user_id": current_user.id,
+            "follower_id": {"$in": follower_ids}
+        }).to_list(1000)
+        viewed_ids = {v["follower_id"] for v in viewed_followers}
+        
+        # Count unread
+        unread_count = len([fid for fid in follower_ids if fid not in viewed_ids])
+        
+        return {"unread_count": unread_count, "total_count": len(follower_ids)}
+        
+    except Exception as e:
+        print(f"❌ Error getting unread followers count: {str(e)}")
+        return {"unread_count": 0, "total_count": 0}
 
 @api_router.get("/users/activity/recent")
 async def get_recent_activity(current_user: UserResponse = Depends(get_current_user)):
