@@ -4213,7 +4213,24 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         # Sort all activities by date
         activities.sort(key=lambda x: x["created_at"], reverse=True)
         
-        return activities[:30]  # Return max 30 activities
+        # Limit to max 30 activities
+        activities = activities[:30]
+        
+        # Check which activities have been viewed by the user
+        activity_ids = [a["id"] for a in activities]
+        viewed_activities = await db.activity_views.find({
+            "user_id": current_user.id,
+            "activity_id": {"$in": activity_ids}
+        }).to_list(1000)
+        viewed_ids = {v["activity_id"] for v in viewed_activities}
+        
+        # Update unread status based on view history
+        for activity in activities:
+            activity["unread"] = activity["id"] not in viewed_ids
+        
+        print(f"DEBUG Activity: Returning {len(activities)} activities, {len(viewed_ids)} already viewed")
+        
+        return activities
         
     except Exception as e:
         # Log error and return empty list
@@ -4221,6 +4238,164 @@ async def get_recent_activity(current_user: UserResponse = Depends(get_current_u
         import traceback
         traceback.print_exc()
         return []
+
+
+@api_router.post("/users/activity/mark-read")
+async def mark_activities_as_read(current_user: UserResponse = Depends(get_current_user)):
+    """Mark all activities as read for the current user"""
+    try:
+        # Get current activities to mark them as read
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        
+        # Get user's polls
+        user_polls = await db.polls.find({"author_id": current_user.id}).to_list(1000)
+        user_poll_ids = [poll["id"] for poll in user_polls]
+        
+        # Collect all activity IDs
+        activity_ids = []
+        
+        # Get likes on user's polls
+        likes = await db.poll_likes.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for like in likes:
+            activity_ids.append(f"like-{like['id']}")
+        
+        # Get comments on user's polls
+        comments = await db.comments.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for comment in comments:
+            activity_ids.append(f"comment-{comment['id']}")
+        
+        # Get votes on user's polls
+        votes = await db.votes.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for vote in votes:
+            activity_ids.append(f"vote-{vote['id']}")
+        
+        # Get general mentions
+        polls_with_mentions = await db.polls.find({
+            "mentioned_users": current_user.id,
+            "author_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for poll in polls_with_mentions:
+            activity_ids.append(f"mention-general-{poll['id']}")
+        
+        # Get option mentions
+        polls_with_option_mentions = await db.polls.find({
+            "options.mentioned_users.id": current_user.id,
+            "author_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for poll in polls_with_option_mentions:
+            activity_ids.append(f"mention-option-{poll['id']}")
+        
+        # Mark all as read (insert if not exists)
+        now = datetime.utcnow()
+        for activity_id in activity_ids:
+            await db.activity_views.update_one(
+                {"user_id": current_user.id, "activity_id": activity_id},
+                {"$setOnInsert": {
+                    "id": str(uuid.uuid4()),
+                    "user_id": current_user.id,
+                    "activity_id": activity_id,
+                    "viewed_at": now
+                }},
+                upsert=True
+            )
+        
+        print(f"✅ Marked {len(activity_ids)} activities as read for user {current_user.id}")
+        return {"success": True, "marked_count": len(activity_ids)}
+        
+    except Exception as e:
+        print(f"❌ Error marking activities as read: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Error marking activities as read")
+
+
+@api_router.get("/users/activity/unread-count")
+async def get_unread_activity_count(current_user: UserResponse = Depends(get_current_user)):
+    """Get count of unread activities for the current user"""
+    try:
+        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        
+        # Get user's polls
+        user_polls = await db.polls.find({"author_id": current_user.id}).to_list(1000)
+        user_poll_ids = [poll["id"] for poll in user_polls]
+        
+        # Collect all activity IDs
+        activity_ids = []
+        
+        # Count likes
+        likes = await db.poll_likes.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for like in likes:
+            activity_ids.append(f"like-{like['id']}")
+        
+        # Count comments
+        comments = await db.comments.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for comment in comments:
+            activity_ids.append(f"comment-{comment['id']}")
+        
+        # Count votes
+        votes = await db.votes.find({
+            "poll_id": {"$in": user_poll_ids},
+            "user_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for vote in votes:
+            activity_ids.append(f"vote-{vote['id']}")
+        
+        # Count mentions
+        polls_with_mentions = await db.polls.find({
+            "mentioned_users": current_user.id,
+            "author_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for poll in polls_with_mentions:
+            activity_ids.append(f"mention-general-{poll['id']}")
+        
+        polls_with_option_mentions = await db.polls.find({
+            "options.mentioned_users.id": current_user.id,
+            "author_id": {"$ne": current_user.id},
+            "created_at": {"$gte": seven_days_ago}
+        }).to_list(1000)
+        for poll in polls_with_option_mentions:
+            activity_ids.append(f"mention-option-{poll['id']}")
+        
+        # Get viewed activities
+        viewed_activities = await db.activity_views.find({
+            "user_id": current_user.id,
+            "activity_id": {"$in": activity_ids}
+        }).to_list(1000)
+        viewed_ids = {v["activity_id"] for v in viewed_activities}
+        
+        # Count unread
+        unread_count = len([aid for aid in activity_ids if aid not in viewed_ids])
+        
+        return {"unread_count": unread_count, "total_count": len(activity_ids)}
+        
+    except Exception as e:
+        print(f"❌ Error getting unread count: {str(e)}")
+        return {"unread_count": 0, "total_count": 0}
+
 
 # =============  COMMENT ENDPOINTS =============
 
