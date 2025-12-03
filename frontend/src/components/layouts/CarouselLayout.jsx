@@ -348,9 +348,9 @@ const CarouselLayout = ({
         })}
       </Swiper>
 
-      {/* INDICADORES PERSONALIZADOS - Solo visible cuando NO es thumbnail */}
+      {/* INDICADORES PERSONALIZADOS - Diseño moderno */}
       {!isThumbnail && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full">
           {poll.options.map((_, i) => (
             <button
               key={i}
@@ -359,8 +359,10 @@ const CarouselLayout = ({
                 swiperRef.current?.slideTo(i);
               }}
               className={cn(
-                'w-8 h-2 rounded-full transition-all',
-                i === currentSlide ? 'bg-white' : 'bg-white/40'
+                'transition-all duration-300 rounded-full',
+                i === currentSlide 
+                  ? 'w-6 h-1.5 bg-white shadow-lg shadow-white/50' 
+                  : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/70 hover:scale-110'
               )}
             />
           ))}
