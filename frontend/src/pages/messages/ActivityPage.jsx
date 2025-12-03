@@ -105,6 +105,18 @@ const ActivityPage = () => {
     }
   };
 
+  // Marcar todas las actividades como leídas
+  const markActivitiesAsRead = async () => {
+    try {
+      console.log('📖 Marking all activities as read...');
+      await apiRequest('/api/users/activity/mark-read', { method: 'POST' });
+      console.log('✅ All activities marked as read');
+    } catch (error) {
+      console.log('⚠️ Error marking activities as read:', error.message);
+      // No mostrar error al usuario, es una operación en background
+    }
+  };
+
   // Cargar actividades
   const loadActivities = async () => {
     try {
@@ -129,7 +141,15 @@ const ActivityPage = () => {
 
       console.log('✅ Activities processed:', activitiesData.length, 'items');
       setActivities(activitiesData);
-      setActivityCount(activitiesData.length);
+      
+      // Contar solo las no leídas para el badge
+      const unreadCount = activitiesData.filter(a => a.unreadCount > 0).length;
+      setActivityCount(unreadCount);
+      
+      // Marcar todas como leídas después de cargarlas
+      // Esto asegura que la próxima vez que el usuario entre, no verá badges
+      await markActivitiesAsRead();
+      
     } catch (error) {
       console.error('❌ Error loading activities:', error.message, error.status);
       console.log('Error details:', error);
