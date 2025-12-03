@@ -247,14 +247,9 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
         /* Carousel layout - Horizontal scroll with Swiper */
         <div className="w-full h-full">
           <Swiper
-            modules={[Pagination]}
             spaceBetween={0}
             slidesPerView={1}
             speed={300}
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
             className="h-full w-full"
           >
             {slots.map((slotIndex) => {
