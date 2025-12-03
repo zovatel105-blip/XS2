@@ -244,9 +244,19 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
   return (
     <div className="w-full h-full">
       {layout.id === 'off' ? (
-        /* Carousel layout - Horizontal scroll */
-        <div className="w-full h-full overflow-x-auto overflow-y-hidden">
-          <div className="flex h-full" style={{ width: `${slots.length * 100}%` }}>
+        /* Carousel layout - Horizontal scroll with Swiper */
+        <div className="w-full h-full">
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={0}
+            slidesPerView={1}
+            speed={300}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            className="h-full w-full"
+          >
             {slots.map((slotIndex) => {
               const option = options[slotIndex] || { text: '', media: null, mentionedUsers: [] };
               return (
