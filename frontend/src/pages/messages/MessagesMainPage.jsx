@@ -225,37 +225,56 @@ const MessagesMainPage = () => {
     }
   };
 
-  // Cargar datos de badges para navegación
+  // Cargar datos de badges para navegación (solo no leídos)
   const loadSegmentData = async () => {
     try {
       let followersCount = 0;
       let activityCount = 0;
       let messageRequestsCount = 0;
 
-      // Cargar seguidores
+      // Cargar conteo de seguidores NO LEÍDOS
       try {
-        const followersResponse = await apiRequest('/api/users/followers/recent');
-        followersCount = followersResponse?.length || 0;
+        const followersResponse = await apiRequest('/api/users/followers/unread-count');
+        followersCount = followersResponse?.unread_count || 0;
+        console.log('✅ Followers unread count:', followersCount);
       } catch (e) {
-        console.log('Followers API not available');
+        console.log('Followers unread count API not available, falling back to total count');
+        try {
+          const followersResponse = await apiRequest('/api/users/followers/recent');
+          followersCount = followersResponse?.length || 0;
+        } catch (e2) {
+          console.log('Followers API not available');
+        }
       }
 
-      // Cargar actividad
+      // Cargar conteo de actividad NO LEÍDA
       try {
-        const activityResponse = await apiRequest('/api/users/activity/recent');
-        activityCount = activityResponse?.length || 0;
-        console.log('✅ Activity loaded:', activityCount, 'activities');
+        const activityResponse = await apiRequest('/api/users/activity/unread-count');
+        activityCount = activityResponse?.unread_count || 0;
+        console.log('✅ Activity unread count:', activityCount);
       } catch (e) {
-        console.error('❌ Activity API error:', e.message, e.status);
-        console.log('Activity API not available');
+        console.log('Activity unread count API not available, falling back to total count');
+        try {
+          const activityResponse = await apiRequest('/api/users/activity/recent');
+          activityCount = activityResponse?.length || 0;
+        } catch (e2) {
+          console.log('Activity API not available');
+        }
       }
 
-      // Cargar solicitudes de mensajes
+      // Cargar conteo de solicitudes NO LEÍDAS
       try {
-        const requestsResponse = await apiRequest('/api/messages/requests');
-        messageRequestsCount = requestsResponse?.length || 0;
+        const requestsResponse = await apiRequest('/api/messages/requests/unread-count');
+        messageRequestsCount = requestsResponse?.unread_count || 0;
+        console.log('✅ Message requests unread count:', messageRequestsCount);
       } catch (e) {
-        console.log('Message requests API not available');
+        console.log('Message requests unread count API not available, falling back to total count');
+        try {
+          const requestsResponse = await apiRequest('/api/messages/requests');
+          messageRequestsCount = requestsResponse?.length || 0;
+        } catch (e2) {
+          console.log('Message requests API not available');
+        }
       }
 
       setSegmentData({
