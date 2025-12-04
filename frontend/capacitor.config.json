@@ -1,0 +1,43 @@
+{
+  "appId": "com.votatok.app",
+  "appName": "VotaTok",
+  "webDir": "build",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#000000",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "Camera": {
+      "saveToGallery": true,
+      "promptLabelHeader": "Permisos de cámara",
+      "promptLabelCancel": "Cancelar",
+      "promptLabelPhoto": "Galería",
+      "promptLabelPicture": "Tomar foto"
+    },
+    "Geolocation": {
+      "enableHighAccuracy": true
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "scrollEnabled": true
+  }
+}
