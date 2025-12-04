@@ -74,6 +74,18 @@ const FollowersPage = () => {
     });
   };
 
+  // Marcar todos los seguidores como leídos
+  const markFollowersAsRead = async () => {
+    try {
+      console.log('📖 Marking all followers as read...');
+      await apiRequest('/api/users/followers/mark-read', { method: 'POST' });
+      console.log('✅ All followers marked as read');
+    } catch (error) {
+      console.log('⚠️ Error marking followers as read:', error.message);
+      // No mostrar error al usuario, es una operación en background
+    }
+  };
+
   // Cargar seguidores
   const loadFollowers = async () => {
     try {
@@ -85,7 +97,7 @@ const FollowersPage = () => {
         type: 'new_follower',
         title: `${follower.display_name || follower.username}`,
         message: `@${follower.username} comenzó a seguirte`,
-        unreadCount: 0,
+        unreadCount: follower.unread ? 1 : 0,
         time: formatTimeForInbox(follower.followed_at),
         avatar: follower.avatar_url, // Usar directamente avatar_url, no fallback aquí
         fallbackAvatar: getAvatarForUser(follower), // Separar el fallback
@@ -94,7 +106,14 @@ const FollowersPage = () => {
       }));
 
       setFollowers(followersData);
-      setFollowerCount(followersData.length);
+      
+      // Contar solo los no leídos para el badge
+      const unreadCount = followersData.filter(f => f.unreadCount > 0).length;
+      setFollowerCount(unreadCount);
+      
+      // Marcar todos como leídos después de cargarlos
+      await markFollowersAsRead();
+      
     } catch (error) {
       console.log('Error loading followers:', error.message);
       // Estado vacío si no hay datos
