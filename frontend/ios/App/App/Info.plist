@@ -45,5 +45,98 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	
+	<!-- ==================== PERMISOS DE iOS ==================== -->
+	
+	<!-- CÁMARA - Permiso para acceder a la cámara -->
+	<key>NSCameraUsageDescription</key>
+	<string>VotaTok necesita acceso a tu cámara para tomar fotos y grabar videos para tus publicaciones.</string>
+	
+	<!-- MICRÓFONO - Permiso para acceder al micrófono -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>VotaTok necesita acceso a tu micrófono para grabar audio en tus videos y mensajes de voz.</string>
+	
+	<!-- FOTOS Y VÍDEOS - Permisos para acceder a la galería -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>VotaTok necesita acceso a tu galería para seleccionar fotos y videos para tus publicaciones.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>VotaTok necesita permiso para guardar fotos y videos en tu galería.</string>
+	
+	<!-- CONTACTOS - Permiso para acceder a los contactos -->
+	<key>NSContactsUsageDescription</key>
+	<string>VotaTok puede acceder a tus contactos para ayudarte a encontrar amigos que también usan la app.</string>
+	
+	<!-- UBICACIÓN - Permisos de geolocalización -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>VotaTok necesita tu ubicación para mostrarte contenido cercano y etiquetar tus publicaciones con tu ubicación.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>VotaTok necesita acceso a tu ubicación en segundo plano para funciones avanzadas de geolocalización.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>VotaTok necesita acceso a tu ubicación para mostrarte contenido cercano y funciones de geolocalización.</string>
+	
+	<!-- DISPOSITIVOS CERCANOS - Bluetooth -->
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>VotaTok puede usar Bluetooth para descubrir dispositivos cercanos y compartir contenido con amigos.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>VotaTok puede conectarse a dispositivos Bluetooth para compartir contenido.</string>
+	
+	<!-- MÚSICA Y AUDIO - Acceso a Apple Music -->
+	<key>NSAppleMusicUsageDescription</key>
+	<string>VotaTok puede acceder a tu biblioteca de música para agregar canciones a tus videos.</string>
+	
+	<!-- RECONOCIMIENTO DE VOZ (opcional) -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>VotaTok puede usar el reconocimiento de voz para generar subtítulos automáticos en tus videos.</string>
+	
+	<!-- DETECCIÓN DE ROSTROS (opcional) -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>VotaTok puede usar Face ID para iniciar sesión de forma segura.</string>
+	
+	<!-- RED LOCAL - Para descubrir dispositivos en la red local -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>VotaTok puede descubrir y conectarse a dispositivos en tu red local para compartir contenido.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_votatok._tcp</string>
+	</array>
+	
+	<!-- MOTION Y FITNESS (opcional para funciones avanzadas) -->
+	<key>NSMotionUsageDescription</key>
+	<string>VotaTok puede usar sensores de movimiento para mejorar la experiencia en AR y efectos especiales.</string>
+	
+	<!-- CONFIGURACIÓN DE NOTIFICACIONES PUSH -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+		<string>audio</string>
+		<string>location</string>
+	</array>
+	
+	<!-- CONFIGURACIÓN DE APP TRANSPORT SECURITY -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	
+	<!-- ESQUEMA URL PERSONALIZADO -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.votatok.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>votatok</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- ITUNES FILE SHARING -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 </dict>
 </plist>
