@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Loader2, AlertCircle, RefreshCw, Send, Plus, User } from 'lucide-react';
 import { Button } from './ui/button';
@@ -24,6 +24,30 @@ const CommentSection = ({
   const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [newCommentId, setNewCommentId] = useState(null);
+  const commentListRef = useRef(null);
+
+  // Función para hacer scroll hacia un comentario y centrarlo
+  const scrollToComment = useCallback((commentId) => {
+    if (!commentId || !commentListRef.current) return;
+    
+    // Pequeño delay para asegurar que el DOM se ha actualizado
+    setTimeout(() => {
+      const commentElement = commentListRef.current.querySelector(`[data-comment-id="${commentId}"]`);
+      if (commentElement) {
+        commentElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+        
+        // Agregar efecto visual de highlight temporal
+        commentElement.classList.add('highlight-comment');
+        setTimeout(() => {
+          commentElement.classList.remove('highlight-comment');
+        }, 2000);
+      }
+    }, 100);
+  }, []);
 
   // Cargar comentarios
   const loadComments = async (pageNum = 0, append = false) => {
