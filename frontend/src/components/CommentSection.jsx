@@ -396,8 +396,8 @@ const CommentSection = ({
           <div className="flex items-center gap-3">
             <Avatar className="w-8 h-8 flex-shrink-0">
               <AvatarImage src={user.avatar_url} alt={user.username} />
-              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-sm">
-                {user.username?.charAt(0).toUpperCase()}
+              <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 flex items-center justify-center">
+                <User className="w-4 h-4" />
               </AvatarFallback>
             </Avatar>
             
