@@ -1090,6 +1090,26 @@ const TikTokScrollView = ({
   const { user: currentUser } = useAuth();
   const [lastActiveIndex, setLastActiveIndex] = useState(initialIndex);
   const controls = useAnimation();
+  
+  // 🔒 Estado para bloquear el swipe cuando un modal está abierto
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // 🔒 Efecto para bloquear/desbloquear el swipe del Swiper cuando un modal está abierto
+  useEffect(() => {
+    if (swiperRef.current) {
+      if (isModalOpen) {
+        // Bloquear scroll cuando hay un modal abierto
+        swiperRef.current.allowSlideNext = false;
+        swiperRef.current.allowSlidePrev = false;
+        swiperRef.current.allowTouchMove = false;
+      } else {
+        // Restaurar scroll cuando no hay modales abiertos
+        swiperRef.current.allowSlideNext = true;
+        swiperRef.current.allowSlidePrev = true;
+        swiperRef.current.allowTouchMove = true;
+      }
+    }
+  }, [isModalOpen]);
 
   // Load user's saved polls on component mount
   useEffect(() => {
