@@ -118,27 +118,13 @@ const CommentsModal = ({
 
             {/* Header minimalista centrado */}
             <div className="sticky top-0 z-10 bg-white px-4 sm:px-6 py-3 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex-1" />
-                
+              <div className="flex items-center justify-center">
                 <h2 className={cn(
                   "font-semibold text-gray-900 text-center",
                   isMobile ? "text-base" : "text-lg"
                 )}>
                   Comentarios
                 </h2>
-                
-                <div className="flex-1 flex justify-end">
-                  <button
-                    onClick={onClose}
-                    className={cn(
-                      "p-0 hover:bg-gray-100 rounded-full transition-all duration-200 flex items-center justify-center",
-                      isMobile ? "h-8 w-8" : "h-10 w-10"
-                    )}
-                  >
-                    <X className={cn("text-gray-500", isMobile ? "w-5 h-5" : "w-6 h-6")} />
-                  </button>
-                </div>
               </div>
             </div>
             
