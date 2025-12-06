@@ -38,10 +38,7 @@ const CommentForm = ({
 
   return (
     <motion.form 
-      className={cn(
-        "flex items-center gap-2 p-2 rounded-lg border bg-white",
-        isReply && "ml-12"
-      )}
+      className="flex items-center gap-2 p-2 rounded-lg border bg-white"
       onSubmit={handleSubmit}
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
