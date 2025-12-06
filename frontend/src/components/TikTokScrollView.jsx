@@ -1378,24 +1378,26 @@ const TikTokScrollView = ({
            width: '100dvw'
          }}>
 
-      {/* Close Button - Always visible in top right corner */}
-      <div className="fixed z-50"
-           style={{
-             top: 'max(1rem, env(safe-area-inset-top))',
-             right: 'max(1rem, env(safe-area-inset-right))'
-           }}>
-        <Button
-          onClick={async () => {
-            console.log('🚪 EXIT BUTTON CLICKED - Stopping audio');
-            await audioManager.stop();
-            onExitTikTok?.();
-          }}
-          className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full transition-all duration-200 hover:scale-110 shadow-xl"
-          size="sm"
-        >
-          <X className="w-5 h-5" />
-        </Button>
-      </div>
+      {/* Close Button - Only visible if showCloseButton is true */}
+      {showCloseButton && (
+        <div className="fixed z-50"
+             style={{
+               top: 'max(1rem, env(safe-area-inset-top))',
+               right: 'max(1rem, env(safe-area-inset-right))'
+             }}>
+          <Button
+            onClick={async () => {
+              console.log('🚪 EXIT BUTTON CLICKED - Stopping audio');
+              await audioManager.stop();
+              onExitTikTok?.();
+            }}
+            className="bg-black/40 text-white hover:bg-black/60 backdrop-blur-md border-none p-2.5 h-10 w-10 rounded-full transition-all duration-200 hover:scale-110 shadow-xl"
+            size="sm"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+      )}
 
       {/* Use Sound Button - Solo para AudioDetailPage */}
       {fromAudioDetailPage && currentAudio && onUseSound && (
