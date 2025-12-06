@@ -1536,6 +1536,8 @@ const TikTokScrollView = ({
             renderPriority={poll.renderPriority || 'medium'}
             shouldUnload={false}  // Never unload, just optimize
             layout={poll.layout}
+            // 🔒 NEW: Callback para bloquear scroll cuando modal está abierto
+            onModalStateChange={setIsModalOpen}
           />
           </SwiperSlide>
         ))}
