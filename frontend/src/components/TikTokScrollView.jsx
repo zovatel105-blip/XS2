@@ -1282,9 +1282,6 @@ const TikTokScrollView = ({
   const handleSlideChange = (swiper) => {
     const newIndex = swiper.activeIndex;
     setActiveIndex(newIndex);
-    
-    // Cerrar el modal de comentarios cuando se hace scroll
-    setShowCommentsModal(false);
   };
 
   // Dynamic loading when user navigates between posts (Search Page functionality)
