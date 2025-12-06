@@ -154,6 +154,10 @@ const CommentSection = ({
       
       setShowNewCommentForm(false);
       
+      // Hacer scroll hacia el nuevo comentario y centrarlo
+      setNewCommentId(newComment.id);
+      scrollToComment(newComment.id);
+      
       toast({
         title: "Comentario agregado",
         description: "Tu comentario se ha publicado correctamente",
