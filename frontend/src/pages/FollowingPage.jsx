@@ -809,6 +809,7 @@ const FollowingPage = () => {
           onExitTikTok={handleExitTikTok}
           onCreatePoll={handleCreatePoll}
           showLogo={false}
+          showCloseButton={false}
         />
 
         <style jsx>{`
