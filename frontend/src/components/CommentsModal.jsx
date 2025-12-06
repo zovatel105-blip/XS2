@@ -16,6 +16,7 @@ const CommentsModal = ({
 }) => {
   const modalRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+  const { hideRightNavigationBar, showRightNavigationBar } = useTikTok();
 
   // Detectar si es móvil
   useEffect(() => {
@@ -29,7 +30,7 @@ const CommentsModal = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Manejar escape key
+  // Manejar apertura/cierre del modal: scroll y navegación lateral
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
@@ -39,15 +40,25 @@ const CommentsModal = ({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Prevenir scroll del body
+      // Prevenir scroll del body cuando el modal está abierto
       document.body.style.overflow = 'hidden';
+      // Ocultar la barra de navegación lateral
+      hideRightNavigationBar();
+    } else {
+      // Restaurar scroll cuando el modal está cerrado
+      document.body.style.overflow = 'unset';
+      // Mostrar la barra de navegación lateral
+      showRightNavigationBar();
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
+      // Restaurar scroll al desmontar
       document.body.style.overflow = 'unset';
+      // Restaurar navegación al desmontar
+      showRightNavigationBar();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, hideRightNavigationBar, showRightNavigationBar]);
 
   // Click outside para cerrar
   const handleBackdropClick = (e) => {
