@@ -4,6 +4,7 @@ import { MessageCircle, Sparkles, Minus } from 'lucide-react';
 import { Button } from './ui/button';
 import CommentSection from './CommentSection';
 import { cn } from '../lib/utils';
+import { useTikTok } from '../contexts/TikTokContext';
 
 const CommentsModal = ({ 
   isOpen, 
