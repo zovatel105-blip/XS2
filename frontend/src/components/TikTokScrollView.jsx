@@ -772,33 +772,35 @@ const TikTokPollCard = ({
               onClick={async (e) => {
                 e.stopPropagation();
                 
-                // Llamar al backend para registrar el share
-                const token = localStorage.getItem('token');
-                if (token) {
-                  try {
-                    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${poll.id}/share`, {
-                      method: 'POST',
-                      headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                      }
-                    });
-                    
-                    if (response.ok) {
-                      const result = await response.json();
-                      console.log('🔗 TikTokScrollView: Poll shared successfully, new count:', result.shares);
-                      
-                      // Marcar como compartido localmente
-                      setSharedPolls(prev => {
-                        const newSet = new Set(prev);
-                        newSet.add(poll.id);
-                        return newSet;
+                // Función para registrar el share en el backend SOLO después de compartir exitosamente
+                const registerShareInBackend = async () => {
+                  const token = localStorage.getItem('token');
+                  if (token) {
+                    try {
+                      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/polls/${poll.id}/share`, {
+                        method: 'POST',
+                        headers: {
+                          'Authorization': `Bearer ${token}`,
+                          'Content-Type': 'application/json'
+                        }
                       });
+                      
+                      if (response.ok) {
+                        const result = await response.json();
+                        console.log('🔗 TikTokScrollView: Poll shared successfully, new count:', result.shares);
+                        
+                        // Marcar como compartido localmente
+                        setSharedPolls(prev => {
+                          const newSet = new Set(prev);
+                          newSet.add(poll.id);
+                          return newSet;
+                        });
+                      }
+                    } catch (error) {
+                      console.error('🔗 TikTokScrollView: Error sharing poll:', error);
                     }
-                  } catch (error) {
-                    console.error('🔗 TikTokScrollView: Error sharing poll:', error);
                   }
-                }
+                };
                 
                 // Intentar Web Share API primero
                 if (navigator.share) {
@@ -806,18 +808,21 @@ const TikTokPollCard = ({
                     title: poll.question || 'Vota en esta encuesta',
                     text: 'Mira esta increíble votación',
                     url: `${window.location.origin}/poll/${poll.id}`,
-                  }).then(() => {
+                  }).then(async () => {
+                    // SOLO registrar el share si el usuario realmente compartió
+                    await registerShareInBackend();
                     onShare && onShare(poll.id);
                   }).catch((error) => {
+                    // Si el usuario canceló (AbortError), NO registrar el share
                     if (error.name !== 'AbortError') {
+                      // Error diferente a cancelación - abrir modal como fallback
                       sharePoll(poll);
-                      onShare && onShare(poll.id);
                     }
+                    // NO llamamos a registerShareInBackend aquí porque el usuario no compartió
                   });
                 } else {
-                  // Si no hay Web Share API, usar modal
+                  // Si no hay Web Share API, usar modal (no registra share automáticamente)
                   sharePoll(poll);
-                  onShare && onShare(poll.id);
                 }
               }}
               className={`flex items-center gap-1 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg backdrop-blur-sm ${
