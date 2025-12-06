@@ -171,10 +171,8 @@ const Comment = ({
 
   return (
     <motion.div
-      className={cn(
-        "comment-thread py-3 px-3 border border-gray-200 rounded-lg",
-        depth > 0 && "ml-12"
-      )}
+      className="comment-thread py-3 px-3 border border-gray-200 rounded-lg"
+      data-comment-id={comment.id}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, delay: depth * 0.1 }}
