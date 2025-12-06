@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MessageCircle, Sparkles, Minus } from 'lucide-react';
+import { MessageCircle, Sparkles, Minus } from 'lucide-react';
 import { Button } from './ui/button';
 import CommentSection from './CommentSection';
 import { cn } from '../lib/utils';
