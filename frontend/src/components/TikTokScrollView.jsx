@@ -1048,6 +1048,7 @@ const TikTokScrollView = ({
   isLoadingMore = false,
   hasMoreContent = true,
   showLogo = true,
+  showCloseButton = true,
   initialIndex = 0,
   fromAudioDetailPage = false,
   currentAudio = null,
