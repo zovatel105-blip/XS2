@@ -132,7 +132,9 @@ const TikTokPollCard = ({
   optimizeVideo = false,
   renderPriority = 'medium',
   shouldUnload = false,
-  layout = null
+  layout = null,
+  // 🔒 NEW: Callback para notificar cuando un modal se abre/cierra
+  onModalStateChange = null
 }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
