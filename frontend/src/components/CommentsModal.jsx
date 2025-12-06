@@ -94,7 +94,7 @@ const CommentsModal = ({
             className={cn(
               "relative bg-white shadow-2xl overflow-hidden flex flex-col",
               isMobile 
-                ? "w-full h-[70vh] rounded-t-3xl" 
+                ? "w-full h-[75vh] max-h-[85vh] rounded-t-3xl safe-area-inset-bottom" 
                 : "w-full max-w-2xl max-h-[92vh] rounded-2xl"
             )}
             variants={modalVariants}
