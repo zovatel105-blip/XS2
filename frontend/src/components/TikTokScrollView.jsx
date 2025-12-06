@@ -206,6 +206,13 @@ const TikTokPollCard = ({
     setCarouselAudioId(null);
   }, [poll.id]);
   
+  // 🔄 Cerrar el modal de comentarios cuando el card deja de estar activo (scroll)
+  useEffect(() => {
+    if (!isActive && showCommentsModal) {
+      setShowCommentsModal(false);
+    }
+  }, [isActive, showCommentsModal]);
+  
   // Feed menu state
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
