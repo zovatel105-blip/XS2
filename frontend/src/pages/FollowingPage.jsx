@@ -212,10 +212,8 @@ const FollowingPage = () => {
   };
 
   const handleAddStory = () => {
-    toast({
-      title: "Próximamente",
-      description: "La función de agregar historias estará disponible pronto",
-    });
+    // Navigate to story creation page
+    navigate('/story/capture');
   };
 
   const handleCloseStoryViewer = () => {
