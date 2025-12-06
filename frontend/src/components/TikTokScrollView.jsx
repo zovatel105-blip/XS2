@@ -748,7 +748,7 @@ const TikTokPollCard = ({
                 }
               }}
               className={`flex items-center gap-1 hover:scale-105 transition-all duration-200 h-auto p-2 rounded-lg backdrop-blur-sm ${
-                commentedPolls.has(poll.id) || poll.userCommented || poll.comments > 0
+                commentedPolls.has(poll.id) || poll.userCommented
                   ? 'text-blue-400 bg-blue-500/20 hover:text-blue-300'
                   : 'text-white bg-black/20 hover:text-blue-400'
               }`}
