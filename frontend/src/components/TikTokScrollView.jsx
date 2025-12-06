@@ -219,6 +219,14 @@ const TikTokPollCard = ({
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
+  // 🔒 Notificar al padre cuando un modal se abre/cierra para bloquear el swipe
+  useEffect(() => {
+    const isAnyModalOpen = showCommentsModal || showVotersModal || isMenuOpen;
+    if (onModalStateChange) {
+      onModalStateChange(isAnyModalOpen);
+    }
+  }, [showCommentsModal, showVotersModal, isMenuOpen, onModalStateChange]);
+  
   const navigate = useNavigate();
   const { followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion } = useFollow();
   const { user: currentUser } = useAuth();
