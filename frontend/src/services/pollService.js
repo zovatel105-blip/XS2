@@ -223,16 +223,7 @@ class PollService {
         followers: '1K' // Placeholder for now
       },
       timeAgo: backendPoll.time_ago,
-      music: backendPoll.music || {
-        id: 'default',
-        title: 'No Music',
-        artist: 'Silence',
-        duration: 30,
-        url: '',
-        cover: '',
-        isOriginal: false,
-        waveform: Array(20).fill(0.5)
-      },
+      music: backendPoll.music || null,  // Si no hay música, devolver null (no mostrar "No Music")
       options: backendPoll.options.map(option => ({
         id: option.id,
         user: option.user,
