@@ -213,7 +213,7 @@ const FollowingPage = () => {
 
   const handleAddStory = () => {
     // Navigate to story creation page
-    navigate('/story/capture');
+    navigate('/story-creation');
   };
 
   const handleCloseStoryViewer = () => {
