@@ -183,8 +183,8 @@ const Comment = ({
         {/* Avatar */}
         <Avatar className="w-10 h-10 flex-shrink-0">
           <AvatarImage src={comment.user.avatar_url} />
-          <AvatarFallback className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white font-bold text-sm">
-            {((comment.user.display_name || comment.user.username || 'U') + '').charAt(0).toUpperCase()}
+          <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 flex items-center justify-center">
+            <User className="w-5 h-5" />
           </AvatarFallback>
         </Avatar>
         
