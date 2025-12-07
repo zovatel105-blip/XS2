@@ -56,18 +56,25 @@ const MusicWaveform = ({ waveform, isPlaying, duration = 30 }) => {
 };
 
 // Simplified TikTok/Instagram style music card
-const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showSource = false }) => {
+const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showSource = false, darkMode = false }) => {
   return (
     <div 
       className={`
-        flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-white/10
-        ${isSelected ? 'bg-white/20 backdrop-blur-sm border-l-4 border-purple-400' : ''}
+        flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200
+        ${darkMode 
+          ? isSelected 
+            ? 'bg-zinc-800' 
+            : 'hover:bg-zinc-800/50'
+          : isSelected 
+            ? 'bg-white/20 backdrop-blur-sm border-l-4 border-purple-400' 
+            : 'hover:bg-white/10'
+        }
       `}
       onClick={() => onSelect(music)}
     >
       {/* Cover with play button */}
       <div 
-        className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-gradient-to-br from-pink-500 to-purple-600 flex-shrink-0"
+        className="relative w-12 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-zinc-700 to-zinc-800 flex-shrink-0"
         onClick={(e) => {
           e.stopPropagation();
           onPlay(music);
@@ -81,85 +88,36 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showS
             e.target.style.display = 'none';
           }}
         />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-          <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/90 flex items-center justify-center transition-all ${isPlaying ? 'scale-110' : ''}`}>
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+          <div className={`w-6 h-6 rounded-full bg-white flex items-center justify-center transition-all ${isPlaying ? 'scale-110' : ''}`}>
             {isPlaying ? (
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-black rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-black rounded-full animate-pulse" />
             ) : (
-              <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-black ml-0.5" />
+              <Play className="w-3 h-3 text-black ml-0.5" />
             )}
           </div>
         </div>
-        
-        {/* Priority/Trending badge */}
-        {(music.isTrending || music.isPriority) && (
-          <div className="absolute -top-1 -right-1">
-            <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-              music.isPriority ? 'bg-yellow-500' : 'bg-red-500'
-            }`}>
-              {music.isPriority ? (
-                <Star className="w-2 h-2 text-white" />
-              ) : (
-                <TrendingUp className="w-2 h-2 text-white" />
-              )}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Music info */}
       <div className="flex-1 min-w-0">
-        <h4 className="font-semibold text-xs sm:text-sm text-white truncate flex items-center gap-1">
+        <h4 className={`font-medium text-sm truncate ${darkMode ? 'text-white' : 'text-white'}`}>
           {music.title}
-          {music.isOriginal && <Sparkles className="w-3 h-3 text-yellow-400 flex-shrink-0" />}
         </h4>
-        <p className="text-xs text-white/70 truncate">
+        <p className={`text-xs truncate ${darkMode ? 'text-zinc-500' : 'text-white/70'}`}>
           {music.artist}
         </p>
-        
-        {/* Source and uses count */}
-        <div className="flex items-center gap-2 mt-0.5">
-          {showSource && music.source && (
-            <div className="flex items-center gap-1">
-              <Globe className="w-2.5 h-2.5 text-white/60" />
-              <span className="text-xs text-white/60">{music.source}</span>
-            </div>
-          )}
-          {music.uses > 0 && (
-            <div className="flex items-center gap-1">
-              <Users className="w-2.5 h-2.5 text-white/60" />
-              <span className="text-xs text-white/60">{formatUses(music.uses)}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Duration */}
-      <div className="hidden sm:flex items-center gap-1 text-xs text-white/70 flex-shrink-0">
-        <Clock className="w-3 h-3" />
-        {formatDuration(music.duration)}
-      </div>
-
-      {/* Simple waveform indicator - Hidden on very small screens */}
-      <div className="hidden sm:flex items-center gap-0.5">
-        {(music.waveform || []).slice(0, 4).map((height, index) => (
-          <div
-            key={index}
-            className={`w-1 bg-white/60 rounded-full transition-all duration-75 ${
-              isPlaying ? 'animate-pulse' : ''
-            }`}
-            style={{
-              height: `${height * 12 + 4}px`,
-              animationDelay: `${index * 100}ms`
-            }}
-          />
-        ))}
+        {music.uses > 0 && (
+          <p className={`text-xs ${darkMode ? 'text-zinc-600' : 'text-white/50'}`}>
+            {formatUses(music.uses)} usos
+          </p>
+        )}
       </div>
 
       {/* Selected indicator */}
       {isSelected && (
-        <div className="w-4 h-4 sm:w-5 sm:h-5 bg-purple-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
-          <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+        <div className="w-5 h-5 bg-white text-black rounded-full flex items-center justify-center flex-shrink-0">
+          <Check className="w-3 h-3" />
         </div>
       )}
     </div>
