@@ -1299,14 +1299,7 @@ const ContentCreationPage = () => {
               </span>
             </button>
 
-            {/* Preview button - Right */}
-            <button
-              onClick={() => setPreviewMode(true)}
-              className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white bg-black/50 backdrop-blur-sm rounded-lg hover:bg-black/60 transition-colors"
-              title="Vista previa fullscreen"
-            >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+            {/* Preview button - Removed per user request */}
           </div>
 
           {/* Removed Title Input - now handled in publication page */}
