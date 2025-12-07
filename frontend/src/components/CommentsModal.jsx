@@ -17,6 +17,9 @@ const CommentsModal = ({
   const modalRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const { hideRightNavigationBar, showRightNavigationBar } = useTikTok();
+  
+  // Ref para rastrear si este modal específico ocultó la barra de navegación
+  const didHideNavRef = useRef(false);
 
   // Detectar si es móvil
   useEffect(() => {
@@ -42,17 +45,23 @@ const CommentsModal = ({
       document.addEventListener('keydown', handleEscape);
       // Prevenir scroll del body cuando el modal está abierto
       document.body.style.overflow = 'hidden';
-      // Ocultar la barra de navegación lateral
+      // Ocultar la barra de navegación lateral y marcar que este modal lo hizo
       hideRightNavigationBar();
+      didHideNavRef.current = true;
+    } else if (didHideNavRef.current) {
+      // Solo restaurar si ESTE modal específico ocultó la navegación
+      document.body.style.overflow = 'unset';
+      showRightNavigationBar();
+      didHideNavRef.current = false;
     }
 
-    // Cleanup: Solo restaurar si este modal específico estaba abierto
+    // Cleanup: Solo restaurar si este modal específico ocultó la navegación
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      if (isOpen) {
-        // Solo restaurar scroll y navegación si este modal estaba abierto
+      if (didHideNavRef.current) {
         document.body.style.overflow = 'unset';
         showRightNavigationBar();
+        didHideNavRef.current = false;
       }
     };
   }, [isOpen, onClose, hideRightNavigationBar, showRightNavigationBar]);
