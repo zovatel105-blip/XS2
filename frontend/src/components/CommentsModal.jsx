@@ -44,19 +44,16 @@ const CommentsModal = ({
       document.body.style.overflow = 'hidden';
       // Ocultar la barra de navegación lateral
       hideRightNavigationBar();
-    } else {
-      // Restaurar scroll cuando el modal está cerrado
-      document.body.style.overflow = 'unset';
-      // Mostrar la barra de navegación lateral
-      showRightNavigationBar();
     }
 
+    // Cleanup: Solo restaurar si este modal específico estaba abierto
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      // Restaurar scroll al desmontar
-      document.body.style.overflow = 'unset';
-      // Restaurar navegación al desmontar
-      showRightNavigationBar();
+      if (isOpen) {
+        // Solo restaurar scroll y navegación si este modal estaba abierto
+        document.body.style.overflow = 'unset';
+        showRightNavigationBar();
+      }
     };
   }, [isOpen, onClose, hideRightNavigationBar, showRightNavigationBar]);
 
