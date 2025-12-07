@@ -166,7 +166,7 @@ const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showS
   );
 };
 
-const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '' }) => {
+const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Popular');
   const [currentMusic, setCurrentMusic] = useState(null);
