@@ -456,105 +456,74 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode 
   const mainCategories = ['Popular', 'Mi Música', 'Reggaeton', 'Trap', 'Urbano Español', 'Pop Latino'];
 
   return (
-    <div className="space-y-3 bg-transparent">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-white/20">
-        <div className="flex items-center gap-2">
-          <Music className="w-5 h-5 text-white" />
-          <h3 className="font-bold text-lg text-white">Agregar música</h3>
-        </div>
-        {selectedMusic && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => onSelectMusic(null)}
-            className="text-white/70 hover:text-red-400 text-xs"
-          >
-            Quitar
-          </Button>
-        )}
-      </div>
-
+    <div className={`space-y-3 ${darkMode ? 'bg-zinc-900' : 'bg-transparent'}`}>
       {/* Enhanced search with real-time indicator */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
+      <div className="relative px-4 pt-2">
+        <Search className="absolute left-7 top-1/2 transform -translate-y-1/2 text-zinc-500 w-4 h-4 mt-1" />
         <Input
-          placeholder="Buscar cualquier canción, artista... ¡Millones de resultados!"
+          placeholder="Buscar canciones, artistas..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="pl-10 bg-white/20 backdrop-blur-sm border-0 rounded-full text-white placeholder:text-white/60"
+          className={`pl-10 h-11 rounded-xl border-0 text-sm ${
+            darkMode 
+              ? 'bg-zinc-800 text-white placeholder:text-zinc-500 focus:ring-1 focus:ring-zinc-600' 
+              : 'bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60'
+          }`}
         />
         {isSearching && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
+          <div className="absolute right-7 top-1/2 transform -translate-y-1/2 mt-1">
+            <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
           </div>
         )}
       </div>
 
       {/* Search status/results info */}
       {searchQuery.trim() && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-white/80">
+        <div className="flex items-center justify-between text-sm px-4">
+          <span className={darkMode ? 'text-zinc-400' : 'text-white/80'}>
             {isSearching 
               ? `Buscando "${searchQuery}"...`
               : searchResults.length > 0
-                ? `${searchResults.length} resultados para "${searchQuery}"`
+                ? `${searchResults.length} resultados`
                 : searchError || 'Sin resultados'
             }
           </span>
-          {searchResults.length > 0 && (
-            <Badge variant="secondary" className="text-xs bg-white/20 backdrop-blur-sm text-white border-0">
-              <Globe className="w-3 h-3 mr-1" />
-              Búsqueda global
-            </Badge>
-          )}
-        </div>
-      )}
-
-      {/* Recomendaciones basadas en el título */}
-      {pollTitle && !searchQuery && activeCategory === 'Popular' && (
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/20">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-purple-300" />
-            <span className="text-sm font-semibold text-white">Recomendado para tu contenido</span>
-          </div>
-          <p className="text-xs text-white/70">Basado en: "{pollTitle}"</p>
         </div>
       )}
 
       {/* Categories - Only show when not searching */}
       {!searchQuery && (
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex gap-2 overflow-x-auto pb-1 px-4 scrollbar-none">
           {mainCategories.map((category) => (
-            <Button
+            <button
               key={category}
               type="button"
-              variant={activeCategory === category ? "default" : "outline"}
-              size="sm"
               onClick={() => setActiveCategory(category)}
-              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium ${
+              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-medium transition-all ${
                 activeCategory === category
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600' 
-                  : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-0'
+                  ? 'bg-white text-black' 
+                  : darkMode 
+                    ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                    : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30'
               }`}
             >
               {category}
-              {category === 'Popular' && (
-                <Star className="w-3 h-3 ml-1" />
-              )}
-            </Button>
+            </button>
           ))}
         </div>
       )}
 
       {/* Music list */}
-      <div className="space-y-1 max-h-80 overflow-y-auto">
+      <div className={`space-y-0.5 max-h-[60vh] overflow-y-auto px-2 ${darkMode ? 'pb-4' : ''}`}>
         {/* Mi Música - Show upload interface */}
         {activeCategory === 'Mi Música' && !searchQuery && (
-          <div className="space-y-2 mb-4">
+          <div className="space-y-2 mb-4 px-2">
             {/* Upload button/form */}
-            <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors">
+            <div className={`border-2 border-dashed rounded-xl p-4 transition-colors ${
+              darkMode 
+                ? 'border-zinc-700 hover:border-zinc-600' 
+                : 'border-gray-200 hover:border-gray-300'
+            }`}>
               <div className="text-center">
                 <input
                   type="file"
@@ -567,36 +536,23 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode 
                 <label
                   htmlFor="audio-upload"
                   className={`cursor-pointer flex flex-col items-center gap-2 ${
-                    isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:text-purple-600'
+                    isUploading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
                   {isUploading ? (
-                    <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+                    <Loader2 className={`w-8 h-8 animate-spin ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`} />
                   ) : (
-                    <Upload className="w-8 h-8 text-gray-400" />
+                    <Upload className={`w-8 h-8 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`} />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className={`text-sm font-medium ${darkMode ? 'text-zinc-300' : 'text-gray-700'}`}>
                       {isUploading ? 'Subiendo audio...' : 'Subir tu música'}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      MP3, M4A, WAV, AAC • Máx. 10MB • Máx. 60seg
+                    <p className={`text-xs ${darkMode ? 'text-zinc-500' : 'text-gray-500'}`}>
+                      MP3, M4A, WAV • Máx. 10MB
                     </p>
                   </div>
                 </label>
-              </div>
-            </div>
-            
-            {/* Instructions for My Music */}
-            <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-              <div className="flex items-start gap-2">
-                <FileAudio className="w-4 h-4 text-blue-500 mt-0.5" />
-                <div>
-                  <p className="text-xs font-medium text-blue-700 mb-1">Tu biblioteca personal</p>
-                  <p className="text-xs text-blue-600">
-                    Sube tus propios audios y úsalos en tus publicaciones. Puedes configurar si son públicos o privados.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -604,25 +560,23 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode 
         
         {isLoadingPopular && !searchQuery && activeCategory === 'Popular' ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-gray-400 animate-spin mr-2" />
-            <span className="text-gray-500">Cargando música popular...</span>
+            <Loader2 className={`w-5 h-5 animate-spin mr-2 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`} />
+            <span className={darkMode ? 'text-zinc-500' : 'text-gray-500'}>Cargando...</span>
           </div>
         ) : isLoadingMyMusic && activeCategory === 'Mi Música' ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-gray-400 animate-spin mr-2" />
-            <span className="text-gray-500">Cargando tu música...</span>
+            <Loader2 className={`w-5 h-5 animate-spin mr-2 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`} />
+            <span className={darkMode ? 'text-zinc-500' : 'text-gray-500'}>Cargando...</span>
           </div>
         ) : searchError && searchQuery ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className={`text-center py-8 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>
             <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">{searchError}</p>
-            <p className="text-xs text-gray-300 mt-1">Intenta con otros términos de búsqueda</p>
           </div>
         ) : activeCategory === 'Mi Música' && filteredMusic.length === 0 && !isLoadingMyMusic ? (
-          <div className="text-center py-8 text-gray-400">
+          <div className={`text-center py-8 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>
             <FileAudio className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No tienes música subida</p>
-            <p className="text-xs text-gray-300 mt-1">Sube tu primer audio usando el botón de arriba</p>
           </div>
         ) : filteredMusic.length > 0 ? (
           <>
@@ -635,12 +589,13 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode 
                 onSelect={handleSelectMusic}
                 onPlay={handlePlay}
                 showSource={searchQuery.trim().length > 0}
+                darkMode={darkMode}
               />
             ))}
             
             {/* Add original sound option at the end - only show for categories other than Mi Música */}
             {activeCategory !== 'Mi Música' && (
-              <div className="border-t pt-2 mt-3">
+              <div className={`border-t pt-2 mt-3 ${darkMode ? 'border-zinc-800' : ''}`}>
                 <SimpleMusicCard
                   music={{
                     id: 'original_sound',
@@ -657,31 +612,20 @@ const MusicSelector = ({ onSelectMusic, selectedMusic, pollTitle = '', darkMode 
                   isSelected={selectedMusic?.id === 'original_sound'}
                   isPlaying={false}
                   onSelect={handleSelectMusic}
-                  onPlay={() => {}} // No play for original sound
-                  showSource={searchQuery.trim().length > 0}
+                  onPlay={() => {}}
+                  showSource={false}
+                  darkMode={darkMode}
                 />
               </div>
             )}
           </>
         ) : (
-          <div className="text-center py-8 text-gray-400">
+          <div className={`text-center py-8 ${darkMode ? 'text-zinc-500' : 'text-gray-400'}`}>
             <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No se encontró música</p>
-            <p className="text-xs text-gray-300 mt-1">
-              {searchQuery ? 'Intenta con otros términos de búsqueda' : 'Cargando biblioteca de música...'}
-            </p>
           </div>
         )}
       </div>
-
-      {/* Loading more indicator for search results */}
-      {searchQuery && searchResults.length > 0 && searchResults.length >= 20 && (
-        <div className="text-center py-2 border-t">
-          <p className="text-xs text-gray-500">
-            Mostrando los primeros {searchResults.length} resultados
-          </p>
-        </div>
-      )}
     </div>
   );
 };
