@@ -649,6 +649,11 @@ const ContentCreationPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewMode, setPreviewMode] = useState(false); // New state for fullscreen preview
   const [cropActiveSlot, setCropActiveSlot] = useState(null); // Which slot is in crop mode
+  
+  // Dialog states for description and mentions
+  const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false);
+  const [mentionsDialogOpen, setMentionsDialogOpen] = useState(false);
+  const [activeSlotForDialog, setActiveSlotForDialog] = useState(null);
 
   // Initialize with pre-selected audio if provided
   useEffect(() => {
