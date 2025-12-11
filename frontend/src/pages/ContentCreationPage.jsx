@@ -158,7 +158,7 @@ const LAYOUT_OPTIONS = [
   { id: 'horizontal-3x2', name: 'Grid 2x3', description: 'Pantalla dividida en 6 partes (cuadrícula de 2x3)' }
 ];
 
-const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUpload, onImageRemove, onOptionTextChange, onMentionSelect, onCropFromPreview, cropActiveSlot, onInlineCropSave, onInlineCropCancel, mentionInputValues, onMentionInputChange, fullscreen = false }) => {
+const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUpload, onImageRemove, onOptionTextChange, onMentionSelect, onCropFromPreview, cropActiveSlot, onInlineCropSave, onInlineCropCancel, mentionInputValues, onMentionInputChange, fullscreen = false, onOpenDescriptionDialog, onOpenMentionsDialog }) => {
   const getLayoutStyle = () => {
     switch (layout.id) {
       case 'off':
