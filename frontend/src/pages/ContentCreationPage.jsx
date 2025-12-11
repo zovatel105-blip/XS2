@@ -540,42 +540,32 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                   )}
                 </div>
 
-                {/* Edit controls */}
+                {/* Compact buttons for description and mentions */}
                 {option.media && (
-                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                    <input
-                      data-option-index={slotIndex}
-                      type="text"
-                      placeholder={`Descripción para ${String.fromCharCode(65 + slotIndex)}...`}
-                      value={option.text || ''}
-                      onChange={(e) => onOptionTextChange(slotIndex, e.target.value)}
-                      className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-400 text-sm mb-2"
-                    />
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent flex gap-2">
+                    {/* Description button */}
+                    <button
+                      onClick={() => {
+                        setActiveSlotForDialog(slotIndex);
+                        setDescriptionDialogOpen(true);
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      <span className="truncate">{option.text ? `${option.text.substring(0, 10)}${option.text.length > 10 ? '...' : ''}` : 'Descripción'}</span>
+                    </button>
                     
-                    {/* User mentions for this option */}
-                    <UserMentionInput 
-                      value={mentionInputValues[slotIndex] || ''}
-                      onChange={(value) => onMentionInputChange(slotIndex, value)}
-                      onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
-                      placeholder={`Mencionar usuarios en ${String.fromCharCode(65 + slotIndex)}...`}
-                      size="sm"
-                    />
-
-                    {/* Display mentioned users */}
-                    {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {option.mentionedUsers.slice(0, 4).map((user, idx) => (
-                          <span key={user.id} className="inline-flex items-center gap-1 bg-blue-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                            @{user.username}
-                          </span>
-                        ))}
-                        {option.mentionedUsers.length > 4 && (
-                          <span className="inline-flex items-center bg-gray-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                            +{option.mentionedUsers.length - 4} más
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    {/* Mentions button */}
+                    <button
+                      onClick={() => {
+                        setActiveSlotForDialog(slotIndex);
+                        setMentionsDialogOpen(true);
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                    >
+                      <AtSign className="w-4 h-4" />
+                      <span className="truncate">{option.mentionedUsers && option.mentionedUsers.length > 0 ? `${option.mentionedUsers.length} usuario${option.mentionedUsers.length > 1 ? 's' : ''}` : 'Mencionar'}</span>
+                    </button>
                   </div>
                 )}
               </div>
