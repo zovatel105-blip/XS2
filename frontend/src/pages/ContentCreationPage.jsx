@@ -1261,6 +1261,8 @@ const ContentCreationPage = () => {
             onInlineCropSave={handleInlineCropSave}
             onInlineCropCancel={handleInlineCropCancel}
             fullscreen={previewMode}
+            onOpenDescriptionDialog={handleOpenDescriptionDialog}
+            onOpenMentionsDialog={handleOpenMentionsDialog}
           />
         </div>
       </div>
