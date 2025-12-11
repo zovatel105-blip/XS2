@@ -646,6 +646,17 @@ const ContentCreationPage = () => {
     });
   };
 
+  // Handlers for opening description and mentions dialogs
+  const handleOpenDescriptionDialog = (slotIndex) => {
+    setActiveSlotForDialog(slotIndex);
+    setDescriptionDialogOpen(true);
+  };
+
+  const handleOpenMentionsDialog = (slotIndex) => {
+    setActiveSlotForDialog(slotIndex);
+    setMentionsDialogOpen(true);
+  };
+
   const handleLayoutSelect = (layout) => {
     setSelectedLayout(layout);
     setShowLayoutMenu(false);
