@@ -365,10 +365,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                   <div className="absolute bottom-4 left-4 right-4 z-20 flex gap-2">
                     {/* Description button */}
                     <button
-                      onClick={() => {
-                        setActiveSlotForDialog(slotIndex);
-                        setDescriptionDialogOpen(true);
-                      }}
+                      onClick={() => onOpenDescriptionDialog && onOpenDescriptionDialog(slotIndex)}
                       className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
                     >
                       <Edit3 className="w-4 h-4" />
@@ -377,10 +374,7 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     
                     {/* Mentions button */}
                     <button
-                      onClick={() => {
-                        setActiveSlotForDialog(slotIndex);
-                        setMentionsDialogOpen(true);
-                      }}
+                      onClick={() => onOpenMentionsDialog && onOpenMentionsDialog(slotIndex)}
                       className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
                     >
                       <AtSign className="w-4 h-4" />
