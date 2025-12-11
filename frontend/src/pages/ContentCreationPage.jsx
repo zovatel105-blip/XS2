@@ -10,6 +10,14 @@ import { fileToBase64 } from '../services/mockData';
 import pollService from '../services/pollService';
 import InlineCrop from '../components/InlineCrop';
 import config from '../config/config';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogFooter 
+} from '../components/ui/dialog';
+import { Button } from '../components/ui/button';
 
 // Swiper imports for carousel
 import { Swiper, SwiperSlide } from 'swiper/react';
