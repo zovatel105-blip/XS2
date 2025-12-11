@@ -1430,9 +1430,9 @@ const ContentCreationPage = () => {
         }
       `}</style>
 
-      {/* Description Dialog */}
+      {/* Description Dialog - Slides from bottom */}
       <Dialog open={descriptionDialogOpen} onOpenChange={setDescriptionDialogOpen}>
-        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700">
+        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700 fixed left-[50%] translate-x-[-50%] bottom-0 top-auto translate-y-0 data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom rounded-t-xl rounded-b-none sm:rounded-b-none border-b-0">
           <DialogHeader>
             <DialogTitle>Agregar Descripción</DialogTitle>
           </DialogHeader>
