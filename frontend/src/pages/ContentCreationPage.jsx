@@ -1463,9 +1463,9 @@ const ContentCreationPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Mentions Dialog */}
+      {/* Mentions Dialog - Slides from top */}
       <Dialog open={mentionsDialogOpen} onOpenChange={setMentionsDialogOpen}>
-        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700">
+        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700 fixed left-[50%] translate-x-[-50%] top-0 bottom-auto translate-y-0 data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top rounded-b-xl rounded-t-none sm:rounded-t-none border-t-0">
           <DialogHeader>
             <DialogTitle>Mencionar Usuarios</DialogTitle>
           </DialogHeader>
