@@ -1503,7 +1503,7 @@ const ContentCreationPage = () => {
                       <button
                         onClick={() => {
                           const updatedUsers = options[activeSlotForDialog].mentionedUsers.filter(u => u.id !== user.id);
-                          handleOptionChange(activeSlotForDialog, { mentionedUsers: updatedUsers });
+                          updateOption(activeSlotForDialog, 'mentionedUsers', updatedUsers);
                         }}
                         className="hover:bg-white/20 rounded-full p-0.5"
                       >
