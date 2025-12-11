@@ -1432,6 +1432,99 @@ const ContentCreationPage = () => {
           justify-content: center;
         }
       `}</style>
+
+      {/* Description Dialog */}
+      <Dialog open={descriptionDialogOpen} onOpenChange={setDescriptionDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700">
+          <DialogHeader>
+            <DialogTitle>Agregar Descripción</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <textarea
+              value={activeSlotForDialog !== null ? (options[activeSlotForDialog]?.text || '') : ''}
+              onChange={(e) => {
+                if (activeSlotForDialog !== null) {
+                  handleOptionTextChange(activeSlotForDialog, e.target.value);
+                }
+              }}
+              placeholder="Escribe una descripción..."
+              className="w-full min-h-[120px] bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none placeholder-gray-500 resize-none"
+              maxLength={500}
+            />
+            <p className="text-sm text-gray-400 text-right">
+              {activeSlotForDialog !== null ? (options[activeSlotForDialog]?.text || '').length : 0}/500
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={() => setDescriptionDialogOpen(false)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Guardar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mentions Dialog */}
+      <Dialog open={mentionsDialogOpen} onOpenChange={setMentionsDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-gray-900 text-white border-gray-700">
+          <DialogHeader>
+            <DialogTitle>Mencionar Usuarios</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <UserMentionInput 
+              value={activeSlotForDialog !== null ? (mentionInputValues[activeSlotForDialog] || '') : ''}
+              onChange={(value) => {
+                if (activeSlotForDialog !== null) {
+                  handleMentionInputChange(activeSlotForDialog, value);
+                }
+              }}
+              onMentionSelect={(user) => {
+                if (activeSlotForDialog !== null) {
+                  handleMentionSelect(activeSlotForDialog, user);
+                }
+              }}
+              placeholder="Buscar usuarios para mencionar..."
+              size="md"
+            />
+            
+            {/* Display mentioned users */}
+            {activeSlotForDialog !== null && options[activeSlotForDialog]?.mentionedUsers && options[activeSlotForDialog].mentionedUsers.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-400 mb-2">Usuarios mencionados:</p>
+                <div className="flex flex-wrap gap-2">
+                  {options[activeSlotForDialog].mentionedUsers.map((user) => (
+                    <span 
+                      key={user.id} 
+                      className="inline-flex items-center gap-2 bg-blue-500/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm"
+                    >
+                      @{user.username}
+                      <button
+                        onClick={() => {
+                          const updatedUsers = options[activeSlotForDialog].mentionedUsers.filter(u => u.id !== user.id);
+                          handleOptionChange(activeSlotForDialog, { mentionedUsers: updatedUsers });
+                        }}
+                        className="hover:bg-white/20 rounded-full p-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={() => setMentionsDialogOpen(false)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Guardar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
