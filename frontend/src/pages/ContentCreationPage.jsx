@@ -361,43 +361,31 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     )}
                   </div>
 
-                  {/* Option text input for horizontal carousel */}
-                  <div className="absolute bottom-4 left-4 right-4 z-20">
-                    <input
-                      data-option-index={slotIndex}
-                      type="text"
-                      placeholder={`Descripción ${String.fromCharCode(65 + slotIndex)}...`}
-                      value={option.text || ''}
-                      onChange={(e) => onOptionTextChange(slotIndex, e.target.value)}
-                      className="w-full bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 focus:border-white/50 focus:outline-none placeholder-gray-400 text-sm"
-                    />
+                  {/* Compact buttons for description and mentions */}
+                  <div className="absolute bottom-4 left-4 right-4 z-20 flex gap-2">
+                    {/* Description button */}
+                    <button
+                      onClick={() => {
+                        setActiveSlotForDialog(slotIndex);
+                        setDescriptionDialogOpen(true);
+                      }}
+                      className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      <span>{option.text ? `${option.text.substring(0, 15)}${option.text.length > 15 ? '...' : ''}` : 'Descripción'}</span>
+                    </button>
                     
-                    {/* User mentions for this option */}
-                    <div className="mt-2">
-                      <UserMentionInput 
-                        value={mentionInputValues[slotIndex] || ''}
-                        onChange={(value) => onMentionInputChange(slotIndex, value)}
-                        onMentionSelect={(user) => onMentionSelect(slotIndex, user)}
-                        placeholder={`Mencionar usuarios...`}
-                        size="sm"
-                      />
-                    </div>
-
-                    {/* Display mentioned users */}
-                    {option.mentionedUsers && option.mentionedUsers.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {option.mentionedUsers.slice(0, 2).map((user, idx) => (
-                          <span key={user.id} className="inline-flex items-center gap-1 bg-blue-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                            @{user.username}
-                          </span>
-                        ))}
-                        {option.mentionedUsers.length > 2 && (
-                          <span className="inline-flex items-center bg-gray-500/80 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                            +{option.mentionedUsers.length - 2}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    {/* Mentions button */}
+                    <button
+                      onClick={() => {
+                        setActiveSlotForDialog(slotIndex);
+                        setMentionsDialogOpen(true);
+                      }}
+                      className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                    >
+                      <AtSign className="w-4 h-4" />
+                      <span>{option.mentionedUsers && option.mentionedUsers.length > 0 ? `${option.mentionedUsers.length} usuario${option.mentionedUsers.length > 1 ? 's' : ''}` : 'Mencionar'}</span>
+                    </button>
                   </div>
                   </div>
                 </SwiperSlide>
