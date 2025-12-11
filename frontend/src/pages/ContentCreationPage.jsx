@@ -361,24 +361,22 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     )}
                   </div>
 
-                  {/* Compact buttons for description and mentions */}
+                  {/* Compact buttons for description and mentions - Icon only */}
                   <div className="absolute bottom-4 left-4 right-4 z-20 flex gap-2">
-                    {/* Description button */}
+                    {/* Description button - Icon only */}
                     <button
                       onClick={() => onOpenDescriptionDialog && onOpenDescriptionDialog(slotIndex)}
-                      className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                      className="flex items-center justify-center w-10 h-10 bg-black/50 backdrop-blur-sm text-white rounded-full border border-white/20 hover:border-white/50 hover:bg-black/70 transition-all"
                     >
-                      <Edit3 className="w-4 h-4" />
-                      <span>{option.text ? `${option.text.substring(0, 15)}${option.text.length > 15 ? '...' : ''}` : 'Descripción'}</span>
+                      <Edit3 className="w-5 h-5" />
                     </button>
                     
-                    {/* Mentions button */}
+                    {/* Mentions button - Icon only */}
                     <button
                       onClick={() => onOpenMentionsDialog && onOpenMentionsDialog(slotIndex)}
-                      className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white px-3 py-2 rounded-lg border border-white/20 hover:border-white/50 transition-all text-sm"
+                      className="flex items-center justify-center w-10 h-10 bg-black/50 backdrop-blur-sm text-white rounded-full border border-white/20 hover:border-white/50 hover:bg-black/70 transition-all"
                     >
-                      <AtSign className="w-4 h-4" />
-                      <span>{option.mentionedUsers && option.mentionedUsers.length > 0 ? `${option.mentionedUsers.length} usuario${option.mentionedUsers.length > 1 ? 's' : ''}` : 'Mencionar'}</span>
+                      <AtSign className="w-5 h-5" />
                     </button>
                   </div>
                   </div>
