@@ -685,6 +685,7 @@ const ContentCreationPage = () => {
   };
 
   const handleOptionTextChange = (index, text) => {
+    console.log(`📝 Guardando texto para opción ${index}:`, text);
     updateOption(index, 'text', text);
   };
 
