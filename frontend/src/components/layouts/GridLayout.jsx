@@ -376,24 +376,31 @@ const GridLayout = ({
             {isActive && option.text && (() => {
               let descriptionPosition;
               
-              // Determine position based on grid type and option index
-              if (gridType === 'grid-2x2') {
-                // Grid 2x2: A,B (top row - index 0,1) = bottom, C,D (bottom row - index 2,3) = top
-                if (optionIndex === 0 || optionIndex === 1) {
-                  descriptionPosition = "bottom-4"; // A, B - descripción abajo
-                } else {
-                  descriptionPosition = "top-4"; // C, D - descripción arriba
-                }
-              } else if (gridType === 'grid-3x2') {
-                // Grid 3x2: A,B,C (top row - index 0,1,2) = bottom, D,E,F (bottom row - index 3,4,5) = top
-                if (optionIndex === 0 || optionIndex === 1 || optionIndex === 2) {
-                  descriptionPosition = "bottom-4"; // A, B, C - descripción abajo
-                } else {
-                  descriptionPosition = "top-4"; // D, E, F - descripción arriba
-                }
+              // Use custom text_position if available, otherwise use grid-based logic
+              if (option.text_position) {
+                descriptionPosition = option.text_position === 'top' ? 'top-4' : 
+                                      option.text_position === 'center' ? 'top-1/2 -translate-y-1/2' : 
+                                      'bottom-4';
               } else {
-                // Other grids: keep current position
-                descriptionPosition = "bottom-24";
+                // Determine position based on grid type and option index (legacy logic)
+                if (gridType === 'grid-2x2') {
+                  // Grid 2x2: A,B (top row - index 0,1) = bottom, C,D (bottom row - index 2,3) = top
+                  if (optionIndex === 0 || optionIndex === 1) {
+                    descriptionPosition = "bottom-4"; // A, B - descripción abajo
+                  } else {
+                    descriptionPosition = "top-4"; // C, D - descripción arriba
+                  }
+                } else if (gridType === 'grid-3x2') {
+                  // Grid 3x2: A,B,C (top row - index 0,1,2) = bottom, D,E,F (bottom row - index 3,4,5) = top
+                  if (optionIndex === 0 || optionIndex === 1 || optionIndex === 2) {
+                    descriptionPosition = "bottom-4"; // A, B, C - descripción abajo
+                  } else {
+                    descriptionPosition = "top-4"; // D, E, F - descripción arriba
+                  }
+                } else {
+                  // Other grids: keep current position
+                  descriptionPosition = "bottom-24";
+                }
               }
               
               return (
