@@ -1481,6 +1481,55 @@ const ContentCreationPage = () => {
             <p className="text-sm text-gray-400 text-right">
               {activeSlotForDialog !== null ? (options[activeSlotForDialog]?.text || '').length : 0}/500
             </p>
+            
+            {/* Text Position Controls */}
+            <div className="space-y-2">
+              <p className="text-sm text-gray-400">Posición del texto:</p>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    if (activeSlotForDialog !== null) {
+                      updateOption(activeSlotForDialog, 'textPosition', 'top');
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeSlotForDialog !== null && options[activeSlotForDialog]?.textPosition === 'top'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Arriba
+                </button>
+                <button
+                  onClick={() => {
+                    if (activeSlotForDialog !== null) {
+                      updateOption(activeSlotForDialog, 'textPosition', 'center');
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeSlotForDialog !== null && options[activeSlotForDialog]?.textPosition === 'center'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Centro
+                </button>
+                <button
+                  onClick={() => {
+                    if (activeSlotForDialog !== null) {
+                      updateOption(activeSlotForDialog, 'textPosition', 'bottom');
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    activeSlotForDialog !== null && (options[activeSlotForDialog]?.textPosition === 'bottom' || !options[activeSlotForDialog]?.textPosition)
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  Abajo
+                </button>
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button
