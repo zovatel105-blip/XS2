@@ -679,7 +679,7 @@ const ContentCreationPage = () => {
   const updateOption = (index, field, value) => {
     const newOptions = [...options];
     while (newOptions.length <= index) {
-      newOptions.push({ text: '', media: null, mentionedUsers: [] });
+      newOptions.push({ text: '', media: null, mentionedUsers: [], textPosition: 'bottom' });
     }
     newOptions[index] = { ...newOptions[index], [field]: value };
     setOptions(newOptions);
