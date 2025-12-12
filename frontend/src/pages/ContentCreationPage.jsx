@@ -1222,10 +1222,11 @@ const ContentCreationPage = () => {
         allMentionedUsers.push(...opt.mentionedUsers.map(user => user.id));
       }
       
-      console.log(`📋 Opción ${index} - Texto:`, opt.text);
+      console.log(`📋 Opción ${index} - Texto:`, opt.text, '- Posición:', opt.textPosition);
       
       return {
         text: opt.text || '', // Use provided text or empty string (sin trim para debugging)
+        text_position: opt.textPosition || 'bottom', // Position of text overlay
         media_type: opt.media.type, // Use the actual media type (image or video)
         media_url: opt.media.url,
         thumbnail_url: opt.media.thumbnail || opt.media.url, // Use thumbnail for videos, original for images
