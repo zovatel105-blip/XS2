@@ -269,6 +269,20 @@ const CarouselLayout = ({
                 )}
               </div>
 
+              {/* TEXT OVERLAY - Descripción del slide */}
+              {!isThumbnail && option.text && (
+                <div className={cn(
+                  "absolute left-0 right-0 z-10 px-4",
+                  option.text_position === 'top' ? 'top-4' : 
+                  option.text_position === 'center' ? 'top-1/2 -translate-y-1/2' : 
+                  'bottom-24'
+                )}>
+                  <p className="text-white text-center text-sm sm:text-base font-medium bg-black/60 backdrop-blur-sm px-4 py-2 rounded-lg break-words">
+                    {option.text}
+                  </p>
+                </div>
+              )}
+
               {/* WINNER/SELECTED SIMILAR UI - Solo visible cuando NO es thumbnail */}
               {!isThumbnail && mobile && poll.userVote && (
                 <div>
