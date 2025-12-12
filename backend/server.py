@@ -6383,6 +6383,7 @@ async def create_poll(
         option = PollOption(
             user_id=current_user.id,  # For now, creator adds all options
             text=option_data["text"],
+            text_position=option_data.get("text_position", "bottom"),  # ✅ Include text position
             media_type=option_data.get("media_type"),
             media_url=option_data.get("media_url"),
             thumbnail_url=option_data.get("thumbnail_url"),
