@@ -616,6 +616,7 @@ const ContentCreationPage = () => {
   const [descriptionDialogOpen, setDescriptionDialogOpen] = useState(false);
   const [mentionsDialogOpen, setMentionsDialogOpen] = useState(false);
   const [activeSlotForDialog, setActiveSlotForDialog] = useState(null);
+  const [textPreviewPosition, setTextPreviewPosition] = useState('bottom'); // 'top', 'center', 'bottom'
 
   // Initialize with pre-selected audio if provided
   useEffect(() => {
