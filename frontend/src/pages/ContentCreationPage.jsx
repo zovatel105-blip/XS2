@@ -361,6 +361,19 @@ const LayoutPreview = ({ layout, options = [], title, selectedMusic, onImageUplo
                     )}
                   </div>
 
+                  {/* Text overlay preview */}
+                  {option.text && (
+                    <div className={`absolute left-0 right-0 z-10 px-4 ${
+                      option.textPosition === 'top' ? 'top-4' : 
+                      option.textPosition === 'center' ? 'top-1/2 -translate-y-1/2' : 
+                      'bottom-20'
+                    }`}>
+                      <p className="text-white text-center text-sm sm:text-base font-medium bg-black/60 backdrop-blur-sm px-4 py-2 rounded-lg break-words">
+                        {option.text}
+                      </p>
+                    </div>
+                  )}
+
                   {/* Compact buttons for description and mentions - Icon only */}
                   <div className="absolute bottom-4 left-4 right-4 z-20 flex gap-2">
                     {/* Description button - Icon only */}
