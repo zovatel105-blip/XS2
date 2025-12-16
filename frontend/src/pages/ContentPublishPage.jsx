@@ -575,7 +575,7 @@ const ContentPublishPage = () => {
                   <button
                     onClick={() => setCommentsEnabled(!commentsEnabled)}
                     className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
-                      commentsEnabled ? 'bg-[#00D9FF]' : 'bg-gray-700'
+                      commentsEnabled ? 'bg-[#3B82F6]' : 'bg-gray-700'
                     }`}
                   >
                     <div
@@ -604,7 +604,7 @@ const ContentPublishPage = () => {
                   <button
                     onClick={() => setShowVoteCount(!showVoteCount)}
                     className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
-                      showVoteCount ? 'bg-[#00D9FF]' : 'bg-gray-700'
+                      showVoteCount ? 'bg-[#3B82F6]' : 'bg-gray-700'
                     }`}
                   >
                     <div
@@ -632,7 +632,7 @@ const ContentPublishPage = () => {
                     onClick={() => setMatureContent('none')}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors touch-manipulation ${
                       matureContent === 'none'
-                        ? 'bg-[#00D9FF] text-white'
+                        ? 'bg-[#3B82F6] text-white'
                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                     }`}
                   >
@@ -682,7 +682,7 @@ const ContentPublishPage = () => {
                   <button
                     onClick={() => setAllowDownloads(!allowDownloads)}
                     className={`relative w-11 h-6 rounded-full transition-colors touch-manipulation flex-shrink-0 ${
-                      allowDownloads ? 'bg-[#00D9FF]' : 'bg-gray-700'
+                      allowDownloads ? 'bg-[#3B82F6]' : 'bg-gray-700'
                     }`}
                   >
                     <div
@@ -801,7 +801,7 @@ const ContentPublishPage = () => {
                   }}
                   className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
                     audienceTarget === option
-                      ? 'bg-[#00D9FF] text-white'
+                      ? 'bg-[#3B82F6] text-white'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
                   }`}
                 >
@@ -852,7 +852,7 @@ const ContentPublishPage = () => {
                   }}
                   className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
                     sourceAuthenticity === option
-                      ? 'bg-[#00D9FF] text-white'
+                      ? 'bg-[#3B82F6] text-white'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
                   }`}
                 >
@@ -903,7 +903,7 @@ const ContentPublishPage = () => {
                   }}
                   className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
                     votingPrivacy === option
-                      ? 'bg-[#00D9FF] text-white'
+                      ? 'bg-[#3B82F6] text-white'
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-750'
                   }`}
                 >
