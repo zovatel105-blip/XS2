@@ -750,7 +750,7 @@ const ContentPublishPage = () => {
           <button
             onClick={handleFinalPublish}
             disabled={isPublishing || !title.trim()}
-            className="w-full flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 active:from-pink-700 active:to-red-700 disabled:from-gray-700 disabled:to-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm touch-manipulation min-h-[44px]"
+            className="w-full flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active:bg-[#6D28D9] disabled:bg-gray-700 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed text-sm touch-manipulation min-h-[44px]"
           >
             {isPublishing ? (
               <>
