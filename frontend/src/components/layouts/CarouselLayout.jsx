@@ -176,9 +176,15 @@ const CarouselLayout = ({
     setCurrentSlide(newIndex);
   };
 
-  // ========== AUDIO HANDLING ==========
+  // ========== AUDIO HANDLING CON POOL PRECARGADO ==========
   useEffect(() => {
     if (!isActive) {
+      // Pausar todos los audios cuando no está activo
+      audioPool.current.forEach((audio) => {
+        if (audio.audioElement) {
+          audio.audioElement.pause();
+        }
+      });
       audioManager.stop();
       audioLoading.current = false;
       return;
@@ -190,60 +196,53 @@ const CarouselLayout = ({
     const extractedAudioId = option.extracted_audio_id;
 
     if (!extractedAudioId) {
+      // Pausar todos los audios si no hay audio extraído
+      audioPool.current.forEach((audio) => {
+        if (audio.audioElement) {
+          audio.audioElement.pause();
+        }
+      });
       audioManager.stop();
       onAudioChange?.(null);
-      // 🎨 Cuando no hay audio extraído, notificar thumbnail del video
+      
       if (onThumbnailChange && option.thumbnail_url) {
         onThumbnailChange(option.thumbnail_url);
       }
       return;
     }
 
-    const loadAndPlay = async () => {
+    const playFromPool = async () => {
       if (audioLoading.current) return;
-
       audioLoading.current = true;
-      const slideOnStart = currentSlide;
 
       try {
-        await audioManager.stop();
-
-        // Fetch audio file
-        const res = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/audio/${extractedAudioId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+        // Pausar todos los otros audios
+        audioPool.current.forEach((audio, slideIndex) => {
+          if (slideIndex !== currentSlide && audio.audioElement) {
+            audio.audioElement.pause();
+            audio.audioElement.currentTime = 0;
           }
-        );
+        });
 
-        if (!res.ok) {
+        // Verificar si el audio está en el pool
+        if (!audioPool.current.has(currentSlide)) {
+          console.log(`⏳ Audio del slide ${currentSlide} aún no está precargado, cargando...`);
+          await preloadAudioForSlide(currentSlide);
+        }
+
+        const pooledAudio = audioPool.current.get(currentSlide);
+        
+        if (!pooledAudio) {
+          console.error(`❌ No se pudo cargar audio para slide ${currentSlide}`);
           audioLoading.current = false;
           return;
         }
 
-        const data = await res.json();
-        const audioData = data.audio || data;
-
-        const audioUrl =
-          audioData.public_url ||
-          audioData.url ||
-          audioData.preview_url;
-
-        if (!audioUrl) {
-          console.error('⚠ No audio URL found');
-          audioLoading.current = false;
-          return;
-        }
-
-        // 🎨 CORRECCIÓN IMPORTANTE: Usar cover_url del audio primero (igual que AudioDetailPage)
-        // Prioridad: 1) audioData.cover_url, 2) option.thumbnail_url (fallback)
-        const coverImage = audioData.cover_url || option.thumbnail_url;
+        const { audioElement, audioData, coverImage } = pooledAudio;
 
         // Update thumbnail for MusicPlayer
         if (onThumbnailChange && coverImage) {
-          console.log(`🖼️ Notificando cover para slide ${currentSlide}:`, coverImage);
+          console.log(`🖼️ Actualizando cover para slide ${currentSlide}`);
           onThumbnailChange(coverImage);
         }
 
@@ -252,30 +251,35 @@ const CarouselLayout = ({
           id: audioData.id,
           title: audioData.title || 'Original Sound',
           artist: audioData.artist || poll.author?.display_name || 'Unknown',
-          preview_url: audioUrl,
-          cover: coverImage, // Usando la misma prioridad que definimos arriba
+          preview_url: audioElement.src,
+          cover: coverImage,
           isOriginal: true,
           source: 'User Upload'
         });
 
-        // Prevent wrong slide playback
-        if (currentSlideSafe.current !== slideOnStart) return;
-
-        await audioManager.play(audioUrl, {
-          startTime: 0,
-          volume: 0.7,
-          loop: true
-        });
+        // Reproducir el audio desde el pool (instantáneo)
+        audioElement.currentTime = 0;
+        
+        const playPromise = audioElement.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log(`▶️ Audio del slide ${currentSlide} reproduciendo`);
+            })
+            .catch((error) => {
+              console.error('Error al reproducir audio:', error);
+            });
+        }
 
       } catch (err) {
-        console.error('Audio error:', err);
+        console.error('❌ Error en playFromPool:', err);
       } finally {
         audioLoading.current = false;
       }
     };
 
-    loadAndPlay();
-  }, [currentSlide, isActive]);
+    playFromPool();
+  }, [currentSlide, isActive, poll.options, poll.author]);
 
   // ========== VIDEO SUPPRESSION FIX (THE IMPORTANT PART) ==========
   //
