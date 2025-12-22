@@ -58,15 +58,117 @@ const CarouselLayout = ({
 
   const mobile = window.innerWidth <= 768;
 
-  // On poll change → reset slide
+  // On poll change → reset slide and clear audio pool
   useEffect(() => {
     setCurrentSlide(0);
     currentSlideSafe.current = 0;
+    // Limpiar pool de audio al cambiar de poll
+    audioPool.current.forEach((audio) => {
+      if (audio.audioElement) {
+        audio.audioElement.pause();
+        audio.audioElement.src = '';
+      }
+    });
+    audioPool.current.clear();
+    audioMetadataCache.current.clear();
   }, [poll.id]);
 
   useEffect(() => {
     currentSlideSafe.current = currentSlide;
   }, [currentSlide]);
+
+  // ========== FUNCIÓN PARA PRECARGAR AUDIO DE UN SLIDE ==========
+  const preloadAudioForSlide = async (slideIndex) => {
+    if (slideIndex < 0 || slideIndex >= poll.options.length) return;
+    if (audioPool.current.has(slideIndex)) return; // Ya está precargado
+    
+    const option = poll.options[slideIndex];
+    if (!option?.extracted_audio_id) return;
+
+    try {
+      console.log(`🔊 Precargando audio para slide ${slideIndex}...`);
+      
+      // Fetch audio metadata si no está en cache
+      if (!audioMetadataCache.current.has(option.extracted_audio_id)) {
+        const res = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/audio/${option.extracted_audio_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const audioData = data.audio || data;
+        
+        audioMetadataCache.current.set(option.extracted_audio_id, audioData);
+      }
+
+      const audioData = audioMetadataCache.current.get(option.extracted_audio_id);
+      const audioUrl = audioData.public_url || audioData.url || audioData.preview_url;
+      
+      if (!audioUrl) return;
+
+      // Crear elemento de audio y precargarlo
+      const audioElement = new Audio();
+      audioElement.preload = 'auto';
+      audioElement.crossOrigin = 'anonymous';
+      audioElement.volume = 0.7;
+      audioElement.loop = true;
+      audioElement.src = audioUrl;
+
+      // Forzar precarga
+      audioElement.load();
+
+      // Guardar en el pool
+      audioPool.current.set(slideIndex, {
+        audioUrl,
+        audioData,
+        audioElement,
+        coverImage: audioData.cover_url || option.thumbnail_url
+      });
+
+      console.log(`✅ Audio precargado para slide ${slideIndex}`);
+    } catch (error) {
+      console.error(`❌ Error precargando audio para slide ${slideIndex}:`, error);
+    }
+  };
+
+  // ========== PRECARGAR AUDIOS ADYACENTES ==========
+  useEffect(() => {
+    if (!isActive || !poll.options) return;
+
+    // Precargar slides: actual, anterior y siguiente
+    const slidesToPreload = [
+      currentSlide,
+      currentSlide - 1,
+      currentSlide + 1,
+      currentSlide + 2 // Extra para mayor buffer
+    ];
+
+    slidesToPreload.forEach(index => {
+      if (index >= 0 && index < poll.options.length) {
+        preloadAudioForSlide(index);
+      }
+    });
+
+    // Limpiar audios muy lejanos para liberar memoria
+    const maxDistance = 3;
+    audioPool.current.forEach((audio, slideIndex) => {
+      if (Math.abs(slideIndex - currentSlide) > maxDistance) {
+        if (audio.audioElement) {
+          audio.audioElement.pause();
+          audio.audioElement.src = '';
+        }
+        audioPool.current.delete(slideIndex);
+        console.log(`🗑️ Liberado audio del slide ${slideIndex}`);
+      }
+    });
+
+  }, [currentSlide, isActive, poll.options]);
 
   // ========== SWIPER SLIDE CHANGE HANDLER ==========
   const handleSlideChange = (swiper) => {
