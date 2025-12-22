@@ -216,9 +216,12 @@ const CarouselLayout = ({
       audioLoading.current = true;
 
       try {
-        // Pausar todos los otros audios
+        // ⚠️ CRÍTICO: Detener audioManager primero para evitar doble reproducción
+        await audioManager.stop();
+
+        // Pausar todos los otros audios del pool
         audioPool.current.forEach((audio, slideIndex) => {
-          if (slideIndex !== currentSlide && audio.audioElement) {
+          if (audio.audioElement) {
             audio.audioElement.pause();
             audio.audioElement.currentTime = 0;
           }
@@ -259,6 +262,7 @@ const CarouselLayout = ({
 
         // Reproducir el audio desde el pool (instantáneo)
         audioElement.currentTime = 0;
+        audioElement.volume = 0.7;
         
         const playPromise = audioElement.play();
         if (playPromise !== undefined) {
