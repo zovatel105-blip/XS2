@@ -201,6 +201,54 @@ const CarouselLayout = ({
     });
   }, [currentSlide, isActive, poll.options]);
 
+  // ========== PRECARGA DE AUDIO PARA SLIDES ADYACENTES ==========
+  useEffect(() => {
+    if (!isActive || !poll.options) return;
+
+    // Precargar audio de slides adyacentes (anterior y siguiente)
+    const preloadAudioForSlide = async (slideIndex) => {
+      if (slideIndex < 0 || slideIndex >= poll.options.length) return;
+      
+      const option = poll.options[slideIndex];
+      if (!option?.extracted_audio_id) return;
+
+      try {
+        // Fetch audio metadata para precarga
+        const res = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/api/audio/${option.extracted_audio_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          const audioData = data.audio || data;
+          const audioUrl = audioData.public_url || audioData.url || audioData.preview_url;
+          
+          if (audioUrl) {
+            // Precargar el audio usando Audio object sin reproducir
+            const audio = new Audio();
+            audio.preload = 'auto';
+            audio.src = audioUrl;
+            console.log(`🔊 Precargando audio para slide ${slideIndex}`);
+          }
+        }
+      } catch (error) {
+        console.log(`⚠️ Error precargando audio para slide ${slideIndex}:`, error);
+      }
+    };
+
+    // Precargar slide anterior
+    preloadAudioForSlide(currentSlide - 1);
+    
+    // Precargar slide siguiente
+    preloadAudioForSlide(currentSlide + 1);
+
+  }, [currentSlide, isActive, poll.options]);
+
   // ========== WINNER + PERCENTAGE ==========
   const getPercentage = (votes) => {
     if (!poll.userVote || poll.totalVotes === 0) return 0;
