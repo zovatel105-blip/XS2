@@ -40,6 +40,10 @@ const CarouselLayout = ({
   const audioLoading = useRef(false);
   const currentSlideSafe = useRef(0);
 
+  // === AUDIO POOL FOR SMOOTH TRANSITIONS ===
+  const audioPool = useRef(new Map()); // Map<slideIndex, {audioUrl, audioData, audioElement}>
+  const audioMetadataCache = useRef(new Map()); // Cache de metadata del audio
+
   const totalSlides = poll.options?.length || 1;
 
   // === Slide state ===
