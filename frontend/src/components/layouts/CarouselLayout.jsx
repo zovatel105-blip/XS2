@@ -253,17 +253,27 @@ const CarouselLayout = ({
                     playsInline
                     loop
                     preload={
-                      idx === currentSlide
-                        ? 'auto'
-                        : Math.abs(currentSlide - idx) <= 1
-                        ? 'metadata'
-                        : 'none'
+                      // Precarga agresiva para carrusel con audio original
+                      option.extracted_audio_id
+                        ? (idx === currentSlide
+                            ? 'auto'  // Slide actual: carga completa
+                            : Math.abs(currentSlide - idx) <= 1
+                            ? 'auto'  // Slides adyacentes: carga completa para audio original
+                            : Math.abs(currentSlide - idx) <= 2
+                            ? 'metadata'  // Slides a 2 distancia: solo metadata
+                            : 'none')  // Slides lejanos: no cargar
+                        : (idx === currentSlide
+                            ? 'auto'
+                            : Math.abs(currentSlide - idx) <= 1
+                            ? 'metadata'
+                            : 'none')
                     }
                     className="w-full h-full object-cover rounded-lg"
                   />
                 ) : (
                   <img
                     src={option.media?.url}
+                    alt=""
                     className="w-full h-full object-cover rounded-lg"
                   />
                 )}
