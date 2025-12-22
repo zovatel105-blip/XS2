@@ -62,16 +62,38 @@ const CarouselLayout = ({
   useEffect(() => {
     setCurrentSlide(0);
     currentSlideSafe.current = 0;
+    
+    // ⚠️ CRÍTICO: Detener audioManager
+    audioManager.stop();
+    
     // Limpiar pool de audio al cambiar de poll
     audioPool.current.forEach((audio) => {
       if (audio.audioElement) {
         audio.audioElement.pause();
+        audio.audioElement.currentTime = 0;
         audio.audioElement.src = '';
       }
     });
     audioPool.current.clear();
     audioMetadataCache.current.clear();
+    
+    console.log('🧹 Pool de audio limpiado');
   }, [poll.id]);
+
+  // Cleanup cuando el componente se desmonta
+  useEffect(() => {
+    return () => {
+      console.log('🧹 Limpiando CarouselLayout...');
+      audioManager.stop();
+      audioPool.current.forEach((audio) => {
+        if (audio.audioElement) {
+          audio.audioElement.pause();
+          audio.audioElement.src = '';
+        }
+      });
+      audioPool.current.clear();
+    };
+  }, []);
 
   useEffect(() => {
     currentSlideSafe.current = currentSlide;
