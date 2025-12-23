@@ -208,7 +208,8 @@ const GridLayout = ({
                     ref={(el) => {
                       if (el) videoRefs.current.set(option.id, el);
                     }}
-                    src={option.media.url} 
+                    src={option.media.url}
+                    poster={option.thumbnail_url}
                     className="w-full h-full object-cover object-center rounded-lg"
                     // ✅ FIXED: Show videos when active (less restrictive)
                     autoPlay={isActive}
