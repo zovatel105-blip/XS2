@@ -45,6 +45,8 @@ const renderTextWithHashtags = (text, navigate) => {
 const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option, totalVotes, userVote, fullScreen = false, globalMentions = [] }) => {
   // Detect mobile device with window resize handling
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
   useEffect(() => {
     const handleResize = () => {
