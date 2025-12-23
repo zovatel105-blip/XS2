@@ -117,9 +117,17 @@ const ProfilePage = () => {
   const { user: authUser, refreshUser } = useAuth();
   const { getUserFollowers, getUserFollowing, followUser, unfollowUser, isFollowing, getFollowStatus, followStateVersion, refreshTrigger, getUserByUsername } = useFollow();
   const { shareModal, shareProfile, closeShareModal } = useShare();
-  const { enterTikTokMode, exitTikTokMode, isTikTokMode } = useTikTok();
+  const { enterTikTokMode, exitTikTokMode, isTikTokMode, hideRightNavigationBar, showRightNavigationBar } = useTikTok();
   const { userId } = useParams();
   const navigate = useNavigate();
+
+  // Ocultar la barra de navegación derecha en esta página
+  useEffect(() => {
+    hideRightNavigationBar();
+    return () => {
+      showRightNavigationBar();
+    };
+  }, [hideRightNavigationBar, showRightNavigationBar]);
 
   // Verificar si hay múltiples cuentas (por ahora simulado - implementar lógica real más adelante)
   const hasMultipleAccounts = false; // Cambiar a true cuando haya múltiples cuentas
