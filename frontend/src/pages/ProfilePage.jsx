@@ -2160,6 +2160,23 @@ const ProfilePage = () => {
 
           </div>
 
+          {/* Mensaje de solicitud pendiente - Centrado y prominente */}
+          {followRequestPending && !isOwnProfile && (
+            <div className="px-4 py-8">
+              <div className="max-w-md mx-auto text-center space-y-4">
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
+                  <UserPlus className="w-10 h-10 text-blue-500" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-gray-900">Solicitud enviada</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Esperando que @{viewedUser?.username || 'usuario'} acepte tu solicitud para seguirle
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Contenido de tabs con diseño limpio - ocupando casi todo el ancho */}
           <div className="pb-24">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
