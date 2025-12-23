@@ -54,7 +54,9 @@ const ActivityPage = () => {
     if (!dateString) return '';
     
     const now = new Date();
-    const date = new Date(dateString);
+    // Asegurar que el dateString se interprete como UTC si no tiene 'Z'
+    const dateStr = dateString.endsWith('Z') ? dateString : dateString + 'Z';
+    const date = new Date(dateStr);
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / (1000 * 60));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
