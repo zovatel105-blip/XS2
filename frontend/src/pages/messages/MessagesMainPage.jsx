@@ -1453,6 +1453,7 @@ const MessagesMainPage = () => {
                   {/* Timestamp */}
                   <div className={`text-xs text-gray-400 mt-1 ${isOwnMessage ? 'text-right mr-2' : 'text-left ml-2'}`}>
                     {(() => {
+                      if (!message.timestamp) return '';
                       // Asegurar que el timestamp se interprete como UTC
                       const dateStr = message.timestamp.endsWith('Z') ? message.timestamp : message.timestamp + 'Z';
                       return new Date(dateStr).toLocaleTimeString('es-ES', { 
