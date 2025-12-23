@@ -100,6 +100,7 @@ const ProfilePage = () => {
   const [showAddSocialModal, setShowAddSocialModal] = useState(false);
   const [newSocialName, setNewSocialName] = useState('');
   const [newSocialUrl, setNewSocialUrl] = useState('');
+  const [followRequestPending, setFollowRequestPending] = useState(false);
   
   // Colores disponibles para las plataformas
   const availableColors = [
