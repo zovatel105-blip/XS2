@@ -53,24 +53,33 @@ const ActivityPage = () => {
   const formatTimeForInbox = (dateString) => {
     if (!dateString) return '';
     
-    const now = new Date();
-    // Asegurar que el dateString se interprete como UTC si no tiene 'Z'
-    const dateStr = dateString.endsWith('Z') ? dateString : dateString + 'Z';
-    const date = new Date(dateStr);
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    try {
+      const now = new Date();
+      // Asegurar que el dateString se interprete como UTC si no tiene 'Z'
+      const dateStr = dateString.endsWith('Z') ? dateString : dateString + 'Z';
+      const date = new Date(dateStr);
+      
+      // Validar que la fecha es válida
+      if (isNaN(date.getTime())) return '';
+      
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffMins < 1) return 'ahora';
-    if (diffMins < 60) return `${diffMins}m`;
-    if (diffHours < 24) return `${diffHours}h`;
-    if (diffDays < 7) return `${diffDays}d`;
-    
-    return date.toLocaleDateString('es-ES', { 
-      day: 'numeric', 
-      month: 'short' 
-    });
+      if (diffMins < 1) return 'ahora';
+      if (diffMins < 60) return `${diffMins}m`;
+      if (diffHours < 24) return `${diffHours}h`;
+      if (diffDays < 7) return `${diffDays}d`;
+      
+      return date.toLocaleDateString('es-ES', { 
+        day: 'numeric', 
+        month: 'short' 
+      });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return '';
+    }
   };
 
   // Funciones de utilidad para actividades
