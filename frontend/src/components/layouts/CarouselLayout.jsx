@@ -385,6 +385,7 @@ const CarouselLayout = ({
                       if (el) videoRefs.current.set(option.id, el);
                     }}
                     src={option.media.url}
+                    poster={option.thumbnail_url}
                     muted
                     playsInline
                     loop
