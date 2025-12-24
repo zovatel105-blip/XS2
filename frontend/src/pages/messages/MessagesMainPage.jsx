@@ -1414,7 +1414,7 @@ const MessagesMainPage = () => {
                 return currentDate.toDateString() !== previousDate.toDateString();
               })();
               
-              // Formatear la fecha para el separador
+              // Formatear la fecha para el separador (estilo Instagram)
               const formatDateSeparator = (dateString) => {
                 if (!dateString) return '';
                 const date = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
@@ -1422,17 +1422,30 @@ const MessagesMainPage = () => {
                 const yesterday = new Date(today);
                 yesterday.setDate(yesterday.getDate() - 1);
                 
+                // Hoy
                 if (date.toDateString() === today.toDateString()) {
                   return 'Hoy';
-                } else if (date.toDateString() === yesterday.toDateString()) {
+                }
+                
+                // Ayer
+                if (date.toDateString() === yesterday.toDateString()) {
                   return 'Ayer';
-                } else {
+                }
+                
+                // Mismo año: "26 ene"
+                if (date.getFullYear() === today.getFullYear()) {
                   return date.toLocaleDateString('es-ES', { 
                     day: 'numeric', 
-                    month: 'short', 
-                    year: 'numeric' 
-                  });
+                    month: 'short'
+                  }).replace('.', ''); // Eliminar el punto del mes
                 }
+                
+                // Otro año: "26 ene 2023"
+                return date.toLocaleDateString('es-ES', { 
+                  day: 'numeric', 
+                  month: 'short',
+                  year: 'numeric'
+                }).replace('.', ''); // Eliminar el punto del mes
               };
               
               // Renderizado especial para mensajes del sistema
