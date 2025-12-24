@@ -1398,25 +1398,73 @@ const MessagesMainPage = () => {
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {/* Renderizar mensajes */}
+            {/* Renderizar mensajes con separadores de fecha */}
             {messages.map((message, index) => {
               const isOwnMessage = message.sender_id === user?.id;
               const isSystemMessage = message.isSystemMessage || message.sender_id === 'system';
               const showAvatar = !isOwnMessage && !isSystemMessage && (index === 0 || messages[index - 1].sender_id !== message.sender_id);
               
+              // Determinar si necesitamos mostrar un separador de fecha
+              const showDateSeparator = (() => {
+                if (index === 0) return true;
+                
+                const currentDate = new Date(message.created_at || message.timestamp);
+                const previousDate = new Date(messages[index - 1].created_at || messages[index - 1].timestamp);
+                
+                return currentDate.toDateString() !== previousDate.toDateString();
+              })();
+              
+              // Formatear la fecha para el separador
+              const formatDateSeparator = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (date.toDateString() === today.toDateString()) {
+                  return 'Hoy';
+                } else if (date.toDateString() === yesterday.toDateString()) {
+                  return 'Ayer';
+                } else {
+                  return date.toLocaleDateString('es-ES', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                  });
+                }
+              };
+              
               // Renderizado especial para mensajes del sistema
               if (isSystemMessage) {
                 return (
-                  <div key={message.id} className="flex justify-center mb-4">
-                    <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm max-w-md text-center border border-blue-200">
-                      {message.content}
+                  <React.Fragment key={message.id}>
+                    {showDateSeparator && (
+                      <div className="flex justify-center my-4">
+                        <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
+                          {formatDateSeparator(message.created_at || message.timestamp)}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm max-w-md text-center border border-blue-200">
+                        {message.content}
+                      </div>
                     </div>
-                  </div>
+                  </React.Fragment>
                 );
               }
               
               return (
-                <div key={message.id} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-4`}>
+                <React.Fragment key={message.id}>
+                  {showDateSeparator && (
+                    <div className="flex justify-center my-4">
+                      <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
+                        {formatDateSeparator(message.created_at || message.timestamp)}
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-4`}>
                   <div className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${isOwnMessage ? 'flex-row-reverse space-x-reverse' : ''}`}>
                     {/* Avatar para mensajes de otros usuarios */}
                     {showAvatar && !isOwnMessage && renderAvatar(
