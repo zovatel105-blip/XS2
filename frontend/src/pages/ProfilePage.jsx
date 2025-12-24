@@ -2160,19 +2160,14 @@ const ProfilePage = () => {
 
           </div>
 
-          {/* Mensaje de solicitud pendiente - Centrado y prominente */}
+          {/* Mensaje de solicitud pendiente - Diseño según imagen de referencia */}
           {followRequestPending && !isOwnProfile && (
-            <div className="px-4 py-8">
-              <div className="max-w-md mx-auto text-center space-y-4">
-                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
-                  <UserPlus className="w-10 h-10 text-blue-500" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900">Solicitud enviada</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    Esperando que @{viewedUser?.username || 'usuario'} acepte tu solicitud para seguirle
-                  </p>
-                </div>
+            <div className="px-6 py-12">
+              <div className="max-w-md mx-auto text-center space-y-3">
+                <h2 className="text-2xl font-bold text-gray-900">Invitación enviada</h2>
+                <p className="text-base text-gray-600 leading-relaxed">
+                  Podrás enviar más mensajes cuando se acepte tu invitación.
+                </p>
               </div>
             </div>
           )}
