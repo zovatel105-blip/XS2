@@ -654,9 +654,9 @@ const MessagesPage = () => {
                           {isChatRequest && (
                             <span className={cn(
                               "text-xs px-2 py-0.5 rounded-full font-medium",
-                              isSender ? "bg-yellow-100 text-yellow-700" : "bg-blue-100 text-blue-700"
+                              isSender ? "bg-gray-100 text-gray-700" : "bg-blue-100 text-blue-700"
                             )}>
-                              {isSender ? "⏳ Pendiente" : "✉️ Nueva"}
+                              {isSender ? "Pendiente" : "Nueva"}
                             </span>
                           )}
                         </div>
