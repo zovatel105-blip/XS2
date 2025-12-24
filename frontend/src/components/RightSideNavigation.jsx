@@ -159,7 +159,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )}
         title="Crear"
         style={{
-          background: `linear-gradient(to bottom, #8B5CF6 0%, #8B5CF6 50%, #3B82F6 50%, #3B82F6 100%)`
+          background: `linear-gradient(to bottom, #8B5CF6 0%, #8B5CF6 45%, #3B82F6 55%, #3B82F6 100%)`
         }}
       >
         <Plus className="w-4 h-4 text-white relative z-10" />
