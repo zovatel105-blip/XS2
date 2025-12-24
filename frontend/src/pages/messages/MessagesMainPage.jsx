@@ -1520,6 +1520,7 @@ const MessagesMainPage = () => {
                     })()}
                   </div>
                 </div>
+              </React.Fragment>
               );
             })}
           </div>
