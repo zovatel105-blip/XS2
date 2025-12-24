@@ -147,7 +147,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )} />
       </button>
 
-      {/* Subir/Crear - Botón especial con gradiente lila-azul */}
+      {/* Subir/Crear - Botón especial con gradiente púrpura (colores exactos de referencia) */}
       <button
         onClick={() => navigate('/create')}
         className={cn(
@@ -159,7 +159,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )}
         title="Crear"
         style={{
-          background: `linear-gradient(to bottom, #8B5CF6 0%, #8B5CF6 45%, #3B82F6 55%, #3B82F6 100%)`
+          background: `linear-gradient(to bottom, #9E61F3 0%, #9E61F3 45%, #6E18D3 55%, #6E18D3 100%)`
         }}
       >
         <Plus className="w-4 h-4 text-white relative z-10" />
