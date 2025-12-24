@@ -1406,12 +1406,26 @@ const MessagesMainPage = () => {
               
               // Determinar si necesitamos mostrar un separador de fecha
               const showDateSeparator = (() => {
-                if (index === 0) return true;
+                if (index === 0) {
+                  console.log(`📅 Primer mensaje - Mostrando separador`, message);
+                  return true;
+                }
                 
                 const currentTimestamp = message.created_at || message.timestamp;
                 const previousTimestamp = messages[index - 1].created_at || messages[index - 1].timestamp;
                 
-                if (!currentTimestamp || !previousTimestamp) return false;
+                console.log(`🔍 Comparando fechas:`, {
+                  currentTimestamp,
+                  previousTimestamp,
+                  messageIndex: index,
+                  senderId: message.sender_id,
+                  userId: user?.id
+                });
+                
+                if (!currentTimestamp || !previousTimestamp) {
+                  console.log(`⚠️ Timestamp faltante - No mostrar separador`);
+                  return false;
+                }
                 
                 // Asegurar que ambos timestamps sean UTC
                 const currentDateStr = currentTimestamp.endsWith('Z') ? currentTimestamp : currentTimestamp + 'Z';
@@ -1419,6 +1433,12 @@ const MessagesMainPage = () => {
                 
                 const currentDate = new Date(currentDateStr);
                 const previousDate = new Date(previousDateStr);
+                
+                console.log(`📆 Fechas parseadas:`, {
+                  current: currentDate.toDateString(),
+                  previous: previousDate.toDateString(),
+                  different: currentDate.toDateString() !== previousDate.toDateString()
+                });
                 
                 // Comparar solo la fecha (día/mes/año), ignorando hora
                 return currentDate.toDateString() !== previousDate.toDateString();
