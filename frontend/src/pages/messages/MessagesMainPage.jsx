@@ -1471,8 +1471,8 @@ const MessagesMainPage = () => {
               return (
                 <React.Fragment key={message.id}>
                   {showDateSeparator && (
-                    <div className="flex justify-center my-4">
-                      <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium">
+                    <div className="flex justify-center my-6">
+                      <div className="bg-gray-100 text-gray-500 px-3 py-1.5 rounded-full text-xs font-medium select-none pointer-events-none">
                         {formatDateSeparator(message.created_at || message.timestamp)}
                       </div>
                     </div>
