@@ -153,8 +153,8 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         className={cn(
           "rounded-full transition-all duration-300 backdrop-blur-sm border border-pink-300/30",
           location.pathname === '/create'
-            ? "bg-gradient-to-b from-pink-500 to-purple-600 w-5 h-12 shadow-2xl ring-2 ring-pink-400/70"
-            : "bg-gradient-to-b from-pink-400 to-purple-500 hover:from-pink-300 hover:to-purple-400 hover:scale-110 w-5 h-12 shadow-xl ring-2 ring-pink-300/50",
+            ? "bg-gradient-to-b from-[#8B5CF6] to-[#3B82F6] w-5 h-12 shadow-2xl ring-2 ring-purple-400/70"
+            : "bg-gradient-to-b from-[#8B5CF6] to-[#3B82F6] hover:opacity-90 hover:scale-110 w-5 h-12 shadow-xl ring-2 ring-purple-300/50",
           "flex items-center justify-center"
         )}
         title="Crear"
