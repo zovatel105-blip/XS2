@@ -1408,9 +1408,19 @@ const MessagesMainPage = () => {
               const showDateSeparator = (() => {
                 if (index === 0) return true;
                 
-                const currentDate = new Date(message.created_at || message.timestamp);
-                const previousDate = new Date(messages[index - 1].created_at || messages[index - 1].timestamp);
+                const currentTimestamp = message.created_at || message.timestamp;
+                const previousTimestamp = messages[index - 1].created_at || messages[index - 1].timestamp;
                 
+                if (!currentTimestamp || !previousTimestamp) return false;
+                
+                // Asegurar que ambos timestamps sean UTC
+                const currentDateStr = currentTimestamp.endsWith('Z') ? currentTimestamp : currentTimestamp + 'Z';
+                const previousDateStr = previousTimestamp.endsWith('Z') ? previousTimestamp : previousTimestamp + 'Z';
+                
+                const currentDate = new Date(currentDateStr);
+                const previousDate = new Date(previousDateStr);
+                
+                // Comparar solo la fecha (día/mes/año), ignorando hora
                 return currentDate.toDateString() !== previousDate.toDateString();
               })();
               
