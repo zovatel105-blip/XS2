@@ -357,7 +357,7 @@ const MessagesPage = () => {
       if (error.message.includes('Chat request already sent')) {
         const existingRequestMessage = {
           id: `system-${Date.now()}`,
-          content: '⏳ Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte.',
+          content: 'Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte.',
           sender_id: 'system',
           isSystemMessage: true,
           created_at: new Date().toISOString()
