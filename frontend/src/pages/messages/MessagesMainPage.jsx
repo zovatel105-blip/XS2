@@ -823,7 +823,7 @@ const MessagesMainPage = () => {
         
         const chatRequestPendingMessage = {
           id: `system-${Date.now()}`,
-          content: '⏳ Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte para poder intercambiar mensajes.',
+          content: 'Ya enviaste una solicitud de chat a este usuario. Espera a que la acepte para poder intercambiar mensajes.',
           sender_id: 'system',
           isSystemMessage: true,
           created_at: new Date().toISOString()
