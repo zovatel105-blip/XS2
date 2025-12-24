@@ -1507,18 +1507,18 @@ const MessagesMainPage = () => {
               </div>
             ) : selectedConversation?.is_chat_request && selectedConversation?.is_request_sender ? (
               /* Si es el sender de la solicitud, mostrar mensaje de espera */
-              <div className="space-y-3">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center">
-                  <p className="text-sm text-yellow-800 font-medium mb-2">
-                    ⏳ Solicitud enviada
-                  </p>
-                  <p className="text-xs text-yellow-600">
-                    Esperando respuesta. No puedes enviar más mensajes hasta que sea aceptada.
+              <div className="space-y-4 p-6">
+                <div className="text-center space-y-3 max-w-md mx-auto">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Invitación enviada
+                  </h2>
+                  <p className="text-base text-gray-600 leading-relaxed">
+                    Podrás enviar más mensajes cuando se acepte tu invitación.
                   </p>
                 </div>
                 <button
                   onClick={() => handleCancelChatRequest()}
-                  className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-medium transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors text-sm"
                 >
                   Cancelar solicitud
                 </button>
