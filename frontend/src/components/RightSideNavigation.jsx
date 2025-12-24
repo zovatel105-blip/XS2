@@ -147,19 +147,22 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )} />
       </button>
 
-      {/* Subir/Crear */}
+      {/* Subir/Crear - Botón especial con gradiente lila-azul */}
       <button
         onClick={() => navigate('/create')}
         className={cn(
-          "rounded-full transition-all duration-300 backdrop-blur-sm border border-pink-300/30",
+          "rounded-full transition-all duration-300 backdrop-blur-sm border border-pink-300/30 relative overflow-hidden",
           location.pathname === '/create'
-            ? "bg-gradient-to-b from-[#8B5CF6] to-[#3B82F6] w-5 h-12 shadow-2xl ring-2 ring-purple-400/70"
-            : "bg-gradient-to-b from-[#8B5CF6] to-[#3B82F6] hover:opacity-90 hover:scale-110 w-5 h-12 shadow-xl ring-2 ring-purple-300/50",
+            ? "w-5 h-12 shadow-2xl ring-2 ring-purple-400/70"
+            : "hover:scale-110 w-5 h-12 shadow-xl ring-2 ring-purple-300/50 hover:opacity-90",
           "flex items-center justify-center"
         )}
         title="Crear"
+        style={{
+          background: `linear-gradient(to bottom, #8B5CF6 0%, #8B5CF6 50%, #3B82F6 50%, #3B82F6 100%)`
+        }}
       >
-        <Plus className="w-4 h-4 text-white" />
+        <Plus className="w-4 h-4 text-white relative z-10" />
       </button>
 
       {/* Mensajes */}
