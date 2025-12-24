@@ -1243,7 +1243,7 @@ const MessagesMainPage = () => {
                         </div>
                         <p className="text-sm text-gray-600 truncate leading-relaxed">
                           {conversation.isPending 
-                            ? '⏳ Solicitud de chat enviada...' 
+                            ? 'Solicitud de chat enviada' 
                             : conversation.last_message || 'Iniciar conversación'
                           }
                         </p>
@@ -1264,10 +1264,10 @@ const MessagesMainPage = () => {
                       {/* Pending Badge */}
                       {conversation.isPending && (
                         <div 
-                          className="min-w-[24px] h-6 rounded-full flex items-center justify-center ml-3 flex-shrink-0 bg-yellow-100 border border-yellow-400"
+                          className="min-w-[24px] h-6 rounded-full flex items-center justify-center ml-3 flex-shrink-0 bg-gray-100 border border-gray-300"
                         >
-                          <span className="text-xs text-yellow-700 font-medium px-2">
-                            ⏳
+                          <span className="text-xs text-gray-700 font-medium px-2">
+                            P
                           </span>
                         </div>
                       )}
