@@ -147,19 +147,19 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )} />
       </button>
 
-      {/* Subir/Crear - Botón especial con gradiente púrpura-azul en forma de arco */}
+      {/* Crear Poll - Botón especial con colores en los bordes en forma de arco */}
       <button
-        onClick={() => navigate('/create')}
+        onClick={onCreatePoll}
         className={cn(
-          "rounded-full transition-all duration-300 backdrop-blur-sm border border-pink-300/30 relative overflow-hidden",
+          "rounded-full transition-all duration-300 backdrop-blur-sm border-2 relative overflow-hidden",
           location.pathname === '/create'
-            ? "w-5 h-12 shadow-2xl ring-2 ring-purple-400/70"
-            : "hover:scale-110 w-5 h-12 shadow-xl ring-2 ring-purple-300/50 hover:opacity-90",
-          "flex items-center justify-center"
+            ? "w-5 h-12 shadow-2xl"
+            : "hover:scale-110 w-5 h-12 shadow-xl hover:opacity-90",
+          "flex items-center justify-center bg-black"
         )}
         title="Crear"
         style={{
-          background: `radial-gradient(ellipse 150% 100% at 50% 0%, #6E18D3 0%, #6E18D3 40%, #3B82F6 70%, #3B82F6 100%)`
+          borderImage: `linear-gradient(to bottom, #6E18D3 0%, #6E18D3 45%, #3B82F6 55%, #3B82F6 100%) 1`
         }}
       >
         <Plus className="w-4 h-4 text-white relative z-10" />
