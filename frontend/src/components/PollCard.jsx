@@ -211,13 +211,30 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
       >
         {renderMentionedUsers()}
         
-        {/* Placeholder mientras carga */}
+        {/* Thumbnail del video - siempre visible y carga rápida */}
+        <img 
+          src={media.thumbnail} 
+          alt="Video thumbnail"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          className={cn(
+            "absolute inset-0 w-full h-full object-cover transition-opacity duration-200",
+            imageLoaded ? "opacity-100" : "opacity-0"
+          )}
+          style={media.transform ? {
+            objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
+            transform: `scale(${media.transform.scale || 1})`,
+            transformOrigin: 'center center'
+          } : {}}
+        />
+        
+        {/* Placeholder minimalista mientras carga */}
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 animate-pulse flex items-center justify-center">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
-              <p className="text-gray-400 text-sm">Cargando...</p>
-            </div>
+          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+            <Play className="w-12 h-12 text-gray-600 opacity-50" />
           </div>
         )}
         
@@ -230,24 +247,6 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
             </div>
           </div>
         )}
-        
-        <img 
-          src={media.thumbnail} 
-          alt="Video thumbnail"
-          loading="eager"
-          fetchpriority="high"
-          onLoad={() => setImageLoaded(true)}
-          onError={() => setImageError(true)}
-          className={cn(
-            "w-full h-full object-cover transition-all duration-300",
-            imageLoaded ? "opacity-100" : "opacity-0"
-          )}
-          style={media.transform ? {
-            objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
-            transform: `scale(${media.transform.scale || 1})`,
-            transformOrigin: 'center center'
-          } : {}}
-        />
         
         {/* Enhanced Progress Bar - Only show when user has voted on mobile */}
         {shouldShowBars && (
