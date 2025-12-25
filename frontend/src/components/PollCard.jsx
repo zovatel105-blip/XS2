@@ -47,6 +47,7 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [thumbnailSrc, setThumbnailSrc] = useState(null);
   
   useEffect(() => {
     const handleResize = () => {
@@ -56,6 +57,26 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // 🚀 OPTIMIZACIÓN: Determinar la mejor fuente de thumbnail para vídeos
+  useEffect(() => {
+    if (media?.type === 'video') {
+      // Prioridad de thumbnails:
+      // 1. option.thumbnail_url (del backend, ya generado)
+      // 2. media.thumbnail (si existe)
+      // 3. null (mostrará placeholder)
+      const bestThumbnail = option?.thumbnail_url || media?.thumbnail;
+      setThumbnailSrc(bestThumbnail);
+      
+      // Pre-cargar la imagen para que esté lista
+      if (bestThumbnail) {
+        const img = new Image();
+        img.src = bestThumbnail;
+        img.onload = () => setImageLoaded(true);
+        img.onerror = () => setImageError(true);
+      }
+    }
+  }, [media, option]);
   
   // YouTube-style percentage bars: ONLY show when user has voted AND on mobile
   const shouldShowBars = isMobile && userVote !== null;
