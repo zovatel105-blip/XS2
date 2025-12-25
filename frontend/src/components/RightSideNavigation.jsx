@@ -151,28 +151,22 @@ const RightSideNavigation = ({ onCreatePoll }) => {
       <button
         onClick={onCreatePoll}
         className={cn(
-          "rounded-full transition-all duration-300 relative overflow-visible",
+          "rounded-full transition-all duration-300 relative",
           location.pathname === '/create'
             ? "w-5 h-12 shadow-2xl"
             : "hover:scale-110 w-5 h-12 shadow-xl hover:opacity-90",
-          "flex items-center justify-center"
+          "flex items-center justify-center flex-shrink-0"
         )}
         title="Crear"
         style={{
-          background: 'black',
-          position: 'relative',
-          padding: '2px'
+          background: `linear-gradient(black, black) padding-box, linear-gradient(to bottom, #6E18D3 0%, #6E18D3 45%, #3B82F6 55%, #3B82F6 100%) border-box`,
+          border: '2px solid transparent',
+          minWidth: '1.25rem',
+          maxWidth: '1.25rem',
+          minHeight: '3rem',
+          maxHeight: '3rem'
         }}
       >
-        {/* Pseudo-elemento para el borde con gradiente */}
-        <div 
-          className="absolute inset-0 rounded-full -z-10"
-          style={{
-            background: `linear-gradient(to bottom, #6E18D3 0%, #6E18D3 45%, #3B82F6 55%, #3B82F6 100%)`,
-            margin: '-2px'
-          }}
-        />
-        <div className="absolute inset-0 rounded-full bg-black m-[2px] -z-10" />
         <Plus className="w-4 h-4 text-white relative z-10" />
       </button>
 
