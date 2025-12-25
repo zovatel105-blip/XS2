@@ -147,21 +147,32 @@ const RightSideNavigation = ({ onCreatePoll }) => {
         )} />
       </button>
 
-      {/* Crear Poll - Botón especial con colores en los bordes en forma de arco */}
+      {/* Crear Poll - Botón especial con colores en los bordes en forma de pastilla */}
       <button
         onClick={onCreatePoll}
         className={cn(
-          "rounded-full transition-all duration-300 backdrop-blur-sm border-2 relative overflow-hidden",
+          "rounded-full transition-all duration-300 relative overflow-visible",
           location.pathname === '/create'
             ? "w-5 h-12 shadow-2xl"
             : "hover:scale-110 w-5 h-12 shadow-xl hover:opacity-90",
-          "flex items-center justify-center bg-black"
+          "flex items-center justify-center"
         )}
         title="Crear"
         style={{
-          borderImage: `linear-gradient(to bottom, #6E18D3 0%, #6E18D3 45%, #3B82F6 55%, #3B82F6 100%) 1`
+          background: 'black',
+          position: 'relative',
+          padding: '2px'
         }}
       >
+        {/* Pseudo-elemento para el borde con gradiente */}
+        <div 
+          className="absolute inset-0 rounded-full -z-10"
+          style={{
+            background: `linear-gradient(to bottom, #6E18D3 0%, #6E18D3 45%, #3B82F6 55%, #3B82F6 100%)`,
+            margin: '-2px'
+          }}
+        />
+        <div className="absolute inset-0 rounded-full bg-black m-[2px] -z-10" />
         <Plus className="w-4 h-4 text-white relative z-10" />
       </button>
 
