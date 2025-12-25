@@ -232,41 +232,62 @@ const MediaPreview = ({ media, isWinner, isSelected, onClick, percentage, option
       >
         {renderMentionedUsers()}
         
-        {/* Thumbnail del video - siempre visible y carga rápida */}
-        <img 
-          src={media.thumbnail} 
-          alt="Video thumbnail"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-          onLoad={() => setImageLoaded(true)}
-          onError={() => setImageError(true)}
+        {/* 🚀 OPTIMIZADO: Placeholder instantáneo con gradiente mientras carga */}
+        <div 
           className={cn(
-            "absolute inset-0 w-full h-full object-cover transition-opacity duration-200",
-            imageLoaded ? "opacity-100" : "opacity-0"
+            "absolute inset-0 bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 flex items-center justify-center transition-opacity duration-300",
+            imageLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
           )}
-          style={media.transform ? {
-            objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
-            transform: `scale(${media.transform.scale || 1})`,
-            transformOrigin: 'center center'
-          } : {}}
-        />
+        >
+          <Play className="w-12 h-12 text-white/30" />
+        </div>
         
-        {/* Placeholder minimalista mientras carga */}
-        {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-            <Play className="w-12 h-12 text-gray-600 opacity-50" />
-          </div>
+        {/* Thumbnail del video - usando la mejor fuente disponible */}
+        {thumbnailSrc && (
+          <img 
+            src={thumbnailSrc} 
+            alt="Video thumbnail"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              // Intentar con media.url como último recurso (poster del video)
+              if (media.url && thumbnailSrc !== media.url) {
+                setThumbnailSrc(null);
+              }
+            }}
+            className={cn(
+              "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            style={media.transform ? {
+              objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
+              transform: `scale(${media.transform.scale || 1})`,
+              transformOrigin: 'center center'
+            } : {}}
+          />
         )}
         
-        {/* Error placeholder */}
-        {imageError && (
-          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-            <div className="text-gray-400 text-center p-4">
-              <Play className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">Error al cargar</p>
-            </div>
-          </div>
+        {/* Fallback: Video element con poster para generar thumbnail on-demand */}
+        {(!thumbnailSrc || imageError) && !imageLoaded && (
+          <video
+            src={media.url}
+            muted
+            playsInline
+            preload="metadata"
+            onLoadedData={(e) => {
+              // Cuando carga metadata, el browser ya tiene el primer frame
+              setImageLoaded(true);
+            }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={media.transform ? {
+              objectPosition: `${media.transform.position?.x || 50}% ${media.transform.position?.y || 50}%`,
+              transform: `scale(${media.transform.scale || 1})`,
+              transformOrigin: 'center center'
+            } : {}}
+          />
         )}
         
         {/* Enhanced Progress Bar - Only show when user has voted on mobile */}
