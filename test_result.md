@@ -7502,3 +7502,26 @@ const getAvatarUrl = (user) => {
 - ✅ Verificar que no hay problemas de CORS con las imágenes
 - ✅ Probar el flujo completo: ajustar → siguiente → publicar → ver en feed
 
+
+---
+## Testing Request (2025-12-25)
+
+### Feature to Test: Video Thumbnail Loading Optimization
+
+**Context:**
+- Modified `PollCard.jsx` to improve video thumbnail loading
+- Added placeholder gradient while loading
+- Using `option.thumbnail_url` as primary source for video thumbnails
+- Fallback to video element with `preload="metadata"` if thumbnail fails
+
+**Test Credentials:**
+- Email: demo@example.com
+- Password: demo123
+
+**What to verify:**
+1. Login works correctly
+2. Feed loads with posts visible
+3. Video thumbnails load quickly (or show placeholder)
+4. No infinite loading states
+5. Check console for any errors related to media loading
+
