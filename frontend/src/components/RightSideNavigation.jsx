@@ -4,7 +4,7 @@ import { Home, Swords, Plus, Inbox, User } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 
-const RightSideNavigation = ({ onCreatePoll }) => {
+const RightSideNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLongPressing, setIsLongPressing] = useState(false);
