@@ -104,6 +104,15 @@ function dispatch(action) {
 function toast({
   ...props
 }) {
+  // 🔇 TOASTS DESHABILITADOS - El usuario prefiere no ver notificaciones toast
+  // Para reactivar, descomentar el código original abajo
+  return {
+    id: "disabled",
+    dismiss: () => {},
+    update: () => {},
+  }
+  
+  /* CÓDIGO ORIGINAL - Descomentar para reactivar toasts:
   const id = genId()
 
   const update = (props) =>
@@ -130,6 +139,7 @@ function toast({
     dismiss,
     update,
   }
+  */
 }
 
 function useToast() {
