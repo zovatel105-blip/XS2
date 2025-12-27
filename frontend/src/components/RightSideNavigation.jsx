@@ -149,7 +149,7 @@ const RightSideNavigation = ({ onCreatePoll }) => {
 
       {/* Crear Poll - Botón especial con colores en los bordes en forma de pastilla */}
       <button
-        onClick={onCreatePoll}
+        onClick={() => navigate('/create')}
         className={cn(
           "rounded-full transition-all duration-300 relative",
           location.pathname === '/create'
