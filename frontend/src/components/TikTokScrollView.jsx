@@ -1008,8 +1008,8 @@ const TikTokPollCard = ({
         </div>
       )}
 
-      {/* Scroll hints - Enhanced for first card */}
-      {index === 0 && (
+      {/* Scroll hints - Solo para usuarios nuevos que no han hecho scroll */}
+      {showScrollHint && (
         <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 z-20"
              style={{ 
                bottom: 'max(8rem, calc(8rem + env(safe-area-inset-bottom)))'
