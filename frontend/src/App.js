@@ -15,6 +15,7 @@ import RequestsPage from './pages/messages/RequestsPage';
 import SettingsPage from './pages/SettingsPage';
 import AudioDetailPage from './pages/AudioDetailPage';
 import SearchPage from './pages/SearchPage';
+import ContentSelectionPage from './pages/ContentSelectionPage';
 import ContentCreationPage from './pages/ContentCreationPage';
 import ContentPublishPage from './pages/ContentPublishPage';
 import FollowingPage from './pages/FollowingPage';
