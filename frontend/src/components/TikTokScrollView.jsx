@@ -134,7 +134,9 @@ const TikTokPollCard = ({
   shouldUnload = false,
   layout = null,
   // 🔒 NEW: Callback para notificar cuando un modal se abre/cierra
-  onModalStateChange = null
+  onModalStateChange = null,
+  // 📜 NEW: Mostrar hint de scroll solo para usuarios nuevos
+  showScrollHint = false
 }) => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
