@@ -1331,6 +1331,12 @@ const TikTokScrollView = ({
   const handleSlideChange = (swiper) => {
     const newIndex = swiper.activeIndex;
     setActiveIndex(newIndex);
+    
+    // 📜 Ocultar el hint de scroll después del primer scroll y guardar en localStorage
+    if (showScrollHint && newIndex > 0) {
+      setShowScrollHint(false);
+      localStorage.setItem('hasScrolledFeed', 'true');
+    }
   };
 
   // Dynamic loading when user navigates between posts (Search Page functionality)
