@@ -149,10 +149,10 @@ const RightSideNavigation = () => {
 
       {/* Crear Poll - Botón especial con colores en los bordes en forma de pastilla */}
       <button
-        onClick={() => navigate('/create')}
+        onClick={() => navigate('/new')}
         className={cn(
           "rounded-full transition-all duration-300 relative",
-          location.pathname === '/create'
+          (location.pathname === '/create' || location.pathname === '/new')
             ? "w-5 h-12 shadow-2xl"
             : "hover:scale-110 w-5 h-12 shadow-xl hover:opacity-90",
           "flex items-center justify-center flex-shrink-0"
