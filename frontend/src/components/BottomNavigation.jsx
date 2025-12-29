@@ -169,9 +169,9 @@ const BottomNavigation = ({ onCreatePoll }) => {
             label="Explorar"
           />
 
-          {/* Create Content Button - Navigate to creation page */}
+          {/* Create Content Button - Navigate to selection page */}
           <NavLink
-            to="/create"
+            to="/new"
             className="flex flex-col items-center gap-1 px-3 py-2 transition-all duration-300 min-w-[60px] group"
           >
             {({ isActive }) => (
