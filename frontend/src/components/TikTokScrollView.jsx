@@ -1094,6 +1094,13 @@ const TikTokScrollView = ({
   // 🔒 Estado para bloquear el swipe cuando un modal está abierto
   const [isModalOpen, setIsModalOpen] = useState(false);
   
+  // 📜 Estado para mostrar el hint de scroll solo para usuarios nuevos
+  const [showScrollHint, setShowScrollHint] = useState(() => {
+    // Solo mostrar si el usuario nunca ha hecho scroll
+    const hasScrolled = localStorage.getItem('hasScrolledFeed');
+    return !hasScrolled;
+  });
+  
   // 🔒 Efecto para bloquear/desbloquear el swipe del Swiper cuando un modal está abierto
   useEffect(() => {
     if (swiperRef.current) {
