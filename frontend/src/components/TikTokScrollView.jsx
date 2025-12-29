@@ -1551,6 +1551,8 @@ const TikTokScrollView = ({
             layout={poll.layout}
             // 🔒 NEW: Callback para bloquear scroll cuando modal está abierto
             onModalStateChange={setIsModalOpen}
+            // 📜 Mostrar hint de scroll solo para usuarios nuevos
+            showScrollHint={showScrollHint && index === 0}
           />
           </SwiperSlide>
         ))}
