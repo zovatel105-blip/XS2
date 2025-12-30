@@ -75,7 +75,7 @@ const VSCreatePage = () => {
     setIsPublishing(true);
     
     try {
-      const backendUrl = AppConfig.getBackendUrl();
+      const backendUrl = AppConfig.BACKEND_URL;
       
       // Preparar datos para el backend
       const vsData = {
@@ -90,6 +90,7 @@ const VSCreatePage = () => {
       
       console.log('Enviando VS data:', vsData);
       console.log('Token:', token ? 'presente' : 'ausente');
+      console.log('Backend URL:', backendUrl);
       
       const response = await fetch(`${backendUrl}/api/vs/create`, {
         method: 'POST',
