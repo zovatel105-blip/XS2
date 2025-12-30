@@ -10139,30 +10139,16 @@ async def create_vs_experience(
         
         logger.info(f"VS experience created: {vs_id} by user {current_user.id}")
         
-        # Convertir questions a un formato simple sin ObjectId
-        clean_questions = []
-        for q in questions:
-            clean_q = {
-                "id": str(q["id"]),
-                "options": [
-                    {
-                        "id": str(opt["id"]),
-                        "text": opt.get("text", ""),
-                        "image": opt.get("image"),
-                        "votes": opt.get("votes", 0)
-                    }
-                    for opt in q["options"]
-                ]
-            }
-            clean_questions.append(clean_q)
-        
-        return {
+        # Usar JSONResponse directamente para evitar problemas de serialización
+        response_data = {
             "success": True,
             "vs_id": str(vs_id),
             "poll_id": str(vs_id),
-            "questions": clean_questions,
+            "questions": questions,
             "message": "VS experience created successfully"
         }
+        
+        return JSONResponse(content=response_data)
         
     except Exception as e:
         logger.error(f"Error creating VS experience: {str(e)}")
