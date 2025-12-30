@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Image, Clock } from 'lucide-react';
+import { X, Image, Clock, Swords } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const ContentSelectionPage = () => {
@@ -22,6 +22,14 @@ const ContentSelectionPage = () => {
       icon: Clock,
       gradient: 'from-blue-500 to-cyan-500',
       route: '/story-creation'
+    },
+    {
+      id: 'vs',
+      title: 'VS',
+      description: '¿Qué prefieres? Votación rápida',
+      icon: Swords,
+      gradient: 'from-orange-500 to-red-500',
+      route: '/vs-create'
     }
   ];
 
