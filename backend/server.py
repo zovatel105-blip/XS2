@@ -213,8 +213,8 @@ async def get_current_user_optional(
         if not payload:
             return None
         
-        # Get user from database
-        user_data = await db.users.find_one({"id": payload["sub"]})
+        # Get user from database - exclude _id to avoid ObjectId serialization issues
+        user_data = await db.users.find_one({"id": payload["sub"]}, {"_id": 0})
         if not user_data:
             return None
         
