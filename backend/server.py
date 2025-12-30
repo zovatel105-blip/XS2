@@ -5511,8 +5511,8 @@ async def get_polls(
     # Build response
     result = []
     for poll_data in polls:
-        # Get option users
-        option_user_ids = [option["user_id"] for option in poll_data.get("options", [])]
+        # Get option users (solo si las opciones tienen user_id)
+        option_user_ids = [option["user_id"] for option in poll_data.get("options", []) if "user_id" in option]
         if option_user_ids:
             option_users_cursor = db.users.find({"id": {"$in": option_user_ids}})
             option_users_list = await option_users_cursor.to_list(len(option_user_ids))
@@ -5523,7 +5523,7 @@ async def get_polls(
         # Process options
         options = []
         for option in poll_data.get("options", []):
-            option_user = option_users_dict.get(option["user_id"])
+            option_user = option_users_dict.get(option.get("user_id")) if option.get("user_id") else None
             if option_user:
                 # Keep media_url as relative path for frontend to handle
                 media_url = option.get("media_url")
