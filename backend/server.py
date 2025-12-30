@@ -188,8 +188,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Get user from database
-    user_data = await db.users.find_one({"id": payload["sub"]})
+    # Get user from database - exclude _id to avoid ObjectId serialization issues
+    user_data = await db.users.find_one({"id": payload["sub"]}, {"_id": 0})
     if not user_data:
         raise HTTPException(
             status_code=config.StatusCodes.UNAUTHORIZED,
