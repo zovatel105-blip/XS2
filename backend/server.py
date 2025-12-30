@@ -10138,17 +10138,36 @@ async def create_vs_experience(
         
         logger.info(f"VS experience created: {vs_id} by user {current_user.id}")
         
+        # Convertir questions a un formato simple sin ObjectId
+        clean_questions = []
+        for q in questions:
+            clean_q = {
+                "id": str(q["id"]),
+                "options": [
+                    {
+                        "id": str(opt["id"]),
+                        "text": opt.get("text", ""),
+                        "image": opt.get("image"),
+                        "votes": opt.get("votes", 0)
+                    }
+                    for opt in q["options"]
+                ]
+            }
+            clean_questions.append(clean_q)
+        
         return {
             "success": True,
-            "vs_id": vs_id,
-            "poll_id": vs_id,
-            "questions": questions,
+            "vs_id": str(vs_id),
+            "poll_id": str(vs_id),
+            "questions": clean_questions,
             "message": "VS experience created successfully"
         }
         
     except Exception as e:
         logger.error(f"Error creating VS experience: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to create VS experience")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Failed to create VS experience: {str(e)}")
 
 
 @api_router.get("/vs/{vs_id}", tags=["VS Experience"])
