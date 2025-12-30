@@ -10048,6 +10048,14 @@ async def create_vs_experience(
     try:
         vs_id = str(uuid.uuid4())
         
+        # Extraer datos simples del usuario para evitar problemas de serialización
+        author_data = {
+            "id": str(current_user.id),
+            "username": str(current_user.username),
+            "display_name": str(current_user.display_name),
+            "avatar_url": str(current_user.avatar_url) if current_user.avatar_url else None
+        }
+        
         # Process questions
         questions = []
         for q in vs_data.questions:
@@ -10055,9 +10063,9 @@ async def create_vs_experience(
             options = []
             for opt in q.options:
                 options.append({
-                    "id": opt.id,
-                    "text": opt.text,
-                    "image": opt.image,
+                    "id": str(opt.id),
+                    "text": str(opt.text) if opt.text else "",
+                    "image": str(opt.image) if opt.image else None,
                     "votes": 0
                 })
             questions.append({
@@ -10067,13 +10075,8 @@ async def create_vs_experience(
         
         vs_doc = {
             "id": vs_id,
-            "author_id": current_user.id,
-            "author": {
-                "id": current_user.id,
-                "username": current_user.username,
-                "display_name": current_user.display_name,
-                "avatar_url": current_user.avatar_url
-            },
+            "author_id": author_data["id"],
+            "author": author_data,
             "questions": questions,
             "total_participants": 0,
             "created_at": datetime.utcnow(),
