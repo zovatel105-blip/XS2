@@ -88,6 +88,9 @@ const VSCreatePage = () => {
         }))
       };
       
+      console.log('Enviando VS data:', vsData);
+      console.log('Token:', token ? 'presente' : 'ausente');
+      
       const response = await fetch(`${backendUrl}/api/vs/create`, {
         method: 'POST',
         headers: {
@@ -97,19 +100,23 @@ const VSCreatePage = () => {
         body: JSON.stringify(vsData)
       });
       
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to create VS experience');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to create VS experience: ${errorText}`);
       }
       
       const result = await response.json();
+      console.log('VS creado exitosamente:', result);
       
       // Navegar al feed para ver la publicación
       navigate('/feed');
       
     } catch (error) {
       console.error('Error publishing VS:', error);
-      // Fallback: mostrar error pero aún navegar al feed
-      navigate('/feed');
+      alert('Error al publicar: ' + error.message);
     } finally {
       setIsPublishing(false);
     }
