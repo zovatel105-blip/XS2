@@ -10093,8 +10093,8 @@ async def create_vs_experience(
         if first_question:
             for opt in first_question["options"]:
                 poll_options.append({
-                    "id": opt["id"],
-                    "text": opt["text"],
+                    "id": str(opt["id"]),
+                    "text": str(opt["text"]) if opt["text"] else "",
                     "media_url": opt.get("image"),
                     "media_type": "image" if opt.get("image") else None,
                     "thumbnail_url": opt.get("image"),
@@ -10105,13 +10105,8 @@ async def create_vs_experience(
             "id": vs_id,  # Usar el mismo ID
             "title": "¿Qué prefieres?",
             "description": f"VS • {len(questions)} {'pregunta' if len(questions) == 1 else 'preguntas'}",
-            "author_id": current_user.id,
-            "author": {
-                "id": current_user.id,
-                "username": current_user.username,
-                "display_name": current_user.display_name,
-                "avatar_url": current_user.avatar_url
-            },
+            "author_id": author_data["id"],
+            "author": author_data,
             "options": poll_options,
             "layout": "vs",  # Nuevo tipo de layout para VS
             "vs_id": vs_id,  # Referencia a la experiencia VS completa
