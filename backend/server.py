@@ -10045,10 +10045,13 @@ async def create_vs_experience(
     current_user: UserResponse = Depends(get_current_user)
 ):
     """Create a new VS experience with multiple questions"""
+    from fastapi.responses import JSONResponse
+    import json
+    
     try:
         vs_id = str(uuid.uuid4())
         
-        # Extraer datos simples del usuario para evitar problemas de serialización
+        # Extraer datos simples del usuario
         author_data = {
             "id": str(current_user.id),
             "username": str(current_user.username),
