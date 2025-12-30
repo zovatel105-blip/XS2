@@ -136,8 +136,6 @@ const VSCreatePage = () => {
     } finally {
       setIsPublishing(false);
     }
-  }; 
-    }});
   };
 
   return (
