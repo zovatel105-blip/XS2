@@ -10083,11 +10083,57 @@ async def create_vs_experience(
         
         await db.vs_experiences.insert_one(vs_doc)
         
+        # También crear un poll para que aparezca en el feed
+        first_question = questions[0] if questions else None
+        poll_options = []
+        
+        if first_question:
+            for opt in first_question["options"]:
+                poll_options.append({
+                    "id": opt["id"],
+                    "text": opt["text"],
+                    "media_url": opt.get("image"),
+                    "media_type": "image" if opt.get("image") else None,
+                    "thumbnail_url": opt.get("image"),
+                    "votes": 0
+                })
+        
+        poll_doc = {
+            "id": vs_id,  # Usar el mismo ID
+            "title": "¿Qué prefieres?",
+            "description": f"VS • {len(questions)} {'pregunta' if len(questions) == 1 else 'preguntas'}",
+            "author_id": current_user.id,
+            "author": {
+                "id": current_user.id,
+                "username": current_user.username,
+                "display_name": current_user.display_name,
+                "avatar_url": current_user.avatar_url
+            },
+            "options": poll_options,
+            "layout": "vs",  # Nuevo tipo de layout para VS
+            "vs_id": vs_id,  # Referencia a la experiencia VS completa
+            "vs_questions": questions,  # Incluir todas las preguntas
+            "total_votes": 0,
+            "views": 0,
+            "likes_count": 0,
+            "comments_count": 0,
+            "shares_count": 0,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True,
+            "is_private": False,
+            "comments_enabled": True,
+            "background_color": "#000000"
+        }
+        
+        await db.polls.insert_one(poll_doc)
+        
         logger.info(f"VS experience created: {vs_id} by user {current_user.id}")
         
         return {
             "success": True,
             "vs_id": vs_id,
+            "poll_id": vs_id,
             "questions": questions,
             "message": "VS experience created successfully"
         }
