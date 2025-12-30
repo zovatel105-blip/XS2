@@ -3,9 +3,81 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { Play } from 'lucide-react';
 
+// Colores de banderas por país
+const countryColors = {
+  // Europa
+  'españa': 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600',
+  'spain': 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600',
+  'francia': 'bg-gradient-to-r from-blue-600 via-white to-red-600',
+  'france': 'bg-gradient-to-r from-blue-600 via-white to-red-600',
+  'italia': 'bg-gradient-to-r from-green-600 via-white to-red-600',
+  'italy': 'bg-gradient-to-r from-green-600 via-white to-red-600',
+  'alemania': 'bg-gradient-to-b from-black via-red-600 to-yellow-400',
+  'germany': 'bg-gradient-to-b from-black via-red-600 to-yellow-400',
+  'portugal': 'bg-gradient-to-r from-green-600 to-red-600',
+  'uk': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
+  'inglaterra': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
+  'england': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
+  'holanda': 'bg-gradient-to-b from-red-600 via-white to-blue-600',
+  'netherlands': 'bg-gradient-to-b from-red-600 via-white to-blue-600',
+  'bélgica': 'bg-gradient-to-r from-black via-yellow-400 to-red-600',
+  'belgium': 'bg-gradient-to-r from-black via-yellow-400 to-red-600',
+  
+  // América
+  'usa': 'bg-gradient-to-b from-blue-900 via-white to-red-600',
+  'estados unidos': 'bg-gradient-to-b from-blue-900 via-white to-red-600',
+  'méxico': 'bg-gradient-to-r from-green-600 via-white to-red-600',
+  'mexico': 'bg-gradient-to-r from-green-600 via-white to-red-600',
+  'brasil': 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500',
+  'brazil': 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500',
+  'argentina': 'bg-gradient-to-b from-sky-400 via-white to-sky-400',
+  'colombia': 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600',
+  'chile': 'bg-gradient-to-b from-white to-red-600',
+  'perú': 'bg-gradient-to-r from-red-600 via-white to-red-600',
+  'peru': 'bg-gradient-to-r from-red-600 via-white to-red-600',
+  'venezuela': 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600',
+  
+  // Asia
+  'japón': 'bg-white',
+  'japan': 'bg-white',
+  'china': 'bg-red-600',
+  'corea': 'bg-gradient-to-b from-white to-red-600',
+  'korea': 'bg-gradient-to-b from-white to-red-600',
+  'india': 'bg-gradient-to-b from-orange-500 via-white to-green-600',
+  
+  // Otros
+  'rusia': 'bg-gradient-to-b from-white via-blue-600 to-red-600',
+  'russia': 'bg-gradient-to-b from-white via-blue-600 to-red-600',
+  'australia': 'bg-blue-900',
+  'canadá': 'bg-gradient-to-r from-red-600 via-white to-red-600',
+  'canada': 'bg-gradient-to-r from-red-600 via-white to-red-600',
+};
+
+// Función para detectar país en el texto
+const getCountryColor = (text, index) => {
+  if (!text) {
+    return index === 0 
+      ? 'bg-gradient-to-b from-amber-400 to-orange-500' 
+      : 'bg-gradient-to-b from-red-500 to-red-700';
+  }
+  
+  const lowerText = text.toLowerCase();
+  
+  for (const [country, color] of Object.entries(countryColors)) {
+    if (lowerText.includes(country)) {
+      return color;
+    }
+  }
+  
+  // Colores por defecto si no se detecta país
+  return index === 0 
+    ? 'bg-gradient-to-b from-amber-400 to-orange-500' 
+    : 'bg-gradient-to-b from-red-500 to-red-700';
+};
+
 /**
  * VSLayout - Renderiza una experiencia VS en el feed
- * Diseño estilo "¿Qué prefieres?" con colores de fondo y temporizador
+ * Diseño estilo "¿Qué prefieres?" con colores de bandera y temporizador
  */
 const VSLayout = ({ 
   poll, 
@@ -18,21 +90,27 @@ const VSLayout = ({
   const [showResults, setShowResults] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(5);
+  const [showVS, setShowVS] = useState(true); // Mostrar VS primero
 
   // Obtener las opciones de la primera pregunta
   const options = poll.options || [];
   const vsQuestions = poll.vs_questions || [];
   const totalQuestions = vsQuestions.length || 1;
 
-  // Colores de fondo para las opciones (estilo bandera)
-  const bgColors = [
-    'bg-gradient-to-b from-amber-400 to-orange-500', // Naranja/Amarillo
-    'bg-gradient-to-b from-red-500 to-red-700'       // Rojo
-  ];
-
-  // Temporizador de 5 segundos
+  // Mostrar VS por 1.5 segundos antes del temporizador
   useEffect(() => {
-    if (!isActive || hasVoted || isThumbnail) return;
+    if (!isActive || isThumbnail) return;
+    
+    const vsTimer = setTimeout(() => {
+      setShowVS(false);
+    }, 1500);
+
+    return () => clearTimeout(vsTimer);
+  }, [isActive, isThumbnail]);
+
+  // Temporizador de 5 segundos (empieza después del VS)
+  useEffect(() => {
+    if (!isActive || hasVoted || isThumbnail || showVS) return;
     
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -45,7 +123,7 @@ const VSLayout = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isActive, hasVoted, isThumbnail]);
+  }, [isActive, hasVoted, isThumbnail, showVS]);
 
   const handleOptionClick = (optionId) => {
     if (hasVoted || isThumbnail) return;
@@ -91,10 +169,11 @@ const VSLayout = ({
         <div className="absolute inset-0 flex flex-col">
           {options.slice(0, 2).map((option, index) => {
             const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
+            const bgColor = getCountryColor(option.text, index);
             return (
               <div 
                 key={option.id}
-                className={cn("flex-1 relative overflow-hidden", bgColors[index])}
+                className={cn("flex-1 relative overflow-hidden", bgColor)}
               >
                 {imageUrl && (
                   <div className="absolute inset-0 flex items-center justify-center p-2">
@@ -105,7 +184,6 @@ const VSLayout = ({
                     />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/10" />
               </div>
             );
           })}
@@ -128,6 +206,8 @@ const VSLayout = ({
           const isSelected = selectedOption === option.id;
           const percentage = showResults ? getPercentage(option.id) : 0;
           const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
+          const bgColor = getCountryColor(option.text, index);
+          const isBottom = index === 1; // Segunda opción (inferior)
           
           return (
             <button
@@ -136,65 +216,116 @@ const VSLayout = ({
               disabled={hasVoted}
               className={cn(
                 "flex-1 relative overflow-hidden transition-all duration-300",
-                "flex flex-col items-center justify-center",
-                bgColors[index],
+                "flex flex-col items-center",
+                isBottom ? "justify-start pt-4" : "justify-center", // Inferior: contenido arriba
+                bgColor,
                 isSelected && "ring-4 ring-white ring-inset"
               )}
             >
-              {/* Imagen centrada con borde redondeado */}
-              {imageUrl && (
-                <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3] mb-3">
-                  <img 
-                    src={imageUrl} 
-                    alt="" 
-                    className={cn(
-                      "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
-                      "transition-transform duration-300",
-                      isSelected && "scale-105 border-white"
-                    )}
-                  />
-                  {/* Check de selección sobre la imagen */}
-                  {isSelected && (
-                    <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
+              {/* Para la opción inferior: Texto arriba, luego imagen */}
+              {isBottom && (
+                <>
+                  {/* Texto arriba */}
+                  <h2 className={cn(
+                    "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
+                    "drop-shadow-lg text-center px-4 mb-3",
+                    "transition-transform duration-300",
+                    isSelected && "scale-110"
+                  )}>
+                    {option.text || `Opción ${index + 1}`}
+                  </h2>
+                  
+                  {/* Porcentaje */}
+                  {showResults && (
+                    <div className="mb-2 animate-in fade-in zoom-in">
+                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
+                        {percentage}%
+                      </span>
                     </div>
                   )}
-                </div>
+                  
+                  {/* Imagen */}
+                  {imageUrl && (
+                    <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3]">
+                      <img 
+                        src={imageUrl} 
+                        alt="" 
+                        className={cn(
+                          "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
+                          "transition-transform duration-300",
+                          isSelected && "scale-105 border-white"
+                        )}
+                      />
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
               
-              {/* Texto de la opción */}
-              <h2 className={cn(
-                "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
-                "drop-shadow-lg text-center px-4",
-                "transition-transform duration-300",
-                isSelected && "scale-110"
-              )}>
-                {option.text || `Opción ${index + 1}`}
-              </h2>
-              
-              {/* Porcentaje después de votar */}
-              {showResults && (
-                <div className="mt-2 animate-in fade-in zoom-in">
-                  <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
-                    {percentage}%
-                  </span>
-                </div>
+              {/* Para la opción superior: Imagen, luego texto */}
+              {!isBottom && (
+                <>
+                  {/* Imagen */}
+                  {imageUrl && (
+                    <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3] mb-3">
+                      <img 
+                        src={imageUrl} 
+                        alt="" 
+                        className={cn(
+                          "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
+                          "transition-transform duration-300",
+                          isSelected && "scale-105 border-white"
+                        )}
+                      />
+                      {isSelected && (
+                        <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Texto abajo */}
+                  <h2 className={cn(
+                    "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
+                    "drop-shadow-lg text-center px-4",
+                    "transition-transform duration-300",
+                    isSelected && "scale-110"
+                  )}>
+                    {option.text || `Opción ${index + 1}`}
+                  </h2>
+                  
+                  {/* Porcentaje */}
+                  {showResults && (
+                    <div className="mt-2 animate-in fade-in zoom-in">
+                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
+                        {percentage}%
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
             </button>
           );
         })}
       </div>
       
-      {/* Temporizador circular en el centro */}
+      {/* Círculo central: VS o Temporizador */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
         <div className={cn(
           "w-16 h-16 md:w-20 md:h-20 rounded-full bg-black flex items-center justify-center",
           "shadow-2xl border-4 border-white relative overflow-hidden"
         )}>
-          {/* Barra de progreso circular */}
-          {!hasVoted && timeLeft > 0 && (
+          {/* Barra de progreso circular (solo cuando está el temporizador) */}
+          {!showVS && !hasVoted && timeLeft > 0 && (
             <svg className="absolute inset-0 w-full h-full -rotate-90">
               <circle
                 cx="50%"
@@ -217,8 +348,10 @@ const VSLayout = ({
               />
             </svg>
           )}
-          <span className="text-white font-black text-2xl md:text-3xl relative z-10">
-            {hasVoted ? '✓' : timeLeft}
+          
+          {/* Contenido del círculo */}
+          <span className="text-white font-black text-xl md:text-2xl relative z-10">
+            {showVS ? 'VS' : (hasVoted ? '✓' : timeLeft)}
           </span>
         </div>
       </div>
