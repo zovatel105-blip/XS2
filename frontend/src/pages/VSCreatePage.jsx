@@ -65,7 +65,7 @@ const VSCreatePage = () => {
 
   const isValid = () => {
     return questions.every(q => 
-      q.options.every(opt => opt.text.trim() || opt.imagePreview)
+      q.options.every(opt => (opt.text && opt.text.trim()) || opt.imagePreview)
     );
   };
 
