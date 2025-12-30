@@ -6174,6 +6174,9 @@ async def get_following_polls(
             category=poll_data.get("category"),
             mentioned_users=mentioned_users_data,  # Include resolved mentioned users
             layout=poll_data.get("layout"),
+            # VS Experience fields
+            vs_id=poll_data.get("vs_id"),
+            vs_questions=poll_data.get("vs_questions", []),
             created_at=poll_data["created_at"],
             time_ago=calculate_time_ago(poll_data["created_at"]),
             # Post settings
