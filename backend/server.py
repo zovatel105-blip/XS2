@@ -10141,6 +10141,7 @@ async def create_vs_experience(
         }
         
         await db.polls.insert_one(poll_doc)
+        logger.info(f"Poll inserted successfully for VS: {vs_id}")
         
         logger.info(f"VS experience created: {vs_id} by user {current_user.id}")
         
@@ -10153,6 +10154,7 @@ async def create_vs_experience(
             "message": "VS experience created successfully"
         }
         
+        logger.info(f"Returning response with {len(questions)} questions")
         return JSONResponse(content=response_data)
         
     except Exception as e:
