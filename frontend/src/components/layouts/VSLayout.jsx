@@ -75,24 +75,27 @@ const VSLayout = ({
     return (
       <div className="w-full h-full relative">
         <div className="absolute inset-0 flex flex-col">
-          {options.slice(0, 2).map((option, index) => (
-            <div 
-              key={option.id}
-              className={cn(
-                "flex-1 relative overflow-hidden",
-                `bg-gradient-to-br ${optionStyles[index]?.bg || 'from-gray-600 to-gray-800'}`
-              )}
-            >
-              {option.media_url && (
-                <img 
-                  src={option.media_url} 
-                  alt="" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              )}
-              <div className="absolute inset-0 bg-black/30" />
-            </div>
-          ))}
+          {options.slice(0, 2).map((option, index) => {
+            const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
+            return (
+              <div 
+                key={option.id}
+                className={cn(
+                  "flex-1 relative overflow-hidden",
+                  `bg-gradient-to-br ${optionStyles[index]?.bg || 'from-gray-600 to-gray-800'}`
+                )}
+              >
+                {imageUrl && (
+                  <img 
+                    src={imageUrl} 
+                    alt="" 
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-black/30" />
+              </div>
+            );
+          })}
         </div>
         {/* VS Badge */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
