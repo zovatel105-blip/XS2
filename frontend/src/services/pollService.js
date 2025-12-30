@@ -252,6 +252,9 @@ class PollService {
       is_featured: backendPoll.is_featured,
       layout: backendPoll.layout,  // ✅ CRITICAL FIX: Include layout field for LayoutRenderer
       mentioned_users: backendPoll.mentioned_users || [],  // ✅ CRITICAL FIX: Include mentioned_users for avatar display
+      // ✅ VS Experience fields - CRITICAL for multi-question VS polls
+      vs_id: backendPoll.vs_id || null,
+      vs_questions: backendPoll.vs_questions || [],
       // Post settings - snake_case from backend
       comments_enabled: backendPoll.comments_enabled !== undefined ? backendPoll.comments_enabled : true,
       show_vote_count: backendPoll.show_vote_count !== undefined ? backendPoll.show_vote_count : true,
