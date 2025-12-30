@@ -86,16 +86,51 @@ const VSLayout = ({
   isThumbnail = false
 }) => {
   const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showResults, setShowResults] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(5);
-  const [showVS, setShowVS] = useState(true); // Mostrar VS primero
-
-  // Obtener las opciones de la primera pregunta
-  const options = poll.options || [];
+  
+  // Obtener todas las preguntas
   const vsQuestions = poll.vs_questions || [];
-  const totalQuestions = vsQuestions.length || 1;
+  const initialOptions = poll.options || [];
+  const totalQuestions = vsQuestions.length > 0 ? vsQuestions.length : 1;
+  
+  // Estado para la pregunta actual
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState({}); // {questionId: optionId}
+  const [showResults, setShowResults] = useState({});
+  const [timeLeft, setTimeLeft] = useState(5);
+  const [showVS, setShowVS] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Obtener las opciones de la pregunta actual
+  const getCurrentOptions = () => {
+    if (vsQuestions.length > 0 && vsQuestions[currentQuestionIndex]) {
+      return vsQuestions[currentQuestionIndex].options || [];
+    }
+    return initialOptions;
+  };
+
+  const getCurrentQuestionId = () => {
+    if (vsQuestions.length > 0 && vsQuestions[currentQuestionIndex]) {
+      return vsQuestions[currentQuestionIndex].id;
+    }
+    return poll.id;
+  };
+
+  const options = getCurrentOptions();
+  const currentQuestionId = getCurrentQuestionId();
+  const hasVoted = !!selectedOptions[currentQuestionId];
+
+  // Función para avanzar a la siguiente pregunta
+  const goToNextQuestion = useCallback(() => {
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setTimeLeft(5);
+        setShowVS(true);
+        setIsTransitioning(false);
+      }, 300);
+    }
+  }, [currentQuestionIndex, totalQuestions]);
 
   // Mostrar VS por 1.5 segundos antes del temporizador
   useEffect(() => {
@@ -106,9 +141,9 @@ const VSLayout = ({
     }, 1500);
 
     return () => clearTimeout(vsTimer);
-  }, [isActive, isThumbnail]);
+  }, [isActive, isThumbnail, currentQuestionIndex]);
 
-  // Temporizador de 5 segundos (empieza después del VS)
+  // Temporizador de 5 segundos
   useEffect(() => {
     if (!isActive || hasVoted || isThumbnail || showVS) return;
     
@@ -116,6 +151,10 @@ const VSLayout = ({
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
+          // Auto-avanzar cuando el tiempo llega a 0
+          if (currentQuestionIndex < totalQuestions - 1) {
+            setTimeout(() => goToNextQuestion(), 500);
+          }
           return 0;
         }
         return prev - 1;
@@ -123,40 +162,34 @@ const VSLayout = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isActive, hasVoted, isThumbnail, showVS]);
+  }, [isActive, hasVoted, isThumbnail, showVS, currentQuestionIndex, totalQuestions, goToNextQuestion]);
 
   const handleOptionClick = (optionId) => {
     if (hasVoted || isThumbnail) return;
     
-    setSelectedOption(optionId);
-    setHasVoted(true);
-    setShowResults(true);
+    setSelectedOptions(prev => ({
+      ...prev,
+      [currentQuestionId]: optionId
+    }));
+    setShowResults(prev => ({
+      ...prev,
+      [currentQuestionId]: true
+    }));
     
     if (onVote) {
       onVote(poll.id, optionId);
     }
-  };
 
-  const handleOpenFullExperience = () => {
-    navigate('/vs-experience', {
-      state: {
-        vsId: poll.vs_id || poll.id,
-        questions: vsQuestions.length > 0 ? vsQuestions : [{
-          id: poll.id,
-          options: options.map(opt => ({
-            id: opt.id,
-            text: opt.text,
-            image: opt.media?.url || opt.media?.thumbnail || opt.media_url || opt.thumbnail_url
-          }))
-        }]
-      }
-    });
+    // Auto-avanzar después de votar (1.5 segundos)
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setTimeout(() => goToNextQuestion(), 1500);
+    }
   };
 
   const getPercentage = (optionId) => {
     const totalVotes = options.reduce((sum, opt) => sum + (opt.votes || 0), 0);
     if (totalVotes === 0) {
-      return optionId === selectedOption ? 65 : 35;
+      return optionId === selectedOptions[currentQuestionId] ? 65 : 35;
     }
     const optionVotes = options.find(o => o.id === optionId)?.votes || 0;
     return Math.round((optionVotes / totalVotes) * 100);
@@ -164,11 +197,12 @@ const VSLayout = ({
 
   // Si es thumbnail, mostrar versión simplificada
   if (isThumbnail) {
+    const thumbOptions = initialOptions.slice(0, 2);
     return (
       <div className="w-full h-full relative">
         <div className="absolute inset-0 flex flex-col">
-          {options.slice(0, 2).map((option, index) => {
-            const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
+          {thumbOptions.map((option, index) => {
+            const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
             const bgColor = getCountryColor(option.text, index);
             return (
               <div 
@@ -194,20 +228,45 @@ const VSLayout = ({
             <span className="text-white font-bold text-xs">VS</span>
           </div>
         </div>
+        {/* Indicador de preguntas */}
+        {totalQuestions > 1 && (
+          <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-white text-xs">
+            {totalQuestions} preguntas
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full relative">
+    <div className={cn(
+      "w-full h-full relative transition-opacity duration-300",
+      isTransitioning && "opacity-50"
+    )}>
+      {/* Indicador de progreso de preguntas */}
+      {totalQuestions > 1 && (
+        <div className="absolute top-2 left-0 right-0 z-30 flex gap-1 px-4">
+          {Array.from({ length: totalQuestions }).map((_, idx) => (
+            <div 
+              key={idx}
+              className={cn(
+                "h-1 flex-1 rounded-full transition-all duration-300",
+                idx < currentQuestionIndex ? "bg-white" :
+                idx === currentQuestionIndex ? "bg-white/80" : "bg-white/30"
+              )}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Opciones A vs B */}
       <div className="absolute inset-0 flex flex-col">
         {options.slice(0, 2).map((option, index) => {
-          const isSelected = selectedOption === option.id;
-          const percentage = showResults ? getPercentage(option.id) : 0;
-          const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
+          const isSelected = selectedOptions[currentQuestionId] === option.id;
+          const percentage = showResults[currentQuestionId] ? getPercentage(option.id) : 0;
+          const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
           const bgColor = getCountryColor(option.text, index);
-          const isBottom = index === 1; // Segunda opción (inferior)
+          const isBottom = index === 1;
           
           return (
             <button
@@ -224,7 +283,6 @@ const VSLayout = ({
               {/* Para la opción inferior: Texto arriba, luego imagen */}
               {isBottom && (
                 <>
-                  {/* Texto arriba con fondo para mejor visibilidad */}
                   <div className="w-full flex flex-col items-center mb-2">
                     <h2 className={cn(
                       "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
@@ -236,8 +294,7 @@ const VSLayout = ({
                       {option.text || `Opción ${index + 1}`}
                     </h2>
                     
-                    {/* Porcentaje */}
-                    {showResults && (
+                    {showResults[currentQuestionId] && (
                       <div className="mt-1 animate-in fade-in zoom-in">
                         <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                           {percentage}%
@@ -246,7 +303,6 @@ const VSLayout = ({
                     )}
                   </div>
                   
-                  {/* Imagen */}
                   {imageUrl && (
                     <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3]">
                       <img 
@@ -273,7 +329,6 @@ const VSLayout = ({
               {/* Para la opción superior: Imagen, luego texto */}
               {!isBottom && (
                 <>
-                  {/* Imagen */}
                   {imageUrl && (
                     <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3] mb-2">
                       <img 
@@ -295,7 +350,6 @@ const VSLayout = ({
                     </div>
                   )}
                   
-                  {/* Texto abajo con mejor visibilidad */}
                   <div className="w-full flex flex-col items-center">
                     <h2 className={cn(
                       "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
@@ -307,8 +361,7 @@ const VSLayout = ({
                       {option.text || `Opción ${index + 1}`}
                     </h2>
                     
-                    {/* Porcentaje */}
-                    {showResults && (
+                    {showResults[currentQuestionId] && (
                       <div className="mt-1 animate-in fade-in zoom-in">
                         <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                           {percentage}%
@@ -329,7 +382,6 @@ const VSLayout = ({
           "w-16 h-16 md:w-20 md:h-20 rounded-full bg-black flex items-center justify-center",
           "shadow-2xl border-4 border-white relative overflow-hidden"
         )}>
-          {/* Barra de progreso circular (solo cuando está el temporizador) */}
           {!showVS && !hasVoted && timeLeft > 0 && (
             <svg className="absolute inset-0 w-full h-full -rotate-90">
               <circle
@@ -354,24 +406,21 @@ const VSLayout = ({
             </svg>
           )}
           
-          {/* Contenido del círculo */}
           <span className="text-white font-black text-xl md:text-2xl relative z-10">
             {showVS ? 'VS' : (hasVoted ? '✓' : timeLeft)}
           </span>
         </div>
       </div>
       
-      {/* Indicador de más preguntas */}
+      {/* Contador de pregunta */}
       {totalQuestions > 1 && (
-        <button
-          onClick={handleOpenFullExperience}
-          className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 hover:bg-black/90 transition-all"
-        >
-          <Play className="w-4 h-4 text-white" />
-          <span className="text-white text-sm font-medium">
-            +{totalQuestions - 1} {totalQuestions === 2 ? 'pregunta más' : 'preguntas más'}
-          </span>
-        </button>
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full">
+            <span className="text-white text-sm font-medium">
+              Pregunta {currentQuestionIndex + 1} de {totalQuestions}
+            </span>
+          </div>
+        </div>
       )}
       
       {/* Línea divisora negra */}
