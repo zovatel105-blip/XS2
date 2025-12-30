@@ -5524,58 +5524,58 @@ async def get_polls(
         options = []
         for option in poll_data.get("options", []):
             option_user = option_users_dict.get(option.get("user_id")) if option.get("user_id") else None
-            if option_user:
-                # Keep media_url as relative path for frontend to handle
-                media_url = option.get("media_url")
-                
-                # Get thumbnail URL for videos
-                thumbnail_url = option.get("thumbnail_url")
-                if not thumbnail_url and media_url and option.get("media_type") == "video":
-                    thumbnail_url = await get_thumbnail_for_media_url(media_url)
-                
-                # Resolve mentioned users for this option
-                option_mentioned_users_data = []
-                if option.get("mentioned_users"):
-                    option_mentioned_user_ids = option.get("mentioned_users", [])
-                    if option_mentioned_user_ids:
-                        try:
-                            option_mentioned_cursor = db.users.find({"id": {"$in": option_mentioned_user_ids}})
-                            option_mentioned_list = await option_mentioned_cursor.to_list(len(option_mentioned_user_ids))
-                            
-                            option_mentioned_users_data = [
-                                {
-                                    "id": user["id"],
-                                    "username": user["username"],
-                                    "display_name": user.get("display_name"),
-                                    "avatar_url": user.get("avatar_url")
-                                } 
-                                for user in option_mentioned_list
-                            ]
-                        except Exception as e:
-                            print(f"DEBUG: Error resolving mentioned users for option {option['id']}: {e}")
-                            option_mentioned_users_data = []
-                
-                option_dict = {
-                    "id": option["id"],
-                    "text": option["text"],
-                    "votes": option["votes"],
-                    "user": {
-                        "username": option_user["username"],
-                        "displayName": option_user["display_name"],
-                        "avatar": option_user.get("avatar_url"),
-                        "verified": option_user.get("is_verified", False),
-                        "followers": "1K"  # Placeholder
-                    },
-                    "mentioned_users": option_mentioned_users_data,  # ✅ CRITICAL FIX: Include resolved mentioned users for each option
-                    "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
-                    "media": {
-                        "type": option.get("media_type"),
-                        "url": media_url,
-                        "thumbnail": thumbnail_url or media_url,
-                        "transform": option.get("media_transform")  # ✅ Include transform data
-                    } if media_url else None
-                }
-                options.append(option_dict)
+            
+            # Keep media_url as relative path for frontend to handle
+            media_url = option.get("media_url")
+            
+            # Get thumbnail URL for videos
+            thumbnail_url = option.get("thumbnail_url")
+            if not thumbnail_url and media_url and option.get("media_type") == "video":
+                thumbnail_url = await get_thumbnail_for_media_url(media_url)
+            
+            # Resolve mentioned users for this option
+            option_mentioned_users_data = []
+            if option.get("mentioned_users"):
+                option_mentioned_user_ids = option.get("mentioned_users", [])
+                if option_mentioned_user_ids:
+                    try:
+                        option_mentioned_cursor = db.users.find({"id": {"$in": option_mentioned_user_ids}})
+                        option_mentioned_list = await option_mentioned_cursor.to_list(len(option_mentioned_user_ids))
+                        
+                        option_mentioned_users_data = [
+                            {
+                                "id": user["id"],
+                                "username": user["username"],
+                                "display_name": user.get("display_name"),
+                                "avatar_url": user.get("avatar_url")
+                            } 
+                            for user in option_mentioned_list
+                        ]
+                    except Exception as e:
+                        print(f"DEBUG: Error resolving mentioned users for option {option.get('id')}: {e}")
+                        option_mentioned_users_data = []
+            
+            option_dict = {
+                "id": option.get("id"),
+                "text": option.get("text", ""),
+                "votes": option.get("votes", 0),
+                "user": {
+                    "username": option_user["username"] if option_user else None,
+                    "displayName": option_user["display_name"] if option_user else None,
+                    "avatar": option_user.get("avatar_url") if option_user else None,
+                    "verified": option_user.get("is_verified", False) if option_user else False,
+                    "followers": "1K"  # Placeholder
+                } if option_user else None,
+                "mentioned_users": option_mentioned_users_data,
+                "extracted_audio_id": option.get("extracted_audio_id"),
+                "media": {
+                    "type": option.get("media_type"),
+                    "url": media_url,
+                    "thumbnail": thumbnail_url or media_url,
+                    "transform": option.get("media_transform")
+                } if media_url else None
+            }
+            options.append(option_dict)
         
         # Skip polls without valid options or without title
         if not options or not poll_data.get("title"):
