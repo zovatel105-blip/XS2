@@ -111,6 +111,8 @@ const VSLayout = ({
         {options.slice(0, 2).map((option, index) => {
           const isSelected = selectedOption === option.id;
           const percentage = showResults ? getPercentage(option.id) : 0;
+          // Obtener la URL de la imagen - puede estar en diferentes ubicaciones
+          const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
           
           return (
             <button
@@ -124,9 +126,9 @@ const VSLayout = ({
               )}
             >
               {/* Background */}
-              {option.media_url || option.thumbnail_url ? (
+              {imageUrl ? (
                 <img 
-                  src={option.media_url || option.thumbnail_url} 
+                  src={imageUrl} 
                   alt="" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
