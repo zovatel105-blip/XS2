@@ -1,11 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Plus, Trash2, Image, Play, ChevronRight } from 'lucide-react';
+import { X, Plus, Trash2, Image, Play, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useAuth } from '../contexts/AuthContext';
+import AppConfig from '../config/config';
 
 const VSCreatePage = () => {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const fileInputRefs = useRef([]);
+  const [isPublishing, setIsPublishing] = useState(false);
   
   const [questions, setQuestions] = useState([
     {
@@ -66,18 +70,73 @@ const VSCreatePage = () => {
   };
 
   const handlePublish = async () => {
-    if (!isValid()) return;
+    if (!isValid() || isPublishing) return;
     
-    // Navegar a la experiencia VS con las preguntas
-    navigate('/vs-experience', { 
-      state: { questions: questions.map(q => ({
-        ...q,
-        options: q.options.map(opt => ({
-          id: opt.id,
-          text: opt.text,
-          image: opt.imagePreview
+    setIsPublishing(true);
+    
+    try {
+      const backendUrl = AppConfig.getBackendUrl();
+      
+      // Preparar datos para el backend
+      const vsData = {
+        questions: questions.map(q => ({
+          options: q.options.map(opt => ({
+            id: opt.id,
+            text: opt.text || `Opción ${opt.id.toUpperCase()}`,
+            image: opt.imagePreview // Base64 image
+          }))
         }))
-      })) 
+      };
+      
+      const response = await fetch(`${backendUrl}/api/vs/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(vsData)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create VS experience');
+      }
+      
+      const result = await response.json();
+      
+      // Navegar a la experiencia VS con el ID creado
+      navigate('/vs-experience', { 
+        state: { 
+          vsId: result.vs_id,
+          questions: result.questions.map((q, index) => ({
+            ...q,
+            options: q.options.map(opt => ({
+              ...opt,
+              // Usar la imagen del estado local ya que el backend puede no tener la URL
+              image: questions[index]?.options.find(o => o.id === opt.id)?.imagePreview || opt.image
+            }))
+          }))
+        } 
+      });
+      
+    } catch (error) {
+      console.error('Error publishing VS:', error);
+      // Fallback: navegar sin guardar en backend (modo offline)
+      navigate('/vs-experience', { 
+        state: { 
+          questions: questions.map(q => ({
+            id: q.id.toString(),
+            options: q.options.map(opt => ({
+              id: opt.id,
+              text: opt.text || `Opción ${opt.id.toUpperCase()}`,
+              image: opt.imagePreview
+            }))
+          }))
+        } 
+      });
+    } finally {
+      setIsPublishing(false);
+    }
+  }; 
     }});
   };
 
