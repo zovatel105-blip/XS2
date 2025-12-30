@@ -10115,14 +10115,22 @@ async def create_vs_experience(
             "vs_questions": questions,  # Incluir todas las preguntas
             "total_votes": 0,
             "views": 0,
+            "likes": 0,
             "likes_count": 0,
             "comments_count": 0,
+            "shares": 0,
             "shares_count": 0,
+            "saves_count": 0,
+            "is_featured": False,
+            "tags": ["vs", "whatwouldyouchoose"],
+            "category": "vs",
+            "mentioned_users": [],
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),
             "is_active": True,
             "is_private": False,
             "comments_enabled": True,
+            "show_vote_count": True,
             "background_color": "#000000"
         }
         
