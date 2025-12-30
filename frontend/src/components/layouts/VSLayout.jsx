@@ -216,8 +216,7 @@ const VSLayout = ({
               disabled={hasVoted}
               className={cn(
                 "flex-1 relative overflow-hidden transition-all duration-300",
-                "flex flex-col items-center",
-                isBottom ? "justify-start pt-4" : "justify-center", // Inferior: contenido arriba
+                "flex flex-col items-center justify-center",
                 bgColor,
                 isSelected && "ring-4 ring-white ring-inset"
               )}
@@ -225,28 +224,31 @@ const VSLayout = ({
               {/* Para la opción inferior: Texto arriba, luego imagen */}
               {isBottom && (
                 <>
-                  {/* Texto arriba */}
-                  <h2 className={cn(
-                    "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
-                    "drop-shadow-lg text-center px-4 mb-3",
-                    "transition-transform duration-300",
-                    isSelected && "scale-110"
-                  )}>
-                    {option.text || `Opción ${index + 1}`}
-                  </h2>
-                  
-                  {/* Porcentaje */}
-                  {showResults && (
-                    <div className="mb-2 animate-in fade-in zoom-in">
-                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
-                        {percentage}%
-                      </span>
-                    </div>
-                  )}
+                  {/* Texto arriba con fondo para mejor visibilidad */}
+                  <div className="w-full flex flex-col items-center mb-2">
+                    <h2 className={cn(
+                      "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
+                      "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
+                      "transition-transform duration-300",
+                      "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
+                      isSelected && "scale-110"
+                    )}>
+                      {option.text || `Opción ${index + 1}`}
+                    </h2>
+                    
+                    {/* Porcentaje */}
+                    {showResults && (
+                      <div className="mt-1 animate-in fade-in zoom-in">
+                        <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                          {percentage}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   
                   {/* Imagen */}
                   {imageUrl && (
-                    <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3]">
+                    <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3]">
                       <img 
                         src={imageUrl} 
                         alt="" 
@@ -273,7 +275,7 @@ const VSLayout = ({
                 <>
                   {/* Imagen */}
                   {imageUrl && (
-                    <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3] mb-3">
+                    <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3] mb-2">
                       <img 
                         src={imageUrl} 
                         alt="" 
@@ -293,24 +295,27 @@ const VSLayout = ({
                     </div>
                   )}
                   
-                  {/* Texto abajo */}
-                  <h2 className={cn(
-                    "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
-                    "drop-shadow-lg text-center px-4",
-                    "transition-transform duration-300",
-                    isSelected && "scale-110"
-                  )}>
-                    {option.text || `Opción ${index + 1}`}
-                  </h2>
-                  
-                  {/* Porcentaje */}
-                  {showResults && (
-                    <div className="mt-2 animate-in fade-in zoom-in">
-                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
-                        {percentage}%
-                      </span>
-                    </div>
-                  )}
+                  {/* Texto abajo con mejor visibilidad */}
+                  <div className="w-full flex flex-col items-center">
+                    <h2 className={cn(
+                      "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
+                      "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
+                      "transition-transform duration-300",
+                      "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
+                      isSelected && "scale-110"
+                    )}>
+                      {option.text || `Opción ${index + 1}`}
+                    </h2>
+                    
+                    {/* Porcentaje */}
+                    {showResults && (
+                      <div className="mt-1 animate-in fade-in zoom-in">
+                        <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                          {percentage}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </>
               )}
             </button>
