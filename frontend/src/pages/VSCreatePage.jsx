@@ -151,15 +151,22 @@ const VSCreatePage = () => {
         <h1 className="text-white font-semibold text-lg">Crear VS</h1>
         <button
           onClick={handlePublish}
-          disabled={!isValid()}
+          disabled={!isValid() || isPublishing}
           className={cn(
-            "px-4 py-2 rounded-full font-semibold text-sm transition-all",
-            isValid() 
+            "px-4 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2",
+            isValid() && !isPublishing
               ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
               : "bg-white/10 text-white/40"
           )}
         >
-          Publicar
+          {isPublishing ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Publicando...</span>
+            </>
+          ) : (
+            <span>Publicar</span>
+          )}
         </button>
       </div>
 
