@@ -1,6 +1,7 @@
 import React from 'react';
 import CarouselLayout from './CarouselLayout';
 import GridLayout from './GridLayout';
+import VSLayout from './VSLayout';
 
 // Mapeo dinámico de layoutType → componente para los 8 layouts soportados
 const layoutComponents = {
@@ -11,7 +12,8 @@ const layoutComponents = {
   'triptych-horizontal': (props) => <GridLayout {...props} gridType="triptych-horizontal" />, // Triptych Horizontal (3 filas)
   'grid-2x2': (props) => <GridLayout {...props} gridType="grid-2x2" />,         // Grid 2x2 (4 partes)
   'grid-3x2': (props) => <GridLayout {...props} gridType="grid-3x2" />,         // Grid 3x2 (6 partes: 3 columnas × 2 filas)
-  'horizontal-3x2': (props) => <GridLayout {...props} gridType="horizontal-3x2" /> // Grid 2x3 (6 partes: 2 columnas × 3 filas)
+  'horizontal-3x2': (props) => <GridLayout {...props} gridType="horizontal-3x2" />, // Grid 2x3 (6 partes: 2 columnas × 3 filas)
+  'vs': VSLayout  // Experiencia VS
 };
 
 /**
