@@ -10018,8 +10018,247 @@ async def upload_story_media(
         logger.error(f"Error uploading story media: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to upload media")
 
-        logger.error(f"Error getting story viewers: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to get story viewers")
+
+# ============================================================================
+# VS EXPERIENCE ENDPOINTS
+# ============================================================================
+
+class VSOption(BaseModel):
+    id: str
+    text: str
+    image: Optional[str] = None
+
+class VSQuestion(BaseModel):
+    id: Optional[str] = None
+    options: List[VSOption]
+
+class VSExperienceCreate(BaseModel):
+    questions: List[VSQuestion]
+
+class VSVote(BaseModel):
+    question_id: str
+    option_id: str
+
+@api_router.post("/vs/create", tags=["VS Experience"])
+async def create_vs_experience(
+    vs_data: VSExperienceCreate,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Create a new VS experience with multiple questions"""
+    try:
+        vs_id = str(uuid.uuid4())
+        
+        # Process questions
+        questions = []
+        for q in vs_data.questions:
+            question_id = str(uuid.uuid4())
+            options = []
+            for opt in q.options:
+                options.append({
+                    "id": opt.id,
+                    "text": opt.text,
+                    "image": opt.image,
+                    "votes": 0
+                })
+            questions.append({
+                "id": question_id,
+                "options": options
+            })
+        
+        vs_doc = {
+            "id": vs_id,
+            "author_id": current_user.id,
+            "author": {
+                "id": current_user.id,
+                "username": current_user.username,
+                "display_name": current_user.display_name,
+                "avatar_url": current_user.avatar_url
+            },
+            "questions": questions,
+            "total_participants": 0,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow(),
+            "is_active": True
+        }
+        
+        await db.vs_experiences.insert_one(vs_doc)
+        
+        logger.info(f"VS experience created: {vs_id} by user {current_user.id}")
+        
+        return {
+            "success": True,
+            "vs_id": vs_id,
+            "questions": questions,
+            "message": "VS experience created successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error creating VS experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create VS experience")
+
+
+@api_router.get("/vs/{vs_id}", tags=["VS Experience"])
+async def get_vs_experience(
+    vs_id: str,
+    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+):
+    """Get a VS experience by ID"""
+    try:
+        vs_doc = await db.vs_experiences.find_one({"id": vs_id})
+        
+        if not vs_doc:
+            raise HTTPException(status_code=404, detail="VS experience not found")
+        
+        # Get user's votes if authenticated
+        user_votes = {}
+        if current_user:
+            votes = await db.vs_votes.find({
+                "vs_id": vs_id,
+                "user_id": current_user.id
+            }).to_list(length=100)
+            
+            for vote in votes:
+                user_votes[vote["question_id"]] = vote["option_id"]
+        
+        return {
+            "id": vs_doc["id"],
+            "author": vs_doc.get("author"),
+            "questions": vs_doc["questions"],
+            "total_participants": vs_doc.get("total_participants", 0),
+            "created_at": vs_doc["created_at"],
+            "user_votes": user_votes
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting VS experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get VS experience")
+
+
+@api_router.post("/vs/{vs_id}/vote", tags=["VS Experience"])
+async def vote_vs_question(
+    vs_id: str,
+    vote: VSVote,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Vote on a VS question"""
+    try:
+        # Check if VS exists
+        vs_doc = await db.vs_experiences.find_one({"id": vs_id})
+        if not vs_doc:
+            raise HTTPException(status_code=404, detail="VS experience not found")
+        
+        # Check if user already voted on this question
+        existing_vote = await db.vs_votes.find_one({
+            "vs_id": vs_id,
+            "question_id": vote.question_id,
+            "user_id": current_user.id
+        })
+        
+        if existing_vote:
+            return {
+                "success": False,
+                "message": "Already voted on this question",
+                "vote": existing_vote["option_id"]
+            }
+        
+        # Record vote
+        vote_doc = {
+            "id": str(uuid.uuid4()),
+            "vs_id": vs_id,
+            "question_id": vote.question_id,
+            "option_id": vote.option_id,
+            "user_id": current_user.id,
+            "created_at": datetime.utcnow()
+        }
+        await db.vs_votes.insert_one(vote_doc)
+        
+        # Update vote count in VS experience
+        await db.vs_experiences.update_one(
+            {
+                "id": vs_id,
+                "questions.id": vote.question_id,
+                "questions.options.id": vote.option_id
+            },
+            {
+                "$inc": {
+                    "questions.$[q].options.$[o].votes": 1
+                }
+            },
+            array_filters=[
+                {"q.id": vote.question_id},
+                {"o.id": vote.option_id}
+            ]
+        )
+        
+        # Update total participants (unique users)
+        participants = await db.vs_votes.distinct("user_id", {"vs_id": vs_id})
+        await db.vs_experiences.update_one(
+            {"id": vs_id},
+            {"$set": {"total_participants": len(participants)}}
+        )
+        
+        # Get updated question stats
+        updated_vs = await db.vs_experiences.find_one({"id": vs_id})
+        question_stats = None
+        for q in updated_vs["questions"]:
+            if q["id"] == vote.question_id:
+                total_votes = sum(opt["votes"] for opt in q["options"])
+                question_stats = {
+                    "question_id": q["id"],
+                    "total_votes": total_votes,
+                    "options": [
+                        {
+                            "id": opt["id"],
+                            "votes": opt["votes"],
+                            "percentage": round((opt["votes"] / total_votes * 100) if total_votes > 0 else 0)
+                        }
+                        for opt in q["options"]
+                    ]
+                }
+                break
+        
+        return {
+            "success": True,
+            "message": "Vote recorded",
+            "stats": question_stats
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error voting on VS: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to record vote")
+
+
+@api_router.get("/vs/feed/latest", tags=["VS Experience"])
+async def get_latest_vs_experiences(
+    limit: int = Query(10, ge=1, le=50),
+    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+):
+    """Get latest VS experiences for the feed"""
+    try:
+        vs_list = await db.vs_experiences.find(
+            {"is_active": True}
+        ).sort("created_at", -1).limit(limit).to_list(length=limit)
+        
+        result = []
+        for vs in vs_list:
+            result.append({
+                "id": vs["id"],
+                "author": vs.get("author"),
+                "questions": vs["questions"],
+                "total_participants": vs.get("total_participants", 0),
+                "created_at": vs["created_at"]
+            })
+        
+        return {"vs_experiences": result}
+        
+    except Exception as e:
+        logger.error(f"Error getting VS feed: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get VS feed")
+
 
 # Incluir el router en la aplicación
 app.include_router(api_router)
