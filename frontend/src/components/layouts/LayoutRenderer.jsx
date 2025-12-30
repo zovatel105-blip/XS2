@@ -50,6 +50,18 @@ const LayoutRenderer = ({
   // Obtener el layout type del poll, con fallback a 'vertical'
   const layoutType = poll.layout || 'vertical';
   
+  // Layout VS tiene su propio componente
+  if (layoutType === 'vs') {
+    return (
+      <VSLayout 
+        poll={poll} 
+        onVote={onVote} 
+        isActive={isActive}
+        isThumbnail={isThumbnail}
+      />
+    );
+  }
+  
   // SOLO layout "off" debe usar carrusel
   if (layoutType === 'off') {
     return (
