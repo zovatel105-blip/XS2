@@ -5,8 +5,7 @@ import { Play } from 'lucide-react';
 
 /**
  * VSLayout - Renderiza una experiencia VS en el feed
- * Muestra la primera pregunta con las opciones A vs B
- * Al hacer clic, navega a la experiencia completa
+ * Diseño estilo "¿Qué prefieres?" con colores de fondo y temporizador
  */
 const VSLayout = ({ 
   poll, 
@@ -18,17 +17,35 @@ const VSLayout = ({
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(5);
 
   // Obtener las opciones de la primera pregunta
   const options = poll.options || [];
   const vsQuestions = poll.vs_questions || [];
   const totalQuestions = vsQuestions.length || 1;
 
-  // Colores para las opciones
-  const optionStyles = [
-    { bg: 'from-orange-500 to-amber-500', text: 'text-white' },
-    { bg: 'from-blue-500 to-cyan-500', text: 'text-white' }
+  // Colores de fondo para las opciones (estilo bandera)
+  const bgColors = [
+    'bg-gradient-to-b from-amber-400 to-orange-500', // Naranja/Amarillo
+    'bg-gradient-to-b from-red-500 to-red-700'       // Rojo
   ];
+
+  // Temporizador de 5 segundos
+  useEffect(() => {
+    if (!isActive || hasVoted || isThumbnail) return;
+    
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isActive, hasVoted, isThumbnail]);
 
   const handleOptionClick = (optionId) => {
     if (hasVoted || isThumbnail) return;
@@ -37,14 +54,12 @@ const VSLayout = ({
     setHasVoted(true);
     setShowResults(true);
     
-    // Llamar a onVote si existe
     if (onVote) {
       onVote(poll.id, optionId);
     }
   };
 
   const handleOpenFullExperience = () => {
-    // Navegar a la experiencia VS completa
     navigate('/vs-experience', {
       state: {
         vsId: poll.vs_id || poll.id,
@@ -53,7 +68,7 @@ const VSLayout = ({
           options: options.map(opt => ({
             id: opt.id,
             text: opt.text,
-            image: opt.media_url || opt.thumbnail_url
+            image: opt.media?.url || opt.media?.thumbnail || opt.media_url || opt.thumbnail_url
           }))
         }]
       }
@@ -63,7 +78,6 @@ const VSLayout = ({
   const getPercentage = (optionId) => {
     const totalVotes = options.reduce((sum, opt) => sum + (opt.votes || 0), 0);
     if (totalVotes === 0) {
-      // Simular porcentajes
       return optionId === selectedOption ? 65 : 35;
     }
     const optionVotes = options.find(o => o.id === optionId)?.votes || 0;
@@ -80,19 +94,18 @@ const VSLayout = ({
             return (
               <div 
                 key={option.id}
-                className={cn(
-                  "flex-1 relative overflow-hidden",
-                  `bg-gradient-to-br ${optionStyles[index]?.bg || 'from-gray-600 to-gray-800'}`
-                )}
+                className={cn("flex-1 relative overflow-hidden", bgColors[index])}
               >
                 {imageUrl && (
-                  <img 
-                    src={imageUrl} 
-                    alt="" 
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+                  <div className="absolute inset-0 flex items-center justify-center p-2">
+                    <img 
+                      src={imageUrl} 
+                      alt="" 
+                      className="max-w-[80%] max-h-[80%] object-contain rounded-xl shadow-lg"
+                    />
+                  </div>
                 )}
-                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 bg-black/10" />
               </div>
             );
           })}
@@ -114,7 +127,6 @@ const VSLayout = ({
         {options.slice(0, 2).map((option, index) => {
           const isSelected = selectedOption === option.id;
           const percentage = showResults ? getPercentage(option.id) : 0;
-          // Obtener la URL de la imagen - puede estar en diferentes ubicaciones
           const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url;
           
           return (
@@ -124,59 +136,50 @@ const VSLayout = ({
               disabled={hasVoted}
               className={cn(
                 "flex-1 relative overflow-hidden transition-all duration-300",
-                "flex items-center justify-center",
+                "flex flex-col items-center justify-center",
+                bgColors[index],
                 isSelected && "ring-4 ring-white ring-inset"
               )}
             >
-              {/* Background */}
-              {imageUrl ? (
-                <img 
-                  src={imageUrl} 
-                  alt="" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              ) : (
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br",
-                  optionStyles[index]?.bg || 'from-gray-600 to-gray-800'
-                )} />
+              {/* Imagen centrada con borde redondeado */}
+              {imageUrl && (
+                <div className="relative z-10 w-[85%] max-w-[300px] aspect-[4/3] mb-3">
+                  <img 
+                    src={imageUrl} 
+                    alt="" 
+                    className={cn(
+                      "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
+                      "transition-transform duration-300",
+                      isSelected && "scale-105 border-white"
+                    )}
+                  />
+                  {/* Check de selección sobre la imagen */}
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
               )}
               
-              {/* Overlay */}
-              <div className={cn(
-                "absolute inset-0 transition-opacity duration-300",
-                option.media_url ? "bg-black/40" : "bg-black/20"
-              )} />
+              {/* Texto de la opción */}
+              <h2 className={cn(
+                "text-white font-black text-xl md:text-2xl uppercase tracking-wide",
+                "drop-shadow-lg text-center px-4",
+                "transition-transform duration-300",
+                isSelected && "scale-110"
+              )}>
+                {option.text || `Opción ${index + 1}`}
+              </h2>
               
-              {/* Barra de resultado */}
+              {/* Porcentaje después de votar */}
               {showResults && (
-                <div 
-                  className="absolute bottom-0 left-0 right-0 bg-white/30 transition-all duration-700"
-                  style={{ height: `${percentage}%` }}
-                />
-              )}
-              
-              {/* Contenido */}
-              <div className="relative z-10 text-center p-6">
-                <h2 className="text-white font-bold text-2xl md:text-3xl drop-shadow-lg">
-                  {option.text || `Opción ${index + 1}`}
-                </h2>
-                
-                {showResults && (
-                  <div className="mt-4 animate-in fade-in zoom-in">
-                    <span className="text-5xl md:text-6xl font-black text-white drop-shadow-lg">
-                      {percentage}%
-                    </span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Check de selección */}
-              {isSelected && (
-                <div className="absolute top-4 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className="mt-2 animate-in fade-in zoom-in">
+                  <span className="text-4xl md:text-5xl font-black text-white drop-shadow-lg">
+                    {percentage}%
+                  </span>
                 </div>
               )}
             </button>
@@ -184,13 +187,39 @@ const VSLayout = ({
         })}
       </div>
       
-      {/* VS Badge */}
+      {/* Temporizador circular en el centro */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
         <div className={cn(
           "w-16 h-16 md:w-20 md:h-20 rounded-full bg-black flex items-center justify-center",
-          "shadow-2xl border-4 border-white"
+          "shadow-2xl border-4 border-white relative overflow-hidden"
         )}>
-          <span className="text-white font-black text-xl md:text-2xl">VS</span>
+          {/* Barra de progreso circular */}
+          {!hasVoted && timeLeft > 0 && (
+            <svg className="absolute inset-0 w-full h-full -rotate-90">
+              <circle
+                cx="50%"
+                cy="50%"
+                r="45%"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="4"
+              />
+              <circle
+                cx="50%"
+                cy="50%"
+                r="45%"
+                fill="none"
+                stroke="white"
+                strokeWidth="4"
+                strokeDasharray={`${(timeLeft / 5) * 100} 100`}
+                strokeLinecap="round"
+                className="transition-all duration-1000"
+              />
+            </svg>
+          )}
+          <span className="text-white font-black text-2xl md:text-3xl relative z-10">
+            {hasVoted ? '✓' : timeLeft}
+          </span>
         </div>
       </div>
       
@@ -207,7 +236,7 @@ const VSLayout = ({
         </button>
       )}
       
-      {/* Línea divisora */}
+      {/* Línea divisora negra */}
       <div className="absolute top-1/2 left-0 right-0 h-1 bg-black z-10 transform -translate-y-1/2" />
     </div>
   );
