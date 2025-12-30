@@ -10046,10 +10046,12 @@ async def create_vs_experience(
 ):
     """Create a new VS experience with multiple questions"""
     from fastapi.responses import JSONResponse
-    import json
+    
+    logger.info(f"Creating VS experience for user {current_user.id}")
     
     try:
         vs_id = str(uuid.uuid4())
+        logger.info(f"Generated VS ID: {vs_id}")
         
         # Extraer datos simples del usuario
         author_data = {
@@ -10061,7 +10063,7 @@ async def create_vs_experience(
         
         # Process questions
         questions = []
-        for q in vs_data.questions:
+        for idx, q in enumerate(vs_data.questions):
             question_id = str(uuid.uuid4())
             options = []
             for opt in q.options:
@@ -10075,6 +10077,9 @@ async def create_vs_experience(
                 "id": question_id,
                 "options": options
             })
+            logger.info(f"Processed question {idx+1}: {question_id} with {len(options)} options")
+        
+        logger.info(f"Total questions processed: {len(questions)}")
         
         vs_doc = {
             "id": vs_id,
