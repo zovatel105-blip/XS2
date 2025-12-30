@@ -103,36 +103,13 @@ const VSCreatePage = () => {
       
       const result = await response.json();
       
-      // Navegar a la experiencia VS con el ID creado
-      navigate('/vs-experience', { 
-        state: { 
-          vsId: result.vs_id,
-          questions: result.questions.map((q, index) => ({
-            ...q,
-            options: q.options.map(opt => ({
-              ...opt,
-              // Usar la imagen del estado local ya que el backend puede no tener la URL
-              image: questions[index]?.options.find(o => o.id === opt.id)?.imagePreview || opt.image
-            }))
-          }))
-        } 
-      });
+      // Navegar al feed para ver la publicación
+      navigate('/feed');
       
     } catch (error) {
       console.error('Error publishing VS:', error);
-      // Fallback: navegar sin guardar en backend (modo offline)
-      navigate('/vs-experience', { 
-        state: { 
-          questions: questions.map(q => ({
-            id: q.id.toString(),
-            options: q.options.map(opt => ({
-              id: opt.id,
-              text: opt.text || `Opción ${opt.id.toUpperCase()}`,
-              image: opt.imagePreview
-            }))
-          }))
-        } 
-      });
+      // Fallback: mostrar error pero aún navegar al feed
+      navigate('/feed');
     } finally {
       setIsPublishing(false);
     }
