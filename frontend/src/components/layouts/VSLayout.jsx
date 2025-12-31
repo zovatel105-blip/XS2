@@ -325,22 +325,6 @@ const VSLayout = ({
 
   return (
     <div ref={containerRef} className="w-full h-full relative overflow-hidden">
-      {/* Barra de progreso */}
-      {totalQuestions > 1 && (
-        <div className="absolute top-2 left-0 right-0 z-30 flex gap-1 px-4">
-          {allQuestions.map((_, idx) => (
-            <div 
-              key={idx}
-              className={cn(
-                "h-1 flex-1 rounded-full transition-all duration-300",
-                idx < currentIndex ? "bg-white" :
-                idx === currentIndex ? "bg-white/80" : "bg-white/30"
-              )}
-            />
-          ))}
-        </div>
-      )}
-
       {/* Carrusel de preguntas */}
       <div 
         className="flex h-full transition-transform duration-500 ease-out"
