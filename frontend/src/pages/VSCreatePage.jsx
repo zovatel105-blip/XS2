@@ -4,6 +4,7 @@ import { X, Plus, Trash2, Image, Play, ChevronRight, Loader2 } from 'lucide-reac
 import { cn } from '../lib/utils';
 import { useAuth } from '../contexts/AuthContext';
 import AppConfig from '../config/config';
+import uploadService from '../services/uploadService';
 
 const VSCreatePage = () => {
   const navigate = useNavigate();
