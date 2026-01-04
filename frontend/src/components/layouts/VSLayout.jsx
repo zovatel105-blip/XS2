@@ -90,10 +90,7 @@ const QuestionSlide = ({
       {options.slice(0, 2).map((option, index) => {
         const isSelected = selectedOption === option.id;
         const percentage = showResults ? getPercentage(option.id) : 0;
-        // Priorizar URLs sobre base64, excluir base64 para mejor rendimiento
-        const rawImageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
-        // Skip base64 images for performance - only use URL-based images
-        const imageUrl = rawImageUrl && !rawImageUrl.startsWith('data:') ? rawImageUrl : null;
+        const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
         const bgColor = getCountryColor(option.text, index);
         const isBottom = index === 1;
         
