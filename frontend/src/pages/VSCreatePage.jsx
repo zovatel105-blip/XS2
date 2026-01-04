@@ -89,7 +89,7 @@ const VSCreatePage = () => {
           if (opt.image && opt.image instanceof File) {
             console.log(`📤 Uploading image for option ${opt.id}...`);
             const uploadResult = await uploadService.uploadFile(opt.image, 'poll_option');
-            imageUrl = uploadResult.url;
+            imageUrl = uploadResult.public_url || uploadResult.url;
             console.log(`✅ Image uploaded: ${imageUrl}`);
           }
           
