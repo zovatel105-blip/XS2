@@ -55,12 +55,10 @@ const VSCreatePage = () => {
   const handleImageUpload = (questionId, optionId, event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateOption(questionId, optionId, 'image', file);
-        updateOption(questionId, optionId, 'imagePreview', reader.result);
-      };
-      reader.readAsDataURL(file);
+      // Use blob URL for preview (more efficient than base64)
+      const previewUrl = URL.createObjectURL(file);
+      updateOption(questionId, optionId, 'image', file); // Store actual file
+      updateOption(questionId, optionId, 'imagePreview', previewUrl);
     }
   };
 
