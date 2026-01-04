@@ -39,7 +39,7 @@ const VSCreatePage = () => {
   };
 
   const updateOption = (questionId, optionId, field, value) => {
-    setQuestions(questions.map(q => {
+    setQuestions(prev => prev.map(q => {
       if (q.id === questionId) {
         return {
           ...q,
@@ -57,8 +57,18 @@ const VSCreatePage = () => {
     if (file) {
       // Use blob URL for preview (more efficient than base64)
       const previewUrl = URL.createObjectURL(file);
-      updateOption(questionId, optionId, 'image', file); // Store actual file
-      updateOption(questionId, optionId, 'imagePreview', previewUrl);
+      // Update both fields at once to avoid race condition
+      setQuestions(prev => prev.map(q => {
+        if (q.id === questionId) {
+          return {
+            ...q,
+            options: q.options.map(opt => 
+              opt.id === optionId ? { ...opt, image: file, imagePreview: previewUrl } : opt
+            )
+          };
+        }
+        return q;
+      }));
     }
   };
 
