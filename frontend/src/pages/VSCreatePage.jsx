@@ -195,14 +195,14 @@ const VSCreatePage = () => {
             <div className="grid grid-cols-2 gap-3">
               {question.options.map((option, oIndex) => (
                 <div key={option.id} className="space-y-2">
-                  {/* Image Upload Area */}
+                  {/* Image Upload Area - Made more prominent */}
                   <div 
                     onClick={() => fileInputRefs.current[`${question.id}-${option.id}`]?.click()}
                     className={cn(
-                      "aspect-square rounded-xl border-2 border-dashed cursor-pointer transition-all overflow-hidden",
+                      "aspect-square rounded-xl border-2 cursor-pointer transition-all overflow-hidden",
                       option.imagePreview 
                         ? "border-transparent" 
-                        : "border-white/20 hover:border-white/40 flex items-center justify-center"
+                        : "border-orange-500/50 hover:border-orange-500 border-dashed bg-orange-500/10 flex items-center justify-center"
                     )}
                   >
                     {option.imagePreview ? (
@@ -213,8 +213,11 @@ const VSCreatePage = () => {
                       />
                     ) : (
                       <div className="text-center p-4">
-                        <Image className="w-8 h-8 text-white/40 mx-auto mb-2" />
-                        <span className="text-white/40 text-xs">Añadir imagen</span>
+                        <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <Image className="w-6 h-6 text-orange-400" />
+                        </div>
+                        <span className="text-orange-400 text-xs font-medium">Toca para añadir imagen</span>
+                        <p className="text-white/30 text-[10px] mt-1">Opción {oIndex === 0 ? 'A' : 'B'}</p>
                       </div>
                     )}
                   </div>
