@@ -300,9 +300,7 @@ const VSLayout = ({
       <div className="w-full h-full relative">
         <div className="absolute inset-0 flex flex-col">
           {thumbOptions.map((option, index) => {
-            const rawImageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
-            // Skip base64 for thumbnails - much faster loading
-            const imageUrl = rawImageUrl && !rawImageUrl.startsWith('data:') ? rawImageUrl : null;
+            const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
             const bgColor = getCountryColor(option.text, index);
             return (
               <div key={option.id} className={cn("flex-1 relative overflow-hidden", bgColor)}>
