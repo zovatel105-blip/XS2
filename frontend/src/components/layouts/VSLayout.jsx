@@ -303,13 +303,21 @@ const VSLayout = ({
       <div className="w-full h-full relative">
         <div className="absolute inset-0 flex flex-col">
           {thumbOptions.map((option, index) => {
-            const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
+            const rawImageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
+            // Skip base64 for thumbnails - much faster loading
+            const imageUrl = rawImageUrl && !rawImageUrl.startsWith('data:') ? rawImageUrl : null;
             const bgColor = getCountryColor(option.text, index);
             return (
               <div key={option.id} className={cn("flex-1 relative overflow-hidden", bgColor)}>
                 {imageUrl && (
                   <div className="absolute inset-0 flex items-center justify-center p-2">
-                    <img src={imageUrl} alt="" className="max-w-[80%] max-h-[80%] object-contain rounded-xl shadow-lg" />
+                    <img 
+                      src={imageUrl} 
+                      alt="" 
+                      loading="lazy"
+                      decoding="async"
+                      className="max-w-[80%] max-h-[80%] object-contain rounded-xl shadow-lg" 
+                    />
                   </div>
                 )}
               </div>
@@ -321,11 +329,6 @@ const VSLayout = ({
             <span className="text-white font-bold text-xs">VS</span>
           </div>
         </div>
-        {totalQuestions > 1 && (
-          <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-white text-xs">
-            {totalQuestions}
-          </div>
-        )}
       </div>
     );
   }
