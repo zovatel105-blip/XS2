@@ -86,6 +86,18 @@ const VSCreatePage = () => {
     try {
       const backendUrl = AppConfig.BACKEND_URL;
       
+      // Debug: Log current questions state
+      console.log('📋 Questions state before upload:', JSON.stringify(questions.map(q => ({
+        id: q.id,
+        options: q.options.map(o => ({
+          id: o.id,
+          text: o.text,
+          hasImage: !!o.image,
+          imageType: o.image ? (o.image instanceof File ? 'File' : typeof o.image) : 'none',
+          hasPreview: !!o.imagePreview
+        }))
+      })), null, 2));
+      
       // First, upload all images using multipart/form-data
       const uploadedQuestions = [];
       
@@ -97,10 +109,12 @@ const VSCreatePage = () => {
           
           // Upload image file if exists (using multipart/form-data)
           if (opt.image && opt.image instanceof File) {
-            console.log(`📤 Uploading image for option ${opt.id}...`);
+            console.log(`📤 Uploading image for option ${opt.id}...`, opt.image.name, opt.image.size);
             const uploadResult = await uploadService.uploadFile(opt.image, 'poll_option');
             imageUrl = uploadResult.public_url || uploadResult.url;
             console.log(`✅ Image uploaded: ${imageUrl}`);
+          } else {
+            console.log(`⚠️ No image file for option ${opt.id}. image:`, opt.image, 'instanceof File:', opt.image instanceof File);
           }
           
           uploadedOptions.push({
@@ -116,7 +130,7 @@ const VSCreatePage = () => {
       // Send VS data with uploaded image URLs (not base64)
       const vsData = { questions: uploadedQuestions };
       
-      console.log('Enviando VS data:', vsData);
+      console.log('📤 Enviando VS data:', JSON.stringify(vsData, null, 2));
       console.log('Token:', token ? 'presente' : 'ausente');
       console.log('Backend URL:', backendUrl);
       
