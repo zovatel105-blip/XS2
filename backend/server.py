@@ -1444,6 +1444,53 @@ async def get_api_info():
         "features": ["messaging", "user_profiles"]
     }
 
+# ============= GEOLOCATION ENDPOINT =============
+
+@api_router.get("/geolocation")
+async def get_user_geolocation(request: Request):
+    """Get user's country based on IP address"""
+    try:
+        # Get client IP
+        client_ip = get_client_ip(request)
+        
+        # For localhost/private IPs, return default
+        if client_ip in ["127.0.0.1", "localhost"] or client_ip.startswith("192.168.") or client_ip.startswith("10."):
+            return {
+                "country": "unknown",
+                "country_code": "XX",
+                "ip": client_ip
+            }
+        
+        # Use ip-api.com (free, no API key needed)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"http://ip-api.com/json/{client_ip}?fields=status,country,countryCode",
+                timeout=5.0
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "success":
+                    return {
+                        "country": data.get("country", "unknown").lower(),
+                        "country_code": data.get("countryCode", "XX"),
+                        "ip": client_ip
+                    }
+        
+        return {
+            "country": "unknown",
+            "country_code": "XX",
+            "ip": client_ip
+        }
+        
+    except Exception as e:
+        logger.error(f"Geolocation error: {e}")
+        return {
+            "country": "unknown",
+            "country_code": "XX",
+            "ip": "unknown"
+        }
+
 # =============  AUTHENTICATION ENDPOINTS =============
 
 @api_router.post("/auth/register", response_model=Token)
