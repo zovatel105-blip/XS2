@@ -92,7 +92,6 @@ const QuestionSlide = ({
         const percentage = showResults ? getPercentage(option.id) : 0;
         const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
         const bgColor = getCountryColor(option.text, index);
-        const isBottom = index === 1;
         
         return (
           <button
@@ -102,82 +101,57 @@ const QuestionSlide = ({
             className={cn(
               "flex-1 relative overflow-hidden transition-all duration-300",
               "flex flex-col items-center justify-center",
-              bgColor,
+              !imageUrl && bgColor,
               isSelected && "ring-4 ring-white ring-inset"
             )}
           >
-            {isBottom ? (
-              <>
-                <div className="w-full flex flex-col items-center mb-2">
-                  <h2 className={cn(
-                    "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
-                    "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
-                    "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
-                    isSelected && "scale-110"
-                  )}>
-                    {option.text || `Opción ${index + 1}`}
-                  </h2>
-                  
-                  {showResults && (
-                    <div className="mt-1 animate-in fade-in zoom-in">
-                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                        {percentage}%
-                      </span>
-                    </div>
-                  )}
+            {/* Imagen de fondo completo */}
+            {imageUrl && (
+              <img 
+                src={imageUrl} 
+                alt="" 
+                loading={isActive ? "eager" : "lazy"}
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
+            
+            {/* Overlay oscuro para mejor legibilidad del texto */}
+            {imageUrl && (
+              <div className="absolute inset-0 bg-black/30" />
+            )}
+            
+            {/* Contenido centrado */}
+            <div className="relative z-10 flex flex-col items-center justify-center">
+              <h2 className={cn(
+                "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
+                "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
+                "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
+                isSelected && "scale-110"
+              )}>
+                {option.text || `Opción ${index + 1}`}
+              </h2>
+              
+              {showResults && (
+                <div className="mt-2 animate-in fade-in zoom-in">
+                  <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    {percentage}%
+                  </span>
                 </div>
-                
-                {imageUrl && (
-                  <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3]">
-                    <img 
-                      src={imageUrl} 
-                      alt="" 
-                      loading={isActive ? "eager" : "lazy"}
-                      decoding="async"
-                      className={cn(
-                        "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
-                        isSelected && "scale-105 border-white"
-                      )}
-                    />
-                    {isSelected && (
-                      <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {imageUrl && (
-                  <div className="relative z-10 w-[75%] max-w-[280px] aspect-[4/3] mb-2">
-                    <img 
-                      src={imageUrl} 
-                      alt="" 
-                      loading={isActive ? "eager" : "lazy"}
-                      decoding="async"
-                      className={cn(
-                        "w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-white/30",
-                        isSelected && "scale-105 border-white"
-                      )}
-                    />
-                    {isSelected && (
-                      <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                <div className="w-full flex flex-col items-center">
-                  <h2 className={cn(
-                    "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
-                    "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
-                    "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
+              )}
+            </div>
+            
+            {/* Indicador de selección */}
+            {isSelected && (
+              <div className="absolute top-3 right-3 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg z-20">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            )}
+          </button>
+        );
+      })}
                     isSelected && "scale-110"
                   )}>
                     {option.text || `Opción ${index + 1}`}
