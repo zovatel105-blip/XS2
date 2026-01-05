@@ -374,18 +374,18 @@ const VSLayout = ({
         ))}
       </div>
       
-      {/* Círculo central: VS o Temporizador con colores del país del creador */}
+      {/* Círculo central: VS o Temporizador con 2 colores del país del creador */}
       {(() => {
-        // Usar el país del creador para los colores
-        const countryColor = getCountryPrimaryColor(creatorCountry, 0);
+        // Usar los 2 colores del país del creador
+        const colors = getCountryColors(creatorCountry);
         
         return (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-            {/* Anillo exterior con color del país */}
+            {/* Anillo exterior con 2 colores en diagonal */}
             <div 
               className="w-16 h-16 md:w-20 md:h-20 rounded-full p-1 shadow-2xl"
               style={{
-                background: countryColor
+                background: `linear-gradient(135deg, ${colors.primary} 50%, ${colors.secondary} 50%)`
               }}
             >
               {/* Círculo interior negro */}
