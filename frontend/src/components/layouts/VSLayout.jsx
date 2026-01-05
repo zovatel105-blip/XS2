@@ -235,8 +235,8 @@ const VSLayout = ({
 }) => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
-  const hasSpokenRef = useRef(false);
-  const speechSynthRef = useRef(null);
+  const voiceSequenceRef = useRef(null);
+  const hasStartedVoiceRef = useRef(false);
   
   // País del creador para los colores
   const creatorCountry = poll.creator_country;
@@ -257,20 +257,30 @@ const VSLayout = ({
   const [showResults, setShowResults] = useState({});
   const [timeLeft, setTimeLeft] = useState(5);
   const [showVS, setShowVS] = useState(true);
+  const [highlightedOption, setHighlightedOption] = useState(null); // Para resaltar visualmente
 
   const currentQuestion = allQuestions[currentIndex];
   const currentQuestionId = currentQuestion?.id;
   const hasVoted = !!selectedOptions[currentQuestionId];
 
+  // Función para detener toda la voz y secuencia
+  const stopVoice = useCallback(() => {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    if (voiceSequenceRef.current) {
+      voiceSequenceRef.current.forEach(timer => clearTimeout(timer));
+      voiceSequenceRef.current = null;
+    }
+    setHighlightedOption(null);
+  }, []);
+
   // Función para hablar con Text-to-Speech
-  const speak = useCallback((text, rate = 1.0) => {
+  const speak = useCallback((text, rate = 1.2) => {
     if (isThumbnail || !window.speechSynthesis) return;
     
-    // Cancelar cualquier speech anterior
-    window.speechSynthesis.cancel();
-    
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-ES'; // Español
+    utterance.lang = 'es-ES';
     utterance.rate = rate;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
@@ -284,39 +294,67 @@ const VSLayout = ({
       utterance.voice = spanishVoice;
     }
     
-    speechSynthRef.current = utterance;
     window.speechSynthesis.speak(utterance);
   }, [isThumbnail]);
 
-  // Detener speech cuando el componente se desmonta o cambia
-  useEffect(() => {
-    return () => {
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
-
-  // Guía por voz cuando se activa el VS
-  useEffect(() => {
-    if (!isActive || isThumbnail || hasSpokenRef.current) return;
+  // Secuencia de voz con resaltado visual
+  const startVoiceSequence = useCallback(() => {
+    if (isThumbnail || hasVoted || !isActive) return;
     
     const options = currentQuestion?.options || [];
     const optionA = options[0]?.text || 'Opción A';
     const optionB = options[1]?.text || 'Opción B';
     
-    // Esperar un momento y luego hablar
-    const timer = setTimeout(() => {
-      speak(`¿Qué prefieres? ${optionA}, o, ${optionB}`);
-      hasSpokenRef.current = true;
-    }, 500);
+    // Cancelar secuencia anterior
+    stopVoice();
     
-    return () => clearTimeout(timer);
-  }, [isActive, isThumbnail, currentQuestion, speak]);
+    const timers = [];
+    
+    // Secuencia: 
+    // 0ms: Resaltar opción A + hablar
+    // 1500ms: Resaltar opción B + hablar  
+    // 3000ms: Quitar resaltado
+    
+    // Paso 1: Resaltar y hablar opción A
+    timers.push(setTimeout(() => {
+      setHighlightedOption(0);
+      speak(optionA, 1.3);
+    }, 0));
+    
+    // Paso 2: Resaltar y hablar opción B
+    timers.push(setTimeout(() => {
+      setHighlightedOption(1);
+      speak(optionB, 1.3);
+    }, 1500));
+    
+    // Paso 3: Quitar resaltado
+    timers.push(setTimeout(() => {
+      setHighlightedOption(null);
+    }, 3000));
+    
+    voiceSequenceRef.current = timers;
+  }, [isThumbnail, hasVoted, isActive, currentQuestion, speak, stopVoice]);
+
+  // Detener speech cuando el componente se desmonta
+  useEffect(() => {
+    return () => stopVoice();
+  }, [stopVoice]);
+
+  // Iniciar secuencia de voz cuando termina el VS y está activo
+  useEffect(() => {
+    if (!isActive || isThumbnail || showVS || hasVoted) return;
+    
+    // Solo iniciar si no ha empezado aún para esta pregunta
+    if (!hasStartedVoiceRef.current) {
+      hasStartedVoiceRef.current = true;
+      startVoiceSequence();
+    }
+  }, [isActive, isThumbnail, showVS, hasVoted, startVoiceSequence]);
 
   // Resetear el flag cuando cambia la pregunta
   useEffect(() => {
-    hasSpokenRef.current = false;
+    hasStartedVoiceRef.current = false;
+    setHighlightedOption(null);
   }, [currentIndex]);
 
   // Avanzar al siguiente slide
