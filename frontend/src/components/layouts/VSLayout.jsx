@@ -326,30 +326,49 @@ const VSLayout = ({
         ))}
       </div>
       
-      {/* Círculo central: VS o Temporizador */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-        <div className={cn(
-          "w-16 h-16 md:w-20 md:h-20 rounded-full bg-black flex items-center justify-center",
-          "shadow-2xl border-4 border-white relative overflow-hidden"
-        )}>
-          {!showVS && !hasVoted && timeLeft > 0 && (
-            <svg className="absolute inset-0 w-full h-full -rotate-90">
-              <circle cx="50%" cy="50%" r="45%" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" />
-              <circle
-                cx="50%" cy="50%" r="45%"
-                fill="none" stroke="white" strokeWidth="4"
-                strokeDasharray={`${(timeLeft / 5) * 100} 100`}
-                strokeLinecap="round"
-                className="transition-all duration-1000"
+      {/* Círculo central: VS o Temporizador con colores de cada opción */}
+      {(() => {
+        const options = currentQuestion?.options || [];
+        const topColor = getCountryPrimaryColor(options[0]?.text, 0);
+        const bottomColor = getCountryPrimaryColor(options[1]?.text, 1);
+        
+        return (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+            <div className={cn(
+              "w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center",
+              "shadow-2xl border-4 border-white relative overflow-hidden"
+            )}>
+              {/* Mitad superior con color de opción 1 */}
+              <div 
+                className="absolute top-0 left-0 right-0 h-1/2"
+                style={{ backgroundColor: topColor }}
               />
-            </svg>
-          )}
-          
-          <span className="text-white font-black text-xl md:text-2xl relative z-10">
-            {showVS ? 'VS' : (hasVoted ? '✓' : timeLeft)}
-          </span>
-        </div>
-      </div>
+              {/* Mitad inferior con color de opción 2 */}
+              <div 
+                className="absolute bottom-0 left-0 right-0 h-1/2"
+                style={{ backgroundColor: bottomColor }}
+              />
+              
+              {!showVS && !hasVoted && timeLeft > 0 && (
+                <svg className="absolute inset-0 w-full h-full -rotate-90 z-10">
+                  <circle cx="50%" cy="50%" r="45%" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" />
+                  <circle
+                    cx="50%" cy="50%" r="45%"
+                    fill="none" stroke="white" strokeWidth="4"
+                    strokeDasharray={`${(timeLeft / 5) * 100} 100`}
+                    strokeLinecap="round"
+                    className="transition-all duration-1000"
+                  />
+                </svg>
+              )}
+              
+              <span className="text-white font-black text-xl md:text-2xl relative z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                {showVS ? 'VS' : (hasVoted ? '✓' : timeLeft)}
+              </span>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
