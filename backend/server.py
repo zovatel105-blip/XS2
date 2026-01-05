@@ -10173,6 +10173,7 @@ async def create_vs_experience(
             "layout": "vs",  # Nuevo tipo de layout para VS
             "vs_id": vs_id,  # Referencia a la experiencia VS completa
             "vs_questions": questions,  # Incluir todas las preguntas
+            "creator_country": vs_data.creator_country,  # País del creador
             "total_votes": 0,
             "views": 0,
             "likes": 0,
