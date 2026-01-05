@@ -195,6 +195,9 @@ const VSLayout = ({
   const navigate = useNavigate();
   const containerRef = useRef(null);
   
+  // País del creador para los colores
+  const creatorCountry = poll.creator_country;
+  
   // Preparar todas las preguntas
   const vsQuestions = poll.vs_questions || [];
   const initialOptions = poll.options || [];
