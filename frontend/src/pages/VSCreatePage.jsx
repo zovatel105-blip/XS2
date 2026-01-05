@@ -145,10 +145,14 @@ const VSCreatePage = () => {
         uploadedQuestions.push({ options: uploadedOptions });
       }
       
-      // Send VS data with uploaded image URLs (not base64)
-      const vsData = { questions: uploadedQuestions };
+      // Send VS data with uploaded image URLs (not base64) and creator country
+      const vsData = { 
+        questions: uploadedQuestions,
+        creator_country: creatorCountry  // País detectado por IP
+      };
       
       console.log('📤 Enviando VS data:', JSON.stringify(vsData, null, 2));
+      console.log('🌍 País del creador:', creatorCountry);
       console.log('Token:', token ? 'presente' : 'ausente');
       console.log('Backend URL:', backendUrl);
       
