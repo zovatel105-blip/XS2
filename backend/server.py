@@ -10087,6 +10087,7 @@ class VSQuestion(BaseModel):
 
 class VSExperienceCreate(BaseModel):
     questions: List[VSQuestion]
+    creator_country: Optional[str] = None  # País del creador detectado por IP
 
 class VSVote(BaseModel):
     question_id: str
