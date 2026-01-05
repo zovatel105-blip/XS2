@@ -92,6 +92,7 @@ const QuestionSlide = ({
         const percentage = showResults ? getPercentage(option.id) : 0;
         const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
         const bgColor = getCountryColor(option.text, index);
+        const isTop = index === 0;
         
         return (
           <button
@@ -100,7 +101,6 @@ const QuestionSlide = ({
             disabled={showResults}
             className={cn(
               "flex-1 relative overflow-hidden transition-all duration-300",
-              "flex flex-col items-center justify-center",
               !imageUrl && bgColor,
               isSelected && "ring-4 ring-white ring-inset"
             )}
@@ -116,16 +116,14 @@ const QuestionSlide = ({
               />
             )}
             
-            {/* Overlay oscuro para mejor legibilidad del texto */}
-            {imageUrl && (
-              <div className="absolute inset-0 bg-black/30" />
-            )}
-            
-            {/* Contenido centrado */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
+            {/* Contenido - posicionado arriba o abajo según la opción */}
+            <div className={cn(
+              "absolute left-0 right-0 z-10 flex flex-col items-center px-4",
+              isTop ? "bottom-4" : "top-4"
+            )}>
               <h2 className={cn(
                 "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
-                "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center px-4",
+                "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center",
                 "[text-shadow:_2px_2px_0_#000,_-2px_-2px_0_#000,_2px_-2px_0_#000,_-2px_2px_0_#000]",
                 isSelected && "scale-110"
               )}>
@@ -133,7 +131,7 @@ const QuestionSlide = ({
               </h2>
               
               {showResults && (
-                <div className="mt-2 animate-in fade-in zoom-in">
+                <div className="mt-1 animate-in fade-in zoom-in">
                   <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {percentage}%
                   </span>
