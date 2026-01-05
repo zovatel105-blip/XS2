@@ -203,14 +203,14 @@ const QuestionSlide = ({
         );
       })}
       
-      {/* Línea divisora con color del país del creador */}
+      {/* Línea divisora con 2 colores del país del creador */}
       {(() => {
-        const countryColor = getCountryPrimaryColor(creatorCountry, 0);
+        const colors = getCountryColors(creatorCountry);
         return (
           <div 
             className="absolute top-1/2 left-0 right-0 h-1.5 z-10 transform -translate-y-1/2"
             style={{
-              background: countryColor
+              background: `linear-gradient(90deg, ${colors.primary} 50%, ${colors.secondary} 50%)`
             }}
           />
         );
