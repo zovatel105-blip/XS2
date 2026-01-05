@@ -124,7 +124,8 @@ const QuestionSlide = ({
   onVote, 
   selectedOption, 
   showResults,
-  creatorCountry  // País del creador para colores
+  creatorCountry,
+  highlightedOption  // Opción resaltada por la voz (0 o 1)
 }) => {
   const options = question.options || [];
 
@@ -141,6 +142,7 @@ const QuestionSlide = ({
     <div className="w-full h-full flex flex-col">
       {options.slice(0, 2).map((option, index) => {
         const isSelected = selectedOption === option.id;
+        const isHighlighted = highlightedOption === index;
         const percentage = showResults ? getPercentage(option.id) : 0;
         const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
         const bgColor = getCountryColor(option.text, index);
@@ -154,9 +156,15 @@ const QuestionSlide = ({
             className={cn(
               "flex-1 relative overflow-hidden transition-all duration-300",
               !imageUrl && bgColor,
-              isSelected && "ring-4 ring-white ring-inset"
+              isSelected && "ring-4 ring-white ring-inset",
+              isHighlighted && !isSelected && "ring-4 ring-yellow-400 ring-inset scale-[1.02]"
             )}
           >
+            {/* Overlay de resaltado por voz */}
+            {isHighlighted && !isSelected && (
+              <div className="absolute inset-0 bg-yellow-400/20 z-5 animate-pulse" />
+            )}
+            
             {/* Imagen de fondo completo */}
             {imageUrl && (
               <img 
