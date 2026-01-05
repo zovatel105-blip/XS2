@@ -259,17 +259,15 @@ const VSLayout = ({
             const imageUrl = option.media?.url || option.media?.thumbnail || option.media_url || option.thumbnail_url || option.image;
             const bgColor = getCountryColor(option.text, index);
             return (
-              <div key={option.id} className={cn("flex-1 relative overflow-hidden", bgColor)}>
+              <div key={option.id} className={cn("flex-1 relative overflow-hidden", !imageUrl && bgColor)}>
                 {imageUrl && (
-                  <div className="absolute inset-0 flex items-center justify-center p-2">
-                    <img 
-                      src={imageUrl} 
-                      alt="" 
-                      loading="lazy"
-                      decoding="async"
-                      className="max-w-[80%] max-h-[80%] object-contain rounded-xl shadow-lg" 
-                    />
-                  </div>
+                  <img 
+                    src={imageUrl} 
+                    alt="" 
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover" 
+                  />
                 )}
               </div>
             );
