@@ -169,15 +169,14 @@ const QuestionSlide = ({
         );
       })}
       
-      {/* Línea divisora con colores en diagonal */}
+      {/* Línea divisora con color del país del creador */}
       {(() => {
-        const topColor = getCountryPrimaryColor(options[0]?.text, 0);
-        const bottomColor = getCountryPrimaryColor(options[1]?.text, 1);
+        const countryColor = getCountryPrimaryColor(creatorCountry, 0);
         return (
           <div 
             className="absolute top-1/2 left-0 right-0 h-1.5 z-10 transform -translate-y-1/2"
             style={{
-              background: `linear-gradient(90deg, ${topColor} 0%, ${topColor} 50%, ${bottomColor} 50%, ${bottomColor} 100%)`
+              background: countryColor
             }}
           />
         );
