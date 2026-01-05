@@ -6225,6 +6225,7 @@ async def get_following_polls(
             # VS Experience fields
             vs_id=poll_data.get("vs_id"),
             vs_questions=poll_data.get("vs_questions", []),
+            creator_country=poll_data.get("creator_country"),
             created_at=poll_data["created_at"],
             time_ago=calculate_time_ago(poll_data["created_at"]),
             # Post settings
