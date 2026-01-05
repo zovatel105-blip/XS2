@@ -169,8 +169,19 @@ const QuestionSlide = ({
         );
       })}
       
-      {/* Línea divisora */}
-      <div className="absolute top-1/2 left-0 right-0 h-1 bg-black z-10 transform -translate-y-1/2" />
+      {/* Línea divisora con colores en diagonal */}
+      {(() => {
+        const topColor = getCountryPrimaryColor(options[0]?.text, 0);
+        const bottomColor = getCountryPrimaryColor(options[1]?.text, 1);
+        return (
+          <div 
+            className="absolute top-1/2 left-0 right-0 h-1.5 z-10 transform -translate-y-1/2"
+            style={{
+              background: `linear-gradient(90deg, ${topColor} 0%, ${topColor} 50%, ${bottomColor} 50%, ${bottomColor} 100%)`
+            }}
+          />
+        );
+      })()}
     </div>
   );
 };
