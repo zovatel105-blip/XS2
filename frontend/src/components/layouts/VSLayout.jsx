@@ -152,24 +152,6 @@ const QuestionSlide = ({
           </button>
         );
       })}
-                    isSelected && "scale-110"
-                  )}>
-                    {option.text || `Opción ${index + 1}`}
-                  </h2>
-                  
-                  {showResults && (
-                    <div className="mt-1 animate-in fade-in zoom-in">
-                      <span className="text-4xl md:text-5xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                        {percentage}%
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </button>
-        );
-      })}
       
       {/* Línea divisora */}
       <div className="absolute top-1/2 left-0 right-0 h-1 bg-black z-10 transform -translate-y-1/2" />
