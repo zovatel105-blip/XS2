@@ -353,6 +353,11 @@ const VSLayout = ({
   const handleVote = (optionId) => {
     if (hasVoted) return;
     
+    // Obtener la opción seleccionada para la voz
+    const options = currentQuestion?.options || [];
+    const selectedOption = options.find(opt => opt.id === optionId);
+    const otherOption = options.find(opt => opt.id !== optionId);
+    
     setSelectedOptions(prev => ({
       ...prev,
       [currentQuestionId]: optionId
@@ -362,13 +367,34 @@ const VSLayout = ({
       [currentQuestionId]: true
     }));
     
+    // Anunciar la elección con voz
+    if (selectedOption) {
+      const totalVotes = options.reduce((sum, opt) => sum + (opt.votes || 0), 0);
+      const selectedVotes = selectedOption.votes || 0;
+      const otherVotes = otherOption?.votes || 0;
+      
+      // Calcular porcentajes (simulados si no hay votos reales)
+      let selectedPercent, otherPercent;
+      if (totalVotes === 0) {
+        selectedPercent = 65;
+        otherPercent = 35;
+      } else {
+        selectedPercent = Math.round(((selectedVotes + 1) / (totalVotes + 1)) * 100);
+        otherPercent = 100 - selectedPercent;
+      }
+      
+      setTimeout(() => {
+        speak(`Elegiste ${selectedOption.text}. ${selectedPercent} por ciento contra ${otherPercent} por ciento.`, 1.1);
+      }, 300);
+    }
+    
     if (onVote) {
       onVote(poll.id, optionId);
     }
 
     // Auto-avanzar después de votar
     if (currentIndex < totalQuestions - 1) {
-      setTimeout(() => goToNext(), 1500);
+      setTimeout(() => goToNext(), 2500); // Aumentado para dar tiempo a la voz
     }
   };
 
