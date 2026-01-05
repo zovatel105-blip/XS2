@@ -90,7 +90,8 @@ const QuestionSlide = ({
   isActive, 
   onVote, 
   selectedOption, 
-  showResults 
+  showResults,
+  creatorCountry  // País del creador para colores
 }) => {
   const options = question.options || [];
 
