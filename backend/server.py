@@ -5680,6 +5680,7 @@ async def get_polls(
             # VS Experience fields - for multi-question VS polls
             vs_id=poll_data.get("vs_id"),
             vs_questions=poll_data.get("vs_questions", []),
+            creator_country=poll_data.get("creator_country"),  # Country where VS was created
             created_at=poll_data["created_at"],
             time_ago=calculate_time_ago(poll_data["created_at"]),
             # Post settings
