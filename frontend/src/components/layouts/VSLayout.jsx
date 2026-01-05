@@ -340,19 +340,18 @@ const VSLayout = ({
         ))}
       </div>
       
-      {/* Círculo central: VS o Temporizador con colores en el anillo */}
+      {/* Círculo central: VS o Temporizador con colores del país del creador */}
       {(() => {
-        const options = currentQuestion?.options || [];
-        const topColor = getCountryPrimaryColor(options[0]?.text, 0);
-        const bottomColor = getCountryPrimaryColor(options[1]?.text, 1);
+        // Usar el país del creador para los colores
+        const countryColor = getCountryPrimaryColor(creatorCountry, 0);
         
         return (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-            {/* Anillo exterior con colores en diagonal */}
+            {/* Anillo exterior con color del país */}
             <div 
               className="w-16 h-16 md:w-20 md:h-20 rounded-full p-1 shadow-2xl"
               style={{
-                background: `linear-gradient(135deg, ${topColor} 50%, ${bottomColor} 50%)`
+                background: countryColor
               }}
             >
               {/* Círculo interior negro */}
