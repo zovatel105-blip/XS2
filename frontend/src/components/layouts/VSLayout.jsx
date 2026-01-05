@@ -2,67 +2,85 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
-// Colores de banderas por país
+// Colores de banderas por país - con color principal para el círculo VS
 const countryColors = {
-  'españa': 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600',
-  'spain': 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600',
-  'francia': 'bg-gradient-to-r from-blue-600 via-white to-red-600',
-  'france': 'bg-gradient-to-r from-blue-600 via-white to-red-600',
-  'italia': 'bg-gradient-to-r from-green-600 via-white to-red-600',
-  'italy': 'bg-gradient-to-r from-green-600 via-white to-red-600',
-  'alemania': 'bg-gradient-to-b from-black via-red-600 to-yellow-400',
-  'germany': 'bg-gradient-to-b from-black via-red-600 to-yellow-400',
-  'portugal': 'bg-gradient-to-r from-green-600 to-red-600',
-  'uk': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
-  'inglaterra': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
-  'england': 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900',
-  'holanda': 'bg-gradient-to-b from-red-600 via-white to-blue-600',
-  'netherlands': 'bg-gradient-to-b from-red-600 via-white to-blue-600',
-  'bélgica': 'bg-gradient-to-r from-black via-yellow-400 to-red-600',
-  'belgium': 'bg-gradient-to-r from-black via-yellow-400 to-red-600',
-  'usa': 'bg-gradient-to-b from-blue-900 via-white to-red-600',
-  'estados unidos': 'bg-gradient-to-b from-blue-900 via-white to-red-600',
-  'méxico': 'bg-gradient-to-r from-green-600 via-white to-red-600',
-  'mexico': 'bg-gradient-to-r from-green-600 via-white to-red-600',
-  'brasil': 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500',
-  'brazil': 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500',
-  'argentina': 'bg-gradient-to-b from-sky-400 via-white to-sky-400',
-  'colombia': 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600',
-  'chile': 'bg-gradient-to-b from-white to-red-600',
-  'perú': 'bg-gradient-to-r from-red-600 via-white to-red-600',
-  'peru': 'bg-gradient-to-r from-red-600 via-white to-red-600',
-  'venezuela': 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600',
-  'japón': 'bg-white',
-  'japan': 'bg-white',
-  'china': 'bg-red-600',
-  'corea': 'bg-gradient-to-b from-white to-red-600',
-  'korea': 'bg-gradient-to-b from-white to-red-600',
-  'india': 'bg-gradient-to-b from-orange-500 via-white to-green-600',
-  'rusia': 'bg-gradient-to-b from-white via-blue-600 to-red-600',
-  'russia': 'bg-gradient-to-b from-white via-blue-600 to-red-600',
-  'australia': 'bg-blue-900',
-  'canadá': 'bg-gradient-to-r from-red-600 via-white to-red-600',
-  'canada': 'bg-gradient-to-r from-red-600 via-white to-red-600',
+  'españa': { bg: 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600', primary: '#dc2626' },
+  'spain': { bg: 'bg-gradient-to-b from-red-600 via-yellow-400 to-red-600', primary: '#dc2626' },
+  'francia': { bg: 'bg-gradient-to-r from-blue-600 via-white to-red-600', primary: '#2563eb' },
+  'france': { bg: 'bg-gradient-to-r from-blue-600 via-white to-red-600', primary: '#2563eb' },
+  'italia': { bg: 'bg-gradient-to-r from-green-600 via-white to-red-600', primary: '#16a34a' },
+  'italy': { bg: 'bg-gradient-to-r from-green-600 via-white to-red-600', primary: '#16a34a' },
+  'alemania': { bg: 'bg-gradient-to-b from-black via-red-600 to-yellow-400', primary: '#000000' },
+  'germany': { bg: 'bg-gradient-to-b from-black via-red-600 to-yellow-400', primary: '#000000' },
+  'portugal': { bg: 'bg-gradient-to-r from-green-600 to-red-600', primary: '#16a34a' },
+  'uk': { bg: 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900', primary: '#1e3a8a' },
+  'inglaterra': { bg: 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900', primary: '#1e3a8a' },
+  'england': { bg: 'bg-gradient-to-r from-blue-900 via-red-600 to-blue-900', primary: '#1e3a8a' },
+  'holanda': { bg: 'bg-gradient-to-b from-red-600 via-white to-blue-600', primary: '#dc2626' },
+  'netherlands': { bg: 'bg-gradient-to-b from-red-600 via-white to-blue-600', primary: '#dc2626' },
+  'bélgica': { bg: 'bg-gradient-to-r from-black via-yellow-400 to-red-600', primary: '#000000' },
+  'belgium': { bg: 'bg-gradient-to-r from-black via-yellow-400 to-red-600', primary: '#000000' },
+  'usa': { bg: 'bg-gradient-to-b from-blue-900 via-white to-red-600', primary: '#1e3a8a' },
+  'estados unidos': { bg: 'bg-gradient-to-b from-blue-900 via-white to-red-600', primary: '#1e3a8a' },
+  'méxico': { bg: 'bg-gradient-to-r from-green-600 via-white to-red-600', primary: '#16a34a' },
+  'mexico': { bg: 'bg-gradient-to-r from-green-600 via-white to-red-600', primary: '#16a34a' },
+  'brasil': { bg: 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500', primary: '#22c55e' },
+  'brazil': { bg: 'bg-gradient-to-b from-green-500 via-yellow-400 to-green-500', primary: '#22c55e' },
+  'argentina': { bg: 'bg-gradient-to-b from-sky-400 via-white to-sky-400', primary: '#38bdf8' },
+  'colombia': { bg: 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600', primary: '#facc15' },
+  'chile': { bg: 'bg-gradient-to-b from-white to-red-600', primary: '#dc2626' },
+  'perú': { bg: 'bg-gradient-to-r from-red-600 via-white to-red-600', primary: '#dc2626' },
+  'peru': { bg: 'bg-gradient-to-r from-red-600 via-white to-red-600', primary: '#dc2626' },
+  'venezuela': { bg: 'bg-gradient-to-b from-yellow-400 via-blue-600 to-red-600', primary: '#facc15' },
+  'japón': { bg: 'bg-white', primary: '#ffffff' },
+  'japan': { bg: 'bg-white', primary: '#ffffff' },
+  'china': { bg: 'bg-red-600', primary: '#dc2626' },
+  'corea': { bg: 'bg-gradient-to-b from-white to-red-600', primary: '#ffffff' },
+  'korea': { bg: 'bg-gradient-to-b from-white to-red-600', primary: '#ffffff' },
+  'india': { bg: 'bg-gradient-to-b from-orange-500 via-white to-green-600', primary: '#f97316' },
+  'rusia': { bg: 'bg-gradient-to-b from-white via-blue-600 to-red-600', primary: '#ffffff' },
+  'russia': { bg: 'bg-gradient-to-b from-white via-blue-600 to-red-600', primary: '#ffffff' },
+  'australia': { bg: 'bg-blue-900', primary: '#1e3a8a' },
+  'canadá': { bg: 'bg-gradient-to-r from-red-600 via-white to-red-600', primary: '#dc2626' },
+  'canada': { bg: 'bg-gradient-to-r from-red-600 via-white to-red-600', primary: '#dc2626' },
+};
+
+// Colores por defecto
+const defaultColors = {
+  top: { bg: 'bg-gradient-to-b from-amber-400 to-orange-500', primary: '#f97316' },
+  bottom: { bg: 'bg-gradient-to-b from-red-500 to-red-700', primary: '#dc2626' }
 };
 
 const getCountryColor = (text, index) => {
   if (!text) {
-    return index === 0 
-      ? 'bg-gradient-to-b from-amber-400 to-orange-500' 
-      : 'bg-gradient-to-b from-red-500 to-red-700';
+    return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
   }
   
   const lowerText = text.toLowerCase();
   
-  for (const [country, color] of Object.entries(countryColors)) {
+  for (const [country, colors] of Object.entries(countryColors)) {
     if (lowerText.includes(country)) {
-      return color;
+      return colors.bg;
     }
   }
   
-  return index === 0 
-    ? 'bg-gradient-to-b from-amber-400 to-orange-500' 
-    : 'bg-gradient-to-b from-red-500 to-red-700';
+  return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
+};
+
+const getCountryPrimaryColor = (text, index) => {
+  if (!text) {
+    return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
+  }
+  
+  const lowerText = text.toLowerCase();
+  
+  for (const [country, colors] of Object.entries(countryColors)) {
+    if (lowerText.includes(country)) {
+      return colors.primary;
+    }
+  }
+  
+  return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
 };
 
 // Componente para una sola pregunta
