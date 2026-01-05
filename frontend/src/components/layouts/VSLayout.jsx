@@ -335,6 +335,7 @@ const VSLayout = ({
               onVote={handleVote}
               selectedOption={selectedOptions[question.id]}
               showResults={showResults[question.id]}
+              creatorCountry={creatorCountry}
             />
           </div>
         ))}
