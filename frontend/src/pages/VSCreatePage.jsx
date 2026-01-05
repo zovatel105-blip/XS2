@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Plus, Trash2, Image, Play, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -11,6 +11,24 @@ const VSCreatePage = () => {
   const { token } = useAuth();
   const fileInputRefs = useRef([]);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [creatorCountry, setCreatorCountry] = useState(null);
+  
+  // Detectar país del usuario al cargar
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        const response = await fetch(`${AppConfig.BACKEND_URL}/api/geolocation`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('🌍 País detectado:', data.country);
+          setCreatorCountry(data.country);
+        }
+      } catch (error) {
+        console.error('Error detecting country:', error);
+      }
+    };
+    detectCountry();
+  }, []);
   
   const [questions, setQuestions] = useState([
     {
