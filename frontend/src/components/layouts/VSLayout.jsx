@@ -326,7 +326,7 @@ const VSLayout = ({
         ))}
       </div>
       
-      {/* Círculo central: VS o Temporizador con colores de cada opción */}
+      {/* Círculo central: VS o Temporizador con colores de cada opción en diagonal */}
       {(() => {
         const options = currentQuestion?.options || [];
         const topColor = getCountryPrimaryColor(options[0]?.text, 0);
@@ -337,18 +337,11 @@ const VSLayout = ({
             <div className={cn(
               "w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center",
               "shadow-2xl border-4 border-white relative overflow-hidden"
-            )}>
-              {/* Mitad superior con color de opción 1 */}
-              <div 
-                className="absolute top-0 left-0 right-0 h-1/2"
-                style={{ backgroundColor: topColor }}
-              />
-              {/* Mitad inferior con color de opción 2 */}
-              <div 
-                className="absolute bottom-0 left-0 right-0 h-1/2"
-                style={{ backgroundColor: bottomColor }}
-              />
-              
+            )}
+            style={{
+              background: `linear-gradient(135deg, ${topColor} 50%, ${bottomColor} 50%)`
+            }}
+            >
               {!showVS && !hasVoted && timeLeft > 0 && (
                 <svg className="absolute inset-0 w-full h-full -rotate-90 z-10">
                   <circle cx="50%" cy="50%" r="45%" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" />
