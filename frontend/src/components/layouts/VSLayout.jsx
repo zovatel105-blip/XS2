@@ -360,12 +360,13 @@ const VSLayout = ({
   // Avanzar al siguiente slide
   const goToNext = useCallback(() => {
     if (currentIndex < totalQuestions - 1) {
+      stopVoice(); // Detener voz al cambiar de pantalla
       setCurrentIndex(prev => prev + 1);
       setTimeLeft(5);
       setShowVS(true);
-      hasSpokenRef.current = false; // Reset para la siguiente pregunta
+      hasStartedVoiceRef.current = false;
     }
-  }, [currentIndex, totalQuestions]);
+  }, [currentIndex, totalQuestions, stopVoice]);
 
   // Mostrar VS por 1.5 segundos
   useEffect(() => {
