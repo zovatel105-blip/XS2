@@ -227,6 +227,8 @@ const VSLayout = ({
 }) => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
+  const hasSpokenRef = useRef(false);
+  const speechSynthRef = useRef(null);
   
   // País del creador para los colores
   const creatorCountry = poll.creator_country;
@@ -252,12 +254,70 @@ const VSLayout = ({
   const currentQuestionId = currentQuestion?.id;
   const hasVoted = !!selectedOptions[currentQuestionId];
 
+  // Función para hablar con Text-to-Speech
+  const speak = useCallback((text, rate = 1.0) => {
+    if (isThumbnail || !window.speechSynthesis) return;
+    
+    // Cancelar cualquier speech anterior
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-ES'; // Español
+    utterance.rate = rate;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    // Buscar voz en español
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoice = voices.find(voice => 
+      voice.lang.startsWith('es') || voice.name.includes('Spanish')
+    );
+    if (spanishVoice) {
+      utterance.voice = spanishVoice;
+    }
+    
+    speechSynthRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  }, [isThumbnail]);
+
+  // Detener speech cuando el componente se desmonta o cambia
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  // Guía por voz cuando se activa el VS
+  useEffect(() => {
+    if (!isActive || isThumbnail || hasSpokenRef.current) return;
+    
+    const options = currentQuestion?.options || [];
+    const optionA = options[0]?.text || 'Opción A';
+    const optionB = options[1]?.text || 'Opción B';
+    
+    // Esperar un momento y luego hablar
+    const timer = setTimeout(() => {
+      speak(`¿Qué prefieres? ${optionA}, o, ${optionB}`);
+      hasSpokenRef.current = true;
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [isActive, isThumbnail, currentQuestion, speak]);
+
+  // Resetear el flag cuando cambia la pregunta
+  useEffect(() => {
+    hasSpokenRef.current = false;
+  }, [currentIndex]);
+
   // Avanzar al siguiente slide
   const goToNext = useCallback(() => {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(prev => prev + 1);
       setTimeLeft(5);
       setShowVS(true);
+      hasSpokenRef.current = false; // Reset para la siguiente pregunta
     }
   }, [currentIndex, totalQuestions]);
 
