@@ -1500,6 +1500,75 @@ async def get_user_geolocation(request: Request):
             "ip": "unknown"
         }
 
+# ============= ELEVENLABS TTS ENDPOINTS =============
+
+class TTSRequest(BaseModel):
+    text: str
+    
+# Initialize ElevenLabs client
+elevenlabs_client = None
+ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
+
+if ELEVENLABS_AVAILABLE:
+    elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY")
+    if elevenlabs_api_key:
+        try:
+            elevenlabs_client = ElevenLabs(api_key=elevenlabs_api_key)
+            logger.info("ElevenLabs client initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize ElevenLabs client: {e}")
+
+@api_router.post("/tts/generate")
+async def generate_tts_audio(request: TTSRequest):
+    """
+    Generate Text-to-Speech audio using ElevenLabs.
+    Returns MP3 audio that can be played in the browser.
+    """
+    if not ELEVENLABS_AVAILABLE or not elevenlabs_client:
+        raise HTTPException(
+            status_code=503, 
+            detail="Text-to-Speech service not available"
+        )
+    
+    if not request.text or len(request.text) == 0:
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+    
+    # Limit text length for short clips (3-4 seconds)
+    if len(request.text) > 150:
+        raise HTTPException(
+            status_code=400, 
+            detail="Text too long. Maximum 150 characters for short clips."
+        )
+    
+    try:
+        # Generate speech using ElevenLabs API
+        audio_generator = elevenlabs_client.generate(
+            text=request.text,
+            voice=ELEVENLABS_VOICE_ID,
+            model="eleven_multilingual_v2",
+            output_format="mp3_22050_32"
+        )
+        
+        # Convert generator to bytes
+        audio_bytes = b"".join(audio_generator)
+        
+        # Return audio as streaming response
+        return StreamingResponse(
+            BytesIO(audio_bytes),
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "inline; filename=tts_audio.mp3",
+                "Cache-Control": "no-cache"
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"TTS generation error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate audio: {str(e)}"
+        )
+
 # =============  AUTHENTICATION ENDPOINTS =============
 
 @api_router.post("/auth/register", response_model=Token)
