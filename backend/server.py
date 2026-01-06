@@ -1524,10 +1524,12 @@ async def generate_tts_audio(request: TTSRequest):
     Generate Text-to-Speech audio using ElevenLabs.
     Returns MP3 audio that can be played in the browser.
     """
-    if not ELEVENLABS_AVAILABLE or not elevenlabs_client:
+    elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY")
+    
+    if not elevenlabs_api_key:
         raise HTTPException(
             status_code=503, 
-            detail="Text-to-Speech service not available"
+            detail="Text-to-Speech service not available - no API key"
         )
     
     if not request.text or len(request.text) == 0:
@@ -1541,27 +1543,54 @@ async def generate_tts_audio(request: TTSRequest):
         )
     
     try:
-        # Generate speech using ElevenLabs API (v2 SDK)
-        audio_generator = elevenlabs_client.text_to_speech.convert(
-            text=request.text,
-            voice_id=ELEVENLABS_VOICE_ID,
-            model_id="eleven_multilingual_v2",
-            output_format="mp3_22050_32"
-        )
+        # Use ElevenLabs REST API directly
+        voice_id = os.getenv("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
+        url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
         
-        # Convert generator to bytes
-        audio_bytes = b"".join(audio_generator)
+        headers = {
+            "xi-api-key": elevenlabs_api_key,
+            "Content-Type": "application/json",
+            "Accept": "audio/mpeg"
+        }
         
-        # Return audio as streaming response
-        return StreamingResponse(
-            BytesIO(audio_bytes),
-            media_type="audio/mpeg",
-            headers={
-                "Content-Disposition": "inline; filename=tts_audio.mp3",
-                "Cache-Control": "no-cache"
+        data = {
+            "text": request.text,
+            "model_id": "eleven_multilingual_v2",
+            "voice_settings": {
+                "stability": 0.5,
+                "similarity_boost": 0.75,
+                "style": 0.0,
+                "use_speaker_boost": True
             }
-        )
+        }
         
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                logger.error(f"ElevenLabs API error: {response.status_code} - {response.text}")
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail=f"ElevenLabs API error: {response.text}"
+                )
+            
+            # Return audio as streaming response
+            return StreamingResponse(
+                BytesIO(response.content),
+                media_type="audio/mpeg",
+                headers={
+                    "Content-Disposition": "inline; filename=tts_audio.mp3",
+                    "Cache-Control": "no-cache"
+                }
+            )
+        
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"TTS generation error: {e}")
         raise HTTPException(
