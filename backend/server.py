@@ -1541,11 +1541,11 @@ async def generate_tts_audio(request: TTSRequest):
         )
     
     try:
-        # Generate speech using ElevenLabs API
-        audio_generator = elevenlabs_client.generate(
+        # Generate speech using ElevenLabs API (v2 SDK)
+        audio_generator = elevenlabs_client.text_to_speech.convert(
             text=request.text,
-            voice=ELEVENLABS_VOICE_ID,
-            model="eleven_multilingual_v2",
+            voice_id=ELEVENLABS_VOICE_ID,
+            model_id="eleven_multilingual_v2",
             output_format="mp3_22050_32"
         )
         
