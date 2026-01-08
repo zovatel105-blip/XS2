@@ -179,7 +179,7 @@ const QuestionSlide = ({
             {/* Contenido - posicionado arriba o abajo según la opción */}
             <div className={cn(
               "absolute left-0 right-0 z-10 flex flex-col items-center px-4",
-              isTop ? "bottom-4" : "top-4"
+              isTop ? "bottom-16 md:bottom-20" : "top-16 md:top-20"
             )}>
               <h2 className={cn(
                 "text-white font-black text-2xl md:text-3xl uppercase tracking-wide",
