@@ -311,26 +311,32 @@ const VSLayout = ({
     const timers = [];
     
     // Secuencia: 
-    // 0ms: Resaltar opción A + hablar
-    // 1500ms: Resaltar opción B + hablar  
-    // 3000ms: Quitar resaltado
+    // 0ms: Decir "¿Qué prefieres?"
+    // 800ms: Resaltar opción A + hablar
+    // 2300ms: Resaltar opción B + hablar  
+    // 3800ms: Quitar resaltado
+    
+    // Paso 0: Decir "¿Qué prefieres?"
+    timers.push(setTimeout(() => {
+      speak('¿Qué prefieres?', 1.2);
+    }, 0));
     
     // Paso 1: Resaltar y hablar opción A
     timers.push(setTimeout(() => {
       setHighlightedOption(0);
       speak(optionA, 1.3);
-    }, 0));
+    }, 800));
     
     // Paso 2: Resaltar y hablar opción B
     timers.push(setTimeout(() => {
       setHighlightedOption(1);
       speak(optionB, 1.3);
-    }, 1500));
+    }, 2300));
     
     // Paso 3: Quitar resaltado
     timers.push(setTimeout(() => {
       setHighlightedOption(null);
-    }, 3000));
+    }, 3800));
     
     voiceSequenceRef.current = timers;
   }, [isThumbnail, hasVoted, isActive, currentQuestion, speak, stopVoice]);
