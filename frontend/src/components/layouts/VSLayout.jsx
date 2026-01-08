@@ -282,14 +282,27 @@ const VSLayout = ({
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'es-ES';
     utterance.rate = rate;
-    utterance.pitch = 1.0;
+    utterance.pitch = 0.9; // Pitch más bajo para voz masculina
     utterance.volume = 1.0;
     
-    // Buscar voz en español
+    // Buscar voz masculina en español
     const voices = window.speechSynthesis.getVoices();
-    const spanishVoice = voices.find(voice => 
+    const maleSpanishVoice = voices.find(voice => 
+      (voice.lang.startsWith('es') || voice.name.includes('Spanish')) &&
+      (voice.name.toLowerCase().includes('male') || 
+       voice.name.includes('Jorge') || 
+       voice.name.includes('Diego') ||
+       voice.name.includes('Pablo') ||
+       voice.name.includes('Andrés') ||
+       voice.name.includes('Juan') ||
+       voice.name.includes('Google español'))
+    );
+    
+    // Si no encuentra masculina, buscar cualquier voz en español
+    const spanishVoice = maleSpanishVoice || voices.find(voice => 
       voice.lang.startsWith('es') || voice.name.includes('Spanish')
     );
+    
     if (spanishVoice) {
       utterance.voice = spanishVoice;
     }
