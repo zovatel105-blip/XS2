@@ -310,36 +310,36 @@ const VSLayout = ({
     
     const timers = [];
     
-    // Secuencia: 
-    // 0ms: Decir "¿Qué prefieres?"
-    // 800ms: Resaltar opción A + hablar
-    // 2300ms: Resaltar opción B + hablar  
-    // 3800ms: Quitar resaltado
+    // Solo decir "¿Qué prefieres?" en la primera pregunta
+    const isFirstQuestion = currentIndex === 0;
+    const introDelay = isFirstQuestion ? 800 : 0;
     
-    // Paso 0: Decir "¿Qué prefieres?"
-    timers.push(setTimeout(() => {
-      speak('¿Qué prefieres?', 1.2);
-    }, 0));
+    // Paso 0: Decir "¿Qué prefieres?" solo en la primera pregunta
+    if (isFirstQuestion) {
+      timers.push(setTimeout(() => {
+        speak('¿Qué prefieres?', 1.2);
+      }, 0));
+    }
     
     // Paso 1: Resaltar y hablar opción A
     timers.push(setTimeout(() => {
       setHighlightedOption(0);
       speak(optionA, 1.3);
-    }, 800));
+    }, introDelay));
     
     // Paso 2: Resaltar y hablar opción B
     timers.push(setTimeout(() => {
       setHighlightedOption(1);
       speak(optionB, 1.3);
-    }, 2300));
+    }, introDelay + 1500));
     
     // Paso 3: Quitar resaltado
     timers.push(setTimeout(() => {
       setHighlightedOption(null);
-    }, 3800));
+    }, introDelay + 3000));
     
     voiceSequenceRef.current = timers;
-  }, [isThumbnail, hasVoted, isActive, currentQuestion, speak, stopVoice]);
+  }, [isThumbnail, hasVoted, isActive, currentQuestion, currentIndex, speak, stopVoice]);
 
   // Detener speech cuando el componente se desmonta
   useEffect(() => {
