@@ -1,76 +1,111 @@
 /**
  * VoiceService - Servicio de Text-to-Speech con detección automática de idioma
+ * y preferencia de tipo de voz consistente entre idiomas
  * 
  * Características:
  * - Detección automática del idioma del texto
+ * - Preferencia de tipo de voz (femenina, masculina) que se mantiene en todos los idiomas
  * - Selección inteligente de la mejor voz disponible
  * - Soporte para múltiples idiomas y acentos
  * - Fallback automático si no hay voz disponible
  */
 
+// Tipos de voz disponibles
+export const VOICE_TYPES = {
+  FEMALE: 'female',
+  MALE: 'male',
+  NEUTRAL: 'neutral', // Cualquier voz disponible
+};
+
 // Mapeo de idiomas a códigos de voz
 const LANGUAGE_CODES = {
   // Español
-  es: { code: 'es', variants: ['es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-CL', 'es-PE', 'es-VE', 'es-US'] },
+  es: { code: 'es', name: 'Español', variants: ['es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-CL', 'es-PE', 'es-VE', 'es-US'] },
   // Inglés
-  en: { code: 'en', variants: ['en-US', 'en-GB', 'en-AU', 'en-CA', 'en-IN', 'en-NZ', 'en-ZA'] },
+  en: { code: 'en', name: 'English', variants: ['en-US', 'en-GB', 'en-AU', 'en-CA', 'en-IN', 'en-NZ', 'en-ZA'] },
   // Portugués
-  pt: { code: 'pt', variants: ['pt-BR', 'pt-PT'] },
+  pt: { code: 'pt', name: 'Português', variants: ['pt-BR', 'pt-PT'] },
   // Francés
-  fr: { code: 'fr', variants: ['fr-FR', 'fr-CA', 'fr-BE', 'fr-CH'] },
+  fr: { code: 'fr', name: 'Français', variants: ['fr-FR', 'fr-CA', 'fr-BE', 'fr-CH'] },
   // Alemán
-  de: { code: 'de', variants: ['de-DE', 'de-AT', 'de-CH'] },
+  de: { code: 'de', name: 'Deutsch', variants: ['de-DE', 'de-AT', 'de-CH'] },
   // Italiano
-  it: { code: 'it', variants: ['it-IT', 'it-CH'] },
+  it: { code: 'it', name: 'Italiano', variants: ['it-IT', 'it-CH'] },
   // Japonés
-  ja: { code: 'ja', variants: ['ja-JP'] },
+  ja: { code: 'ja', name: '日本語', variants: ['ja-JP'] },
   // Coreano
-  ko: { code: 'ko', variants: ['ko-KR'] },
+  ko: { code: 'ko', name: '한국어', variants: ['ko-KR'] },
   // Chino
-  zh: { code: 'zh', variants: ['zh-CN', 'zh-TW', 'zh-HK'] },
+  zh: { code: 'zh', name: '中文', variants: ['zh-CN', 'zh-TW', 'zh-HK'] },
   // Ruso
-  ru: { code: 'ru', variants: ['ru-RU'] },
+  ru: { code: 'ru', name: 'Русский', variants: ['ru-RU'] },
   // Árabe
-  ar: { code: 'ar', variants: ['ar-SA', 'ar-EG', 'ar-AE'] },
+  ar: { code: 'ar', name: 'العربية', variants: ['ar-SA', 'ar-EG', 'ar-AE'] },
   // Hindi
-  hi: { code: 'hi', variants: ['hi-IN'] },
+  hi: { code: 'hi', name: 'हिन्दी', variants: ['hi-IN'] },
   // Holandés
-  nl: { code: 'nl', variants: ['nl-NL', 'nl-BE'] },
+  nl: { code: 'nl', name: 'Nederlands', variants: ['nl-NL', 'nl-BE'] },
   // Polaco
-  pl: { code: 'pl', variants: ['pl-PL'] },
+  pl: { code: 'pl', name: 'Polski', variants: ['pl-PL'] },
   // Turco
-  tr: { code: 'tr', variants: ['tr-TR'] },
+  tr: { code: 'tr', name: 'Türkçe', variants: ['tr-TR'] },
   // Sueco
-  sv: { code: 'sv', variants: ['sv-SE'] },
+  sv: { code: 'sv', name: 'Svenska', variants: ['sv-SE'] },
   // Noruego
-  no: { code: 'no', variants: ['no-NO', 'nb-NO'] },
+  no: { code: 'no', name: 'Norsk', variants: ['no-NO', 'nb-NO'] },
   // Danés
-  da: { code: 'da', variants: ['da-DK'] },
+  da: { code: 'da', name: 'Dansk', variants: ['da-DK'] },
   // Finés
-  fi: { code: 'fi', variants: ['fi-FI'] },
+  fi: { code: 'fi', name: 'Suomi', variants: ['fi-FI'] },
   // Griego
-  el: { code: 'el', variants: ['el-GR'] },
+  el: { code: 'el', name: 'Ελληνικά', variants: ['el-GR'] },
   // Hebreo
-  he: { code: 'he', variants: ['he-IL'] },
+  he: { code: 'he', name: 'עברית', variants: ['he-IL'] },
   // Tailandés
-  th: { code: 'th', variants: ['th-TH'] },
+  th: { code: 'th', name: 'ไทย', variants: ['th-TH'] },
   // Vietnamita
-  vi: { code: 'vi', variants: ['vi-VN'] },
+  vi: { code: 'vi', name: 'Tiếng Việt', variants: ['vi-VN'] },
   // Indonesio
-  id: { code: 'id', variants: ['id-ID'] },
+  id: { code: 'id', name: 'Bahasa Indonesia', variants: ['id-ID'] },
   // Malayo
-  ms: { code: 'ms', variants: ['ms-MY'] },
+  ms: { code: 'ms', name: 'Bahasa Melayu', variants: ['ms-MY'] },
   // Catalán
-  ca: { code: 'ca', variants: ['ca-ES'] },
+  ca: { code: 'ca', name: 'Català', variants: ['ca-ES'] },
   // Gallego
-  gl: { code: 'gl', variants: ['gl-ES'] },
+  gl: { code: 'gl', name: 'Galego', variants: ['gl-ES'] },
   // Euskera
-  eu: { code: 'eu', variants: ['eu-ES'] },
+  eu: { code: 'eu', name: 'Euskara', variants: ['eu-ES'] },
 };
+
+// Patrones para detectar género de voz por nombre
+const FEMALE_VOICE_PATTERNS = [
+  /female/i, /mujer/i, /femenin/i, /femme/i, /frau/i, /donna/i,
+  /samantha/i, /victoria/i, /karen/i, /moira/i, /tessa/i, /fiona/i,
+  /alex/i, /allison/i, /ava/i, /susan/i, /zira/i, /hazel/i,
+  /helena/i, /monica/i, /paulina/i, /sabina/i, /lucia/i, /carmen/i,
+  /conchita/i, /penelope/i, /lupe/i, /mia/i, /nuria/i, /silvia/i,
+  /google.*female/i, /microsoft.*female/i, /apple.*female/i,
+  /siri.*female/i, /cortana/i, /alexa/i,
+  // Nombres comunes femeninos en diferentes idiomas
+  /maria/i, /anna/i, /sofia/i, /emma/i, /olivia/i, /isabella/i,
+  /amelie/i, /chloe/i, /sara/i, /laura/i, /elena/i, /julia/i,
+  /natasha/i, /yuki/i, /mei/i, /kyoko/i, /sora/i,
+];
+
+const MALE_VOICE_PATTERNS = [
+  /male/i, /hombre/i, /masculin/i, /homme/i, /mann/i, /uomo/i,
+  /daniel/i, /thomas/i, /david/i, /jorge/i, /carlos/i, /diego/i,
+  /james/i, /john/i, /mark/i, /tom/i, /alex(?!a)/i,
+  /google.*male/i, /microsoft.*male/i, /apple.*male/i,
+  /siri.*male/i,
+  // Nombres comunes masculinos en diferentes idiomas
+  /miguel/i, /pablo/i, /pedro/i, /luis/i, /antonio/i,
+  /jean/i, /pierre/i, /hans/i, /marco/i, /luca/i,
+  /ivan/i, /dmitri/i, /kenji/i, /takeshi/i, /wang/i,
+];
 
 // Patrones de caracteres para detección de idioma
 const LANGUAGE_PATTERNS = {
-  // Caracteres únicos de idiomas
   ja: /[\u3040-\u309F\u30A0-\u30FF]/,  // Hiragana y Katakana
   ko: /[\uAC00-\uD7AF\u1100-\u11FF]/,  // Hangul
   zh: /[\u4E00-\u9FFF]/,  // Caracteres chinos
@@ -82,24 +117,24 @@ const LANGUAGE_PATTERNS = {
   hi: /[\u0900-\u097F]/,  // Devanagari (Hindi)
 };
 
-// Palabras comunes por idioma para detección más precisa
+// Palabras comunes por idioma para detección
 const COMMON_WORDS = {
-  es: ['el', 'la', 'de', 'que', 'y', 'en', 'un', 'es', 'por', 'con', 'para', 'los', 'del', 'se', 'las', 'una', 'pero', 'más', 'como', 'ya', 'todo', 'esta', 'ser', 'son', 'también', 'fue', 'hay', 'está', 'muy', 'años', 'hasta', 'desde', 'están', 'nosotros', 'ustedes', 'ellos', 'ellas', 'hola', 'gracias', 'bueno', 'qué', 'cómo', 'cuándo', 'dónde', 'por qué', 'opción'],
-  en: ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'option', 'hello', 'thanks', 'good'],
-  pt: ['o', 'a', 'de', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'é', 'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'as', 'dos', 'como', 'mas', 'foi', 'ao', 'ele', 'das', 'tem', 'à', 'seu', 'sua', 'ou', 'ser', 'quando', 'muito', 'há', 'nos', 'já', 'está', 'também', 'só', 'pelo', 'opção', 'olá', 'obrigado'],
-  fr: ['le', 'de', 'un', 'être', 'et', 'à', 'il', 'avoir', 'ne', 'je', 'son', 'que', 'se', 'qui', 'ce', 'dans', 'en', 'du', 'elle', 'au', 'pour', 'pas', 'vous', 'par', 'sur', 'faire', 'plus', 'dire', 'me', 'on', 'mon', 'lui', 'nous', 'comme', 'mais', 'pouvoir', 'avec', 'tout', 'option', 'bonjour', 'merci'],
-  de: ['der', 'die', 'und', 'in', 'den', 'von', 'zu', 'das', 'mit', 'sich', 'des', 'auf', 'für', 'ist', 'im', 'dem', 'nicht', 'ein', 'eine', 'als', 'auch', 'es', 'an', 'er', 'hat', 'aus', 'bei', 'wir', 'nach', 'am', 'sie', 'werden', 'oder', 'option', 'hallo', 'danke'],
-  it: ['di', 'che', 'è', 'e', 'la', 'il', 'un', 'a', 'per', 'in', 'una', 'mi', 'sono', 'ho', 'non', 'ma', 'lo', 'ha', 'le', 'si', 'come', 'con', 'io', 'questo', 'ti', 'da', 'se', 'ci', 'no', 'più', 'del', 'era', 'della', 'opzione', 'ciao', 'grazie'],
-  nl: ['de', 'het', 'een', 'van', 'en', 'in', 'is', 'dat', 'op', 'te', 'zijn', 'voor', 'met', 'als', 'aan', 'er', 'maar', 'om', 'ook', 'naar', 'optie', 'hallo', 'bedankt'],
-  pl: ['i', 'w', 'nie', 'na', 'do', 'to', 'że', 'się', 'z', 'co', 'jak', 'ale', 'po', 'tak', 'od', 'o', 'za', 'opcja', 'cześć', 'dzięki'],
-  tr: ['bir', 've', 'bu', 'için', 'de', 'da', 'ile', 'ben', 'ne', 'var', 'gibi', 'daha', 'çok', 'olarak', 'o', 'seçenek', 'merhaba', 'teşekkürler'],
-  sv: ['och', 'i', 'att', 'det', 'som', 'en', 'på', 'är', 'av', 'för', 'med', 'till', 'den', 'har', 'de', 'alternativ', 'hej', 'tack'],
-  no: ['og', 'i', 'det', 'er', 'på', 'en', 'som', 'for', 'av', 'til', 'med', 'har', 'de', 'alternativ', 'hei', 'takk'],
-  da: ['og', 'i', 'at', 'det', 'er', 'en', 'til', 'på', 'de', 'for', 'med', 'som', 'af', 'mulighed', 'hej', 'tak'],
-  fi: ['ja', 'on', 'ei', 'se', 'että', 'hän', 'oli', 'mutta', 'niin', 'kun', 'vaihtoehto', 'hei', 'kiitos'],
-  vi: ['và', 'của', 'là', 'có', 'trong', 'được', 'này', 'cho', 'không', 'một', 'lựa chọn', 'xin chào', 'cảm ơn'],
-  id: ['dan', 'yang', 'di', 'ini', 'dengan', 'untuk', 'tidak', 'dari', 'dalam', 'adalah', 'pilihan', 'halo', 'terima kasih'],
-  ms: ['dan', 'yang', 'di', 'ini', 'dengan', 'untuk', 'tidak', 'dari', 'dalam', 'adalah', 'pilihan', 'hai', 'terima kasih'],
+  es: ['el', 'la', 'de', 'que', 'y', 'en', 'un', 'es', 'por', 'con', 'para', 'los', 'del', 'se', 'las', 'una', 'pero', 'más', 'como', 'ya', 'todo', 'esta', 'ser', 'son', 'también', 'fue', 'hay', 'está', 'muy', 'hasta', 'desde', 'están', 'nosotros', 'hola', 'gracias', 'bueno', 'qué', 'cómo', 'opción'],
+  en: ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'option', 'hello', 'thanks'],
+  pt: ['o', 'a', 'de', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'é', 'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'opção', 'olá', 'obrigado'],
+  fr: ['le', 'de', 'un', 'être', 'et', 'à', 'il', 'avoir', 'ne', 'je', 'son', 'que', 'se', 'qui', 'ce', 'dans', 'en', 'du', 'elle', 'option', 'bonjour', 'merci'],
+  de: ['der', 'die', 'und', 'in', 'den', 'von', 'zu', 'das', 'mit', 'sich', 'des', 'auf', 'für', 'ist', 'im', 'dem', 'nicht', 'option', 'hallo', 'danke'],
+  it: ['di', 'che', 'è', 'e', 'la', 'il', 'un', 'a', 'per', 'in', 'una', 'mi', 'sono', 'ho', 'non', 'opzione', 'ciao', 'grazie'],
+  nl: ['de', 'het', 'een', 'van', 'en', 'in', 'is', 'dat', 'op', 'te', 'optie', 'hallo', 'bedankt'],
+  pl: ['i', 'w', 'nie', 'na', 'do', 'to', 'że', 'się', 'z', 'opcja', 'cześć', 'dzięki'],
+  tr: ['bir', 've', 'bu', 'için', 'de', 'da', 'ile', 'ben', 'seçenek', 'merhaba', 'teşekkürler'],
+  sv: ['och', 'i', 'att', 'det', 'som', 'en', 'på', 'är', 'alternativ', 'hej', 'tack'],
+  no: ['og', 'i', 'det', 'er', 'på', 'en', 'som', 'alternativ', 'hei', 'takk'],
+  da: ['og', 'i', 'at', 'det', 'er', 'en', 'mulighed', 'hej', 'tak'],
+  fi: ['ja', 'on', 'ei', 'se', 'että', 'vaihtoehto', 'hei', 'kiitos'],
+  vi: ['và', 'của', 'là', 'có', 'trong', 'lựa chọn', 'xin chào', 'cảm ơn'],
+  id: ['dan', 'yang', 'di', 'ini', 'dengan', 'pilihan', 'halo', 'terima kasih'],
+  ms: ['dan', 'yang', 'di', 'ini', 'dengan', 'pilihan', 'hai', 'terima kasih'],
 };
 
 // Cache de voces disponibles
@@ -123,12 +158,12 @@ const getPreferences = () => {
     console.warn('Error loading voice preferences:', e);
   }
   return {
-    preferredVoiceName: null,  // Nombre de la voz preferida
-    preferredLanguage: null,   // Idioma preferido (null = auto-detect)
+    voiceType: VOICE_TYPES.FEMALE,  // Tipo de voz preferido (se mantiene entre idiomas)
     rate: 1.1,
     pitch: 1.0,
     volume: 1.0,
-    autoDetect: true,          // Detección automática de idioma
+    autoDetect: true,              // Detección automática de idioma
+    forcedLanguage: null,          // Idioma forzado (null = auto-detect)
   };
 };
 
@@ -150,20 +185,24 @@ const savePreferences = (preferences) => {
 };
 
 /**
- * Establece la voz preferida por nombre
- * @param {string} voiceName - Nombre de la voz
+ * Establece el tipo de voz preferido (se mantiene consistente entre idiomas)
+ * @param {string} voiceType - VOICE_TYPES.FEMALE, VOICE_TYPES.MALE, o VOICE_TYPES.NEUTRAL
  */
-const setPreferredVoice = (voiceName) => {
-  return savePreferences({ preferredVoiceName: voiceName });
+const setPreferredVoiceType = (voiceType) => {
+  if (!Object.values(VOICE_TYPES).includes(voiceType)) {
+    console.warn('Tipo de voz inválido:', voiceType);
+    return getPreferences();
+  }
+  return savePreferences({ voiceType });
 };
 
 /**
- * Establece el idioma preferido
- * @param {string} languageCode - Código de idioma (ej: 'es', 'en') o null para auto-detect
+ * Establece el idioma forzado (null para auto-detectar)
+ * @param {string|null} languageCode
  */
-const setPreferredLanguage = (languageCode) => {
+const setForcedLanguage = (languageCode) => {
   return savePreferences({ 
-    preferredLanguage: languageCode,
+    forcedLanguage: languageCode,
     autoDetect: languageCode === null 
   });
 };
@@ -178,6 +217,31 @@ const setVoiceParams = (params) => {
   if (params.pitch !== undefined) validParams.pitch = Math.max(0.5, Math.min(2, params.pitch));
   if (params.volume !== undefined) validParams.volume = Math.max(0, Math.min(1, params.volume));
   return savePreferences(validParams);
+};
+
+/**
+ * Detecta el género de una voz por su nombre
+ * @param {SpeechSynthesisVoice} voice
+ * @returns {string} - 'female', 'male', o 'neutral'
+ */
+const detectVoiceGender = (voice) => {
+  const name = voice.name.toLowerCase();
+  
+  // Verificar patrones femeninos
+  for (const pattern of FEMALE_VOICE_PATTERNS) {
+    if (pattern.test(name)) {
+      return VOICE_TYPES.FEMALE;
+    }
+  }
+  
+  // Verificar patrones masculinos
+  for (const pattern of MALE_VOICE_PATTERNS) {
+    if (pattern.test(name)) {
+      return VOICE_TYPES.MALE;
+    }
+  }
+  
+  return VOICE_TYPES.NEUTRAL;
 };
 
 /**
@@ -202,7 +266,6 @@ const getVoices = () => {
       return;
     }
 
-    // Esperar a que se carguen las voces
     const checkVoices = () => {
       const loadedVoices = window.speechSynthesis.getVoices();
       if (loadedVoices.length > 0) {
@@ -213,7 +276,6 @@ const getVoices = () => {
 
     window.speechSynthesis.onvoiceschanged = checkVoices;
     
-    // Fallback con timeout
     setTimeout(() => {
       const fallbackVoices = window.speechSynthesis.getVoices();
       cachedVoices = fallbackVoices;
@@ -236,7 +298,7 @@ const detectLanguage = (text) => {
 
   const normalizedText = text.toLowerCase().trim();
   
-  // 1. Primero verificar caracteres especiales de idiomas
+  // 1. Verificar caracteres especiales de idiomas
   for (const [lang, pattern] of Object.entries(LANGUAGE_PATTERNS)) {
     if (pattern.test(normalizedText)) {
       console.log(`🌍 Idioma detectado por caracteres: ${lang}`);
@@ -251,7 +313,6 @@ const detectLanguage = (text) => {
   for (const [lang, commonWords] of Object.entries(COMMON_WORDS)) {
     scores[lang] = 0;
     for (const word of words) {
-      // Limpiar puntuación
       const cleanWord = word.replace(/[.,!?¿¡;:'"()]/g, '');
       if (commonWords.includes(cleanWord)) {
         scores[lang]++;
@@ -261,7 +322,7 @@ const detectLanguage = (text) => {
 
   // 3. Encontrar el idioma con más coincidencias
   let maxScore = 0;
-  let detectedLang = 'es'; // Default
+  let detectedLang = 'es';
 
   for (const [lang, score] of Object.entries(scores)) {
     if (score > maxScore) {
@@ -270,7 +331,7 @@ const detectLanguage = (text) => {
     }
   }
 
-  // 4. Verificar caracteres especiales del español (ñ, tildes)
+  // 4. Verificar caracteres especiales del español
   if (/[ñáéíóúü¿¡]/i.test(normalizedText) && maxScore < 3) {
     detectedLang = 'es';
   }
@@ -285,13 +346,15 @@ const detectLanguage = (text) => {
 };
 
 /**
- * Obtiene la mejor voz disponible para un idioma
+ * Obtiene la mejor voz disponible para un idioma y tipo de voz preferido
  * @param {string} languageCode - Código de idioma
- * @param {SpeechSynthesisVoice[]} voices - Lista de voces disponibles
- * @returns {SpeechSynthesisVoice|null}
+ * @param {string} preferredType - Tipo de voz preferido (female, male, neutral)
+ * @returns {Promise<SpeechSynthesisVoice|null>}
  */
-const getBestVoice = async (languageCode) => {
+const getBestVoice = async (languageCode, preferredType = null) => {
   const voices = await getVoices();
+  const prefs = getPreferences();
+  const voiceType = preferredType || prefs.voiceType || VOICE_TYPES.NEUTRAL;
   
   if (!voices || voices.length === 0) {
     console.warn('⚠️ No hay voces disponibles');
@@ -300,50 +363,66 @@ const getBestVoice = async (languageCode) => {
 
   const langConfig = LANGUAGE_CODES[languageCode] || LANGUAGE_CODES.es;
   
-  // Buscar voz en orden de preferencia
-  for (const variant of langConfig.variants) {
-    // Primero buscar voces nativas/de alta calidad
-    const nativeVoice = voices.find(v => 
-      v.lang === variant && 
-      (v.localService || v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Premium'))
-    );
-    if (nativeVoice) {
-      console.log(`🎤 Voz seleccionada (premium): ${nativeVoice.name} (${nativeVoice.lang})`);
-      return nativeVoice;
-    }
+  // Filtrar voces por idioma
+  const languageVoices = voices.filter(v => 
+    langConfig.variants.some(variant => v.lang === variant) ||
+    v.lang.startsWith(langConfig.code)
+  );
 
-    // Luego cualquier voz que coincida con la variante
-    const variantVoice = voices.find(v => v.lang === variant);
-    if (variantVoice) {
-      console.log(`🎤 Voz seleccionada: ${variantVoice.name} (${variantVoice.lang})`);
-      return variantVoice;
-    }
+  if (languageVoices.length === 0) {
+    console.warn(`⚠️ No hay voces para ${languageCode}, usando fallback`);
+    return voices[0];
   }
 
-  // Fallback: buscar cualquier voz que coincida con el código base
-  const baseVoice = voices.find(v => v.lang.startsWith(langConfig.code));
-  if (baseVoice) {
-    console.log(`🎤 Voz seleccionada (fallback): ${baseVoice.name} (${baseVoice.lang})`);
-    return baseVoice;
+  // Clasificar voces por género
+  const classifiedVoices = languageVoices.map(voice => ({
+    voice,
+    gender: detectVoiceGender(voice),
+    isPremium: voice.localService || 
+               voice.name.includes('Natural') || 
+               voice.name.includes('Neural') || 
+               voice.name.includes('Premium') ||
+               voice.name.includes('Enhanced')
+  }));
+
+  // Buscar voz del tipo preferido
+  let matchingVoices = classifiedVoices.filter(v => 
+    voiceType === VOICE_TYPES.NEUTRAL || v.gender === voiceType
+  );
+
+  // Si no hay coincidencia exacta, usar todas las voces del idioma
+  if (matchingVoices.length === 0) {
+    console.log(`⚠️ No hay voz ${voiceType} para ${languageCode}, usando alternativa`);
+    matchingVoices = classifiedVoices;
   }
 
-  // Último recurso: primera voz disponible
-  console.warn(`⚠️ No se encontró voz para ${languageCode}, usando default`);
-  return voices[0];
+  // Priorizar voces premium
+  const premiumVoice = matchingVoices.find(v => v.isPremium);
+  if (premiumVoice) {
+    console.log(`🎤 Voz seleccionada (${premiumVoice.gender}, premium): ${premiumVoice.voice.name} (${premiumVoice.voice.lang})`);
+    return premiumVoice.voice;
+  }
+
+  // Usar primera voz disponible
+  const selectedVoice = matchingVoices[0];
+  console.log(`🎤 Voz seleccionada (${selectedVoice.gender}): ${selectedVoice.voice.name} (${selectedVoice.voice.lang})`);
+  return selectedVoice.voice;
 };
 
 /**
- * Habla un texto con detección automática de idioma
+ * Habla un texto con detección automática de idioma y voz preferida
  * @param {string} text - Texto a hablar
  * @param {Object} options - Opciones adicionales
- * @returns {Promise<void>}
+ * @returns {Promise<SpeechSynthesisUtterance>}
  */
 const speak = async (text, options = {}) => {
+  const prefs = getPreferences();
   const {
-    rate = 1.1,
-    pitch = 1.0,
-    volume = 1.0,
-    forceLanguage = null,
+    rate = prefs.rate,
+    pitch = prefs.pitch,
+    volume = prefs.volume,
+    forceLanguage = prefs.forcedLanguage,
+    voiceType = prefs.voiceType,
     onStart = () => {},
     onEnd = () => {},
     onError = () => {},
@@ -355,14 +434,14 @@ const speak = async (text, options = {}) => {
   if (!text || text.trim().length === 0) {
     console.warn('⚠️ Texto vacío, nada que hablar');
     onEnd();
-    return;
+    return null;
   }
 
   // Detectar idioma o usar el forzado
   const detectedLang = forceLanguage || detectLanguage(text);
   
-  // Obtener la mejor voz para el idioma
-  const voice = await getBestVoice(detectedLang);
+  // Obtener la mejor voz para el idioma Y el tipo preferido
+  const voice = await getBestVoice(detectedLang, voiceType);
   
   // Crear utterance
   const utterance = new SpeechSynthesisUtterance(text);
@@ -371,7 +450,6 @@ const speak = async (text, options = {}) => {
     utterance.voice = voice;
     utterance.lang = voice.lang;
   } else {
-    // Fallback a código de idioma si no hay voz
     const langConfig = LANGUAGE_CODES[detectedLang] || LANGUAGE_CODES.es;
     utterance.lang = langConfig.variants[0] || 'es-ES';
   }
@@ -387,7 +465,7 @@ const speak = async (text, options = {}) => {
     onError(event);
   };
 
-  console.log(`🔊 Hablando en ${utterance.lang}: "${text.substring(0, 50)}..."`);
+  console.log(`🔊 Hablando (${voiceType}) en ${utterance.lang}: "${text.substring(0, 50)}..."`);
   window.speechSynthesis.speak(utterance);
 
   return utterance;
@@ -436,11 +514,20 @@ const getSupportedLanguages = async () => {
     );
     
     if (availableVoices.length > 0) {
+      // Clasificar voces por género
+      const femaleVoices = availableVoices.filter(v => detectVoiceGender(v) === VOICE_TYPES.FEMALE);
+      const maleVoices = availableVoices.filter(v => detectVoiceGender(v) === VOICE_TYPES.MALE);
+      
       supported[lang] = {
-        name: getLanguageName(lang),
+        name: config.name,
+        code: config.code,
+        totalVoices: availableVoices.length,
+        femaleVoices: femaleVoices.length,
+        maleVoices: maleVoices.length,
         voices: availableVoices.map(v => ({
           name: v.name,
           lang: v.lang,
+          gender: detectVoiceGender(v),
           isNative: v.localService
         }))
       };
@@ -451,46 +538,38 @@ const getSupportedLanguages = async () => {
 };
 
 /**
- * Obtiene el nombre legible del idioma
- * @param {string} code - Código de idioma
- * @returns {string}
+ * Obtiene las voces disponibles para un idioma específico, clasificadas por género
+ * @param {string} languageCode
+ * @returns {Promise<Object>}
  */
-const getLanguageName = (code) => {
-  const names = {
-    es: 'Español',
-    en: 'English',
-    pt: 'Português',
-    fr: 'Français',
-    de: 'Deutsch',
-    it: 'Italiano',
-    ja: '日本語',
-    ko: '한국어',
-    zh: '中文',
-    ru: 'Русский',
-    ar: 'العربية',
-    hi: 'हिन्दी',
-    nl: 'Nederlands',
-    pl: 'Polski',
-    tr: 'Türkçe',
-    sv: 'Svenska',
-    no: 'Norsk',
-    da: 'Dansk',
-    fi: 'Suomi',
-    el: 'Ελληνικά',
-    he: 'עברית',
-    th: 'ไทย',
-    vi: 'Tiếng Việt',
-    id: 'Bahasa Indonesia',
-    ms: 'Bahasa Melayu',
-    ca: 'Català',
-    gl: 'Galego',
-    eu: 'Euskara',
+const getVoicesForLanguage = async (languageCode) => {
+  const voices = await getVoices();
+  const langConfig = LANGUAGE_CODES[languageCode] || LANGUAGE_CODES.es;
+  
+  const languageVoices = voices.filter(v => 
+    langConfig.variants.some(variant => v.lang === variant) ||
+    v.lang.startsWith(langConfig.code)
+  );
+
+  return {
+    female: languageVoices.filter(v => detectVoiceGender(v) === VOICE_TYPES.FEMALE),
+    male: languageVoices.filter(v => detectVoiceGender(v) === VOICE_TYPES.MALE),
+    neutral: languageVoices.filter(v => detectVoiceGender(v) === VOICE_TYPES.NEUTRAL),
+    all: languageVoices
   };
-  return names[code] || code.toUpperCase();
 };
 
 /**
- * Prepara el texto con el idioma detectado (útil para mostrar información)
+ * Obtiene el nombre legible del idioma
+ * @param {string} code
+ * @returns {string}
+ */
+const getLanguageName = (code) => {
+  return LANGUAGE_CODES[code]?.name || code.toUpperCase();
+};
+
+/**
+ * Prepara el texto con el idioma detectado
  * @param {string} text 
  * @returns {Object}
  */
@@ -506,17 +585,34 @@ const analyzeText = (text) => {
 
 // Exportar el servicio
 const voiceService = {
+  // Funciones principales
   speak,
   stop,
   pause,
   resume,
   isSpeaking,
+  
+  // Detección y análisis
   detectLanguage,
-  getBestVoice,
+  detectVoiceGender,
+  analyzeText,
+  
+  // Gestión de voces
   getVoices,
+  getBestVoice,
+  getVoicesForLanguage,
   getSupportedLanguages,
   getLanguageName,
-  analyzeText,
+  
+  // Preferencias
+  getPreferences,
+  savePreferences,
+  setPreferredVoiceType,
+  setForcedLanguage,
+  setVoiceParams,
+  
+  // Constantes
+  VOICE_TYPES,
   LANGUAGE_CODES,
 };
 
