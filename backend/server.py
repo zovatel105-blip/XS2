@@ -5953,19 +5953,29 @@ async def get_ultra_fast_feed(
         author_ids = list(set(poll.get("author_id") for poll in polls if poll.get("author_id")))
         authors_cursor = db.users.find({"id": {"$in": author_ids}})
         authors_list = await authors_cursor.to_list(len(author_ids))
-        authors_dict = {user["id"]: user for user in authors_list}
+        # Remove _id from authors to avoid ObjectId serialization issues
+        authors_dict = {}
+        for user in authors_list:
+            user_copy = {k: v for k, v in user.items() if k != "_id"}
+            authors_dict[user["id"]] = user_copy
         
         # Build response quickly
         result = []
         for poll_data in polls:
             author = authors_dict.get(poll_data.get("author_id"))
             if author:
+                # Clean options to remove _id fields
+                clean_options = []
+                for opt in poll_data.get("options", []):
+                    clean_opt = {k: v for k, v in opt.items() if k != "_id"}
+                    clean_options.append(clean_opt)
+                
                 poll_response = {
                     "id": poll_data.get("id"),
                     "title": poll_data.get("title"),
                     "author": author,
                     "authorUser": author,  # For compatibility
-                    "options": poll_data.get("options", []),
+                    "options": clean_options,
                     "created_at": poll_data.get("created_at"),
                     "total_votes": poll_data.get("total_votes", 0),
                     "likes_count": poll_data.get("likes_count", 0),
@@ -5976,7 +5986,11 @@ async def get_ultra_fast_feed(
                     "userLiked": False,  # Simplified - no user like lookup for speed
                     # Post settings - Include from database
                     "comments_enabled": poll_data.get("comments_enabled", True),
-                    "show_vote_count": poll_data.get("show_vote_count", True)
+                    "show_vote_count": poll_data.get("show_vote_count", True),
+                    # VS fields
+                    "vs_id": poll_data.get("vs_id"),
+                    "vs_questions": poll_data.get("vs_questions", []),
+                    "creator_country": poll_data.get("creator_country")
                 }
                 result.append(poll_response)
         
