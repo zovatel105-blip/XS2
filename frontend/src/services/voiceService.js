@@ -713,6 +713,7 @@ const voiceService = {
   detectLanguage,
   detectVoiceGender,
   analyzeText,
+  getLanguageFromCountry,
   
   // Gestión de voces
   getVoices,
@@ -731,6 +732,7 @@ const voiceService = {
   // Constantes
   VOICE_TYPES,
   LANGUAGE_CODES,
+  COUNTRY_TO_LANGUAGE,
 };
 
 export default voiceService;
