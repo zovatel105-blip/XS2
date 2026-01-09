@@ -409,6 +409,7 @@ const VSExperiencePage = () => {
               selectedOption={votedQuestions[question.id]}
               votes={null}
               onComplete={goToNext}
+              creatorCountry={creatorCountry}
             />
           </div>
         ))}
