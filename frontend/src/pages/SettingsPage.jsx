@@ -6,12 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { 
   ArrowLeft, ChevronRight, User, Shield, Bell, Eye, MessageCircle, 
   Lock, LogOut, Save, Monitor, Key, Globe, Moon, Sun, Volume2, Smartphone,
-  Download, Wifi, BatteryLow, Languages, Type, HelpCircle, Info, Mail, Settings
+  Download, Wifi, BatteryLow, Languages, Type, HelpCircle, Info, Mail, Settings,
+  Mic, UserCircle, UserCircle2
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import EditProfileModal from '../components/EditProfileModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
+import voiceService, { VOICE_TYPES } from '../services/voiceService';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
