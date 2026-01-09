@@ -20,8 +20,10 @@ const VSCreatePage = () => {
         const response = await fetch(`${AppConfig.BACKEND_URL}/api/geolocation`);
         if (response.ok) {
           const data = await response.json();
-          console.log('🌍 País detectado:', data.country);
-          setCreatorCountry(data.country);
+          // Usar country_code (ISO 2 letras: US, ES, MX, etc.) en lugar de country name
+          const countryCode = data.country_code || 'XX';
+          console.log('🌍 País detectado:', countryCode);
+          setCreatorCountry(countryCode);
         }
       } catch (error) {
         console.error('Error detecting country:', error);
