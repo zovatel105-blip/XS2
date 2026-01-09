@@ -48,11 +48,12 @@ const VSQuestion = ({
       // Texto a hablar (con fallback para opciones sin texto)
       const textToSpeak = option.text || `Opción ${currentIndex + 1}`;
       
-      // Usar el servicio de voz con detección automática de idioma
+      // Usar el servicio de voz con el país del creador para determinar el idioma
       // La voz preferida (femenina/masculina) se mantiene consistente entre idiomas
       await voiceService.speak(textToSpeak, {
         rate: 1.1,
         pitch: 1.0,
+        country: creatorCountry,  // Usar país del creador para determinar idioma
         onEnd: () => {
           currentIndex++;
           if (currentIndex < options.length) {
@@ -75,7 +76,7 @@ const VSQuestion = ({
     
     // Pequeño delay antes de empezar
     timeoutRef.current = setTimeout(speakNext, 500);
-  }, [isActive, hasVoted, question.options]);
+  }, [isActive, hasVoted, question.options, creatorCountry]);
 
   // Auto-avance si no vota
   useEffect(() => {
