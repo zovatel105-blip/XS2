@@ -382,26 +382,26 @@ const VSLayout = ({
     if (isFirstQuestion) {
       const introPhrase = getIntroPhrase();
       timers.push(setTimeout(() => {
-        speak(introPhrase, 1.2);
+        speak(introPhrase, 0.9);  // Velocidad más lenta
       }, 0));
     }
     
     // Paso 1: Resaltar y hablar opción A
     timers.push(setTimeout(() => {
       setHighlightedOption(0);
-      speak(optionA, 1.3);
+      speak(optionA, 1.0);  // Velocidad normal para opciones
     }, introDelay));
     
     // Paso 2: Resaltar y hablar opción B
     timers.push(setTimeout(() => {
       setHighlightedOption(1);
-      speak(optionB, 1.3);
-    }, introDelay + 1500));
+      speak(optionB, 1.0);  // Velocidad normal para opciones
+    }, introDelay + 1800));  // Más tiempo entre opciones
     
     // Paso 3: Quitar resaltado
     timers.push(setTimeout(() => {
       setHighlightedOption(null);
-    }, introDelay + 3000));
+    }, introDelay + 3600));  // Más tiempo total
     
     voiceSequenceRef.current = timers;
   }, [isThumbnail, hasVoted, isActive, currentQuestion, currentIndex, speak, stopVoice, getIntroPhrase]);
