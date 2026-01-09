@@ -178,6 +178,40 @@ const SettingsPage = () => {
     setModalsOpen(prev => ({ ...prev, [modalName]: false }));
   };
 
+  // Voice settings handlers
+  const handleVoiceTypeChange = (voiceType) => {
+    const updated = voiceService.setPreferredVoiceType(voiceType);
+    setVoiceSettings(updated);
+    toast({
+      title: "Voz actualizada",
+      description: `Tipo de voz cambiado a ${voiceType === VOICE_TYPES.FEMALE ? 'Femenina' : voiceType === VOICE_TYPES.MALE ? 'Masculina' : 'Neutral'}`,
+    });
+  };
+
+  const handleVoiceRateChange = (rate) => {
+    const updated = voiceService.setVoiceParams({ rate: parseFloat(rate) });
+    setVoiceSettings(updated);
+  };
+
+  const testVoice = async () => {
+    if (testingVoice) return;
+    setTestingVoice(true);
+    
+    // Textos de prueba en diferentes idiomas
+    const testTexts = [
+      "¡Hola! Esta es una prueba de voz en español.",
+      "Hello! This is a voice test in English.",
+      "Olá! Este é um teste de voz em português."
+    ];
+    
+    const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
+    
+    await voiceService.speak(randomText, {
+      onEnd: () => setTestingVoice(false),
+      onError: () => setTestingVoice(false)
+    });
+  };
+
   // Componente para elementos de configuración con flecha
   const SettingsItem = ({ icon: Icon, title, description, onClick, rightElement, showChevron = false }) => (
     <div 
