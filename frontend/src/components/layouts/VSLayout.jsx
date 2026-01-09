@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
+import voiceService from '../../services/voiceService';
 
 // Colores de banderas por país - con 2 colores principales para el círculo VS
 const countryColors = {
