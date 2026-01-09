@@ -6241,8 +6241,8 @@ async def get_following_polls(
     # Build response (same logic as get_polls but for followed users only)
     result = []
     for poll_data in polls:
-        # Get option users
-        option_user_ids = [option["user_id"] for option in poll_data.get("options", [])]
+        # Get option users - handle options without user_id
+        option_user_ids = [option.get("user_id") for option in poll_data.get("options", []) if option.get("user_id")]
         if option_user_ids:
             option_users_cursor = db.users.find({"id": {"$in": option_user_ids}})
             option_users_list = await option_users_cursor.to_list(len(option_user_ids))
@@ -6253,37 +6253,38 @@ async def get_following_polls(
         # Process options
         options = []
         for option in poll_data.get("options", []):
-            option_user = option_users_dict.get(option["user_id"])
-            if option_user:
-                # Keep media_url as relative path for frontend to handle
-                media_url = option.get("media_url")
-                
-                # Get thumbnail URL for videos
-                thumbnail_url = option.get("thumbnail_url")
-                if not thumbnail_url and media_url and option.get("media_type") == "video":
-                    thumbnail_url = await get_thumbnail_for_media_url(media_url)
-                
-                option_dict = {
-                    "id": option["id"],
-                    "text": option["text"],
-                    "votes": option["votes"],
-                    "user": {
-                        "username": option_user["username"],
-                        "displayName": option_user["display_name"],
-                        "avatar": option_user.get("avatar_url"),
-                        "verified": option_user.get("is_verified", False),
-                        "id": option_user["id"]
-                    },
-                    "mentioned_users": option.get("mentioned_users", []),
-                    "extracted_audio_id": option.get("extracted_audio_id"),  # 🎵 Include extracted audio ID
-                    "media": {
-                        "type": option.get("media_type"),
-                        "url": media_url,
-                        "thumbnail": thumbnail_url,
-                        "transform": option.get("media_transform")
-                    } if media_url else None
-                }
-                options.append(option_dict)
+            option_user_id = option.get("user_id")
+            option_user = option_users_dict.get(option_user_id) if option_user_id else None
+            
+            # Keep media_url as relative path for frontend to handle
+            media_url = option.get("media_url")
+            
+            # Get thumbnail URL for videos
+            thumbnail_url = option.get("thumbnail_url")
+            if not thumbnail_url and media_url and option.get("media_type") == "video":
+                thumbnail_url = await get_thumbnail_for_media_url(media_url)
+            
+            option_dict = {
+                "id": option.get("id"),
+                "text": option.get("text", ""),
+                "votes": option.get("votes", 0),
+                "user": {
+                    "username": option_user["username"] if option_user else "unknown",
+                    "displayName": option_user.get("display_name", "") if option_user else "",
+                    "avatar": option_user.get("avatar_url") if option_user else None,
+                    "verified": option_user.get("is_verified", False) if option_user else False,
+                    "id": option_user["id"] if option_user else None
+                } if option_user else None,
+                "mentioned_users": option.get("mentioned_users", []),
+                "extracted_audio_id": option.get("extracted_audio_id"),
+                "media": {
+                    "type": option.get("media_type"),
+                    "url": media_url,
+                    "thumbnail": thumbnail_url,
+                    "transform": option.get("media_transform")
+                } if media_url else None
+            }
+            options.append(option_dict)
         
         # Get author information
         author = authors_dict.get(poll_data["author_id"])
