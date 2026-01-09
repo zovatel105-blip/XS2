@@ -11,7 +11,8 @@ const VSQuestion = ({
   hasVoted, 
   selectedOption, 
   votes,
-  onComplete 
+  onComplete,
+  creatorCountry  // País donde se creó la publicación
 }) => {
   const [highlightedOption, setHighlightedOption] = useState(null);
   const [showResults, setShowResults] = useState(false);
