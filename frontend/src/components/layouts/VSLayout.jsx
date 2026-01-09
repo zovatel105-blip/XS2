@@ -274,40 +274,17 @@ const VSLayout = ({
     setHighlightedOption(null);
   }, []);
 
-  // Función para hablar con Text-to-Speech
-  const speak = useCallback((text, rate = 1.2) => {
-    if (isThumbnail || !window.speechSynthesis) return;
+  // Función para hablar con Text-to-Speech (usando voiceService con detección de idioma)
+  const speak = useCallback(async (text, rate = 1.2) => {
+    if (isThumbnail) return;
     
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-ES';
-    utterance.rate = rate;
-    utterance.pitch = 0.9; // Pitch más bajo para voz masculina
-    utterance.volume = 1.0;
-    
-    // Buscar voz masculina en español
-    const voices = window.speechSynthesis.getVoices();
-    const maleSpanishVoice = voices.find(voice => 
-      (voice.lang.startsWith('es') || voice.name.includes('Spanish')) &&
-      (voice.name.toLowerCase().includes('male') || 
-       voice.name.includes('Jorge') || 
-       voice.name.includes('Diego') ||
-       voice.name.includes('Pablo') ||
-       voice.name.includes('Andrés') ||
-       voice.name.includes('Juan') ||
-       voice.name.includes('Google español'))
-    );
-    
-    // Si no encuentra masculina, buscar cualquier voz en español
-    const spanishVoice = maleSpanishVoice || voices.find(voice => 
-      voice.lang.startsWith('es') || voice.name.includes('Spanish')
-    );
-    
-    if (spanishVoice) {
-      utterance.voice = spanishVoice;
-    }
-    
-    window.speechSynthesis.speak(utterance);
-  }, [isThumbnail]);
+    // Usar voiceService con el país del creador para determinar el idioma
+    await voiceService.speak(text, {
+      rate,
+      pitch: 0.9,
+      country: creatorCountry,  // El idioma se determina por el país del creador
+    });
+  }, [isThumbnail, creatorCountry]);
 
   // Secuencia de voz con resaltado visual
   const startVoiceSequence = useCallback(() => {
