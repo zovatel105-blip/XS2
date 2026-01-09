@@ -56,6 +56,10 @@ const SettingsPage = () => {
     changePassword: false
   });
 
+  // Voice settings state
+  const [voiceSettings, setVoiceSettings] = useState(() => voiceService.getPreferences());
+  const [testingVoice, setTestingVoice] = useState(false);
+
   useEffect(() => {
     if (user) {
       setSettings({
