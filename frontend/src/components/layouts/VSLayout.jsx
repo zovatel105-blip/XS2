@@ -239,8 +239,18 @@ const VSLayout = ({
   const voiceSequenceRef = useRef(null);
   const hasStartedVoiceRef = useRef(false);
   
-  // País del creador para los colores
+  // País del creador para los colores y voz
   const creatorCountry = poll.creator_country;
+  
+  // Debug: Log del país del creador
+  useEffect(() => {
+    console.log('🎤 VSLayout - País del creador:', creatorCountry);
+    console.log('🎤 VSLayout - Poll completo:', JSON.stringify({
+      id: poll.id,
+      creator_country: poll.creator_country,
+      layout: poll.layout
+    }));
+  }, [creatorCountry, poll]);
   
   // Preparar todas las preguntas
   const vsQuestions = poll.vs_questions || [];
