@@ -25,17 +25,17 @@ const VSQuestion = ({
     { bg: 'from-blue-500 to-cyan-500', highlight: 'ring-4 ring-white' }
   ];
 
-  // Text-to-Speech para presentar las opciones
+  // Text-to-Speech para presentar las opciones con detección automática de idioma
   const speakOptions = useCallback(() => {
     if (!isActive || hasVoted) return;
     
     // Cancelar cualquier speech anterior
-    window.speechSynthesis.cancel();
+    voiceService.stop();
     
     const options = question.options;
     let currentIndex = 0;
     
-    const speakNext = () => {
+    const speakNext = async () => {
       if (currentIndex >= options.length || !isActive) {
         setHighlightedOption(null);
         return;
@@ -44,22 +44,32 @@ const VSQuestion = ({
       const option = options[currentIndex];
       setHighlightedOption(option.id);
       
-      const utterance = new SpeechSynthesisUtterance(option.text || `Opción ${currentIndex + 1}`);
-      utterance.lang = 'es-ES';
-      utterance.rate = 1.1;
-      utterance.pitch = 1;
+      // Texto a hablar (con fallback para opciones sin texto)
+      const textToSpeak = option.text || `Opción ${currentIndex + 1}`;
       
-      utterance.onend = () => {
-        currentIndex++;
-        if (currentIndex < options.length) {
-          setTimeout(speakNext, 300);
-        } else {
-          setHighlightedOption(null);
+      // Usar el servicio de voz con detección automática de idioma
+      // La voz preferida (femenina/masculina) se mantiene consistente entre idiomas
+      await voiceService.speak(textToSpeak, {
+        rate: 1.1,
+        pitch: 1.0,
+        onEnd: () => {
+          currentIndex++;
+          if (currentIndex < options.length) {
+            setTimeout(speakNext, 300);
+          } else {
+            setHighlightedOption(null);
+          }
+        },
+        onError: () => {
+          // En caso de error, continuar con la siguiente opción
+          currentIndex++;
+          if (currentIndex < options.length) {
+            setTimeout(speakNext, 300);
+          } else {
+            setHighlightedOption(null);
+          }
         }
-      };
-      
-      speechRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
+      });
     };
     
     // Pequeño delay antes de empezar
