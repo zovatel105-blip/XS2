@@ -254,7 +254,7 @@ const VSExperiencePage = () => {
   const location = useLocation();
   const containerRef = useRef(null);
   
-  // Obtener preguntas del state o usar datos de ejemplo
+  // Obtener preguntas y país del creador del state
   const initialQuestions = location.state?.questions || [
     {
       id: 1,
@@ -278,6 +278,9 @@ const VSExperiencePage = () => {
       ]
     }
   ];
+  
+  // País donde se creó la publicación (determina el idioma de la voz)
+  const creatorCountry = location.state?.creator_country || null;
   
   const [questions] = useState(initialQuestions);
   const [currentIndex, setCurrentIndex] = useState(0);
