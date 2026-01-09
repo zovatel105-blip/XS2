@@ -480,6 +480,74 @@ const SettingsPage = () => {
 
         <SectionSeparator />
 
+        {/* Sección: Voz VS */}
+        <SectionTitle>Voz de VS</SectionTitle>
+        <div className="bg-white">
+          <SettingsItem
+            icon={Mic}
+            title="Tipo de voz"
+            description="La voz se adapta automáticamente al idioma"
+            rightElement={
+              <select 
+                value={voiceSettings.voiceType}
+                onChange={(e) => handleVoiceTypeChange(e.target.value)}
+                className="text-sm text-gray-600 bg-transparent border-none focus:outline-none"
+              >
+                <option value={VOICE_TYPES.FEMALE}>Femenina</option>
+                <option value={VOICE_TYPES.MALE}>Masculina</option>
+                <option value={VOICE_TYPES.NEUTRAL}>Neutral</option>
+              </select>
+            }
+          />
+          <SettingsItem
+            icon={Volume2}
+            title="Velocidad de voz"
+            description="Ajustar velocidad de lectura"
+            rightElement={
+              <select 
+                value={voiceSettings.rate}
+                onChange={(e) => handleVoiceRateChange(e.target.value)}
+                className="text-sm text-gray-600 bg-transparent border-none focus:outline-none"
+              >
+                <option value="0.8">Lenta</option>
+                <option value="1.0">Normal</option>
+                <option value="1.1">Rápida</option>
+                <option value="1.3">Muy rápida</option>
+              </select>
+            }
+          />
+          <div 
+            className={`flex items-center justify-between p-4 hover:bg-gray-50 transition-colors duration-200 cursor-pointer ${testingVoice ? 'opacity-50' : ''}`}
+            onClick={testVoice}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="flex-shrink-0">
+                <Globe className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900">Probar voz</p>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {testingVoice ? 'Reproduciendo...' : 'Escuchar una muestra con detección de idioma'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              {testingVoice ? (
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-400" strokeWidth={1.5} />
+              )}
+            </div>
+          </div>
+          <div className="px-4 py-3 bg-blue-50 border-t border-blue-100">
+            <p className="text-xs text-blue-700">
+              💡 La voz detecta automáticamente el idioma del texto (español, inglés, portugués, francés, etc.) y usa tu tipo de voz preferido en cada idioma.
+            </p>
+          </div>
+        </div>
+
+        <SectionSeparator />
+
         {/* Sección: Seguridad */}
         <SectionTitle>Seguridad</SectionTitle>
         <div className="bg-white">
