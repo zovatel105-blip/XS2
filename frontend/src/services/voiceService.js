@@ -106,6 +106,80 @@ const COMMON_WORDS = {
 let cachedVoices = null;
 let voicesLoadedPromise = null;
 
+// Clave para guardar preferencias en localStorage
+const VOICE_PREFERENCES_KEY = 'vs_voice_preferences';
+
+/**
+ * Obtiene las preferencias de voz guardadas
+ * @returns {Object}
+ */
+const getPreferences = () => {
+  try {
+    const saved = localStorage.getItem(VOICE_PREFERENCES_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.warn('Error loading voice preferences:', e);
+  }
+  return {
+    preferredVoiceName: null,  // Nombre de la voz preferida
+    preferredLanguage: null,   // Idioma preferido (null = auto-detect)
+    rate: 1.1,
+    pitch: 1.0,
+    volume: 1.0,
+    autoDetect: true,          // Detección automática de idioma
+  };
+};
+
+/**
+ * Guarda las preferencias de voz
+ * @param {Object} preferences
+ */
+const savePreferences = (preferences) => {
+  try {
+    const current = getPreferences();
+    const updated = { ...current, ...preferences };
+    localStorage.setItem(VOICE_PREFERENCES_KEY, JSON.stringify(updated));
+    console.log('✅ Preferencias de voz guardadas:', updated);
+    return updated;
+  } catch (e) {
+    console.warn('Error saving voice preferences:', e);
+    return getPreferences();
+  }
+};
+
+/**
+ * Establece la voz preferida por nombre
+ * @param {string} voiceName - Nombre de la voz
+ */
+const setPreferredVoice = (voiceName) => {
+  return savePreferences({ preferredVoiceName: voiceName });
+};
+
+/**
+ * Establece el idioma preferido
+ * @param {string} languageCode - Código de idioma (ej: 'es', 'en') o null para auto-detect
+ */
+const setPreferredLanguage = (languageCode) => {
+  return savePreferences({ 
+    preferredLanguage: languageCode,
+    autoDetect: languageCode === null 
+  });
+};
+
+/**
+ * Establece los parámetros de voz (rate, pitch, volume)
+ * @param {Object} params
+ */
+const setVoiceParams = (params) => {
+  const validParams = {};
+  if (params.rate !== undefined) validParams.rate = Math.max(0.5, Math.min(2, params.rate));
+  if (params.pitch !== undefined) validParams.pitch = Math.max(0.5, Math.min(2, params.pitch));
+  if (params.volume !== undefined) validParams.volume = Math.max(0, Math.min(1, params.volume));
+  return savePreferences(validParams);
+};
+
 /**
  * Obtiene las voces disponibles en el dispositivo
  * @returns {Promise<SpeechSynthesisVoice[]>}
