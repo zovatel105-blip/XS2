@@ -100,7 +100,7 @@ const VSQuestion = ({
     }
     
     return () => {
-      window.speechSynthesis.cancel();
+      voiceService.stop();
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
