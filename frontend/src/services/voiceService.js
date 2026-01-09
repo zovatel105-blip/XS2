@@ -98,7 +98,7 @@ const COUNTRY_TO_LANGUAGE = {
   'ID': 'id',
   
   // Malayo
-  'MY': 'ms', 'BN': 'ms',
+  'BN': 'ms',  // Brunei usa Malayo
 };
 
 /**
