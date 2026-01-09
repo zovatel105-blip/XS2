@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import voiceService from '../services/voiceService';
 
 // Componente para una sola pregunta VS
 const VSQuestion = ({ 
