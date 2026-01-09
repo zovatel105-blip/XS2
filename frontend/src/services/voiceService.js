@@ -101,15 +101,102 @@ const COUNTRY_TO_LANGUAGE = {
   'BN': 'ms',  // Brunei usa Malayo
 };
 
+// Mapeo de nombres de país (en minúsculas) a códigos ISO
+const COUNTRY_NAME_TO_CODE = {
+  'united states': 'US', 'usa': 'US', 'us': 'US',
+  'spain': 'ES', 'españa': 'ES',
+  'mexico': 'MX', 'méxico': 'MX',
+  'argentina': 'AR',
+  'colombia': 'CO',
+  'chile': 'CL',
+  'peru': 'PE', 'perú': 'PE',
+  'venezuela': 'VE',
+  'united kingdom': 'GB', 'uk': 'GB', 'england': 'GB',
+  'canada': 'CA', 'canadá': 'CA',
+  'australia': 'AU',
+  'brazil': 'BR', 'brasil': 'BR',
+  'portugal': 'PT',
+  'france': 'FR', 'francia': 'FR',
+  'germany': 'DE', 'alemania': 'DE', 'deutschland': 'DE',
+  'italy': 'IT', 'italia': 'IT',
+  'japan': 'JP', 'japón': 'JP',
+  'china': 'CN',
+  'korea': 'KR', 'south korea': 'KR',
+  'russia': 'RU', 'rusia': 'RU',
+  'netherlands': 'NL', 'holanda': 'NL',
+  'belgium': 'BE', 'bélgica': 'BE',
+  'switzerland': 'CH', 'suiza': 'CH',
+  'austria': 'AT',
+  'poland': 'PL', 'polonia': 'PL',
+  'turkey': 'TR', 'turquía': 'TR',
+  'sweden': 'SE', 'suecia': 'SE',
+  'norway': 'NO', 'noruega': 'NO',
+  'denmark': 'DK', 'dinamarca': 'DK',
+  'finland': 'FI', 'finlandia': 'FI',
+  'greece': 'GR', 'grecia': 'GR',
+  'israel': 'IL',
+  'india': 'IN',
+  'thailand': 'TH', 'tailandia': 'TH',
+  'vietnam': 'VN',
+  'indonesia': 'ID',
+  'malaysia': 'MY', 'malasia': 'MY',
+  'philippines': 'PH', 'filipinas': 'PH',
+  'singapore': 'SG', 'singapur': 'SG',
+  'egypt': 'EG', 'egipto': 'EG',
+  'saudi arabia': 'SA', 'arabia saudita': 'SA',
+  'united arab emirates': 'AE', 'emiratos árabes unidos': 'AE',
+};
+
+/**
+ * Normaliza el código de país (convierte nombres a códigos ISO si es necesario)
+ * @param {string} country - Código ISO o nombre del país
+ * @returns {string} - Código ISO de 2 letras
+ */
+const normalizeCountryCode = (country) => {
+  if (!country) return null;
+  
+  const upperCode = country.toUpperCase();
+  
+  // Si ya es un código de 2 letras válido, devolverlo
+  if (upperCode.length === 2 && COUNTRY_TO_LANGUAGE[upperCode]) {
+    return upperCode;
+  }
+  
+  // Si es un nombre de país, buscar en el mapeo
+  const lowerName = country.toLowerCase();
+  if (COUNTRY_NAME_TO_CODE[lowerName]) {
+    return COUNTRY_NAME_TO_CODE[lowerName];
+  }
+  
+  // Intentar encontrar coincidencia parcial
+  for (const [name, code] of Object.entries(COUNTRY_NAME_TO_CODE)) {
+    if (lowerName.includes(name) || name.includes(lowerName)) {
+      return code;
+    }
+  }
+  
+  return null;
+};
+
 /**
  * Obtiene el idioma basado en el código de país
- * @param {string} countryCode - Código ISO de país (ej: 'US', 'ES', 'BR')
+ * @param {string} countryCode - Código ISO de país (ej: 'US', 'ES', 'BR') o nombre del país
  * @returns {string} - Código de idioma (ej: 'en', 'es', 'pt')
  */
 const getLanguageFromCountry = (countryCode) => {
   if (!countryCode) return null;
-  const code = countryCode.toUpperCase();
-  return COUNTRY_TO_LANGUAGE[code] || null;
+  
+  // Normalizar el código de país
+  const normalizedCode = normalizeCountryCode(countryCode);
+  
+  if (!normalizedCode) {
+    console.log(`⚠️ País no reconocido: ${countryCode}`);
+    return null;
+  }
+  
+  const language = COUNTRY_TO_LANGUAGE[normalizedCode];
+  console.log(`🌍 País ${countryCode} -> Código ${normalizedCode} -> Idioma ${language}`);
+  return language || null;
 };
 
 // Mapeo de idiomas a códigos de voz
