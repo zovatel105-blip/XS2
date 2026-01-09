@@ -323,13 +323,14 @@ const VSLayout = ({
   }, []);
 
   // Función para hablar con Text-to-Speech (usando voiceService con detección de idioma)
-  const speak = useCallback(async (text, rate = 1.2) => {
+  const speak = useCallback(async (text, rate = 0.9) => {
     if (isThumbnail) return;
     
     // Usar voiceService con el país del creador para determinar el idioma
+    // Velocidad reducida para que se escuche mejor
     await voiceService.speak(text, {
       rate,
-      pitch: 0.9,
+      pitch: 1.0,
       country: creatorCountry,  // El idioma se determina por el país del creador
     });
   }, [isThumbnail, creatorCountry]);
