@@ -61,9 +61,6 @@ const COUNTRY_TO_LANGUAGE = {
   'IQ': 'ar', 'SY': 'ar', 'JO': 'ar', 'LB': 'ar', 'KW': 'ar', 'QA': 'ar',
   'BH': 'ar', 'OM': 'ar', 'YE': 'ar', 'LY': 'ar', 'SD': 'ar',
   
-  // Hindi
-  'IN': 'hi', // India también puede ser inglés, pero hindi es oficial
-  
   // Holandés
   'NL': 'nl', 'SR': 'nl',
   
