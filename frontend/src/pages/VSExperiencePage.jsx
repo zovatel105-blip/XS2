@@ -124,7 +124,7 @@ const VSQuestion = ({
     if (hasVoted) return;
     
     // Detener audio inmediatamente
-    window.speechSynthesis.cancel();
+    voiceService.stop();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
     
