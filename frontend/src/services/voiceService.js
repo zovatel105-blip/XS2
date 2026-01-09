@@ -521,6 +521,7 @@ const speak = async (text, options = {}) => {
     volume = prefs.volume,
     forceLanguage = prefs.forcedLanguage,
     voiceType = prefs.voiceType,
+    country = null,  // Código de país para determinar idioma (ej: 'US', 'ES')
     onStart = () => {},
     onEnd = () => {},
     onError = () => {},
@@ -535,8 +536,26 @@ const speak = async (text, options = {}) => {
     return null;
   }
 
-  // Detectar idioma o usar el forzado
-  const detectedLang = forceLanguage || detectLanguage(text);
+  // Determinar idioma: prioridad país > forzado > detección automática
+  let detectedLang;
+  
+  if (country) {
+    // Si hay país, usar el idioma del país
+    detectedLang = getLanguageFromCountry(country);
+    if (detectedLang) {
+      console.log(`🌍 Idioma determinado por país (${country}): ${detectedLang}`);
+    }
+  }
+  
+  if (!detectedLang && forceLanguage) {
+    detectedLang = forceLanguage;
+    console.log(`🔒 Idioma forzado: ${detectedLang}`);
+  }
+  
+  if (!detectedLang) {
+    detectedLang = detectLanguage(text);
+    console.log(`🔍 Idioma detectado del texto: ${detectedLang}`);
+  }
   
   // Obtener la mejor voz para el idioma Y el tipo preferido
   const voice = await getBestVoice(detectedLang, voiceType);
