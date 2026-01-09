@@ -6214,7 +6214,8 @@ async def get_following_polls(
     author_ids = list(set(poll["author_id"] for poll in polls))
     authors_cursor = db.users.find({"id": {"$in": author_ids}})
     authors_list = await authors_cursor.to_list(len(author_ids))
-    authors_dict = {user["id"]: UserResponse(**user) for user in authors_list}
+    # Remove _id to avoid ObjectId serialization issues
+    authors_dict = {user["id"]: UserResponse(**{k: v for k, v in user.items() if k != "_id"}) for user in authors_list}
     
     # For following polls, we know user follows all authors already
     following_dict = {user_id: {"following_id": user_id, "follower_id": current_user.id} 
