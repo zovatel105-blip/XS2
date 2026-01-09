@@ -266,9 +266,7 @@ const VSLayout = ({
 
   // Función para detener toda la voz y secuencia
   const stopVoice = useCallback(() => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
+    voiceService.stop();
     if (voiceSequenceRef.current) {
       voiceSequenceRef.current.forEach(timer => clearTimeout(timer));
       voiceSequenceRef.current = null;
