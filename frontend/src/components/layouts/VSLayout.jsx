@@ -108,110 +108,48 @@ const defaultColors = {
   bottom: { bg: 'bg-gradient-to-b from-red-500 to-red-700', primary: '#dc2626', secondary: '#f97316' }
 };
 
-// Mapeo de códigos ISO a nombres de país para colores
-const isoToCountryName = {
-  'US': 'united states',
-  'ES': 'españa',
-  'MX': 'méxico',
-  'AR': 'argentina',
-  'CO': 'colombia',
-  'CL': 'chile',
-  'PE': 'perú',
-  'VE': 'venezuela',
-  'EC': 'ecuador',
-  'UY': 'uruguay',
-  'PY': 'paraguay',
-  'BO': 'bolivia',
-  'CR': 'costa rica',
-  'GT': 'guatemala',
-  'HN': 'honduras',
-  'SV': 'el salvador',
-  'NI': 'nicaragua',
-  'PA': 'panamá',
-  'DO': 'república dominicana',
-  'PR': 'puerto rico',
-  'CU': 'cuba',
-  'BR': 'brasil',
-  'PT': 'portugal',
-  'FR': 'france',
-  'DE': 'germany',
-  'IT': 'italy',
-  'GB': 'united kingdom',
-  'JP': 'japan',
-  'CN': 'china',
-  'KR': 'south korea',
-  'RU': 'russia',
-};
-
-// Normaliza el país a nombre para buscar colores
-const normalizeCountryForColors = (country) => {
-  if (!country) return null;
-  
-  // Si es un código ISO de 2-3 letras, convertir a nombre
-  if (country.length <= 3) {
-    const upperCode = country.toUpperCase();
-    if (isoToCountryName[upperCode]) {
-      return isoToCountryName[upperCode];
-    }
-  }
-  
-  // Si ya es un nombre, devolverlo en minúsculas
-  return country.toLowerCase();
-};
-
-const getCountryColor = (text, index) => {
-  if (!text) {
+// Función simplificada para obtener colores - busca directamente en el objeto
+const getCountryColor = (countryCode, index) => {
+  if (!countryCode) {
     return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
   }
   
-  // Normalizar: si es código ISO, convertir a nombre
-  const normalizedCountry = normalizeCountryForColors(text);
+  // Buscar directamente (puede ser código ISO o nombre)
+  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
   
-  if (normalizedCountry) {
-    for (const [country, colors] of Object.entries(countryColors)) {
-      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
-        return colors.bg;
-      }
-    }
+  if (colors) {
+    return colors.bg;
   }
   
   return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
 };
 
 // Obtiene los 2 colores principales del país
-const getCountryColors = (countryName) => {
-  if (!countryName) {
+const getCountryColors = (countryCode) => {
+  if (!countryCode) {
     return { primary: defaultColors.top.primary, secondary: defaultColors.bottom.primary };
   }
   
-  // Normalizar: si es código ISO, convertir a nombre
-  const normalizedCountry = normalizeCountryForColors(countryName);
+  // Buscar directamente (puede ser código ISO o nombre)
+  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
   
-  if (normalizedCountry) {
-    for (const [country, colors] of Object.entries(countryColors)) {
-      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
-        return { primary: colors.primary, secondary: colors.secondary };
-      }
-    }
+  if (colors) {
+    return { primary: colors.primary, secondary: colors.secondary };
   }
   
   return { primary: defaultColors.top.primary, secondary: defaultColors.bottom.primary };
 };
 
-const getCountryPrimaryColor = (text, index) => {
-  if (!text) {
+const getCountryPrimaryColor = (countryCode, index) => {
+  if (!countryCode) {
     return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
   }
   
-  // Normalizar: si es código ISO, convertir a nombre
-  const normalizedCountry = normalizeCountryForColors(text);
+  // Buscar directamente (puede ser código ISO o nombre)
+  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
   
-  if (normalizedCountry) {
-    for (const [country, colors] of Object.entries(countryColors)) {
-      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
-        return colors.primary;
-      }
-    }
+  if (colors) {
+    return colors.primary;
   }
   
   return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
