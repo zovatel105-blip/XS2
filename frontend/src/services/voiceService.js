@@ -17,6 +17,104 @@ export const VOICE_TYPES = {
   NEUTRAL: 'neutral', // Cualquier voz disponible
 };
 
+// Mapeo de código de país a idioma
+const COUNTRY_TO_LANGUAGE = {
+  // Español
+  'ES': 'es', 'MX': 'es', 'AR': 'es', 'CO': 'es', 'CL': 'es', 'PE': 'es', 
+  'VE': 'es', 'EC': 'es', 'GT': 'es', 'CU': 'es', 'BO': 'es', 'DO': 'es',
+  'HN': 'es', 'PY': 'es', 'SV': 'es', 'NI': 'es', 'CR': 'es', 'PA': 'es',
+  'UY': 'es', 'PR': 'es', 'GQ': 'es',
+  
+  // Inglés
+  'US': 'en', 'GB': 'en', 'AU': 'en', 'CA': 'en', 'NZ': 'en', 'IE': 'en',
+  'ZA': 'en', 'JM': 'en', 'TT': 'en', 'BB': 'en', 'BZ': 'en', 'GY': 'en',
+  'IN': 'en', 'PH': 'en', 'SG': 'en', 'MY': 'en', 'PK': 'en', 'NG': 'en',
+  'KE': 'en', 'GH': 'en', 'ZW': 'en',
+  
+  // Portugués
+  'BR': 'pt', 'PT': 'pt', 'AO': 'pt', 'MZ': 'pt',
+  
+  // Francés
+  'FR': 'fr', 'BE': 'fr', 'CH': 'fr', 'MC': 'fr', 'LU': 'fr',
+  'SN': 'fr', 'CI': 'fr', 'CM': 'fr', 'MG': 'fr', 'HT': 'fr',
+  
+  // Alemán
+  'DE': 'de', 'AT': 'de', 'LI': 'de',
+  
+  // Italiano
+  'IT': 'it', 'SM': 'it', 'VA': 'it',
+  
+  // Japonés
+  'JP': 'ja',
+  
+  // Coreano
+  'KR': 'ko', 'KP': 'ko',
+  
+  // Chino
+  'CN': 'zh', 'TW': 'zh', 'HK': 'zh', 'MO': 'zh',
+  
+  // Ruso
+  'RU': 'ru', 'BY': 'ru', 'KZ': 'ru', 'KG': 'ru',
+  
+  // Árabe
+  'SA': 'ar', 'AE': 'ar', 'EG': 'ar', 'MA': 'ar', 'DZ': 'ar', 'TN': 'ar',
+  'IQ': 'ar', 'SY': 'ar', 'JO': 'ar', 'LB': 'ar', 'KW': 'ar', 'QA': 'ar',
+  'BH': 'ar', 'OM': 'ar', 'YE': 'ar', 'LY': 'ar', 'SD': 'ar',
+  
+  // Hindi
+  'IN': 'hi', // India también puede ser inglés, pero hindi es oficial
+  
+  // Holandés
+  'NL': 'nl', 'SR': 'nl',
+  
+  // Polaco
+  'PL': 'pl',
+  
+  // Turco
+  'TR': 'tr',
+  
+  // Sueco
+  'SE': 'sv',
+  
+  // Noruego
+  'NO': 'no',
+  
+  // Danés
+  'DK': 'da',
+  
+  // Finés
+  'FI': 'fi',
+  
+  // Griego
+  'GR': 'el', 'CY': 'el',
+  
+  // Hebreo
+  'IL': 'he',
+  
+  // Tailandés
+  'TH': 'th',
+  
+  // Vietnamita
+  'VN': 'vi',
+  
+  // Indonesio
+  'ID': 'id',
+  
+  // Malayo
+  'MY': 'ms', 'BN': 'ms',
+};
+
+/**
+ * Obtiene el idioma basado en el código de país
+ * @param {string} countryCode - Código ISO de país (ej: 'US', 'ES', 'BR')
+ * @returns {string} - Código de idioma (ej: 'en', 'es', 'pt')
+ */
+const getLanguageFromCountry = (countryCode) => {
+  if (!countryCode) return null;
+  const code = countryCode.toUpperCase();
+  return COUNTRY_TO_LANGUAGE[code] || null;
+};
+
 // Mapeo de idiomas a códigos de voz
 const LANGUAGE_CODES = {
   // Español
