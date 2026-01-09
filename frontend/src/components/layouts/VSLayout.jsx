@@ -286,6 +286,32 @@ const VSLayout = ({
     });
   }, [isThumbnail, creatorCountry]);
 
+  // Obtener la frase de intro según el idioma del país
+  const getIntroPhrase = useCallback(() => {
+    const lang = voiceService.getLanguageFromCountry(creatorCountry);
+    const phrases = {
+      'es': '¿Qué prefieres?',
+      'en': 'What do you prefer?',
+      'pt': 'O que você prefere?',
+      'fr': 'Que préférez-vous?',
+      'de': 'Was bevorzugst du?',
+      'it': 'Cosa preferisci?',
+      'ja': '何が好きですか？',
+      'ko': '뭐가 좋아요?',
+      'zh': '你喜欢什么？',
+      'ru': 'Что вы предпочитаете?',
+      'ar': 'ماذا تفضل؟',
+      'nl': 'Wat heeft je voorkeur?',
+      'pl': 'Co wolisz?',
+      'tr': 'Hangisini tercih edersin?',
+      'sv': 'Vad föredrar du?',
+      'no': 'Hva foretrekker du?',
+      'da': 'Hvad foretrækker du?',
+      'fi': 'Mitä suosit?',
+    };
+    return phrases[lang] || phrases['es'];  // Default español
+  }, [creatorCountry]);
+
   // Secuencia de voz con resaltado visual
   const startVoiceSequence = useCallback(() => {
     if (isThumbnail || hasVoted || !isActive) return;
@@ -299,14 +325,15 @@ const VSLayout = ({
     
     const timers = [];
     
-    // Solo decir "¿Qué prefieres?" en la primera pregunta
+    // Solo decir intro en la primera pregunta
     const isFirstQuestion = currentIndex === 0;
     const introDelay = isFirstQuestion ? 800 : 0;
     
-    // Paso 0: Decir "¿Qué prefieres?" solo en la primera pregunta
+    // Paso 0: Decir frase intro (en el idioma del país) solo en la primera pregunta
     if (isFirstQuestion) {
+      const introPhrase = getIntroPhrase();
       timers.push(setTimeout(() => {
-        speak('¿Qué prefieres?', 1.2);
+        speak(introPhrase, 1.2);
       }, 0));
     }
     
@@ -328,7 +355,7 @@ const VSLayout = ({
     }, introDelay + 3000));
     
     voiceSequenceRef.current = timers;
-  }, [isThumbnail, hasVoted, isActive, currentQuestion, currentIndex, speak, stopVoice]);
+  }, [isThumbnail, hasVoted, isActive, currentQuestion, currentIndex, speak, stopVoice, getIntroPhrase]);
 
   // Detener speech cuando el componente se desmonta
   useEffect(() => {
