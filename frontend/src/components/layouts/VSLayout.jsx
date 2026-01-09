@@ -68,16 +68,70 @@ const defaultColors = {
   bottom: { bg: 'bg-gradient-to-b from-red-500 to-red-700', primary: '#dc2626', secondary: '#f97316' }
 };
 
+// Mapeo de códigos ISO a nombres de país para colores
+const isoToCountryName = {
+  'US': 'united states',
+  'ES': 'españa',
+  'MX': 'méxico',
+  'AR': 'argentina',
+  'CO': 'colombia',
+  'CL': 'chile',
+  'PE': 'perú',
+  'VE': 'venezuela',
+  'EC': 'ecuador',
+  'UY': 'uruguay',
+  'PY': 'paraguay',
+  'BO': 'bolivia',
+  'CR': 'costa rica',
+  'GT': 'guatemala',
+  'HN': 'honduras',
+  'SV': 'el salvador',
+  'NI': 'nicaragua',
+  'PA': 'panamá',
+  'DO': 'república dominicana',
+  'PR': 'puerto rico',
+  'CU': 'cuba',
+  'BR': 'brasil',
+  'PT': 'portugal',
+  'FR': 'france',
+  'DE': 'germany',
+  'IT': 'italy',
+  'GB': 'united kingdom',
+  'JP': 'japan',
+  'CN': 'china',
+  'KR': 'south korea',
+  'RU': 'russia',
+};
+
+// Normaliza el país a nombre para buscar colores
+const normalizeCountryForColors = (country) => {
+  if (!country) return null;
+  
+  // Si es un código ISO de 2-3 letras, convertir a nombre
+  if (country.length <= 3) {
+    const upperCode = country.toUpperCase();
+    if (isoToCountryName[upperCode]) {
+      return isoToCountryName[upperCode];
+    }
+  }
+  
+  // Si ya es un nombre, devolverlo en minúsculas
+  return country.toLowerCase();
+};
+
 const getCountryColor = (text, index) => {
   if (!text) {
     return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
   }
   
-  const lowerText = text.toLowerCase();
+  // Normalizar: si es código ISO, convertir a nombre
+  const normalizedCountry = normalizeCountryForColors(text);
   
-  for (const [country, colors] of Object.entries(countryColors)) {
-    if (lowerText.includes(country)) {
-      return colors.bg;
+  if (normalizedCountry) {
+    for (const [country, colors] of Object.entries(countryColors)) {
+      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
+        return colors.bg;
+      }
     }
   }
   
@@ -90,11 +144,14 @@ const getCountryColors = (countryName) => {
     return { primary: defaultColors.top.primary, secondary: defaultColors.bottom.primary };
   }
   
-  const lowerText = countryName.toLowerCase();
+  // Normalizar: si es código ISO, convertir a nombre
+  const normalizedCountry = normalizeCountryForColors(countryName);
   
-  for (const [country, colors] of Object.entries(countryColors)) {
-    if (lowerText.includes(country)) {
-      return { primary: colors.primary, secondary: colors.secondary };
+  if (normalizedCountry) {
+    for (const [country, colors] of Object.entries(countryColors)) {
+      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
+        return { primary: colors.primary, secondary: colors.secondary };
+      }
     }
   }
   
@@ -106,11 +163,14 @@ const getCountryPrimaryColor = (text, index) => {
     return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
   }
   
-  const lowerText = text.toLowerCase();
+  // Normalizar: si es código ISO, convertir a nombre
+  const normalizedCountry = normalizeCountryForColors(text);
   
-  for (const [country, colors] of Object.entries(countryColors)) {
-    if (lowerText.includes(country)) {
-      return colors.primary;
+  if (normalizedCountry) {
+    for (const [country, colors] of Object.entries(countryColors)) {
+      if (normalizedCountry.includes(country) || country.includes(normalizedCountry)) {
+        return colors.primary;
+      }
     }
   }
   
