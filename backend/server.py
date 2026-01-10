@@ -10507,6 +10507,249 @@ async def get_latest_vs_experiences(
         raise HTTPException(status_code=500, detail="Failed to get VS feed")
 
 
+# ===================== MOMENTS ENDPOINTS =====================
+
+class MomentResponse(BaseModel):
+    id: str
+    user_id: str
+    username: str
+    user_avatar: Optional[str] = None
+    image_url: str
+    caption: Optional[str] = None
+    location: Optional[str] = None
+    filter: Optional[str] = "none"
+    likes_count: int = 0
+    comments_count: int = 0
+    is_liked: bool = False
+    created_at: datetime
+
+@api_router.post("/moments", tags=["Moments"])
+async def create_moment(
+    image: UploadFile = File(...),
+    caption: str = "",
+    location: str = "",
+    filter: str = "none",
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Create a new moment - a single image post to share special memories"""
+    try:
+        # Validate file type
+        if not image.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="Only image files are allowed")
+        
+        # Read and save image
+        content = await image.read()
+        
+        # Validate file size (max 10MB)
+        if len(content) > 10 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="Image size exceeds 10MB limit")
+        
+        # Generate unique filename
+        file_extension = image.filename.split('.')[-1] if '.' in image.filename else 'jpg'
+        filename = f"{uuid.uuid4()}.{file_extension}"
+        
+        # Ensure uploads directory exists
+        moments_dir = Path("uploads/moments")
+        moments_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save file
+        file_path = moments_dir / filename
+        async with aiofiles.open(file_path, 'wb') as f:
+            await f.write(content)
+        
+        # Create moment document
+        moment_id = str(uuid.uuid4())
+        moment_data = {
+            "id": moment_id,
+            "user_id": current_user.id,
+            "username": current_user.username,
+            "user_avatar": current_user.avatar,
+            "image_url": f"/api/uploads/moments/{filename}",
+            "caption": caption[:500] if caption else "",
+            "location": location[:100] if location else "",
+            "filter": filter,
+            "likes": [],
+            "likes_count": 0,
+            "comments": [],
+            "comments_count": 0,
+            "created_at": datetime.utcnow(),
+            "is_active": True
+        }
+        
+        await db.moments.insert_one(moment_data)
+        
+        logger.info(f"Moment created: {moment_id} by user {current_user.username}")
+        
+        return {
+            "id": moment_id,
+            "message": "Momento publicado exitosamente",
+            "image_url": moment_data["image_url"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating moment: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create moment")
+
+@api_router.get("/moments", tags=["Moments"])
+async def get_moments(
+    limit: int = Query(20, ge=1, le=50),
+    offset: int = Query(0, ge=0),
+    user_id: Optional[str] = None,
+    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+):
+    """Get moments feed or user-specific moments"""
+    try:
+        query = {"is_active": True}
+        if user_id:
+            query["user_id"] = user_id
+        
+        moments = await db.moments.find(query).sort("created_at", -1).skip(offset).limit(limit).to_list(length=limit)
+        
+        result = []
+        for moment in moments:
+            is_liked = False
+            if current_user and current_user.id in moment.get("likes", []):
+                is_liked = True
+            
+            result.append({
+                "id": moment["id"],
+                "user_id": moment["user_id"],
+                "username": moment["username"],
+                "user_avatar": moment.get("user_avatar"),
+                "image_url": moment["image_url"],
+                "caption": moment.get("caption", ""),
+                "location": moment.get("location", ""),
+                "filter": moment.get("filter", "none"),
+                "likes_count": moment.get("likes_count", 0),
+                "comments_count": moment.get("comments_count", 0),
+                "is_liked": is_liked,
+                "created_at": moment["created_at"]
+            })
+        
+        return {"moments": result, "total": len(result)}
+        
+    except Exception as e:
+        logger.error(f"Error getting moments: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get moments")
+
+@api_router.get("/moments/{moment_id}", tags=["Moments"])
+async def get_moment(
+    moment_id: str,
+    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+):
+    """Get a specific moment by ID"""
+    try:
+        moment = await db.moments.find_one({"id": moment_id, "is_active": True})
+        
+        if not moment:
+            raise HTTPException(status_code=404, detail="Moment not found")
+        
+        is_liked = False
+        if current_user and current_user.id in moment.get("likes", []):
+            is_liked = True
+        
+        return {
+            "id": moment["id"],
+            "user_id": moment["user_id"],
+            "username": moment["username"],
+            "user_avatar": moment.get("user_avatar"),
+            "image_url": moment["image_url"],
+            "caption": moment.get("caption", ""),
+            "location": moment.get("location", ""),
+            "filter": moment.get("filter", "none"),
+            "likes_count": moment.get("likes_count", 0),
+            "comments_count": moment.get("comments_count", 0),
+            "comments": moment.get("comments", []),
+            "is_liked": is_liked,
+            "created_at": moment["created_at"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting moment: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get moment")
+
+@api_router.post("/moments/{moment_id}/like", tags=["Moments"])
+async def like_moment(
+    moment_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Like or unlike a moment"""
+    try:
+        moment = await db.moments.find_one({"id": moment_id, "is_active": True})
+        
+        if not moment:
+            raise HTTPException(status_code=404, detail="Moment not found")
+        
+        likes = moment.get("likes", [])
+        
+        if current_user.id in likes:
+            # Unlike
+            likes.remove(current_user.id)
+            action = "unliked"
+        else:
+            # Like
+            likes.append(current_user.id)
+            action = "liked"
+        
+        await db.moments.update_one(
+            {"id": moment_id},
+            {"$set": {"likes": likes, "likes_count": len(likes)}}
+        )
+        
+        return {
+            "action": action,
+            "likes_count": len(likes),
+            "is_liked": action == "liked"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error liking moment: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to like moment")
+
+@api_router.delete("/moments/{moment_id}", tags=["Moments"])
+async def delete_moment(
+    moment_id: str,
+    current_user: UserResponse = Depends(get_current_user)
+):
+    """Delete a moment (only by owner)"""
+    try:
+        moment = await db.moments.find_one({"id": moment_id})
+        
+        if not moment:
+            raise HTTPException(status_code=404, detail="Moment not found")
+        
+        if moment["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="You can only delete your own moments")
+        
+        await db.moments.update_one(
+            {"id": moment_id},
+            {"$set": {"is_active": False}}
+        )
+        
+        return {"message": "Moment deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting moment: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete moment")
+
+# Serve moment images
+@api_router.get("/uploads/moments/{filename}", tags=["Moments"])
+async def get_moment_image(filename: str):
+    """Serve moment images"""
+    file_path = Path("uploads/moments") / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(file_path)
+
+
 # Incluir el router en la aplicación
 app.include_router(api_router)
 
