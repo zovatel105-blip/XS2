@@ -21,9 +21,10 @@ const CustomLogo = ({ size = 24, className = "" }) => {
         height={size}
         style={{
           display: 'block',
-          objectFit: 'contain',
+          objectFit: 'cover',
           maxWidth: '100%',
-          maxHeight: '100%'
+          maxHeight: '100%',
+          borderRadius: '20%'
         }}
       />
     </div>
