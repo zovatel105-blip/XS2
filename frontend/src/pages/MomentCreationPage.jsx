@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Camera, Image as ImageIcon, MapPin, Send, Sparkles, RotateCcw, Upload, Edit3 } from 'lucide-react';
+import { X, Music, Plus, Pencil, AtSign, Camera, Image as ImageIcon, MapPin, RotateCcw, Upload, Edit3 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useTikTok } from '../contexts/TikTokContext';
@@ -131,14 +131,11 @@ const MomentCreationPage = () => {
     setCropActive(false);
   };
 
-  // Publish moment
-  const handlePublish = async () => {
+  // Handle next/publish
+  const handleNext = async () => {
     if (!selectedImage) {
-      toast({
-        title: "Sin imagen",
-        description: "Selecciona una imagen para tu momento",
-        variant: "destructive"
-      });
+      // If no image, open gallery to select
+      handleGallerySelect();
       return;
     }
 
@@ -195,213 +192,200 @@ const MomentCreationPage = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 relative h-screen w-screen overflow-hidden bg-black" style={{ margin: 0, padding: 0 }}>
-      {/* Main Content Area */}
-      <div className="absolute top-0 left-0 right-0 bottom-32">
-        <div className="relative w-full h-full bg-black rounded-3xl overflow-hidden">
-          
-          {!imagePreview ? (
-            // Image Selection View - Similar to ContentCreationPage empty state
-            <div className="w-full h-full flex flex-col items-center justify-center p-6 gap-8">
-              <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center">
-                  <Sparkles className="w-12 h-12 text-white" />
-                </div>
-                <h2 className="text-white text-xl font-bold mb-2">Captura tu momento</h2>
-                <p className="text-white/60 text-sm max-w-xs">
-                  Guarda esos instantes especiales que no quieres olvidar
-                </p>
-              </div>
+    <div className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col" style={{ margin: 0, padding: 0 }}>
+      
+      {/* Top Header Bar */}
+      <div className="flex items-center justify-between px-4 py-3 pt-4">
+        {/* Close Button - Left */}
+        <button
+          onClick={() => navigate(-1)}
+          className="w-10 h-10 rounded-full bg-[#1a1a1a] flex items-center justify-center hover:bg-[#2a2a2a] transition-colors"
+        >
+          <X className="w-5 h-5 text-white" strokeWidth={2.5} />
+        </button>
 
-              <div className="flex gap-4">
-                {/* Camera Button */}
-                <button
-                  onClick={handleCameraCapture}
-                  className="flex flex-col items-center gap-2 p-6 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl hover:scale-105 transition-transform"
-                >
-                  <Camera className="w-8 h-8 text-white" />
-                  <span className="text-white font-medium text-sm">Cámara</span>
-                </button>
+        {/* Right Side - Add Sound & Camera */}
+        <div className="flex items-center gap-3">
+          {/* Add Sound Button */}
+          <button 
+            className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-white/10 transition-colors"
+            onClick={() => toast({ title: "Próximamente", description: "Función de añadir sonido" })}
+          >
+            <Music className="w-5 h-5 text-white" />
+            <span className="text-white text-sm font-medium">Add sound</span>
+          </button>
 
-                {/* Gallery Button */}
-                <button
-                  onClick={handleGallerySelect}
-                  className="flex flex-col items-center gap-2 p-6 bg-white/10 rounded-2xl hover:bg-white/20 transition-colors"
-                >
-                  <ImageIcon className="w-8 h-8 text-white" />
-                  <span className="text-white font-medium text-sm">Galería</span>
-                </button>
-              </div>
-
-              {/* Hidden file inputs */}
-              <input
-                ref={cameraInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleImageSelect}
-                className="hidden"
-              />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="hidden"
-              />
-            </div>
-          ) : (
-            // Image Preview with InlineCrop - Same as ContentCreationPage
-            <div 
-              className="w-full h-full relative overflow-hidden cursor-pointer"
-              onClick={() => !cropActive && setCropActive(true)}
-            >
-              <InlineCrop
-                isActive={cropActive}
-                imageSrc={imagePreview}
-                savedTransform={imageTransform ? { transform: imageTransform } : null}
-                onSave={handleCropSave}
-                onCancel={handleCropCancel}
-                className={`w-full h-full object-cover ${filters.find(f => f.id === filter)?.class || ''}`}
-              />
-
-              {/* Edit controls - Top left */}
-              {!cropActive && (
-                <div className="absolute top-4 left-4 z-30">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowCaptionInput(true);
-                      }}
-                      className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
-                      title="Editar descripción"
-                    >
-                      <Edit3 className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleGallerySelect();
-                      }}
-                      className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
-                      title="Cambiar imagen"
-                    >
-                      <Upload className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReset();
-                      }}
-                      className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
-                      title="Eliminar"
-                    >
-                      <RotateCcw className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Caption overlay at bottom */}
-              {caption && !cropActive && (
-                <div className="absolute bottom-4 left-4 right-4 z-20">
-                  <p className="text-white text-sm font-medium drop-shadow-lg line-clamp-3 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2">
-                    {caption}
-                  </p>
-                </div>
-              )}
-
-              {/* Location badge */}
-              {location && !cropActive && (
-                <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                  <MapPin className="w-3 h-3 text-white" />
-                  <span className="text-white text-xs">{location}</span>
-                </div>
-              )}
-
-              {/* Tap to adjust hint */}
-              {!cropActive && (
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
-                  <span className="text-white/60 text-xs bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
-                    Toca para ajustar
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Camera/Switch Button */}
+          <button 
+            className="w-10 h-10 rounded-full border-2 border-white/80 flex items-center justify-center hover:bg-white/10 transition-colors"
+            onClick={handleCameraCapture}
+          >
+            <div className="w-5 h-4 border-2 border-white rounded-sm"></div>
+          </button>
         </div>
       </div>
 
-      {/* Bottom Controls Area - Same style as ContentCreationPage */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black">
-        
-        {/* Filters row - only show when image is selected */}
-        {imagePreview && !cropActive && (
-          <div className="px-4 py-2">
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-              {filters.map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setFilter(f.id)}
-                  className={`flex-shrink-0 flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
-                    filter === f.id ? 'bg-amber-500/30 ring-2 ring-amber-500' : 'bg-white/10 hover:bg-white/20'
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-lg overflow-hidden ${f.class}`}>
-                    <img
-                      src={imagePreview}
-                      alt={f.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className={`text-[10px] ${filter === f.id ? 'text-amber-400' : 'text-white/70'}`}>
-                    {f.name}
-                  </span>
-                </button>
-              ))}
-            </div>
+      {/* Main Content Area - Center Plus or Image */}
+      <div className="flex-1 flex items-center justify-center relative">
+        {!imagePreview ? (
+          // Empty State - Plus Icon in center
+          <button
+            onClick={handleGallerySelect}
+            className="flex items-center justify-center hover:scale-110 transition-transform"
+          >
+            <Plus className="w-12 h-12 text-white" strokeWidth={1.5} />
+          </button>
+        ) : (
+          // Image Preview with InlineCrop
+          <div 
+            className="w-full h-full relative overflow-hidden"
+            onClick={() => !cropActive && setCropActive(true)}
+          >
+            <InlineCrop
+              isActive={cropActive}
+              imageSrc={imagePreview}
+              savedTransform={imageTransform ? { transform: imageTransform } : null}
+              onSave={handleCropSave}
+              onCancel={handleCropCancel}
+              className={`w-full h-full object-cover ${filters.find(f => f.id === filter)?.class || ''}`}
+            />
+
+            {/* Edit controls - Top left when image is shown */}
+            {!cropActive && (
+              <div className="absolute top-4 left-4 z-30">
+                <div className="flex gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowCaptionInput(true);
+                    }}
+                    className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                    title="Editar descripción"
+                  >
+                    <Edit3 className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleGallerySelect();
+                    }}
+                    className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                    title="Cambiar imagen"
+                  >
+                    <Upload className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReset();
+                    }}
+                    className="w-10 h-10 bg-black/30 backdrop-blur-sm text-white rounded-full flex items-center justify-center hover:bg-black/50 transition-colors"
+                    title="Eliminar"
+                  >
+                    <RotateCcw className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Caption overlay at bottom */}
+            {caption && !cropActive && (
+              <div className="absolute bottom-4 left-4 right-4 z-20">
+                <p className="text-white text-sm font-medium drop-shadow-lg line-clamp-3 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2">
+                  {caption}
+                </p>
+              </div>
+            )}
+
+            {/* Location badge */}
+            {location && !cropActive && (
+              <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                <MapPin className="w-3 h-3 text-white" />
+                <span className="text-white text-xs">{location}</span>
+              </div>
+            )}
+
+            {/* Tap to adjust hint */}
+            {!cropActive && (
+              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
+                <span className="text-white/60 text-xs bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
+                  Toca para ajustar
+                </span>
+              </div>
+            )}
           </div>
         )}
+      </div>
 
-        {/* Action buttons row */}
-        <div className="px-4 py-3 flex items-center justify-between">
-          {/* Close button */}
-          <button
-            onClick={() => navigate(-1)}
-            className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-          >
-            <X className="w-6 h-6 text-white" />
-          </button>
+      {/* Filters row - only show when image is selected */}
+      {imagePreview && !cropActive && (
+        <div className="px-4 py-2 bg-[#0a0a0a]">
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {filters.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id)}
+                className={`flex-shrink-0 flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+                  filter === f.id ? 'bg-amber-500/30 ring-2 ring-amber-500' : 'bg-white/10 hover:bg-white/20'
+                }`}
+              >
+                <div className={`w-10 h-10 rounded-lg overflow-hidden ${f.class}`}>
+                  <img
+                    src={imagePreview}
+                    alt={f.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span className={`text-[10px] ${filter === f.id ? 'text-amber-400' : 'text-white/70'}`}>
+                  {f.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-          {/* Publish button */}
+      {/* Bottom Section */}
+      <div className="bg-[#0a0a0a]">
+        {/* Action Icons Row - Left side icons + Right side "Siguiente" button */}
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Left Icons - Pencil and @ */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowCaptionInput(true)}
+              className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+            >
+              <Pencil className="w-5 h-5 text-white" />
+            </button>
+            <button
+              onClick={() => toast({ title: "Próximamente", description: "Función de mencionar usuarios" })}
+              className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
+            >
+              <AtSign className="w-5 h-5 text-white" />
+            </button>
+          </div>
+
+          {/* Right - Siguiente Button */}
           <button
-            onClick={handlePublish}
-            disabled={!selectedImage || isPublishing}
-            className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
-              selectedImage && !isPublishing
-                ? 'bg-gradient-to-r from-amber-500 to-yellow-500 hover:scale-105'
-                : 'bg-white/20 cursor-not-allowed'
-            }`}
+            onClick={handleNext}
+            disabled={isPublishing}
+            className="px-6 py-2.5 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-full transition-colors disabled:opacity-50"
           >
             {isPublishing ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <>
-                <Send className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">Publicar</span>
-              </>
+              <span className="text-white font-medium text-sm">Siguiente</span>
             )}
           </button>
         </div>
 
-        {/* Tab bar */}
-        <div className="bg-black/90 backdrop-blur-md px-4 py-4 pb-6 border-t border-white/10">
-          <div className="flex items-center justify-center gap-6">
+        {/* Navigation Tab Bar */}
+        <div className="px-4 pb-8 pt-2">
+          <div className="flex items-center justify-center gap-8">
             {/* PUBLICAR */}
             <button
               onClick={() => navigate('/create')}
-              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              className="text-white/50 font-semibold text-sm tracking-wider hover:text-white/80 transition-colors"
             >
               PUBLICAR
             </button>
@@ -409,7 +393,7 @@ const MomentCreationPage = () => {
             {/* HISTORIA */}
             <button
               onClick={() => navigate('/story-creation')}
-              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              className="text-white/50 font-semibold text-sm tracking-wider hover:text-white/80 transition-colors"
             >
               HISTORIA
             </button>
@@ -417,22 +401,19 @@ const MomentCreationPage = () => {
             {/* VS */}
             <button
               onClick={() => navigate('/vs-create')}
-              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              className="text-white/50 font-semibold text-sm tracking-wider hover:text-white/80 transition-colors"
             >
               VS
             </button>
             
             {/* MOMENTO - Active */}
-            <button
-              className="text-white font-semibold text-sm tracking-wide"
-            >
-              MOMENTO
-            </button>
-          </div>
-          
-          {/* Active indicator line */}
-          <div className="flex justify-center mt-2">
-            <div className="w-16 h-0.5 bg-white rounded-full"></div>
+            <div className="flex flex-col items-center">
+              <button className="text-white font-semibold text-sm tracking-wider">
+                MOMENTO
+              </button>
+              {/* Active indicator line */}
+              <div className="w-16 h-0.5 bg-white rounded-full mt-2"></div>
+            </div>
           </div>
         </div>
       </div>
