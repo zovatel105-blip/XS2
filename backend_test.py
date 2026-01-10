@@ -558,10 +558,10 @@ class MomentoTester:
 
 async def main():
     """Main test execution"""
-    print("🚀 Starting Backend Testing for Universal Search Poll Images")
+    print("🚀 Starting Backend Testing for Momento Creation Flow")
     print("="*80)
     
-    tester = BackendTester()
+    tester = MomentoTester()
     
     try:
         # Setup
@@ -571,10 +571,23 @@ async def main():
             print("❌ Cannot proceed without authentication")
             return False
         
-        # Run tests
-        await tester.test_universal_search_poll_images()
-        await tester.test_specific_poll_search()
-        await tester.test_frontend_compatibility()
+        # Run tests in sequence
+        print(f"\n🎯 Testing Momento Creation Flow with user ID: {tester.test_user_id}")
+        
+        # Test 1: Create a Momento
+        await tester.test_momento_creation()
+        
+        # Test 2: Retrieve the created Momento
+        await tester.test_momento_retrieval()
+        
+        # Test 3: Check if Momento appears in feed
+        await tester.test_momento_in_feed()
+        
+        # Test 4: Test voting on the Momento
+        await tester.test_momento_voting()
+        
+        # Test 5: Test layout validation
+        await tester.test_layout_validation()
         
         # Print summary
         success = tester.print_summary()
