@@ -1385,25 +1385,64 @@ const ContentCreationPage = () => {
         </div>
       )}
 
-      {/* Botón "Siguiente" estilo "Tu historia" - Parte inferior */}
+      {/* Bottom Tab Bar - Instagram/TikTok style */}
       {!previewMode && (
-        <div className="absolute bottom-0 left-0 right-0 z-30 pb-6 px-4">
-          <div className="max-w-md mx-auto flex justify-end">
+        <div className="absolute bottom-0 left-0 right-0 z-30">
+          {/* Next button row */}
+          <div className="px-4 pb-3 flex justify-end">
             <button
               onClick={handleCreate}
               disabled={isCreating || options.filter(opt => opt && opt.media).length < 2}
               className="flex items-center gap-2 bg-gray-900/80 hover:bg-gray-800/80 disabled:bg-gray-900/40 disabled:cursor-not-allowed backdrop-blur-sm rounded-full px-4 py-2 transition-all"
             >
-              {/* Texto */}
               <span className="text-white font-medium text-sm">
                 {isCreating ? 'Creando...' : 'Siguiente'}
               </span>
-              
-              {/* Loading spinner */}
               {isCreating && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               )}
             </button>
+          </div>
+
+          {/* Tab bar */}
+          <div className="bg-black/90 backdrop-blur-md px-4 py-4 pb-6">
+            <div className="flex items-center justify-center gap-6">
+              {/* PUBLICAR - Active */}
+              <button
+                className="text-white font-semibold text-sm tracking-wide"
+              >
+                PUBLICAR
+              </button>
+              
+              {/* HISTORIA */}
+              <button
+                onClick={() => navigate('/story-creation')}
+                className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              >
+                HISTORIA
+              </button>
+              
+              {/* VS */}
+              <button
+                onClick={() => navigate('/vs-create')}
+                className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              >
+                VS
+              </button>
+              
+              {/* MOMENTO */}
+              <button
+                onClick={() => navigate('/moment-create')}
+                className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+              >
+                MOMENTO
+              </button>
+            </div>
+            
+            {/* Active indicator line */}
+            <div className="flex justify-center mt-2">
+              <div className="w-16 h-0.5 bg-white rounded-full"></div>
+            </div>
           </div>
         </div>
       )}
