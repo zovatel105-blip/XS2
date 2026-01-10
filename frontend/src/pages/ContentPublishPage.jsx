@@ -431,6 +431,18 @@ const ContentPublishPage = () => {
                         );
                       }
                       
+                      // Moment - Single image fullscreen
+                      if (contentData.layout === 'moment') {
+                        return (
+                          <div className="relative w-full h-full">
+                            {renderMedia(contentData.options[0])}
+                            <div className="absolute top-1 right-1 bg-amber-500/80 px-1.5 py-0.5 rounded text-[8px] text-white font-medium">
+                              Momento
+                            </div>
+                          </div>
+                        );
+                      }
+                      
                       // Default fallback - Show first image
                       return (
                         <div className="relative w-full h-full">
