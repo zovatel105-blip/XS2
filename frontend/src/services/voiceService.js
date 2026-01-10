@@ -606,13 +606,16 @@ const speak = async (text, options = {}) => {
     forceLanguage = prefs.forcedLanguage,
     voiceType = prefs.voiceType,
     country = null,  // Código de país para determinar idioma (ej: 'US', 'ES')
+    cancelPrevious = false,  // Si debe cancelar el speech anterior
     onStart = () => {},
     onEnd = () => {},
     onError = () => {},
   } = options;
 
-  // Cancelar cualquier speech anterior
-  window.speechSynthesis.cancel();
+  // Solo cancelar si se solicita explícitamente
+  if (cancelPrevious) {
+    window.speechSynthesis.cancel();
+  }
 
   if (!text || text.trim().length === 0) {
     console.warn('⚠️ Texto vacío, nada que hablar');
