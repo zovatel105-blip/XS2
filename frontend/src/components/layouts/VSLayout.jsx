@@ -327,11 +327,12 @@ const VSLayout = ({
     });
   }, [isThumbnail, creatorCountry]);
 
-  // Obtener la frase de intro según el idioma del país
+  // Obtener la frase de intro según el idioma del país - TODOS LOS IDIOMAS
   const getIntroPhrase = useCallback(() => {
     const lang = voiceService.getLanguageFromCountry(creatorCountry);
     
     const phrases = {
+      // Idiomas principales
       'es': '¿Qué prefieres?',
       'en': 'What do you prefer?',
       'pt': 'O que você prefere?',
@@ -350,6 +351,44 @@ const VSLayout = ({
       'no': 'Hva foretrekker du?',
       'da': 'Hvad foretrækker du?',
       'fi': 'Mitä suosit?',
+      // Idiomas adicionales
+      'el': 'Τι προτιμάς;',           // Griego
+      'he': 'מה אתה מעדיף?',          // Hebreo
+      'th': 'คุณชอบอะไรมากกว่า?',      // Tailandés
+      'vi': 'Bạn thích gì hơn?',      // Vietnamita
+      'id': 'Apa yang kamu pilih?',   // Indonesio
+      'ms': 'Apa yang anda pilih?',   // Malayo
+      'hi': 'आप क्या पसंद करते हैं?',    // Hindi
+      'bn': 'আপনি কোনটা পছন্দ করেন?',   // Bengali
+      'ur': 'آپ کیا پسند کرتے ہیں؟',    // Urdu
+      'ta': 'நீங்கள் எதை விரும்புகிறீர்கள்?', // Tamil
+      'cs': 'Co preferuješ?',         // Checo
+      'sk': 'Čo preferuješ?',         // Eslovaco
+      'hu': 'Mit választanál?',       // Húngaro
+      'ro': 'Ce preferi?',            // Rumano
+      'bg': 'Какво предпочиташ?',     // Búlgaro
+      'hr': 'Što preferiraš?',        // Croata
+      'sr': 'Шта преферираш?',        // Serbio
+      'sl': 'Kaj imaš raje?',         // Esloveno
+      'uk': 'Що ви обираєте?',        // Ucraniano
+      'ca': 'Què prefereixes?',       // Catalán
+      'et': 'Mida sa eelistad?',      // Estonio
+      'lv': 'Ko tu izvēlies?',        // Letón
+      'lt': 'Ką tu pasirinktum?',     // Lituano
+      'is': 'Hvað kýst þú?',          // Islandés
+      'sq': 'Çfarë preferoni?',       // Albanés
+      'mk': 'Што претпочитате?',      // Macedonio
+      'ka': 'რას ანიჭებთ უპირატესობას?', // Georgiano
+      'hy': 'Ի՞նdelays եdelays delays delays delays եdelays նdelays delays delays delays delays նdelays delays delays delays delays delays նdelays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays', // Armenio - simplificado
+      'az': 'Nəyi seçərdiniz?',       // Azerbaiyano
+      'uz': 'Nimani tanlaysiz?',      // Uzbeko
+      'mn': 'Та юу сонгох вэ?',       // Mongol
+      'ne': 'तपाईं के रोज्नुहुन्छ?',     // Nepalí
+      'my': 'ဘာကိုပိုကြိုက်သလဲ?',      // Birmano
+      'km': 'អ្នកចូលចិត្តអ្វី?',         // Khmer
+      'lo': 'ເຈົ້າມັກຫຍັງ?',           // Lao
+      'am': 'ምን ትመርጣለህ?',           // Amárico
+      'fa': 'چه چیزی را ترجیح می‌دهید؟', // Persa
     };
     return phrases[lang] || phrases['es'];  // Default español
   }, [creatorCountry]);
