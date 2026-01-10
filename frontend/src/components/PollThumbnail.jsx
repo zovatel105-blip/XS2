@@ -110,6 +110,8 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
         return 'grid grid-cols-2 grid-rows-3 gap-0.5';
       case 'off': // Carrusel - mostrar solo primera imagen
         return 'grid grid-cols-1 gap-0';
+      case 'moment': // Momento - imagen única
+        return 'grid grid-cols-1 gap-0';
       default:
         return 'grid grid-cols-2 gap-0.5';
     }
@@ -126,6 +128,7 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
       case 'grid-3x2': return 6;
       case 'horizontal-3x2': return 6;
       case 'off': return 1; // Solo mostrar primera imagen en carrusel
+      case 'moment': return 1; // Solo mostrar una imagen en momento
       default: return 2;
     }
   };
