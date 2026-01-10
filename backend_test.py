@@ -20,12 +20,13 @@ TEST_CREDENTIALS = {
     "password": "test123"
 }
 
-class ViewTrackingTester:
+class MomentoTester:
     def __init__(self):
         self.session = None
         self.auth_token = None
         self.test_results = []
-        self.test_poll_id = None
+        self.test_user_id = None
+        self.created_poll_id = None
         
     async def setup(self):
         """Initialize HTTP session and authenticate"""
@@ -38,9 +39,10 @@ class ViewTrackingTester:
             await self.session.close()
             
     async def authenticate(self):
-        """Authenticate with demo credentials"""
-        print("🔐 Authenticating with demo credentials...")
+        """Authenticate with test credentials or register new user"""
+        print("🔐 Authenticating with test credentials...")
         
+        # First try to login with existing credentials
         try:
             async with self.session.post(
                 f"{BACKEND_URL}/auth/login",
@@ -51,14 +53,50 @@ class ViewTrackingTester:
                     data = await response.json()
                     self.auth_token = data.get("access_token")
                     user_data = data.get("user", {})
-                    print(f"✅ Authentication successful - User: {user_data.get('username', 'Unknown')}")
+                    self.test_user_id = user_data.get("id")
+                    print(f"✅ Login successful - User: {user_data.get('username', 'Unknown')} (ID: {self.test_user_id})")
+                    return True
+                elif response.status == 401:
+                    print("⚠️ Login failed, attempting to register new user...")
+                    return await self.register_test_user()
+                else:
+                    error_text = await response.text()
+                    print(f"❌ Login failed: {response.status} - {error_text}")
+                    return False
+        except Exception as e:
+            print(f"❌ Login error: {str(e)}")
+            return await self.register_test_user()
+    
+    async def register_test_user(self):
+        """Register a new test user"""
+        print("📝 Registering new test user...")
+        
+        registration_data = {
+            "email": TEST_CREDENTIALS["email"],
+            "password": TEST_CREDENTIALS["password"],
+            "username": f"testuser_{int(time.time())}",
+            "display_name": "Test User for Momento"
+        }
+        
+        try:
+            async with self.session.post(
+                f"{BACKEND_URL}/auth/register",
+                json=registration_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self.auth_token = data.get("access_token")
+                    user_data = data.get("user", {})
+                    self.test_user_id = user_data.get("id")
+                    print(f"✅ Registration successful - User: {user_data.get('username', 'Unknown')} (ID: {self.test_user_id})")
                     return True
                 else:
                     error_text = await response.text()
-                    print(f"❌ Authentication failed: {response.status} - {error_text}")
+                    print(f"❌ Registration failed: {response.status} - {error_text}")
                     return False
         except Exception as e:
-            print(f"❌ Authentication error: {str(e)}")
+            print(f"❌ Registration error: {str(e)}")
             return False
     
     def get_auth_headers(self):
@@ -67,408 +105,404 @@ class ViewTrackingTester:
             return {}
         return {"Authorization": f"Bearer {self.auth_token}"}
     
-    async def get_valid_poll_id(self) -> Optional[str]:
-        """Get a valid poll ID from the feed for testing"""
-        print("🔍 Getting valid poll ID from feed...")
+    async def test_momento_creation(self):
+        """Test creating a Momento poll with layout 'moment'"""
+        print("\n📸 Testing Momento Creation...")
+        
+        # Prepare the momento data as specified in the review request
+        momento_data = {
+            "title": "Mi primer momento",
+            "options": [
+                {
+                    "text": "Descripción del momento",
+                    "media_type": "image",
+                    "media_url": "/api/uploads/test.jpg"
+                }
+            ],
+            "layout": "moment",
+            "tags": [],
+            "mentioned_users": []
+        }
+        
+        try:
+            async with self.session.post(
+                f"{BACKEND_URL}/polls",
+                json=momento_data,
+                headers={**self.get_auth_headers(), "Content-Type": "application/json"}
+            ) as response:
+                
+                response_text = await response.text()
+                print(f"📊 Response Status: {response.status}")
+                print(f"📄 Response Body: {response_text[:500]}...")
+                
+                if response.status == 200 or response.status == 201:
+                    try:
+                        data = json.loads(response_text)
+                        
+                        # Verify response structure
+                        required_fields = ["id", "title", "layout", "options"]
+                        missing_fields = [field for field in required_fields if field not in data]
+                        
+                        if not missing_fields:
+                            poll_id = data.get("id")
+                            layout = data.get("layout")
+                            title = data.get("title")
+                            options = data.get("options", [])
+                            
+                            print(f"✅ Momento created successfully")
+                            print(f"   🆔 Poll ID: {poll_id}")
+                            print(f"   📝 Title: {title}")
+                            print(f"   🎨 Layout: {layout}")
+                            print(f"   📷 Options count: {len(options)}")
+                            
+                            # Verify layout is 'moment'
+                            if layout == "moment":
+                                print(f"   ✅ Layout 'moment' accepted correctly")
+                                
+                                # Verify option structure
+                                if options and len(options) == 1:
+                                    option = options[0]
+                                    if (option.get("text") == "Descripción del momento" and 
+                                        option.get("media_type") == "image"):
+                                        print(f"   ✅ Option structure correct")
+                                        
+                                        self.created_poll_id = poll_id
+                                        self.test_results.append({
+                                            "test": "momento_creation",
+                                            "status": "PASS",
+                                            "poll_id": poll_id,
+                                            "layout": layout,
+                                            "details": f"Successfully created Momento with layout 'moment'. Poll ID: {poll_id}"
+                                        })
+                                        return True
+                                    else:
+                                        print(f"   ❌ Option structure incorrect")
+                                        self.test_results.append({
+                                            "test": "momento_creation",
+                                            "status": "FAIL",
+                                            "error": "Option structure doesn't match expected format"
+                                        })
+                                else:
+                                    print(f"   ❌ Expected 1 option, got {len(options)}")
+                                    self.test_results.append({
+                                        "test": "momento_creation",
+                                        "status": "FAIL",
+                                        "error": f"Expected 1 option, got {len(options)}"
+                                    })
+                            else:
+                                print(f"   ❌ Layout '{layout}' != 'moment'")
+                                self.test_results.append({
+                                    "test": "momento_creation",
+                                    "status": "FAIL",
+                                    "error": f"Layout '{layout}' not accepted, expected 'moment'"
+                                })
+                        else:
+                            print(f"❌ Response missing required fields: {missing_fields}")
+                            self.test_results.append({
+                                "test": "momento_creation",
+                                "status": "FAIL",
+                                "error": f"Missing fields: {missing_fields}"
+                            })
+                    except json.JSONDecodeError as e:
+                        print(f"❌ Invalid JSON response: {str(e)}")
+                        self.test_results.append({
+                            "test": "momento_creation",
+                            "status": "FAIL",
+                            "error": f"Invalid JSON response: {str(e)}"
+                        })
+                else:
+                    print(f"❌ Momento creation failed: {response.status}")
+                    self.test_results.append({
+                        "test": "momento_creation",
+                        "status": "FAIL",
+                        "error": f"HTTP {response.status}: {response_text}"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error creating momento: {str(e)}")
+            self.test_results.append({
+                "test": "momento_creation",
+                "status": "ERROR",
+                "error": str(e)
+            })
+        
+        return False
+    
+    async def test_momento_retrieval(self):
+        """Test retrieving the created Momento"""
+        print("\n🔍 Testing Momento Retrieval...")
+        
+        if not self.created_poll_id:
+            print("❌ No created poll ID available for testing")
+            self.test_results.append({
+                "test": "momento_retrieval",
+                "status": "SKIP",
+                "error": "No created poll ID"
+            })
+            return
+        
+        try:
+            async with self.session.get(
+                f"{BACKEND_URL}/polls/{self.created_poll_id}",
+                headers=self.get_auth_headers()
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    
+                    # Verify the retrieved poll matches what we created
+                    layout = data.get("layout")
+                    title = data.get("title")
+                    options = data.get("options", [])
+                    
+                    if layout == "moment" and title == "Mi primer momento":
+                        print(f"✅ Momento retrieved successfully")
+                        print(f"   🆔 Poll ID: {data.get('id')}")
+                        print(f"   📝 Title: {title}")
+                        print(f"   🎨 Layout: {layout}")
+                        print(f"   📷 Options: {len(options)}")
+                        
+                        self.test_results.append({
+                            "test": "momento_retrieval",
+                            "status": "PASS",
+                            "poll_id": self.created_poll_id,
+                            "details": f"Successfully retrieved Momento. Layout: {layout}, Title: {title}"
+                        })
+                    else:
+                        print(f"❌ Retrieved data doesn't match created data")
+                        print(f"   Expected layout: 'moment', got: '{layout}'")
+                        print(f"   Expected title: 'Mi primer momento', got: '{title}'")
+                        self.test_results.append({
+                            "test": "momento_retrieval",
+                            "status": "FAIL",
+                            "error": f"Data mismatch - Layout: {layout}, Title: {title}"
+                        })
+                else:
+                    error_text = await response.text()
+                    print(f"❌ Momento retrieval failed: {response.status} - {error_text}")
+                    self.test_results.append({
+                        "test": "momento_retrieval",
+                        "status": "FAIL",
+                        "error": f"HTTP {response.status}: {error_text}"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error retrieving momento: {str(e)}")
+            self.test_results.append({
+                "test": "momento_retrieval",
+                "status": "ERROR",
+                "error": str(e)
+            })
+    
+    async def test_momento_in_feed(self):
+        """Test that the Momento appears in the feed"""
+        print("\n📱 Testing Momento in Feed...")
         
         try:
             async with self.session.get(
                 f"{BACKEND_URL}/polls",
                 headers=self.get_auth_headers()
             ) as response:
+                
                 if response.status == 200:
                     data = await response.json()
                     polls = data.get("polls", [])
-                    if polls:
-                        poll_id = polls[0].get("id")
-                        poll_title = polls[0].get("title", "Unknown")
-                        print(f"✅ Found poll ID: {poll_id} - '{poll_title}'")
-                        return poll_id
-                    else:
-                        print("❌ No polls found in feed")
-                        return None
-                else:
-                    error_text = await response.text()
-                    print(f"❌ Failed to get polls: {response.status} - {error_text}")
-                    return None
-        except Exception as e:
-            print(f"❌ Error getting poll ID: {str(e)}")
-            return None
-    
-    async def test_authenticated_user_view_registration(self):
-        """FASE 1.1: Test authenticated user registering views"""
-        print("\n👤 Testing Authenticated User View Registration...")
-        
-        if not self.test_poll_id:
-            print("❌ No valid poll ID available for testing")
-            self.test_results.append({
-                "test": "authenticated_view_registration",
-                "status": "SKIP",
-                "error": "No valid poll ID"
-            })
-            return
-        
-        try:
-            # Register a view as authenticated user
-            async with self.session.post(
-                f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
-                headers=self.get_auth_headers()
-            ) as response:
-                
-                if response.status == 200:
-                    data = await response.json()
                     
-                    # Verify response structure
-                    required_fields = ["success", "poll_id", "total_views", "message"]
-                    missing_fields = [field for field in required_fields if field not in data]
+                    # Look for our created momento in the feed
+                    momento_found = False
+                    for poll in polls:
+                        if poll.get("id") == self.created_poll_id:
+                            momento_found = True
+                            layout = poll.get("layout")
+                            title = poll.get("title")
+                            
+                            print(f"✅ Momento found in feed")
+                            print(f"   🆔 Poll ID: {poll.get('id')}")
+                            print(f"   📝 Title: {title}")
+                            print(f"   🎨 Layout: {layout}")
+                            
+                            if layout == "moment":
+                                self.test_results.append({
+                                    "test": "momento_in_feed",
+                                    "status": "PASS",
+                                    "poll_id": self.created_poll_id,
+                                    "details": f"Momento appears correctly in feed with layout 'moment'"
+                                })
+                            else:
+                                self.test_results.append({
+                                    "test": "momento_in_feed",
+                                    "status": "FAIL",
+                                    "error": f"Momento in feed has wrong layout: {layout}"
+                                })
+                            break
                     
-                    if not missing_fields:
-                        print(f"✅ View registered successfully")
-                        print(f"   📊 Total views: {data.get('total_views')}")
-                        print(f"   📝 Message: {data.get('message')}")
-                        print(f"   🆔 Poll ID: {data.get('poll_id')}")
-                        
+                    if not momento_found:
+                        print(f"❌ Momento not found in feed")
+                        print(f"   📊 Total polls in feed: {len(polls)}")
                         self.test_results.append({
-                            "test": "authenticated_view_registration",
-                            "status": "PASS",
-                            "total_views": data.get('total_views'),
-                            "details": f"Successfully registered view for authenticated user. Total views: {data.get('total_views')}"
-                        })
-                        
-                        return data.get('total_views')
-                    else:
-                        print(f"❌ Response missing required fields: {missing_fields}")
-                        self.test_results.append({
-                            "test": "authenticated_view_registration",
+                            "test": "momento_in_feed",
                             "status": "FAIL",
-                            "error": f"Missing fields: {missing_fields}"
+                            "error": f"Created Momento not found in feed (searched {len(polls)} polls)"
                         })
                 else:
                     error_text = await response.text()
-                    print(f"❌ View registration failed: {response.status} - {error_text}")
+                    print(f"❌ Feed retrieval failed: {response.status} - {error_text}")
                     self.test_results.append({
-                        "test": "authenticated_view_registration",
+                        "test": "momento_in_feed",
                         "status": "FAIL",
                         "error": f"HTTP {response.status}: {error_text}"
                     })
                     
         except Exception as e:
-            print(f"❌ Error registering authenticated view: {str(e)}")
+            print(f"❌ Error checking feed: {str(e)}")
             self.test_results.append({
-                "test": "authenticated_view_registration",
+                "test": "momento_in_feed",
                 "status": "ERROR",
                 "error": str(e)
             })
-        
-        return None
     
-    async def test_unauthenticated_user_view_registration(self):
-        """FASE 1.2: Test unauthenticated user registering views"""
-        print("\n🕵️ Testing Unauthenticated User View Registration...")
+    async def test_momento_voting(self):
+        """Test voting functionality on the Momento"""
+        print("\n🗳️ Testing Momento Voting...")
         
-        if not self.test_poll_id:
-            print("❌ No valid poll ID available for testing")
+        if not self.created_poll_id:
+            print("❌ No created poll ID available for testing")
             self.test_results.append({
-                "test": "unauthenticated_view_registration",
+                "test": "momento_voting",
                 "status": "SKIP",
-                "error": "No valid poll ID"
+                "error": "No created poll ID"
             })
             return
         
         try:
-            # Generate a unique session ID
-            session_id = f"session_{int(time.time())}_test123"
-            print(f"🆔 Using session ID: {session_id}")
-            
-            # Register a view without authentication but with session ID header
-            headers = {"X-Session-ID": session_id}
-            
-            async with self.session.post(
-                f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
-                headers=headers
-            ) as response:
-                
-                if response.status == 200:
-                    data = await response.json()
-                    
-                    # Verify response structure
-                    required_fields = ["success", "poll_id", "total_views", "message"]
-                    missing_fields = [field for field in required_fields if field not in data]
-                    
-                    if not missing_fields:
-                        print(f"✅ Unauthenticated view registered successfully")
-                        print(f"   📊 Total views: {data.get('total_views')}")
-                        print(f"   📝 Message: {data.get('message')}")
-                        print(f"   🆔 Session ID: {session_id}")
-                        
-                        self.test_results.append({
-                            "test": "unauthenticated_view_registration",
-                            "status": "PASS",
-                            "total_views": data.get('total_views'),
-                            "session_id": session_id,
-                            "details": f"Successfully registered view for unauthenticated user with session ID. Total views: {data.get('total_views')}"
-                        })
-                        
-                        return data.get('total_views')
-                    else:
-                        print(f"❌ Response missing required fields: {missing_fields}")
-                        self.test_results.append({
-                            "test": "unauthenticated_view_registration",
-                            "status": "FAIL",
-                            "error": f"Missing fields: {missing_fields}"
-                        })
-                else:
-                    error_text = await response.text()
-                    print(f"❌ Unauthenticated view registration failed: {response.status} - {error_text}")
-                    self.test_results.append({
-                        "test": "unauthenticated_view_registration",
-                        "status": "FAIL",
-                        "error": f"HTTP {response.status}: {error_text}"
-                    })
-                    
-        except Exception as e:
-            print(f"❌ Error registering unauthenticated view: {str(e)}")
-            self.test_results.append({
-                "test": "unauthenticated_view_registration",
-                "status": "ERROR",
-                "error": str(e)
-            })
-        
-        return None
-    
-    async def test_multiple_views_same_user(self):
-        """FASE 1.3: Test multiple views from the same user"""
-        print("\n🔄 Testing Multiple Views from Same User...")
-        
-        if not self.test_poll_id:
-            print("❌ No valid poll ID available for testing")
-            self.test_results.append({
-                "test": "multiple_views_same_user",
-                "status": "SKIP",
-                "error": "No valid poll ID"
-            })
-            return
-        
-        try:
-            initial_views = None
-            views_registered = 0
-            
-            # Register 3 views from the same authenticated user
-            for i in range(3):
-                print(f"🔄 Registering view #{i+1}...")
-                
-                async with self.session.post(
-                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
-                    headers=self.get_auth_headers()
-                ) as response:
-                    
-                    if response.status == 200:
-                        data = await response.json()
-                        current_views = data.get('total_views')
-                        
-                        if initial_views is None:
-                            initial_views = current_views - 1  # Subtract the view we just registered
-                        
-                        views_registered += 1
-                        print(f"   ✅ View #{i+1} registered. Total views: {current_views}")
-                        
-                        # Small delay to ensure different timestamps
-                        await asyncio.sleep(0.1)
-                    else:
-                        error_text = await response.text()
-                        print(f"   ❌ View #{i+1} failed: {response.status} - {error_text}")
-                        break
-            
-            if views_registered == 3:
-                # Verify that all 3 views were counted
-                async with self.session.post(
-                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
-                    headers=self.get_auth_headers()
-                ) as response:
-                    
-                    if response.status == 200:
-                        data = await response.json()
-                        final_views = data.get('total_views')
-                        views_increase = final_views - initial_views
-                        
-                        if views_increase >= 4:  # At least 4 views (3 + 1 verification)
-                            print(f"✅ Multiple views correctly registered")
-                            print(f"   📊 Views increased by: {views_increase}")
-                            print(f"   🎯 Expected: At least 4, Got: {views_increase}")
-                            
-                            self.test_results.append({
-                                "test": "multiple_views_same_user",
-                                "status": "PASS",
-                                "views_registered": views_registered + 1,
-                                "views_increase": views_increase,
-                                "details": f"Successfully registered {views_registered + 1} views from same user. Views increased by {views_increase}"
-                            })
-                        else:
-                            print(f"❌ Views not properly counted")
-                            print(f"   📊 Expected increase: At least 4, Got: {views_increase}")
-                            
-                            self.test_results.append({
-                                "test": "multiple_views_same_user",
-                                "status": "FAIL",
-                                "views_increase": views_increase,
-                                "error": f"Views increase ({views_increase}) less than expected (4+)"
-                            })
-            else:
-                print(f"❌ Only {views_registered}/3 views were registered successfully")
-                self.test_results.append({
-                    "test": "multiple_views_same_user",
-                    "status": "PARTIAL",
-                    "views_registered": views_registered,
-                    "error": f"Only {views_registered}/3 views registered"
-                })
-                
-        except Exception as e:
-            print(f"❌ Error testing multiple views: {str(e)}")
-            self.test_results.append({
-                "test": "multiple_views_same_user",
-                "status": "ERROR",
-                "error": str(e)
-            })
-    
-    async def test_nonexistent_poll_view(self):
-        """FASE 1.4: Test view registration for nonexistent poll"""
-        print("\n🚫 Testing View Registration for Nonexistent Poll...")
-        
-        fake_poll_id = "fake-poll-id-999"
-        
-        try:
-            async with self.session.post(
-                f"{BACKEND_URL}/polls/{fake_poll_id}/view",
-                headers=self.get_auth_headers()
-            ) as response:
-                
-                if response.status == 404:
-                    data = await response.json()
-                    detail = data.get("detail", "")
-                    
-                    if "Poll not found" in detail:
-                        print(f"✅ Correctly returned 404 for nonexistent poll")
-                        print(f"   📝 Message: {detail}")
-                        
-                        self.test_results.append({
-                            "test": "nonexistent_poll_view",
-                            "status": "PASS",
-                            "response_code": 404,
-                            "details": f"Correctly returned 404 with message: {detail}"
-                        })
-                    else:
-                        print(f"❌ Wrong error message: {detail}")
-                        self.test_results.append({
-                            "test": "nonexistent_poll_view",
-                            "status": "FAIL",
-                            "response_code": 404,
-                            "error": f"Wrong error message: {detail}"
-                        })
-                else:
-                    error_text = await response.text()
-                    print(f"❌ Expected 404, got {response.status}: {error_text}")
-                    self.test_results.append({
-                        "test": "nonexistent_poll_view",
-                        "status": "FAIL",
-                        "response_code": response.status,
-                        "error": f"Expected 404, got {response.status}: {error_text}"
-                    })
-                    
-        except Exception as e:
-            print(f"❌ Error testing nonexistent poll: {str(e)}")
-            self.test_results.append({
-                "test": "nonexistent_poll_view",
-                "status": "ERROR",
-                "error": str(e)
-            })
-    
-    async def test_voters_endpoint_view_count(self):
-        """FASE 2.1: Test that voters endpoint returns correct view count"""
-        print("\n📊 Testing Voters Endpoint View Count...")
-        
-        if not self.test_poll_id:
-            print("❌ No valid poll ID available for testing")
-            self.test_results.append({
-                "test": "voters_endpoint_view_count",
-                "status": "SKIP",
-                "error": "No valid poll ID"
-            })
-            return
-        
-        try:
-            # First, register some views to ensure we have data
-            print("🔄 Registering 5 views for testing...")
-            for i in range(5):
-                await self.session.post(
-                    f"{BACKEND_URL}/polls/{self.test_poll_id}/view",
-                    headers=self.get_auth_headers()
-                )
-                await asyncio.sleep(0.1)
-            
-            # Now test the voters endpoint
+            # First get the poll to find the option ID
             async with self.session.get(
-                f"{BACKEND_URL}/polls/{self.test_poll_id}/voters",
+                f"{BACKEND_URL}/polls/{self.created_poll_id}",
                 headers=self.get_auth_headers()
             ) as response:
                 
                 if response.status == 200:
-                    data = await response.json()
+                    poll_data = await response.json()
+                    options = poll_data.get("options", [])
                     
-                    # Check required fields
-                    required_fields = ["poll_id", "voters", "total_votes", "views"]
-                    missing_fields = [field for field in required_fields if field not in data]
-                    
-                    if not missing_fields:
-                        views_count = data.get("views")
-                        total_votes = data.get("total_votes")
-                        voters = data.get("voters", [])
+                    if options:
+                        option_id = options[0].get("id")
                         
-                        print(f"✅ Voters endpoint returned valid data")
-                        print(f"   📊 Views: {views_count}")
-                        print(f"   🗳️  Total votes: {total_votes}")
-                        print(f"   👥 Voters: {len(voters)}")
+                        # Now try to vote on the option
+                        vote_data = {
+                            "option_id": option_id
+                        }
                         
-                        # Verify that views count is from poll_views collection (should be >= 5)
-                        if views_count >= 5:
-                            print(f"✅ Views count reflects poll_views collection data")
+                        async with self.session.post(
+                            f"{BACKEND_URL}/polls/{self.created_poll_id}/vote",
+                            json=vote_data,
+                            headers={**self.get_auth_headers(), "Content-Type": "application/json"}
+                        ) as vote_response:
                             
-                            self.test_results.append({
-                                "test": "voters_endpoint_view_count",
-                                "status": "PASS",
-                                "views_count": views_count,
-                                "total_votes": total_votes,
-                                "voters_count": len(voters),
-                                "details": f"Voters endpoint correctly returns views from poll_views collection. Views: {views_count}, Votes: {total_votes}"
-                            })
-                        else:
-                            print(f"❌ Views count ({views_count}) doesn't reflect registered views")
-                            
-                            self.test_results.append({
-                                "test": "voters_endpoint_view_count",
-                                "status": "FAIL",
-                                "views_count": views_count,
-                                "error": f"Views count ({views_count}) less than expected (5+)"
-                            })
+                            if vote_response.status == 200:
+                                vote_result = await vote_response.json()
+                                
+                                print(f"✅ Vote cast successfully")
+                                print(f"   🗳️ Option ID: {option_id}")
+                                print(f"   📊 Vote result: {vote_result}")
+                                
+                                self.test_results.append({
+                                    "test": "momento_voting",
+                                    "status": "PASS",
+                                    "option_id": option_id,
+                                    "details": f"Successfully voted on Momento option"
+                                })
+                            else:
+                                error_text = await vote_response.text()
+                                print(f"❌ Voting failed: {vote_response.status} - {error_text}")
+                                self.test_results.append({
+                                    "test": "momento_voting",
+                                    "status": "FAIL",
+                                    "error": f"Voting HTTP {vote_response.status}: {error_text}"
+                                })
                     else:
-                        print(f"❌ Response missing required fields: {missing_fields}")
+                        print(f"❌ No options found in poll")
                         self.test_results.append({
-                            "test": "voters_endpoint_view_count",
+                            "test": "momento_voting",
                             "status": "FAIL",
-                            "error": f"Missing fields: {missing_fields}"
+                            "error": "No options found in poll for voting"
                         })
                 else:
                     error_text = await response.text()
-                    print(f"❌ Voters endpoint failed: {response.status} - {error_text}")
+                    print(f"❌ Failed to get poll for voting: {response.status} - {error_text}")
                     self.test_results.append({
-                        "test": "voters_endpoint_view_count",
+                        "test": "momento_voting",
                         "status": "FAIL",
-                        "error": f"HTTP {response.status}: {error_text}"
+                        "error": f"Failed to get poll: HTTP {response.status}"
                     })
                     
         except Exception as e:
-            print(f"❌ Error testing voters endpoint: {str(e)}")
+            print(f"❌ Error testing voting: {str(e)}")
             self.test_results.append({
-                "test": "voters_endpoint_view_count",
+                "test": "momento_voting",
+                "status": "ERROR",
+                "error": str(e)
+            })
+    
+    async def test_layout_validation(self):
+        """Test that invalid layouts are rejected"""
+        print("\n🚫 Testing Layout Validation...")
+        
+        # Test with invalid layout
+        invalid_data = {
+            "title": "Test invalid layout",
+            "options": [
+                {
+                    "text": "Test option",
+                    "media_type": "image",
+                    "media_url": "/api/uploads/test.jpg"
+                }
+            ],
+            "layout": "invalid_layout",
+            "tags": [],
+            "mentioned_users": []
+        }
+        
+        try:
+            async with self.session.post(
+                f"{BACKEND_URL}/polls",
+                json=invalid_data,
+                headers={**self.get_auth_headers(), "Content-Type": "application/json"}
+            ) as response:
+                
+                response_text = await response.text()
+                
+                if response.status == 400 or response.status == 422:
+                    print(f"✅ Invalid layout correctly rejected")
+                    print(f"   📊 Status: {response.status}")
+                    print(f"   📄 Response: {response_text[:200]}...")
+                    
+                    self.test_results.append({
+                        "test": "layout_validation",
+                        "status": "PASS",
+                        "response_code": response.status,
+                        "details": f"Invalid layout 'invalid_layout' correctly rejected with {response.status}"
+                    })
+                elif response.status == 200 or response.status == 201:
+                    print(f"❌ Invalid layout was accepted (should be rejected)")
+                    self.test_results.append({
+                        "test": "layout_validation",
+                        "status": "FAIL",
+                        "error": f"Invalid layout 'invalid_layout' was accepted (HTTP {response.status})"
+                    })
+                else:
+                    print(f"⚠️ Unexpected response: {response.status}")
+                    self.test_results.append({
+                        "test": "layout_validation",
+                        "status": "PARTIAL",
+                        "response_code": response.status,
+                        "details": f"Unexpected response code {response.status} for invalid layout"
+                    })
+                    
+        except Exception as e:
+            print(f"❌ Error testing layout validation: {str(e)}")
+            self.test_results.append({
+                "test": "layout_validation",
                 "status": "ERROR",
                 "error": str(e)
             })
@@ -476,7 +510,7 @@ class ViewTrackingTester:
     def print_summary(self):
         """Print test summary"""
         print("\n" + "="*80)
-        print("🎯 UNIVERSAL SEARCH POLL IMAGES - TEST SUMMARY")
+        print("📸 MOMENTO CREATION FLOW - TEST SUMMARY")
         print("="*80)
         
         total_tests = len(self.test_results)
@@ -484,12 +518,14 @@ class ViewTrackingTester:
         failed_tests = len([t for t in self.test_results if t["status"] == "FAIL"])
         error_tests = len([t for t in self.test_results if t["status"] == "ERROR"])
         partial_tests = len([t for t in self.test_results if t["status"] == "PARTIAL"])
+        skipped_tests = len([t for t in self.test_results if t["status"] == "SKIP"])
         
         print(f"📊 Total Tests: {total_tests}")
         print(f"✅ Passed: {passed_tests}")
         print(f"⚠️  Partial: {partial_tests}")
         print(f"❌ Failed: {failed_tests}")
         print(f"💥 Errors: {error_tests}")
+        print(f"⏭️  Skipped: {skipped_tests}")
         
         success_rate = ((passed_tests + partial_tests) / total_tests * 100) if total_tests > 0 else 0
         print(f"🎯 Success Rate: {success_rate:.1f}%")
@@ -510,13 +546,13 @@ class ViewTrackingTester:
         
         # Overall assessment
         if success_rate >= 80:
-            print("🎉 OVERALL ASSESSMENT: EXCELLENT - Poll image search is working correctly!")
+            print("🎉 OVERALL ASSESSMENT: EXCELLENT - Momento creation flow is working correctly!")
         elif success_rate >= 60:
-            print("👍 OVERALL ASSESSMENT: GOOD - Poll image search is mostly working with minor issues")
+            print("👍 OVERALL ASSESSMENT: GOOD - Momento creation flow is mostly working with minor issues")
         elif success_rate >= 40:
-            print("⚠️  OVERALL ASSESSMENT: NEEDS IMPROVEMENT - Some issues with poll image search")
+            print("⚠️  OVERALL ASSESSMENT: NEEDS IMPROVEMENT - Some issues with Momento creation flow")
         else:
-            print("❌ OVERALL ASSESSMENT: CRITICAL ISSUES - Poll image search needs significant fixes")
+            print("❌ OVERALL ASSESSMENT: CRITICAL ISSUES - Momento creation flow needs significant fixes")
         
         return success_rate >= 60  # Return True if tests are generally successful
 
