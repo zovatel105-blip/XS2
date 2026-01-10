@@ -368,32 +368,32 @@ const VSLayout = ({
     
     // Solo decir intro en la primera pregunta
     const isFirstQuestion = currentIndex === 0;
-    const introDelay = isFirstQuestion ? 800 : 0;
+    const introDelay = isFirstQuestion ? 1500 : 0;  // Más tiempo para la intro (1.5 segundos)
     
     // Paso 0: Decir frase intro (en el idioma del país) solo en la primera pregunta
     if (isFirstQuestion) {
       const introPhrase = getIntroPhrase();
       timers.push(setTimeout(() => {
-        speak(introPhrase, 0.9);  // Velocidad más lenta
+        speak(introPhrase, 0.85);  // Velocidad más lenta para intro
       }, 0));
     }
     
-    // Paso 1: Resaltar y hablar opción A
+    // Paso 1: Resaltar y hablar opción A (después de que termine la intro)
     timers.push(setTimeout(() => {
       setHighlightedOption(0);
-      speak(optionA, 1.0);  // Velocidad normal para opciones
+      speak(optionA, 0.95);
     }, introDelay));
     
     // Paso 2: Resaltar y hablar opción B
     timers.push(setTimeout(() => {
       setHighlightedOption(1);
-      speak(optionB, 1.0);  // Velocidad normal para opciones
-    }, introDelay + 1800));  // Más tiempo entre opciones
+      speak(optionB, 0.95);
+    }, introDelay + 2000));  // 2 segundos entre opciones
     
     // Paso 3: Quitar resaltado
     timers.push(setTimeout(() => {
       setHighlightedOption(null);
-    }, introDelay + 3600));  // Más tiempo total
+    }, introDelay + 4000));  // 4 segundos total después de intro
     
     voiceSequenceRef.current = timers;
   }, [isThumbnail, hasVoted, isActive, currentQuestion, currentIndex, speak, stopVoice, getIntroPhrase]);
