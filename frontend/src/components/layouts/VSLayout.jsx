@@ -330,7 +330,6 @@ const VSLayout = ({
   // Obtener la frase de intro según el idioma del país
   const getIntroPhrase = useCallback(() => {
     const lang = voiceService.getLanguageFromCountry(creatorCountry);
-    console.log('🗣️ getIntroPhrase - creatorCountry:', creatorCountry, '-> lang:', lang);
     
     const phrases = {
       'es': '¿Qué prefieres?',
