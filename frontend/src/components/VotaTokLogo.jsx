@@ -4,7 +4,7 @@ const VotaTokLogo = ({ size = 60, className = "" }) => {
   return (
     <div className={`inline-flex items-center justify-center ${className}`}>
       <img 
-        src="/votatuk-logo.png" 
+        src="/votatuk-logo.jpg" 
         alt="VotaTok Logo"
         width={size}
         height={size}
@@ -20,7 +20,7 @@ export const VotaTokSimpleLogo = ({ size = 40, className = "" }) => {
   return (
     <div className={`inline-flex items-center justify-center ${className}`}>
       <img 
-        src="/votatuk-logo.png" 
+        src="/votatuk-logo.jpg" 
         alt="VotaTok Logo"
         width={size}
         height={size}
