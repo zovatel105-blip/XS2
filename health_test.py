@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://multilingual-voice-8.preview.emergentagent.com/api"
+BACKEND_URL = "https://ffmpeg-ready.preview.emergentagent.com/api"
 
 class HealthTester:
     def __init__(self):
