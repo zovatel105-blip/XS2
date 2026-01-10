@@ -282,27 +282,6 @@ const VSLayout = ({
   // País del creador para los colores y voz
   const creatorCountry = poll.creator_country;
   
-  // Debug: Log detallado del país del creador
-  useEffect(() => {
-    console.log('🎨 DEBUG COLORES:');
-    console.log('  - creatorCountry raw:', creatorCountry);
-    console.log('  - tipo:', typeof creatorCountry);
-    console.log('  - poll.creator_country:', poll.creator_country);
-    
-    // Verificar si existe en countryColors
-    if (creatorCountry) {
-      const directMatch = countryColors[creatorCountry];
-      const lowerMatch = countryColors[creatorCountry.toLowerCase?.()];
-      const upperMatch = countryColors[creatorCountry.toUpperCase?.()];
-      console.log('  - Match directo:', directMatch ? 'SÍ' : 'NO');
-      console.log('  - Match lowercase:', lowerMatch ? 'SÍ' : 'NO');
-      console.log('  - Match uppercase:', upperMatch ? 'SÍ' : 'NO');
-    }
-    
-    const colors = getCountryColors(creatorCountry);
-    console.log('  - Colores obtenidos:', colors);
-  }, [creatorCountry, poll]);
-  
   // Preparar todas las preguntas
   const vsQuestions = poll.vs_questions || [];
   const initialOptions = poll.options || [];
