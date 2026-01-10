@@ -510,8 +510,8 @@ const CarouselLayout = ({
         })}
       </Swiper>
 
-      {/* INDICADORES PERSONALIZADOS - Sin marco */}
-      {!isThumbnail && (
+      {/* INDICADORES PERSONALIZADOS - Sin marco - No mostrar para momentos (una sola imagen) */}
+      {!isThumbnail && !isMoment && poll.options.length > 1 && (
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {poll.options.map((_, i) => (
             <button
