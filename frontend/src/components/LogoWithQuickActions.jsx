@@ -99,30 +99,43 @@ const LogoWithQuickActions = ({ size = 32, className = "" }) => {
           WebkitUserSelect: 'none',
           WebkitTouchCallout: 'none',
           WebkitTapHighlightColor: 'transparent',
+          border: 'none',
+          outline: 'none',
+          boxShadow: 'none',
+          background: 'transparent',
+          // Forzar eliminación de cualquier outline o ring del navegador
+          WebkitAppearance: 'none',
+          MozAppearance: 'none',
+          appearance: 'none',
+          // Eliminar cualquier ring o outline en todos los estados
+          '&:focus': {
+            outline: 'none !important',
+            boxShadow: 'none !important',
+            border: 'none !important'
+          },
+          '&:active': {
+            outline: 'none !important',
+            boxShadow: 'none !important',
+            border: 'none !important'
+          },
+          '&:hover': {
+            outline: 'none !important',
+            boxShadow: 'none !important',
+            border: 'none !important'
+          }
         }}
         title="Mantén presionado para acciones rápidas"
       >
-        {/* Círculo exterior con gradiente */}
-        <div 
-          className="absolute rounded-full"
-          style={{
-            width: `${size}px`,
-            height: `${size}px`,
-            background: 'linear-gradient(45deg, #FF0050, #00F2EA, #FF0050)',
-            padding: '3px',
-          }}
-        >
-          <div 
-            className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden"
-          >
-            <CustomLogo 
-              size={size - 10} 
-              className={`transition-all duration-300 ${
-                isPressed ? 'brightness-110' : 'hover:brightness-105'
-              }`} 
-            />
-          </div>
-        </div>
+        {/* Efectos eliminados para quitar cualquier anillo visual */}
+        
+        <CustomLogo 
+          size={size} 
+          className={`transition-all duration-300 ${
+            isPressed ? 'brightness-110 drop-shadow-lg' : 'hover:brightness-105'
+          }`} 
+        />
+        
+        {/* Indicador de carga eliminado para quitar anillo */}
       </div>
 
       {/* Menú de acciones rápidas */}
