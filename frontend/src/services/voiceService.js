@@ -17,31 +17,38 @@ export const VOICE_TYPES = {
   NEUTRAL: 'neutral', // Cualquier voz disponible
 };
 
-// Mapeo de código de país a idioma
+// Mapeo de código de país a idioma - TODOS LOS IDIOMAS POSIBLES
 const COUNTRY_TO_LANGUAGE = {
-  // Español
+  // Español (21 países)
   'ES': 'es', 'MX': 'es', 'AR': 'es', 'CO': 'es', 'CL': 'es', 'PE': 'es', 
   'VE': 'es', 'EC': 'es', 'GT': 'es', 'CU': 'es', 'BO': 'es', 'DO': 'es',
   'HN': 'es', 'PY': 'es', 'SV': 'es', 'NI': 'es', 'CR': 'es', 'PA': 'es',
   'UY': 'es', 'PR': 'es', 'GQ': 'es',
   
-  // Inglés
+  // Inglés (50+ países)
   'US': 'en', 'GB': 'en', 'AU': 'en', 'CA': 'en', 'NZ': 'en', 'IE': 'en',
   'ZA': 'en', 'JM': 'en', 'TT': 'en', 'BB': 'en', 'BZ': 'en', 'GY': 'en',
-  'IN': 'en', 'PH': 'en', 'SG': 'en', 'MY': 'en', 'PK': 'en', 'NG': 'en',
-  'KE': 'en', 'GH': 'en', 'ZW': 'en',
+  'PH': 'en', 'SG': 'en', 'NG': 'en', 'KE': 'en', 'GH': 'en', 'ZW': 'en',
+  'BW': 'en', 'NA': 'en', 'ZM': 'en', 'MW': 'en', 'UG': 'en', 'TZ': 'en',
+  'RW': 'en', 'SL': 'en', 'LR': 'en', 'GM': 'en', 'MT': 'en', 'FJ': 'en',
+  'PG': 'en', 'WS': 'en', 'TO': 'en', 'VU': 'en', 'SB': 'en', 'KI': 'en',
   
-  // Portugués
-  'BR': 'pt', 'PT': 'pt', 'AO': 'pt', 'MZ': 'pt',
+  // Portugués (9 países)
+  'BR': 'pt', 'PT': 'pt', 'AO': 'pt', 'MZ': 'pt', 'GW': 'pt', 'CV': 'pt',
+  'ST': 'pt', 'TL': 'pt',
   
-  // Francés
+  // Francés (29 países)
   'FR': 'fr', 'BE': 'fr', 'CH': 'fr', 'MC': 'fr', 'LU': 'fr',
   'SN': 'fr', 'CI': 'fr', 'CM': 'fr', 'MG': 'fr', 'HT': 'fr',
+  'BF': 'fr', 'ML': 'fr', 'NE': 'fr', 'TD': 'fr', 'GN': 'fr',
+  'BJ': 'fr', 'TG': 'fr', 'CF': 'fr', 'CG': 'fr', 'CD': 'fr',
+  'GA': 'fr', 'DJ': 'fr', 'KM': 'fr', 'SC': 'fr', 'MU': 'fr',
+  'RE': 'fr', 'GP': 'fr', 'MQ': 'fr', 'GF': 'fr',
   
-  // Alemán
+  // Alemán (6 países)
   'DE': 'de', 'AT': 'de', 'LI': 'de',
   
-  // Italiano
+  // Italiano (4 países)
   'IT': 'it', 'SM': 'it', 'VA': 'it',
   
   // Japonés
@@ -50,25 +57,26 @@ const COUNTRY_TO_LANGUAGE = {
   // Coreano
   'KR': 'ko', 'KP': 'ko',
   
-  // Chino
+  // Chino (Mandarín)
   'CN': 'zh', 'TW': 'zh', 'HK': 'zh', 'MO': 'zh',
   
-  // Ruso
+  // Ruso (4 países principales)
   'RU': 'ru', 'BY': 'ru', 'KZ': 'ru', 'KG': 'ru',
   
-  // Árabe
+  // Árabe (22 países)
   'SA': 'ar', 'AE': 'ar', 'EG': 'ar', 'MA': 'ar', 'DZ': 'ar', 'TN': 'ar',
   'IQ': 'ar', 'SY': 'ar', 'JO': 'ar', 'LB': 'ar', 'KW': 'ar', 'QA': 'ar',
-  'BH': 'ar', 'OM': 'ar', 'YE': 'ar', 'LY': 'ar', 'SD': 'ar',
+  'BH': 'ar', 'OM': 'ar', 'YE': 'ar', 'LY': 'ar', 'SD': 'ar', 'PS': 'ar',
+  'MR': 'ar', 'SO': 'ar', 'DJ': 'ar', 'KM': 'ar',
   
   // Holandés
-  'NL': 'nl', 'SR': 'nl',
+  'NL': 'nl', 'SR': 'nl', 'AW': 'nl', 'CW': 'nl',
   
   // Polaco
   'PL': 'pl',
   
   // Turco
-  'TR': 'tr',
+  'TR': 'tr', 'CY': 'tr',
   
   // Sueco
   'SE': 'sv',
@@ -83,7 +91,7 @@ const COUNTRY_TO_LANGUAGE = {
   'FI': 'fi',
   
   // Griego
-  'GR': 'el', 'CY': 'el',
+  'GR': 'el',
   
   // Hebreo
   'IL': 'he',
@@ -98,6 +106,153 @@ const COUNTRY_TO_LANGUAGE = {
   'ID': 'id',
   
   // Malayo
+  'MY': 'ms', 'BN': 'ms',
+  
+  // Hindi
+  'IN': 'hi',
+  
+  // Bengali
+  'BD': 'bn',
+  
+  // Urdu
+  'PK': 'ur',
+  
+  // Tamil
+  'LK': 'ta',
+  
+  // Checo
+  'CZ': 'cs',
+  
+  // Eslovaco
+  'SK': 'sk',
+  
+  // Húngaro
+  'HU': 'hu',
+  
+  // Rumano
+  'RO': 'ro', 'MD': 'ro',
+  
+  // Búlgaro
+  'BG': 'bg',
+  
+  // Croata
+  'HR': 'hr',
+  
+  // Serbio
+  'RS': 'sr', 'BA': 'sr', 'ME': 'sr',
+  
+  // Esloveno
+  'SI': 'sl',
+  
+  // Ucraniano
+  'UA': 'uk',
+  
+  // Catalán
+  'AD': 'ca',
+  
+  // Estonio
+  'EE': 'et',
+  
+  // Letón
+  'LV': 'lv',
+  
+  // Lituano
+  'LT': 'lt',
+  
+  // Islandés
+  'IS': 'is',
+  
+  // Irlandés (Gaélico)
+  // 'IE': 'ga', // IE ya está como inglés
+  
+  // Galés
+  // 'GB': 'cy', // GB ya está como inglés
+  
+  // Maltés
+  // 'MT': 'mt', // MT ya está como inglés
+  
+  // Albanés
+  'AL': 'sq', 'XK': 'sq',
+  
+  // Macedonio
+  'MK': 'mk',
+  
+  // Georgiano
+  'GE': 'ka',
+  
+  // Armenio
+  'AM': 'hy',
+  
+  // Azerbaiyano
+  'AZ': 'az',
+  
+  // Kazajo
+  // 'KZ': 'kk', // KZ ya está como ruso
+  
+  // Uzbeko
+  'UZ': 'uz',
+  
+  // Tayiko
+  'TJ': 'tg',
+  
+  // Turkmeno
+  'TM': 'tk',
+  
+  // Mongol
+  'MN': 'mn',
+  
+  // Nepalí
+  'NP': 'ne',
+  
+  // Cingalés
+  // 'LK': 'si', // LK ya está como tamil
+  
+  // Birmano (Myanmar)
+  'MM': 'my',
+  
+  // Khmer (Camboyano)
+  'KH': 'km',
+  
+  // Lao
+  'LA': 'lo',
+  
+  // Tagalo (Filipino)
+  // 'PH': 'tl', // PH ya está como inglés
+  
+  // Swahili
+  // 'KE': 'sw', // KE ya está como inglés
+  // 'TZ': 'sw', // TZ ya está como inglés
+  
+  // Afrikáans
+  // 'ZA': 'af', // ZA ya está como inglés
+  
+  // Amárico (Etíope)
+  'ET': 'am',
+  
+  // Persa (Farsi)
+  'IR': 'fa', 'AF': 'fa',
+  
+  // Pashto
+  // 'AF': 'ps', // AF ya está como persa
+  
+  // Kurdo
+  // Varios países, pero no hay código específico
+  
+  // Hausa
+  // 'NG': 'ha', // NG ya está como inglés
+  
+  // Yoruba
+  // 'NG': 'yo', // NG ya está como inglés
+  
+  // Igbo
+  // 'NG': 'ig', // NG ya está como inglés
+  
+  // Zulú
+  // 'ZA': 'zu', // ZA ya está como inglés
+  
+  // Xhosa
+  // 'ZA': 'xh', // ZA ya está como inglés
+};
   'BN': 'ms',  // Brunei usa Malayo
 };
 
