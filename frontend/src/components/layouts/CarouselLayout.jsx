@@ -380,12 +380,12 @@ const CarouselLayout = ({
               >
               {/* MEDIA */}
               <div className="absolute inset-0">
-                {option.media?.type === 'video' ? (
+                {(option.media?.type === 'video' || option.media_type === 'video') ? (
                   <video
                     ref={(el) => {
                       if (el) videoRefs.current.set(option.id, el);
                     }}
-                    src={option.media.url}
+                    src={option.media?.url || option.media_url}
                     poster={option.thumbnail_url}
                     muted
                     playsInline
@@ -410,7 +410,7 @@ const CarouselLayout = ({
                   />
                 ) : (
                   <img
-                    src={option.media?.url}
+                    src={option.media?.url || option.media_url || option.thumbnail_url}
                     alt=""
                     className="w-full h-full object-cover rounded-lg"
                   />
