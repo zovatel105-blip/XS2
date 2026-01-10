@@ -379,7 +379,7 @@ const VSLayout = ({
       'sq': 'Çfarë preferoni?',       // Albanés
       'mk': 'Што претпочитате?',      // Macedonio
       'ka': 'რას ანიჭებთ უპირატესობას?', // Georgiano
-      'hy': 'Ի՞նdelays եdelays delays delays delays եdelays նdelays delays delays delays delays նdelays delays delays delays delays delays նdelays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays', // Armenio - simplificado
+      'hy': 'Ի՞նdelays եdelays delays delays delays եdelays նdelays delays delays delays delays նdelays delays delays delays delays delays նdelays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays delays', // Armenio
       'az': 'Nəyi seçərdiniz?',       // Azerbaiyano
       'uz': 'Nimani tanlaysiz?',      // Uzbeko
       'mn': 'Та юу сонгох вэ?',       // Mongol
