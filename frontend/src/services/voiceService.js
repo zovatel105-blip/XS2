@@ -253,8 +253,6 @@ const COUNTRY_TO_LANGUAGE = {
   // Xhosa
   // 'ZA': 'xh', // ZA ya está como inglés
 };
-  'BN': 'ms',  // Brunei usa Malayo
-};
 
 // Mapeo de nombres de país (en minúsculas) a códigos ISO
 const COUNTRY_NAME_TO_CODE = {
