@@ -108,48 +108,50 @@ const defaultColors = {
   bottom: { bg: 'bg-gradient-to-b from-red-500 to-red-700', primary: '#dc2626', secondary: '#f97316' }
 };
 
-// Función simplificada para obtener colores - busca directamente en el objeto
-const getCountryColor = (countryCode, index) => {
-  if (!countryCode) {
+const getCountryColor = (text, index) => {
+  if (!text) {
     return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
   }
   
-  // Buscar directamente (puede ser código ISO o nombre)
-  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
+  const lowerText = text.toLowerCase();
   
-  if (colors) {
-    return colors.bg;
+  for (const [country, colors] of Object.entries(countryColors)) {
+    if (lowerText.includes(country.toLowerCase()) || country.toLowerCase().includes(lowerText)) {
+      return colors.bg;
+    }
   }
   
   return index === 0 ? defaultColors.top.bg : defaultColors.bottom.bg;
 };
 
 // Obtiene los 2 colores principales del país
-const getCountryColors = (countryCode) => {
-  if (!countryCode) {
+const getCountryColors = (countryName) => {
+  if (!countryName) {
     return { primary: defaultColors.top.primary, secondary: defaultColors.bottom.primary };
   }
   
-  // Buscar directamente (puede ser código ISO o nombre)
-  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
+  const lowerText = countryName.toLowerCase();
   
-  if (colors) {
-    return { primary: colors.primary, secondary: colors.secondary };
+  for (const [country, colors] of Object.entries(countryColors)) {
+    if (lowerText.includes(country.toLowerCase()) || country.toLowerCase().includes(lowerText)) {
+      return { primary: colors.primary, secondary: colors.secondary };
+    }
   }
   
   return { primary: defaultColors.top.primary, secondary: defaultColors.bottom.primary };
 };
 
-const getCountryPrimaryColor = (countryCode, index) => {
-  if (!countryCode) {
+const getCountryPrimaryColor = (text, index) => {
+  if (!text) {
     return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
   }
   
-  // Buscar directamente (puede ser código ISO o nombre)
-  const colors = countryColors[countryCode] || countryColors[countryCode.toLowerCase()] || countryColors[countryCode.toUpperCase()];
+  const lowerText = text.toLowerCase();
   
-  if (colors) {
-    return colors.primary;
+  for (const [country, colors] of Object.entries(countryColors)) {
+    if (lowerText.includes(country.toLowerCase()) || country.toLowerCase().includes(lowerText)) {
+      return colors.primary;
+    }
   }
   
   return index === 0 ? defaultColors.top.primary : defaultColors.bottom.primary;
