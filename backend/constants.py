@@ -13,6 +13,7 @@ VALID_LAYOUTS = [
     'grid-2x2',            # Grid 2x2 - Screen split in 4 parts (2x2 grid)
     'grid-3x2',            # Grid 3x2 - Screen split in 6 parts (3x2 grid)
     'horizontal-3x2',      # Grid 2x3 - Screen split in 6 parts (2x3 grid)
+    'moment',              # Momento - Single image post with voting
 ]
 
 # Layout descriptions for documentation
@@ -25,6 +26,7 @@ LAYOUT_DESCRIPTIONS = {
     'grid-2x2': 'Pantalla dividida en 4 partes (cuadrícula de 2x2)',
     'grid-3x2': 'Pantalla dividida en 6 partes (cuadrícula de 3x2)',
     'horizontal-3x2': 'Pantalla dividida en 6 partes (cuadrícula de 2x3)',
+    'moment': 'Imagen única con votación (Momento)',
 }
 
 # Default layout if none specified
