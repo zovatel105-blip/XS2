@@ -20,6 +20,7 @@ import ContentCreationPage from './pages/ContentCreationPage';
 import ContentPublishPage from './pages/ContentPublishPage';
 import VSCreatePage from './pages/VSCreatePage';
 import VSExperiencePage from './pages/VSExperiencePage';
+import MomentCreationPage from './pages/MomentCreationPage';
 import FollowingPage from './pages/FollowingPage';
 import AuthPage from './pages/AuthPage';
 import StoryCapturePage from './pages/StoryCapturePage';
