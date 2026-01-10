@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for View Tracking System
-Testing the new poll view tracking system that registers EACH visualization, not just unique users.
+Backend Testing Suite for Momento Creation Flow
+Testing the creation of "Momento" posts (single image with voting functionality).
 """
 
 import asyncio
@@ -16,8 +16,8 @@ from typing import Dict, List, Any, Optional
 # Configuration
 BACKEND_URL = "https://ffmpeg-ready.preview.emergentagent.com/api"
 TEST_CREDENTIALS = {
-    "email": "demo@example.com",
-    "password": "demo123"
+    "email": "test@example.com",
+    "password": "test123"
 }
 
 class ViewTrackingTester:
