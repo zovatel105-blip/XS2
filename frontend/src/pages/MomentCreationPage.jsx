@@ -334,36 +334,38 @@ const MomentCreationPage = () => {
       </div>
 
       {/* Bottom Controls Area - Same style as ContentCreationPage */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-black px-4 flex flex-col justify-center gap-3">
+      <div className="absolute bottom-0 left-0 right-0 bg-black">
         
         {/* Filters row - only show when image is selected */}
         {imagePreview && !cropActive && (
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {filters.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                className={`flex-shrink-0 flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
-                  filter === f.id ? 'bg-amber-500/30 ring-2 ring-amber-500' : 'bg-white/10 hover:bg-white/20'
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-lg overflow-hidden ${f.class}`}>
-                  <img
-                    src={imagePreview}
-                    alt={f.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className={`text-[10px] ${filter === f.id ? 'text-amber-400' : 'text-white/70'}`}>
-                  {f.name}
-                </span>
-              </button>
-            ))}
+          <div className="px-4 py-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+              {filters.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFilter(f.id)}
+                  className={`flex-shrink-0 flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all ${
+                    filter === f.id ? 'bg-amber-500/30 ring-2 ring-amber-500' : 'bg-white/10 hover:bg-white/20'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-lg overflow-hidden ${f.class}`}>
+                    <img
+                      src={imagePreview}
+                      alt={f.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className={`text-[10px] ${filter === f.id ? 'text-amber-400' : 'text-white/70'}`}>
+                    {f.name}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Action buttons row */}
-        <div className="flex items-center justify-between">
+        <div className="px-4 py-3 flex items-center justify-between">
           {/* Close button */}
           <button
             onClick={() => navigate(-1)}
@@ -372,17 +374,11 @@ const MomentCreationPage = () => {
             <X className="w-6 h-6 text-white" />
           </button>
 
-          {/* Title */}
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-400" />
-            <span className="text-white font-semibold">Momento</span>
-          </div>
-
           {/* Publish button */}
           <button
             onClick={handlePublish}
             disabled={!selectedImage || isPublishing}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+            className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all ${
               selectedImage && !isPublishing
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-500 hover:scale-105'
                 : 'bg-white/20 cursor-not-allowed'
@@ -391,9 +387,53 @@ const MomentCreationPage = () => {
             {isPublishing ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <Send className="w-5 h-5 text-white" />
+              <>
+                <Send className="w-5 h-5 text-white" />
+                <span className="text-white font-medium">Publicar</span>
+              </>
             )}
           </button>
+        </div>
+
+        {/* Tab bar */}
+        <div className="bg-black/90 backdrop-blur-md px-4 py-4 pb-6 border-t border-white/10">
+          <div className="flex items-center justify-center gap-6">
+            {/* PUBLICAR */}
+            <button
+              onClick={() => navigate('/create')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              PUBLICAR
+            </button>
+            
+            {/* HISTORIA */}
+            <button
+              onClick={() => navigate('/story-creation')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              HISTORIA
+            </button>
+            
+            {/* VS */}
+            <button
+              onClick={() => navigate('/vs-create')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              VS
+            </button>
+            
+            {/* MOMENTO - Active */}
+            <button
+              className="text-white font-semibold text-sm tracking-wide"
+            >
+              MOMENTO
+            </button>
+          </div>
+          
+          {/* Active indicator line */}
+          <div className="flex justify-center mt-2">
+            <div className="w-16 h-0.5 bg-white rounded-full"></div>
+          </div>
         </div>
       </div>
 
