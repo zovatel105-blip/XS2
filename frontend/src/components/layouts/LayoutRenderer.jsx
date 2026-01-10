@@ -6,6 +6,7 @@ import VSLayout from './VSLayout';
 // Mapeo dinámico de layoutType → componente para los 8 layouts soportados
 const layoutComponents = {
   'off': CarouselLayout,                    // Carrusel vertical
+  'moment': CarouselLayout,                 // Momento - imagen única a pantalla completa
   'vertical': (props) => <GridLayout {...props} gridType="vertical" />,           // Split Vertical (2 columnas)
   'horizontal': (props) => <GridLayout {...props} gridType="horizontal" />,       // Split Horizontal (2 filas)
   'triptych-vertical': (props) => <GridLayout {...props} gridType="triptych-vertical" />,   // Triptych Vertical (3 columnas)
