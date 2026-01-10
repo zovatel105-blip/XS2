@@ -62,8 +62,8 @@ const LayoutRenderer = ({
     );
   }
   
-  // SOLO layout "off" debe usar carrusel
-  if (layoutType === 'off') {
+  // Layout "off" (carrusel) y "moment" (imagen única) usan CarouselLayout
+  if (layoutType === 'off' || layoutType === 'moment') {
     return (
       <CarouselLayout 
         poll={poll} 
@@ -83,6 +83,8 @@ const LayoutRenderer = ({
         shouldUnload={shouldUnload}
         // 🖼️ Ocultar UI en miniaturas
         isThumbnail={isThumbnail}
+        // 📸 Momento: Una sola imagen sin indicadores de carrusel
+        isMoment={layoutType === 'moment'}
       />
     );
   }
