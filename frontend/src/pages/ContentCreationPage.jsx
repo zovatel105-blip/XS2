@@ -1339,15 +1339,6 @@ const ContentCreationPage = () => {
       {/* Floating Right Sidebar - Overlay on top of content - Hidden in preview mode */}
       {!previewMode && (
         <div className="absolute top-16 sm:top-20 right-2 sm:right-4 z-40 flex flex-col gap-2 sm:gap-3">
-          {/* Momento Button - Top */}
-          <button
-            onClick={() => navigate('/moment-create')}
-            className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 rounded-full flex items-center justify-center text-white transition-all shadow-lg"
-            title="Crear Momento"
-          >
-            <Camera className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-
           {/* Layout Button */}
           <div className="relative">
             <button
