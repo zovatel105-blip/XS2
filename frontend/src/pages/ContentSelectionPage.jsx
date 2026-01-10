@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Image, Clock, Swords } from 'lucide-react';
+import { X, Image, Clock, Swords, Camera } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const ContentSelectionPage = () => {
@@ -14,6 +14,14 @@ const ContentSelectionPage = () => {
       icon: Image,
       gradient: 'from-purple-500 to-pink-500',
       route: '/create'
+    },
+    {
+      id: 'moment',
+      title: 'Momento',
+      description: 'Momentos que no quieres olvidar',
+      icon: Camera,
+      gradient: 'from-amber-500 to-yellow-500',
+      route: '/moment-create'
     },
     {
       id: 'story',
