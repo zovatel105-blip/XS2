@@ -67,7 +67,7 @@ const COUNTRY_TO_LANGUAGE = {
   'SA': 'ar', 'AE': 'ar', 'EG': 'ar', 'MA': 'ar', 'DZ': 'ar', 'TN': 'ar',
   'IQ': 'ar', 'SY': 'ar', 'JO': 'ar', 'LB': 'ar', 'KW': 'ar', 'QA': 'ar',
   'BH': 'ar', 'OM': 'ar', 'YE': 'ar', 'LY': 'ar', 'SD': 'ar', 'PS': 'ar',
-  'MR': 'ar', 'SO': 'ar', 'DJ': 'ar', 'KM': 'ar',
+  'MR': 'ar', 'SO': 'ar',
   
   // Holandés
   'NL': 'nl', 'SR': 'nl', 'AW': 'nl', 'CW': 'nl',
