@@ -146,7 +146,7 @@ function AppContent() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/audio/:audioId" element={<AudioDetailPage />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/new" element={<ContentSelectionPage />} />
+            <Route path="/new" element={<Navigate to="/create" replace />} />
             <Route path="/content-creation" element={<ContentCreationPage />} />
             <Route path="/create" element={<ContentCreationPage />} />
             <Route path="/content-publish" element={<ContentPublishPage />} />
