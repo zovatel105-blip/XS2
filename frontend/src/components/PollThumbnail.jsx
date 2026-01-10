@@ -288,6 +288,130 @@ const PollThumbnail = ({ result, className = "", onClick, hideBadge = false, onQ
     );
   }
 
+  // Para layout 'moment' (imagen única), mostrar solo la primera imagen sin indicadores
+  if (layout === 'moment') {
+    const firstOption = optionsWithMedia[0];
+    return (
+      <div 
+        ref={containerRef}
+        className={`relative aspect-[6/11] bg-gray-100 cursor-pointer rounded-xl overflow-hidden ${className}`}
+        onMouseDown={handlePressStart}
+        onMouseMove={handlePressMove}
+        onMouseUp={handlePressEnd}
+        onMouseLeave={handlePressCancel}
+        onTouchStart={handlePressStart}
+        onTouchMove={handlePressMove}
+        onTouchEnd={handlePressEnd}
+        onTouchCancel={handlePressCancel}
+      >
+        <img
+          src={firstOption.media_type === 'video' ? firstOption.thumbnail_url : (firstOption.media_url || firstOption.thumbnail_url)}
+          alt={result.title || 'Momento'}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.style.display = 'none';
+          }}
+        />
+        
+        {/* Badge de Momento */}
+        {!hideBadge && (
+          <div className="absolute top-1 left-1 bg-amber-500/80 text-white text-xs px-2 py-0.5 rounded-full">
+            📸
+          </div>
+        )}
+        
+        {/* Modal de votación rápida para momento */}
+        {showQuickVote && (
+          <div 
+            className="absolute inset-0 bg-black/90 z-50 flex items-center justify-center p-2"
+            style={{ touchAction: 'none' }}
+          >
+            <div className="w-full h-full flex flex-col">
+              <div className="text-white text-center mb-2 text-xs font-medium">
+                Mantén presionado para votar
+              </div>
+              
+              <div className="flex-1 relative">
+                {options.slice(0, 1).map((option, index) => {
+                  const isSelected = selectedOption === index;
+                  const isVoted = result.user_vote === index;
+                  const votePercentage = result.total_votes > 0 
+                    ? Math.round((option.votes / result.total_votes) * 100) 
+                    : 0;
+                  
+                  return (
+                    <div
+                      key={index}
+                      data-option-index={index}
+                      className={`relative w-full h-full rounded-lg overflow-hidden transition-all duration-150 ${
+                        isSelected 
+                          ? 'ring-4 ring-amber-400 scale-[0.98]' 
+                          : 'scale-100'
+                      }`}
+                    >
+                      {/* Background Image */}
+                      {(option.media_url || option.thumbnail_url) && (
+                        <img 
+                          src={option.media_type === 'video' ? option.thumbnail_url : (option.media_url || option.thumbnail_url)}
+                          alt={option.text || 'Momento'}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      )}
+                      
+                      {/* Overlay */}
+                      <div className={`absolute inset-0 transition-all duration-150 ${
+                        isSelected 
+                          ? 'bg-amber-500/40' 
+                          : 'bg-black/30'
+                      }`} />
+                      
+                      {/* Content */}
+                      <div className="relative h-full flex flex-col justify-end p-3">
+                        {option.text && (
+                          <span className="text-white text-sm font-medium drop-shadow-lg text-center mb-2">
+                            {option.text}
+                          </span>
+                        )}
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {isVoted && (
+                              <div className="bg-white/90 rounded-full p-1">
+                                <Check size={14} className="text-amber-500" />
+                              </div>
+                            )}
+                            {isSelected && (
+                              <div className="bg-amber-500 rounded-full p-2 animate-pulse">
+                                <Check size={18} className="text-white" />
+                              </div>
+                            )}
+                          </div>
+                          <span className="text-white text-sm font-bold bg-black/50 px-2 py-1 rounded-full">
+                            {votePercentage}%
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Progress bar */}
+                      <div 
+                        className="absolute bottom-0 left-0 h-1.5 bg-amber-500 transition-all duration-500"
+                        style={{ width: `${votePercentage}%` }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="text-center text-white text-xs opacity-70 mt-2">
+                {selectedOption !== null ? '✓ Suelta para votar' : 'Toca para votar'}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   // Para layouts de grid, mostrar todas las opciones en su layout correspondiente
   return (
     <div 
