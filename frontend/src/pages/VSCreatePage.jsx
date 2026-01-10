@@ -303,19 +303,63 @@ const VSCreatePage = () => {
         )}
       </div>
 
-      {/* Preview Button */}
-      {isValid() && (
-        <div className="p-4 border-t border-white/10">
-          <button
-            onClick={handlePublish}
-            className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center gap-2 text-white font-semibold"
-          >
-            <Play className="w-5 h-5" />
-            <span>Iniciar experiencia VS</span>
-            <ChevronRight className="w-5 h-5" />
-          </button>
+      {/* Bottom Tab Bar - Instagram/TikTok style */}
+      <div className="border-t border-white/10">
+        {/* Preview/Publish button */}
+        {isValid() && (
+          <div className="p-4">
+            <button
+              onClick={handlePublish}
+              className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center gap-2 text-white font-semibold"
+            >
+              <Play className="w-5 h-5" />
+              <span>Iniciar experiencia VS</span>
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        {/* Tab bar */}
+        <div className="bg-black/90 backdrop-blur-md px-4 py-4 pb-6">
+          <div className="flex items-center justify-center gap-6">
+            {/* PUBLICAR */}
+            <button
+              onClick={() => navigate('/create')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              PUBLICAR
+            </button>
+            
+            {/* HISTORIA */}
+            <button
+              onClick={() => navigate('/story-creation')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              HISTORIA
+            </button>
+            
+            {/* VS - Active */}
+            <button
+              className="text-white font-semibold text-sm tracking-wide"
+            >
+              VS
+            </button>
+            
+            {/* MOMENTO */}
+            <button
+              onClick={() => navigate('/moment-create')}
+              className="text-white/50 font-medium text-sm tracking-wide hover:text-white/80 transition-colors"
+            >
+              MOMENTO
+            </button>
+          </div>
+          
+          {/* Active indicator line */}
+          <div className="flex justify-center mt-2">
+            <div className="w-8 h-0.5 bg-white rounded-full"></div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
