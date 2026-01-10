@@ -379,7 +379,7 @@ const VSLayout = ({
       'sq': 'Çfarë preferoni?',       // Albanés
       'mk': 'Што претпочитате?',      // Macedonio
       'ka': 'რას ანიჭებთ უპირატესობას?', // Georgiano
-      'hy': 'Ի՞նdelays delays', // Armenio
+      'hy': 'Ինdelays delays',            // Armenio
       'az': 'Nəyi seçərdiniz?',       // Azerbaiyano
       'uz': 'Nimani tanlaysiz?',      // Uzbeko
       'mn': 'Та юу сонгох вэ?',       // Mongol
