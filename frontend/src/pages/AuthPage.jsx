@@ -148,7 +148,7 @@ const AuthPage = () => {
           {/* Logo personalizado */}
           <div className="inline-flex items-center justify-center mb-10 md:mb-6">
             <img 
-              src="/votatuk-logo.jpg"
+              src="/votatuk-logo.png"
               alt="Logo"
               className="w-64 h-64 md:w-40 md:h-40 object-contain"
             />

@@ -15,16 +15,15 @@ const CustomLogo = ({ size = 24, className = "" }) => {
     >
       {/* Logo igual que la página de login */}
       <img
-        src="/votatuk-logo.jpg"
+        src="/votatuk-logo.png"
         alt="Logo"
         width={size}
         height={size}
         style={{
           display: 'block',
-          objectFit: 'cover',
+          objectFit: 'contain',
           maxWidth: '100%',
-          maxHeight: '100%',
-          borderRadius: '20%'
+          maxHeight: '100%'
         }}
       />
     </div>
