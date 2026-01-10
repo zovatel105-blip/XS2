@@ -148,7 +148,7 @@ const AuthPage = () => {
           {/* Logo personalizado */}
           <div className="inline-flex items-center justify-center mb-10 md:mb-6">
             <img 
-              src="https://customer-assets.emergentagent.com/job_979c19d8-b9c0-4e35-80df-e411a6f88938/artifacts/qk9i0x5a_file_00000000a8a071f5befc3375a0b68179.png"
+              src="/votatuk-logo.png"
               alt="Logo"
               className="w-64 h-64 md:w-40 md:h-40 object-contain"
             />
