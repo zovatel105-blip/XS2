@@ -1,5 +1,5 @@
 /**
- * Video Memory Manager - TikTok-style video optimization
+ * Video Memory Manager - Twyk-style video optimization
  * Manages video loading, unloading, and memory usage for smooth scrolling
  */
 
