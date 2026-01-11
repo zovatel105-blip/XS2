@@ -303,7 +303,7 @@ const VSCreatePage = () => {
         )}
       </div>
 
-      {/* Bottom Tab Bar - Instagram/TikTok style */}
+      {/* Bottom Tab Bar - Twyk style */}
       <div className="border-t border-white/10">
         {/* Preview/Publish button */}
         {isValid() && (
