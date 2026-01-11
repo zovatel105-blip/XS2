@@ -366,8 +366,9 @@ option.media = {
 
 ✅ **PROBLEMA IDENTIFICADO:**
 - Usuario reportó: "Panel de música en momentos - cuando hago click en el botón de música el panel aparece oculto"
-- **Síntoma**: Al hacer clic en el botón de añadir música, el panel selector de música era invisible
-- **Causa raíz**: Conflicto de z-index - tanto el contenedor principal como el modal del MusicSelector tenían `z-50`
+- **Síntoma**: Al hacer clic en el botón de añadir música, la pantalla se volvía borrosa pero el panel era invisible
+- **Causa raíz 1**: Conflicto de z-index - contenedor principal y modal ambos tenían `z-50`
+- **Causa raíz 2**: El backdrop (fondo borroso) cubría el panel del contenido porque ambos estaban en el mismo contenedor sin z-index relativo
 - **Ubicación**: MomentCreationPage.jsx y ContentCreationPage.jsx
 
 ✅ **ANÁLISIS TÉCNICO:**
@@ -379,45 +380,66 @@ option.media = {
 
 // Modal de MusicSelector - línea 676 MomentCreationPage.jsx (ANTES)
 <div className="fixed inset-0 z-50 flex flex-col justify-end">
+  <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+  <div className="relative bg-zinc-900 rounded-t-3xl ...">  // Sin z-index
+    <MusicSelector />
+  </div>
+</div>
 ```
 
-- Ambos elementos tenían `z-50`, causando que el modal quedara detrás o fuera cortado
-- El contenedor principal tiene `overflow-hidden` que cortaba elementos que sobresalían
-- El modal no podía aparecer por encima del contenedor principal
+**PROBLEMAS IDENTIFICADOS:**
+1. Modal tenía mismo z-index (`z-50`) que el contenedor principal
+2. El backdrop con `absolute inset-0` cubría TODO el contenedor, incluyendo el panel de contenido
+3. El panel de contenido con solo `relative` (sin z-index) quedaba detrás del backdrop
 
 ✅ **SOLUCIÓN IMPLEMENTADA:**
 
-**FRONTEND - Aumentado z-index del modal de MusicSelector:**
+**FRONTEND - Corrección en dos pasos:**
 
-1. **MomentCreationPage.jsx (línea 676):**
-   ```jsx
-   // ANTES:
-   <div className="fixed inset-0 z-50 flex flex-col justify-end">
-   
-   // DESPUÉS:
-   <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-   ```
+**PASO 1: Aumentar z-index del contenedor del modal**
+```jsx
+// ANTES:
+<div className="fixed inset-0 z-50 flex flex-col justify-end">
 
-2. **ContentCreationPage.jsx (línea 1443):**
-   ```jsx
-   // ANTES:
-   <div className="fixed inset-0 z-50 flex flex-col justify-end">
-   
-   // DESPUÉS:
-   <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-   ```
+// DESPUÉS:
+<div className="fixed inset-0 z-[100] flex flex-col justify-end">
+```
+
+**PASO 2: Agregar z-index al panel de contenido para que esté por encima del backdrop**
+```jsx
+// ANTES:
+<div className="relative bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+
+// DESPUÉS:
+<div className="relative z-10 bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+```
+
+**Estructura resultante con z-index correcto:**
+```
+z-[100]: Contenedor del modal (fixed)
+  ↳ z-0 (default): Backdrop (absolute) - Fondo borroso
+  ↳ z-10 (explicit): Panel de contenido (relative) - Por encima del backdrop
+      ↳ MusicSelector visible
+```
 
 ✅ **ARCHIVOS MODIFICADOS:**
-- `/app/frontend/src/pages/MomentCreationPage.jsx` (línea 676): z-index aumentado de z-50 a z-[100]
-- `/app/frontend/src/pages/ContentCreationPage.jsx` (línea 1443): z-index aumentado de z-50 a z-[100]
+
+**MomentCreationPage.jsx:**
+- Línea 676: z-index del contenedor: `z-50` → `z-[100]`
+- Línea 682: z-index del panel: `relative` → `relative z-10`
+
+**ContentCreationPage.jsx:**
+- Línea 1443: z-index del contenedor: `z-50` → `z-[100]`
+- Línea 1451: z-index del panel: `relative` → `relative z-10`
 
 ✅ **RESULTADO FINAL:**
 🎯 **PANEL DE MÚSICA COMPLETAMENTE VISIBLE** - Los usuarios ahora pueden:
 - 🎵 Ver el panel completo de selección de música al hacer clic en el botón
-- 📱 Seleccionar música sin problemas en la página de momentos
-- 🎨 Experiencia consistente en MomentCreationPage y ContentCreationPage
-- ✅ Modal aparece correctamente por encima de todos los elementos
-- 🔧 Sin conflictos de z-index
+- 👀 El backdrop se vuelve borroso correctamente (feedback visual)
+- 🎨 El panel de contenido aparece por encima del backdrop (completamente visible)
+- 📱 Seleccionar música sin problemas en ambas páginas de creación
+- ✅ Modal aparece correctamente con z-index en capas (backdrop → panel → contenido)
+- 🔧 Sin conflictos de z-index entre elementos
 
 
 **🎬 SISTEMA DE REPRODUCCIONES POR VISUALIZACIÓN IMPLEMENTADO (2025-01-27): Las reproducciones ahora cuentan CADA visualización, no solo usuarios únicos.**
