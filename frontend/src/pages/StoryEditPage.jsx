@@ -723,7 +723,7 @@ const StoryEditPage = () => {
                 Aa
               </button>
 
-              {/* Botón paleta de color - Rueda de colores estilo Instagram */}
+              {/* Botón paleta de color - Rueda de colores estilo Twyk */}
               <button
                 onClick={() => {
                   setShowColorPicker(!showColorPicker);
