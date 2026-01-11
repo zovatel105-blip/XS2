@@ -153,7 +153,7 @@ const AuthPage = () => {
               className="w-72 h-72 md:w-48 md:h-48 object-contain"
             />
           </div>
-          {/* Title - Hidden on mobile for Instagram style */}
+          {/* Title - Hidden on mobile for Twyk style */}
           <h1 className="hidden md:block text-3xl font-bold text-black mb-2">
             {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </h1>
