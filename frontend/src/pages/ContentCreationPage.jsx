@@ -1440,7 +1440,7 @@ const ContentCreationPage = () => {
 
       {/* Music Selector Modal - Bottom Sheet Style */}
       {showMusicSelector && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[100] flex flex-col justify-end">
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
