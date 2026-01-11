@@ -41,6 +41,15 @@ const ShareModal = ({ isOpen, onClose, content }) => {
             description: "El enlace se ha copiado. Pégalo en tu story o post de Instagram",
           });
           break;
+        
+        case 'tiktok':
+          // TikTok tampoco permite compartir directo por URL
+          await copyToClipboard(url);
+          toast({
+            title: "🎵 Copiado para TikTok", 
+            description: "El enlace se ha copiado. Pégalo en tu video de TikTok",
+          });
+          break;
 
         case 'copy':
           await copyToClipboard(url);
