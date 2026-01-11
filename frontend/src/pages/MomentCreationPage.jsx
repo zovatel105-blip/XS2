@@ -809,6 +809,7 @@ const MomentCreationPage = () => {
         }
       `}</style>
     </div>
+    
     {/* Music Selector Modal - Rendered outside overflow-hidden container using Portal */}
     {showMusicSelector && createPortal(
       <div className="fixed inset-0 z-[100] flex flex-col justify-end">
@@ -844,6 +845,7 @@ const MomentCreationPage = () => {
       </div>,
       document.body
     )}
+    </>
   );
 };
 
