@@ -672,41 +672,6 @@ const MomentCreationPage = () => {
         </div>
       </div>
 
-      {/* Music Selector Modal - Bottom Sheet Style */}
-      {showMusicSelector && (
-        <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-          <div 
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setShowMusicSelector(false)}
-          />
-          
-          <div className="relative z-10 bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
-            <div className="flex justify-center pt-3 pb-2">
-              <div className="w-10 h-1 bg-zinc-600 rounded-full" />
-            </div>
-            
-            <div className="px-4 pb-3 flex items-center justify-between border-b border-zinc-800">
-              <h3 className="text-lg font-semibold text-white">Añadir sonido</h3>
-              <button
-                onClick={() => setShowMusicSelector(false)}
-                className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto overscroll-contain">
-              <MusicSelector
-                onSelectMusic={handleMusicSelect}
-                selectedMusic={selectedMusic}
-                pollTitle=""
-                darkMode={true}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
