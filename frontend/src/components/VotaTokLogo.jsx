@@ -1,6 +1,6 @@
 import React from 'react';
 
-const VotaTokLogo = ({ size = 60, className = "" }) => {
+const VotaTokLogo = ({ size = 80, className = "" }) => {
   return (
     <div className={`inline-flex items-center justify-center ${className}`}>
       <img 
@@ -16,7 +16,7 @@ const VotaTokLogo = ({ size = 60, className = "" }) => {
 };
 
 // Logo simplificado para uso en navegación
-export const VotaTokSimpleLogo = ({ size = 40, className = "" }) => {
+export const VotaTokSimpleLogo = ({ size = 50, className = "" }) => {
   return (
     <div className={`inline-flex items-center justify-center ${className}`}>
       <img 
