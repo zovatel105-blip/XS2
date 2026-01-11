@@ -1444,7 +1444,7 @@ const MessagesMainPage = () => {
                 return currentDate.toDateString() !== previousDate.toDateString();
               })();
               
-              // Formatear la fecha para el separador (estilo Instagram)
+              // Formatear la fecha para el separador (estilo Twyk)
               const formatDateSeparator = (dateString) => {
                 if (!dateString) return '';
                 const date = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
