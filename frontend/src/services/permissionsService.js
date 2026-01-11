@@ -263,7 +263,7 @@ export const openAppSettings = async () => {
   
   // En Capacitor 7, no hay un método directo para abrir settings
   // Se puede implementar usando un plugin nativo o indicar al usuario
-  console.log('Por favor, ve a Configuración > Apps > VotaTok para cambiar los permisos');
+  console.log('Por favor, ve a Configuración > Apps > Twyk para cambiar los permisos');
 };
 
 /**
