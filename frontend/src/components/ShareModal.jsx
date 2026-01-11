@@ -88,6 +88,17 @@ const ShareModal = ({ isOpen, onClose, content }) => {
       description: 'Compartir en Facebook'
     },
     {
+      id: 'twyk',
+      name: 'Twyk',
+      icon: ({ className }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-1.32-.17A6.57 6.57 0 0 0 3.5 15.768a6.57 6.57 0 0 0 6.57 6.57 6.57 6.57 0 0 0 6.57-6.57V9.379a8.365 8.365 0 0 0 3.766 1.355 8.365 8.365 0 0 0 1.183-.001V7.016h-.035a4.795 4.795 0 0 1-1.965-.33z"/>
+        </svg>
+      ),
+      color: 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600',
+      description: 'Copiar para Twyk'
+    },
+    {
       id: 'whatsapp',
       name: 'WhatsApp',
       icon: MessageCircle,
