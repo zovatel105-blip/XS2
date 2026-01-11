@@ -1,5 +1,5 @@
 /**
- * AudioManager - Sistema de reproducción automática real para feed TikTok
+ * AudioManager - Sistema de reproducción automática real para feed Twyk
  * Maneja reproducción HTML5 con previews reales de iTunes API
  */
 
