@@ -1,4 +1,4 @@
-// Librería de música disponible para las publicaciones - Estilo TikTok con Artistas Reales
+// Librería de música disponible para las publicaciones - Estilo Twyk con Artistas Reales
 export const musicLibrary = [
   // TRENDING - Música Popular
   {
