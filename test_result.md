@@ -362,84 +362,142 @@ option.media = {
 
 ---
 
-**🎵 PANEL DE MÚSICA EN MOMENTOS AHORA VISIBLE - CORREGIDO (2025-01-11): El panel de selección de música en la página de creación de momentos ahora es completamente visible.**
+**🎵 PANEL DE MÚSICA EN MOMENTOS AHORA VISIBLE - CORREGIDO (2025-01-11): El panel de selección de música en la página de creación de momentos ahora es completamente visible usando React Portal.**
 
 ✅ **PROBLEMA IDENTIFICADO:**
-- Usuario reportó: "Panel de música en momentos - cuando hago click en el botón de música el panel aparece oculto"
-- **Síntoma**: Al hacer clic en el botón de añadir música, la pantalla se volvía borrosa pero el panel era invisible
-- **Causa raíz 1**: Conflicto de z-index - contenedor principal y modal ambos tenían `z-50`
-- **Causa raíz 2**: El backdrop (fondo borroso) cubría el panel del contenido porque ambos estaban en el mismo contenedor sin z-index relativo
-- **Ubicación**: MomentCreationPage.jsx y ContentCreationPage.jsx
+- Usuario reportó: "Panel de música en momentos - cuando hago click en el botón de música el panel aparece oculto, aún nada"
+- **Síntoma**: Al hacer clic en el botón de añadir música, la pantalla se volvía borrosa pero el panel era completamente invisible
+- **Intentos previos fallidos**:
+  1. Aumentar z-index del modal: `z-50` → `z-[100]` ❌ No funcionó
+  2. Agregar z-index al panel de contenido: `relative` → `relative z-10` ❌ No funcionó
+- **Causa raíz definitiva**: El modal estaba renderizado DENTRO del contenedor con `overflow-hidden`, por lo que aunque tuviera z-index alto y position fixed, seguía siendo cortado por el contenedor padre
 
-✅ **ANÁLISIS TÉCNICO:**
+✅ **ANÁLISIS TÉCNICO PROFUNDO:**
 
-**PROBLEMA EN EL CÓDIGO:**
+**PROBLEMA FUNDAMENTAL EN LA JERARQUÍA DEL DOM:**
 ```jsx
-// Contenedor principal - línea 448 MomentCreationPage.jsx
-<div className="fixed inset-0 z-50 relative h-screen w-screen overflow-hidden bg-black">
-
-// Modal de MusicSelector - línea 676 MomentCreationPage.jsx (ANTES)
-<div className="fixed inset-0 z-50 flex flex-col justify-end">
-  <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-  <div className="relative bg-zinc-900 rounded-t-3xl ...">  // Sin z-index
-    <MusicSelector />
-  </div>
+// Estructura INCORRECTA (línea 448 MomentCreationPage.jsx)
+<div className="fixed inset-0 z-50 overflow-hidden bg-black">  // ← Contenedor padre
+  {/* ... contenido de la página ... */}
+  
+  {showMusicSelector && (
+    <div className="fixed inset-0 z-[100]">  // ← Modal con fixed y z-index alto
+      <div className="absolute inset-0 backdrop-blur-sm" />
+      <div className="relative z-10">
+        <MusicSelector />  // ← INVISIBLE por overflow-hidden del padre
+      </div>
+    </div>
+  )}
 </div>
 ```
 
-**PROBLEMAS IDENTIFICADOS:**
-1. Modal tenía mismo z-index (`z-50`) que el contenedor principal
-2. El backdrop con `absolute inset-0` cubría TODO el contenedor, incluyendo el panel de contenido
-3. El panel de contenido con solo `relative` (sin z-index) quedaba detrás del backdrop
+**POR QUÉ NO FUNCIONABA:**
+- Aunque el modal tenga `position: fixed` y `z-index: 100`
+- Si su elemento PADRE tiene `overflow-hidden`
+- El navegador CORTA todo contenido que sobresalga, incluso elementos fixed
+- Esta es una limitación conocida de CSS: `overflow: hidden` en un ancestro crea un nuevo contexto de apilamiento
 
 ✅ **SOLUCIÓN IMPLEMENTADA:**
 
-**FRONTEND - Corrección en dos pasos:**
+**USO DE REACT PORTAL - createPortal:**
 
-**PASO 1: Aumentar z-index del contenedor del modal**
+React Portal permite renderizar un componente en un nodo DOM diferente, fuera de la jerarquía de su componente padre.
+
+**PASO 1: Importar createPortal**
 ```jsx
-// ANTES:
-<div className="fixed inset-0 z-50 flex flex-col justify-end">
-
-// DESPUÉS:
-<div className="fixed inset-0 z-[100] flex flex-col justify-end">
+import { createPortal } from 'react-dom';
 ```
 
-**PASO 2: Agregar z-index al panel de contenido para que esté por encima del backdrop**
+**PASO 2: Mover el modal FUERA del contenedor y usar Portal**
 ```jsx
-// ANTES:
-<div className="relative bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+// ESTRUCTURA CORRECTA
+<div className="fixed inset-0 z-50 overflow-hidden bg-black">
+  {/* ... contenido de la página ... */}
+</div>
+{/* ↑ Contenedor cierra ANTES del modal */}
 
-// DESPUÉS:
-<div className="relative z-10 bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+{/* Modal renderizado directamente en document.body mediante Portal */}
+{showMusicSelector && createPortal(
+  <div className="fixed inset-0 z-[100] flex flex-col justify-end">
+    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+         onClick={() => setShowMusicSelector(false)} />
+    
+    <div className="relative z-10 bg-zinc-900 rounded-t-3xl ...">
+      <MusicSelector ... />
+    </div>
+  </div>,
+  document.body  // ← Renderizado directamente en body, NO en el componente padre
+)}
 ```
 
-**Estructura resultante con z-index correcto:**
-```
-z-[100]: Contenedor del modal (fixed)
-  ↳ z-0 (default): Backdrop (absolute) - Fondo borroso
-  ↳ z-10 (explicit): Panel de contenido (relative) - Por encima del backdrop
-      ↳ MusicSelector visible
-```
+**BENEFICIOS DEL PORTAL:**
+1. ✅ El modal se renderiza en `document.body`, completamente fuera del contenedor con overflow-hidden
+2. ✅ Mantiene acceso al estado del componente padre (showMusicSelector, handleMusicSelect, etc.)
+3. ✅ Los event handlers funcionan normalmente
+4. ✅ No hay conflictos de z-index con contenedores padres
+5. ✅ El backdrop y el panel son completamente visibles
 
 ✅ **ARCHIVOS MODIFICADOS:**
 
 **MomentCreationPage.jsx:**
-- Línea 676: z-index del contenedor: `z-50` → `z-[100]`
-- Línea 682: z-index del panel: `relative` → `relative z-10`
+- Línea 2: Agregado import `createPortal` de 'react-dom'
+- Líneas 674-707: Eliminado modal del MusicSelector del contenedor con overflow-hidden
+- Después de línea 845: Agregado modal usando createPortal renderizado en document.body
 
 **ContentCreationPage.jsx:**
-- Línea 1443: z-index del contenedor: `z-50` → `z-[100]`
-- Línea 1451: z-index del panel: `relative` → `relative z-10`
+- Línea 2: Agregado import `createPortal` de 'react-dom'
+- Líneas 1442-1480: Eliminado modal del MusicSelector del contenedor con overflow-hidden
+- Después de línea 1642: Agregado modal usando createPortal renderizado en document.body
+
+✅ **CÓDIGO FINAL:**
+
+```jsx
+// Al final del return, FUERA del contenedor principal
+{showMusicSelector && createPortal(
+  <div className="fixed inset-0 z-[100] flex flex-col justify-end">
+    <div 
+      className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+      onClick={() => setShowMusicSelector(false)}
+    />
+    
+    <div className="relative z-10 bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+      {/* Handle Bar */}
+      <div className="flex justify-center pt-3 pb-2">
+        <div className="w-10 h-1 bg-zinc-600 rounded-full" />
+      </div>
+      
+      {/* Header */}
+      <div className="px-4 pb-3 flex items-center justify-between border-b border-zinc-800">
+        <h3 className="text-lg font-semibold text-white">Añadir sonido</h3>
+        <button onClick={() => setShowMusicSelector(false)}>
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        <MusicSelector
+          onSelectMusic={handleMusicSelect}
+          selectedMusic={selectedMusic}
+          pollTitle=""
+          darkMode={true}
+        />
+      </div>
+    </div>
+  </div>,
+  document.body  // ← Clave: renderizado en body
+)}
+```
 
 ✅ **RESULTADO FINAL:**
-🎯 **PANEL DE MÚSICA COMPLETAMENTE VISIBLE** - Los usuarios ahora pueden:
+🎯 **PANEL DE MÚSICA COMPLETAMENTE VISIBLE CON REACT PORTAL** - Los usuarios ahora pueden:
 - 🎵 Ver el panel completo de selección de música al hacer clic en el botón
 - 👀 El backdrop se vuelve borroso correctamente (feedback visual)
 - 🎨 El panel de contenido aparece por encima del backdrop (completamente visible)
 - 📱 Seleccionar música sin problemas en ambas páginas de creación
-- ✅ Modal aparece correctamente con z-index en capas (backdrop → panel → contenido)
-- 🔧 Sin conflictos de z-index entre elementos
+- ✅ Modal renderizado fuera de la jerarquía del contenedor con overflow-hidden
+- 🔧 Solución definitiva usando React Portal para escapar las restricciones del CSS
+- 🚀 Mantiene toda la funcionalidad del estado y eventos del componente padre
 
 
 **🎬 SISTEMA DE REPRODUCCIONES POR VISUALIZACIÓN IMPLEMENTADO (2025-01-27): Las reproducciones ahora cuentan CADA visualización, no solo usuarios únicos.**
