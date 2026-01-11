@@ -86,7 +86,7 @@ const DesktopLayout = ({ children }) => {
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">V</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">VotaTok</span>
+            <span className="text-xl font-bold text-gray-900">Twyk</span>
           </div>
         </div>
 
