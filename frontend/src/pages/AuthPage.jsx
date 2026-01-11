@@ -316,7 +316,7 @@ const AuthPage = () => {
             </div>
           </div>
 
-          {/* Google OAuth Button - Instagram style on mobile */}
+          {/* Google OAuth Button - Twyk style on mobile */}
           <button
             type="button"
             onClick={() => {
