@@ -150,7 +150,7 @@ const AuthPage = () => {
             <img 
               src="/votatuk-logo.png"
               alt="Logo"
-              className="w-64 h-64 md:w-40 md:h-40 object-contain"
+              className="w-72 h-72 md:w-48 md:h-48 object-contain"
             />
           </div>
           {/* Title - Hidden on mobile for Instagram style */}
