@@ -703,8 +703,8 @@ const SearchPage = () => {
       // Simple share functionality
       if (navigator.share) {
         await navigator.share({
-          title: 'VotaTok - Poll',
-          text: 'Mira este poll en VotaTok',
+          title: 'Twyk - Poll',
+          text: 'Mira este poll en Twyk',
           url: `${window.location.origin}/poll/${pollId}`
         });
       } else {
