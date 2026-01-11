@@ -5964,24 +5964,50 @@ async def get_ultra_fast_feed(
         for poll_data in polls:
             author = authors_dict.get(poll_data.get("author_id"))
             if author:
-                # Clean options to remove _id fields
-                clean_options = []
+                # 🎨 CRITICAL FIX: Transform options to frontend format with media object
+                transformed_options = []
                 for opt in poll_data.get("options", []):
-                    clean_opt = {k: v for k, v in opt.items() if k != "_id"}
-                    clean_options.append(clean_opt)
+                    # Get media fields from database
+                    media_url = opt.get("media_url")
+                    media_type = opt.get("media_type")
+                    thumbnail_url = opt.get("thumbnail_url")
+                    
+                    # Build option with proper media structure
+                    option_dict = {
+                        "id": opt.get("id"),
+                        "text": opt.get("text", ""),
+                        "votes": opt.get("votes", 0),
+                        "extracted_audio_id": opt.get("extracted_audio_id"),
+                        # 🎨 CRITICAL: Transform media to frontend format
+                        "media": {
+                            "type": media_type,
+                            "url": media_url,
+                            "thumbnail": thumbnail_url or media_url,
+                            "transform": opt.get("media_transform")
+                        } if media_url else None
+                    }
+                    transformed_options.append(option_dict)
+                
+                # 🎵 CRITICAL FIX: Get music info if music_id exists
+                music_info = None
+                if poll_data.get("music_id"):
+                    music_info = await get_music_info(poll_data.get("music_id"))
+                elif poll_data.get("music"):
+                    # If music data already embedded, use it
+                    music_info = poll_data.get("music")
                 
                 poll_response = {
                     "id": poll_data.get("id"),
                     "title": poll_data.get("title"),
                     "author": author,
                     "authorUser": author,  # For compatibility
-                    "options": clean_options,
+                    "options": transformed_options,  # 🎨 FIXED: Use transformed options
                     "created_at": poll_data.get("created_at"),
                     "total_votes": poll_data.get("total_votes", 0),
                     "likes_count": poll_data.get("likes_count", 0),
                     "comments_count": poll_data.get("comments_count", 0),
                     "layout": poll_data.get("layout"),
-                    "music": poll_data.get("music"),
+                    "music": music_info,  # 🎵 FIXED: Use resolved music info
                     "userVote": None,  # Simplified - no user vote lookup for speed
                     "userLiked": False,  # Simplified - no user like lookup for speed
                     # Post settings - Include from database
