@@ -200,7 +200,7 @@ const AuthPage = () => {
           {/* Register-only fields */}
           {!isLogin && (
             <>
-              {/* Username Field - Instagram style */}
+              {/* Username Field - Twyk style */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-black hidden md:block">
                   Usuario
