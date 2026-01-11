@@ -148,8 +148,8 @@ const AuthPage = () => {
           {/* Logo personalizado */}
           <div className="inline-flex items-center justify-center mb-10 md:mb-6">
             <img 
-              src="/votatuk-logo.png"
-              alt="Logo"
+              src="/twyk-logo.png"
+              alt="Twyk Logo"
               className="w-72 h-72 md:w-48 md:h-48 object-contain"
             />
           </div>
