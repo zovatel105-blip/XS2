@@ -13,10 +13,10 @@ const CustomLogo = ({ size = 36, className = "" }) => {
         background: 'transparent'
       }}
     >
-      {/* Logo actualizado */}
+      {/* Logo actualizado - Twyk */}
       <img
-        src="/votatuk-logo.png"
-        alt="Logo"
+        src="/twyk-logo.png"
+        alt="Twyk Logo"
         width={size}
         height={size}
         style={{
