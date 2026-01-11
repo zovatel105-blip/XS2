@@ -224,7 +224,7 @@ const AuthPage = () => {
                 )}
               </div>
 
-              {/* Display Name Field - Instagram style */}
+              {/* Display Name Field - Twyk style */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-black hidden md:block">
                   Nombre
