@@ -282,7 +282,7 @@ const AuthPage = () => {
             )}
           </div>
 
-          {/* Forgot Password - Mobile only, Instagram style */}
+          {/* Forgot Password - Mobile only, Twyk style */}
           {isLogin && (
             <div className="text-right md:hidden -mt-2">
               <button
