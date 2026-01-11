@@ -162,7 +162,7 @@ const AuthPage = () => {
           </p>
         </div>
 
-        {/* Form - Instagram style spacing on mobile */}
+        {/* Form - Twyk style spacing on mobile */}
         <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
           
           {/* General Error */}
