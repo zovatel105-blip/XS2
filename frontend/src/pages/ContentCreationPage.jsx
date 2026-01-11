@@ -1448,7 +1448,7 @@ const ContentCreationPage = () => {
           />
           
           {/* Bottom Sheet Container */}
-          <div className="relative bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
+          <div className="relative z-10 bg-zinc-900 rounded-t-3xl w-full max-h-[85vh] flex flex-col animate-slide-up">
             {/* Handle Bar */}
             <div className="flex justify-center pt-3 pb-2">
               <div className="w-10 h-1 bg-zinc-600 rounded-full" />
