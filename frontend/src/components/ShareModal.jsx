@@ -25,6 +25,7 @@ const ShareModal = ({ isOpen, onClose, content }) => {
   // URLs para compartir en diferentes plataformas
   const shareUrls = {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title + ' - ' + description)}&url=${encodeURIComponent(url)}`,
     whatsapp: `https://wa.me/?text=${encodeURIComponent(title + '\n' + description + '\n' + url)}`,
     telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title + ' - ' + description)}`,
   };
@@ -32,12 +33,12 @@ const ShareModal = ({ isOpen, onClose, content }) => {
   const handleShare = async (platform) => {
     try {
       switch (platform) {
-        case 'twyk':
-          // Twyk - copiar al portapapeles
+        case 'instagram':
+          // Instagram no permite compartir directo por URL, copiamos al portapapeles
           await copyToClipboard(url);
           toast({
-            title: "🎵 Copiado para Twyk", 
-            description: "El enlace se ha copiado. Compártelo en Twyk",
+            title: "📱 Copiado para Instagram",
+            description: "El enlace se ha copiado. Pégalo en tu story o post de Instagram",
           });
           break;
 
@@ -50,7 +51,7 @@ const ShareModal = ({ isOpen, onClose, content }) => {
           break;
 
         default:
-          // Para Facebook, WhatsApp, Telegram
+          // Para Facebook, Twitter, WhatsApp, Telegram
           window.open(shareUrls[platform], '_blank', 'width=600,height=400');
           toast({
             title: "🚀 Compartiendo...",
