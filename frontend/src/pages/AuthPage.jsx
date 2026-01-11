@@ -339,7 +339,7 @@ const AuthPage = () => {
           </button>
         </form>
 
-        {/* Toggle Auth Mode - Instagram style on mobile */}
+        {/* Toggle Auth Mode - Twyk style on mobile */}
         <div className="mt-6 md:mt-8 text-center">
           <p className="text-gray-600 text-sm md:text-base">
             {isLogin ? (
