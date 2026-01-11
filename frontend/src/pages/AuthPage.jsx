@@ -173,7 +173,7 @@ const AuthPage = () => {
             </div>
           )}
 
-          {/* Email Field - Instagram style */}
+          {/* Email Field - Twyk style */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-black hidden md:block">
               Email
