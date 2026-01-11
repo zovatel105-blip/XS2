@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomLogo = ({ size = 24, className = "" }) => {
+const CustomLogo = ({ size = 36, className = "" }) => {
   return (
     <div
       className={`${className} flex items-center justify-center`}
