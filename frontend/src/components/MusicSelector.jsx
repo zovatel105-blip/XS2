@@ -55,7 +55,7 @@ const MusicWaveform = ({ waveform, isPlaying, duration = 30 }) => {
   );
 };
 
-// Simplified TikTok/Instagram style music card
+// Simplified Twyk style music card
 const SimpleMusicCard = ({ music, isSelected, isPlaying, onSelect, onPlay, showSource = false, darkMode = false }) => {
   return (
     <div 
