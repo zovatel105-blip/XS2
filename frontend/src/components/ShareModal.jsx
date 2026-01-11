@@ -32,6 +32,15 @@ const ShareModal = ({ isOpen, onClose, content }) => {
   const handleShare = async (platform) => {
     try {
       switch (platform) {
+        case 'twyk':
+          // Twyk - copiar al portapapeles
+          await copyToClipboard(url);
+          toast({
+            title: "🎵 Copiado para Twyk", 
+            description: "El enlace se ha copiado. Compártelo en Twyk",
+          });
+          break;
+
         case 'copy':
           await copyToClipboard(url);
           toast({
