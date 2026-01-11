@@ -51,7 +51,7 @@ const StoryPlusIcon = ({ size = 16, className = "" }) => (
   </svg>
 );
 
-// Ícono personalizado de LIVE estilo TikTok
+// Ícono personalizado de LIVE estilo Twyk
 const TikTokLiveIcon = ({ size = 16, className = "" }) => {
   return (
     <svg
