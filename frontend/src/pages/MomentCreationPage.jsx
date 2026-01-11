@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Music, Plus, Upload, Video, AtSign, Edit3 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
