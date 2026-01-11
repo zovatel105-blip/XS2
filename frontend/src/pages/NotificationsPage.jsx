@@ -117,7 +117,7 @@ const NotificationsPage = () => {
       user: 'PedroMartinez',
       message: 'votó en tu votación',
       time: 'hace 1 hora',
-      poll: '¿Cuál es el mejor baile de TikTok?'
+      poll: '¿Cuál es el mejor baile de Twyk?'
     },
     {
       id: 5,
@@ -148,7 +148,7 @@ const NotificationsPage = () => {
       user: 'SofiaHernandez',
       message: 'votó en tu votación',
       time: 'hace 1 día',
-      poll: '¿Cuál es el mejor baile de TikTok?'
+      poll: '¿Cuál es el mejor baile de Twyk?'
     }
   ];
 
