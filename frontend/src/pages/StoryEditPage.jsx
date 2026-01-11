@@ -424,7 +424,7 @@ const StoryEditPage = () => {
       const distance = getDistance(e.touches[0], e.touches[1]);
       const newScale = (distance / initialDistance) * initialScale;
       
-      // Limitar escala entre 1x y 3x (estilo Instagram)
+      // Limitar escala entre 1x y 3x (estilo Twyk)
       const clampedScale = Math.min(Math.max(newScale, 1), 3);
       setScale(clampedScale);
       
