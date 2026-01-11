@@ -1378,7 +1378,7 @@ const ContentCreationPage = () => {
         </div>
       )}
 
-      {/* Bottom Tab Bar - Instagram/TikTok style */}
+      {/* Bottom Tab Bar - Twyk style */}
       {!previewMode && (
         <div className="absolute bottom-0 left-0 right-0 z-30">
           {/* Next button row */}
