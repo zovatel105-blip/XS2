@@ -13,9 +13,9 @@ const CustomLogo = ({ size = 24, className = "" }) => {
         background: 'transparent'
       }}
     >
-      {/* Logo igual que la página de login */}
+      {/* Logo actualizado */}
       <img
-        src="https://customer-assets.emergentagent.com/job_979c19d8-b9c0-4e35-80df-e411a6f88938/artifacts/qk9i0x5a_file_00000000a8a071f5befc3375a0b68179.png"
+        src="/votatuk-logo.png"
         alt="Logo"
         width={size}
         height={size}
