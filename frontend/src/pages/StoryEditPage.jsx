@@ -1350,7 +1350,7 @@ const StoryEditPage = () => {
             )}
           </div>
 
-          {/* Botón de "Tu historia" estilo Instagram y Papelera */}
+          {/* Botón de "Tu historia" estilo Twyk y Papelera */}
           <div className="flex justify-between items-center">
             {/* Papelera - Solo visible cuando se arrastra algo */}
             {(draggingTextIndex !== null || draggingStickerIndex !== null) && (
