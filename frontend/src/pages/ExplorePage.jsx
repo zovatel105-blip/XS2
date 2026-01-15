@@ -1,464 +1,476 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Swords, Plus, Inbox, User, Heart, MessageCircle, Share2, Bookmark, Trophy, Crown, Medal, Play, Eye, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trophy, Swords, Crown, Medal, Eye, User, Play, CheckCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useAuth } from '../contexts/AuthContext';
+import TikTokScrollView from '../components/TikTokScrollView';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Mousewheel, Keyboard } from 'swiper/modules';
-import 'swiper/css';
 
-// Datos de ejemplo para retos completados
+// Datos de ejemplo para retos completados - convertidos al formato de poll para TikTokScrollView
 const mockCompletedBattles = [
   {
     id: 'completed1',
-    title: 'Battle Épico: Arte Digital vs Tradicional',
-    participants: [
+    title: '🏆 Battle Épico: Arte Digital vs Tradicional',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Arte',
+    duration: '2h 30min',
+    completedAt: '2025-01-14T10:30:00Z',
+    totalVotes: 27770,
+    views: 45000,
+    likes: 8331,
+    comments: 900,
+    shares: 450,
+    author: {
+      id: 'user1',
+      username: 'CreatorPro',
+      display_name: 'Creator Pro',
+      avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user1', 
-        username: 'CreatorPro', 
-        displayName: 'Creator Pro',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+        id: 'opt1',
+        text: 'Arte Digital',
         votes: 15420,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user1',
+          username: 'CreatorPro',
+          display_name: 'Creator Pro',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       },
       { 
-        id: 'user2', 
-        username: 'ArtistMaster', 
-        displayName: 'Artist Master',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+        id: 'opt2',
+        text: 'Arte Tradicional',
         votes: 12350,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user2',
+          username: 'ArtistMaster',
+          display_name: 'Artist Master',
+          avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       }
     ],
-    totalViews: 45000,
-    totalVotes: 27770,
-    completedAt: '2025-01-14T10:30:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=1080&h=1920&fit=crop',
-    },
-    category: 'Arte',
-    duration: '2h 30min'
+    timeAgo: 'hace 1d'
   },
   {
     id: 'completed2',
-    title: 'Dance Challenge: Hip Hop vs K-Pop',
-    participants: [
+    title: '💃 Dance Challenge: Hip Hop vs K-Pop',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Baile',
+    duration: '1h 45min',
+    completedAt: '2025-01-13T18:45:00Z',
+    totalVotes: 42900,
+    views: 89000,
+    likes: 12870,
+    comments: 1780,
+    shares: 890,
+    author: {
+      id: 'user3',
+      username: 'DanceQueen',
+      display_name: 'Dance Queen',
+      avatar_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user3', 
-        username: 'DanceQueen', 
-        displayName: 'Dance Queen',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+        id: 'opt3',
+        text: 'Hip Hop',
         votes: 23100,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user3',
+          username: 'DanceQueen',
+          display_name: 'Dance Queen',
+          avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       },
       { 
-        id: 'user4', 
-        username: 'MoveMaster', 
-        displayName: 'Move Master',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+        id: 'opt4',
+        text: 'K-Pop',
         votes: 19800,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user4',
+          username: 'MoveMaster',
+          display_name: 'Move Master',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       }
     ],
-    totalViews: 89000,
-    totalVotes: 42900,
-    completedAt: '2025-01-13T18:45:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=1080&h=1920&fit=crop',
-    },
-    category: 'Baile',
-    duration: '1h 45min'
+    timeAgo: 'hace 2d'
   },
   {
     id: 'completed3',
-    title: 'Gaming Battle: Speed Run Challenge',
-    participants: [
+    title: '🎮 Gaming Battle: Speed Run Challenge',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Gaming',
+    duration: '3h 15min',
+    completedAt: '2025-01-12T22:00:00Z',
+    totalVotes: 20100,
+    views: 32000,
+    likes: 6030,
+    comments: 640,
+    shares: 320,
+    author: {
+      id: 'user6',
+      username: 'ProPlayer',
+      display_name: 'Pro Player',
+      avatar_url: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user5', 
-        username: 'GamerX', 
-        displayName: 'Gamer X',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop',
+        id: 'opt5',
+        text: 'Gamer X',
         votes: 8900,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user5',
+          username: 'GamerX',
+          display_name: 'Gamer X',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       },
       { 
-        id: 'user6', 
-        username: 'ProPlayer', 
-        displayName: 'Pro Player',
-        avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=150&h=150&fit=crop',
+        id: 'opt6',
+        text: 'Pro Player',
         votes: 11200,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user6',
+          username: 'ProPlayer',
+          display_name: 'Pro Player',
+          avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       }
     ],
-    totalViews: 32000,
-    totalVotes: 20100,
-    completedAt: '2025-01-12T22:00:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1080&h=1920&fit=crop',
-    },
-    category: 'Gaming',
-    duration: '3h 15min'
+    timeAgo: 'hace 3d'
   },
   {
     id: 'completed4',
-    title: 'Cooking Battle: Italian vs Asian',
-    participants: [
+    title: '🍝 Cooking Battle: Italian vs Asian',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Cocina',
+    duration: '2h 00min',
+    completedAt: '2025-01-11T14:20:00Z',
+    totalVotes: 34700,
+    views: 56000,
+    likes: 10410,
+    comments: 1120,
+    shares: 560,
+    author: {
+      id: 'user7',
+      username: 'ChefMario',
+      display_name: 'Chef Mario',
+      avatar_url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user7', 
-        username: 'ChefMario', 
-        displayName: 'Chef Mario',
-        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop',
+        id: 'opt7',
+        text: 'Cocina Italiana',
         votes: 18500,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user7',
+          username: 'ChefMario',
+          display_name: 'Chef Mario',
+          avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       },
       { 
-        id: 'user8', 
-        username: 'MasterWok', 
-        displayName: 'Master Wok',
-        avatar: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop',
+        id: 'opt8',
+        text: 'Cocina Asiática',
         votes: 16200,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user8',
+          username: 'MasterWok',
+          display_name: 'Master Wok',
+          avatar: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       }
     ],
-    totalViews: 56000,
-    totalVotes: 34700,
-    completedAt: '2025-01-11T14:20:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1080&h=1920&fit=crop',
-    },
-    category: 'Cocina',
-    duration: '2h 00min'
+    timeAgo: 'hace 4d'
   },
   {
     id: 'completed5',
-    title: 'Music Battle: Guitar vs Piano',
-    participants: [
+    title: '🎸 Music Battle: Guitar vs Piano',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Música',
+    duration: '1h 30min',
+    completedAt: '2025-01-10T20:15:00Z',
+    totalVotes: 45500,
+    views: 78000,
+    likes: 13650,
+    comments: 1560,
+    shares: 780,
+    author: {
+      id: 'user10',
+      username: 'PianoMaster',
+      display_name: 'Piano Master',
+      avatar_url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user9', 
-        username: 'GuitarHero', 
-        displayName: 'Guitar Hero',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop',
+        id: 'opt9',
+        text: 'Guitarra',
         votes: 21000,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user9',
+          username: 'GuitarHero',
+          display_name: 'Guitar Hero',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       },
       { 
-        id: 'user10', 
-        username: 'PianoMaster', 
-        displayName: 'Piano Master',
-        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop',
+        id: 'opt10',
+        text: 'Piano',
         votes: 24500,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user10',
+          username: 'PianoMaster',
+          display_name: 'Piano Master',
+          avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       }
     ],
-    totalViews: 78000,
-    totalVotes: 45500,
-    completedAt: '2025-01-10T20:15:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1080&h=1920&fit=crop',
-    },
-    category: 'Música',
-    duration: '1h 30min'
+    timeAgo: 'hace 5d'
   },
   {
     id: 'completed6',
-    title: 'Fashion Challenge: Street vs Elegant',
-    participants: [
+    title: '👗 Fashion Challenge: Street vs Elegant',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Moda',
+    duration: '2h 15min',
+    completedAt: '2025-01-09T16:00:00Z',
+    totalVotes: 60100,
+    views: 95000,
+    likes: 18030,
+    comments: 1900,
+    shares: 950,
+    author: {
+      id: 'user11',
+      username: 'StreetStyle',
+      display_name: 'Street Style',
+      avatar_url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user11', 
-        username: 'StreetStyle', 
-        displayName: 'Street Style',
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+        id: 'opt11',
+        text: 'Street Style',
         votes: 31200,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user11',
+          username: 'StreetStyle',
+          display_name: 'Street Style',
+          avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       },
       { 
-        id: 'user12', 
-        username: 'ElegantFashion', 
-        displayName: 'Elegant Fashion',
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop',
+        id: 'opt12',
+        text: 'Elegant Fashion',
         votes: 28900,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user12',
+          username: 'ElegantFashion',
+          display_name: 'Elegant Fashion',
+          avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       }
     ],
-    totalViews: 95000,
-    totalVotes: 60100,
-    completedAt: '2025-01-09T16:00:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1080&h=1920&fit=crop',
-    },
-    category: 'Moda',
-    duration: '2h 15min'
+    timeAgo: 'hace 6d'
   },
   {
     id: 'completed7',
-    title: 'Comedy Battle: Stand-up vs Sketches',
-    participants: [
+    title: '😂 Comedy Battle: Stand-up vs Sketches',
+    type: 'vs',
+    layout: 'vs',
+    isCompleted: true,
+    category: 'Comedia',
+    duration: '1h 45min',
+    completedAt: '2025-01-08T21:30:00Z',
+    totalVotes: 41900,
+    views: 67000,
+    likes: 12570,
+    comments: 1340,
+    shares: 670,
+    author: {
+      id: 'user14',
+      username: 'SketchMaster',
+      display_name: 'Sketch Master',
+      avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+      is_verified: true
+    },
+    options: [
       { 
-        id: 'user13', 
-        username: 'StandupKing', 
-        displayName: 'Standup King',
-        avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
+        id: 'opt13',
+        text: 'Stand-up Comedy',
         votes: 19800,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user13',
+          username: 'StandupKing',
+          display_name: 'Standup King',
+          avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
+          verified: false
+        },
         isWinner: false
       },
       { 
-        id: 'user14', 
-        username: 'SketchMaster', 
-        displayName: 'Sketch Master',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+        id: 'opt14',
+        text: 'Sketch Comedy',
         votes: 22100,
+        media: {
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?w=1080&h=1920&fit=crop'
+        },
+        user: {
+          id: 'user14',
+          username: 'SketchMaster',
+          display_name: 'Sketch Master',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+          verified: true
+        },
         isWinner: true
       }
     ],
-    totalViews: 67000,
-    totalVotes: 41900,
-    completedAt: '2025-01-08T21:30:00Z',
-    media: {
-      type: 'image',
-      url: 'https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=1080&h=1920&fit=crop',
-    },
-    category: 'Comedia',
-    duration: '1h 45min'
+    timeAgo: 'hace 7d'
   }
 ];
-
-// Componente para cada batalla completada (estilo TikTok)
-const CompletedBattleCard = ({ battle, isActive, onUserClick }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const navigate = useNavigate();
-
-  const winner = battle.participants.find(p => p.isWinner);
-  const loser = battle.participants.find(p => !p.isWinner);
-
-  const formatNumber = (num) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-    return num.toString();
-  };
-
-  const formatTimeAgo = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-    
-    if (diffDays > 0) return `hace ${diffDays}d`;
-    if (diffHours > 0) return `hace ${diffHours}h`;
-    return 'hace poco';
-  };
-
-  const getVotePercentage = (votes) => {
-    return Math.round((votes / battle.totalVotes) * 100);
-  };
-
-  return (
-    <div className="relative w-full h-full bg-black">
-      {/* Background Media */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${battle.media.url})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/60" />
-      </div>
-
-      {/* Header - Título y categoría */}
-      <div className="absolute top-16 left-0 right-16 z-20 p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="px-2 py-1 bg-purple-500/80 rounded-full text-xs font-semibold text-white">
-            {battle.category}
-          </span>
-          <span className="px-2 py-1 bg-green-500/80 rounded-full text-xs font-semibold text-white flex items-center gap-1">
-            <Trophy className="w-3 h-3" />
-            COMPLETADO
-          </span>
-        </div>
-        <h2 className="text-white text-xl font-bold drop-shadow-lg line-clamp-2">
-          {battle.title}
-        </h2>
-        <p className="text-white/60 text-sm mt-1">
-          {formatTimeAgo(battle.completedAt)} • {battle.duration}
-        </p>
-      </div>
-
-      {/* Contenido principal - Participantes y resultados */}
-      <div className="absolute bottom-32 left-0 right-20 z-20 px-4">
-        {/* VS Card */}
-        <div className="bg-black/60 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-          <div className="flex items-center justify-between">
-            {/* Ganador */}
-            <div className="flex-1 flex flex-col items-center">
-              <div className="relative">
-                <button 
-                  onClick={() => onUserClick(winner.id)}
-                  className="relative"
-                >
-                  <Avatar className="w-16 h-16 ring-4 ring-yellow-500 shadow-lg shadow-yellow-500/30">
-                    <AvatarImage src={winner.avatar} alt={winner.displayName} className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-br from-yellow-500 to-orange-500 text-white">
-                      <User className="w-6 h-6" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="absolute -top-2 -right-2 bg-yellow-500 rounded-full p-1">
-                    <Crown className="w-4 h-4 text-white" />
-                  </div>
-                </button>
-              </div>
-              <span className="text-white font-semibold text-sm mt-2">@{winner.username}</span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-yellow-400 font-bold text-lg">{getVotePercentage(winner.votes)}%</span>
-              </div>
-              <span className="text-white/60 text-xs">{formatNumber(winner.votes)} votos</span>
-            </div>
-
-            {/* VS Divider */}
-            <div className="px-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">VS</span>
-              </div>
-            </div>
-
-            {/* Perdedor */}
-            <div className="flex-1 flex flex-col items-center">
-              <button 
-                onClick={() => onUserClick(loser.id)}
-                className="relative"
-              >
-                <Avatar className="w-16 h-16 ring-2 ring-gray-500 opacity-80">
-                  <AvatarImage src={loser.avatar} alt={loser.displayName} className="object-cover" />
-                  <AvatarFallback className="bg-gradient-to-br from-gray-500 to-gray-600 text-white">
-                    <User className="w-6 h-6" />
-                  </AvatarFallback>
-                </Avatar>
-              </button>
-              <span className="text-white/80 font-semibold text-sm mt-2">@{loser.username}</span>
-              <div className="flex items-center gap-1 mt-1">
-                <span className="text-white/60 font-bold text-lg">{getVotePercentage(loser.votes)}%</span>
-              </div>
-              <span className="text-white/40 text-xs">{formatNumber(loser.votes)} votos</span>
-            </div>
-          </div>
-
-          {/* Barra de progreso de votos */}
-          <div className="mt-4 h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-500"
-              style={{ width: `${getVotePercentage(winner.votes)}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="flex items-center justify-center gap-6 mt-4 text-white/80 text-sm">
-          <span className="flex items-center gap-1">
-            <Eye className="w-4 h-4" />
-            {formatNumber(battle.totalViews)} vistas
-          </span>
-          <span className="flex items-center gap-1">
-            <Trophy className="w-4 h-4" />
-            {formatNumber(battle.totalVotes)} votos
-          </span>
-        </div>
-      </div>
-
-      {/* Acciones sociales - lado derecho */}
-      <div className="absolute right-3 bottom-40 flex flex-col items-center gap-5 z-30">
-        {/* Like */}
-        <button
-          onClick={() => setIsLiked(!isLiked)}
-          className="flex flex-col items-center gap-1"
-        >
-          <div className={cn(
-            "w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300",
-            isLiked 
-              ? "bg-red-500/20 backdrop-blur-sm" 
-              : "bg-black/40 backdrop-blur-sm hover:bg-black/60"
-          )}>
-            <Heart 
-              className={cn(
-                "w-6 h-6 transition-all duration-300",
-                isLiked ? "text-red-500 fill-red-500 scale-110" : "text-white"
-              )} 
-            />
-          </div>
-          <span className="text-white text-xs font-medium">{formatNumber(Math.floor(battle.totalVotes * 0.3))}</span>
-        </button>
-
-        {/* Comentarios */}
-        <button className="flex flex-col items-center gap-1">
-          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors">
-            <MessageCircle className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-white text-xs font-medium">{formatNumber(Math.floor(battle.totalViews * 0.02))}</span>
-        </button>
-
-        {/* Compartir */}
-        <button className="flex flex-col items-center gap-1">
-          <div className="w-11 h-11 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors">
-            <Share2 className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-white text-xs font-medium">{formatNumber(Math.floor(battle.totalViews * 0.01))}</span>
-        </button>
-
-        {/* Guardar */}
-        <button
-          onClick={() => setIsSaved(!isSaved)}
-          className="flex flex-col items-center gap-1"
-        >
-          <div className={cn(
-            "w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300",
-            isSaved 
-              ? "bg-yellow-500/20 backdrop-blur-sm" 
-              : "bg-black/40 backdrop-blur-sm hover:bg-black/60"
-          )}>
-            <Bookmark 
-              className={cn(
-                "w-6 h-6 transition-all duration-300",
-                isSaved ? "text-yellow-500 fill-yellow-500" : "text-white"
-              )} 
-            />
-          </div>
-        </button>
-
-        {/* Ver replay */}
-        <button className="flex flex-col items-center gap-1">
-          <div className="w-11 h-11 rounded-full bg-purple-500/80 backdrop-blur-sm flex items-center justify-center hover:bg-purple-600/80 transition-colors">
-            <Play className="w-6 h-6 text-white fill-white" />
-          </div>
-          <span className="text-white text-xs font-medium">Replay</span>
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const ExplorePage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [battles, setBattles] = useState(mockCompletedBattles);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [savedPolls, setSavedPolls] = useState(new Set());
+  const [commentedPolls, setCommentedPolls] = useState(new Set());
+  const [sharedPolls, setSharedPolls] = useState(new Set());
 
-  const handleUserClick = (userId) => {
-    navigate(`/profile/${userId}`);
-  };
+  // Handlers para interacciones
+  const handleVote = useCallback((pollId, optionId) => {
+    console.log('Vote on completed battle:', pollId, optionId);
+    // No permitir votar en batallas completadas
+  }, []);
 
-  const handleSlideChange = (swiper) => {
-    setActiveIndex(swiper.activeIndex);
-  };
+  const handleLike = useCallback((pollId) => {
+    console.log('Like completed battle:', pollId);
+  }, []);
+
+  const handleShare = useCallback((pollId) => {
+    console.log('Share completed battle:', pollId);
+  }, []);
+
+  const handleComment = useCallback((pollId) => {
+    console.log('Comment on completed battle:', pollId);
+  }, []);
+
+  const handleSave = useCallback((pollId) => {
+    console.log('Save completed battle:', pollId);
+    setSavedPolls(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(pollId)) {
+        newSet.delete(pollId);
+      } else {
+        newSet.add(pollId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const handleCreatePoll = useCallback(() => {
+    navigate('/new');
+  }, [navigate]);
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Header fijo */}
-      <div className="absolute top-0 left-0 right-0 z-40 px-4 py-3 bg-gradient-to-b from-black/90 to-transparent">
-        <div className="flex items-center justify-between">
+      {/* Header fijo con botón de Retos Activos */}
+      <div className="absolute top-0 left-0 right-0 z-50 px-4 py-3 bg-gradient-to-b from-black/90 via-black/60 to-transparent pointer-events-none">
+        <div className="flex items-center justify-between pointer-events-auto">
           <h1 className="text-white text-lg font-bold flex items-center gap-2">
             <Trophy className="w-5 h-5 text-yellow-500" />
             Retos Completados
@@ -473,115 +485,23 @@ const ExplorePage = () => {
         </div>
       </div>
 
-      {/* Swiper de batallas completadas */}
-      <Swiper
-        direction="vertical"
-        slidesPerView={1}
-        spaceBetween={0}
-        mousewheel={true}
-        keyboard={true}
-        modules={[Mousewheel, Keyboard]}
-        onSlideChange={handleSlideChange}
-        className="w-full h-full"
-      >
-        {battles.map((battle, index) => (
-          <SwiperSlide key={battle.id}>
-            <CompletedBattleCard 
-              battle={battle} 
-              isActive={index === activeIndex}
-              onUserClick={handleUserClick}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      {/* Menú lateral derecho */}
-      <div 
-        className="fixed right-2 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-50"
-        style={{ right: 'max(0.5rem, env(safe-area-inset-right))' }}
-      >
-        {/* Home/Feed */}
-        <button
-          onClick={() => navigate('/feed')}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/10"
-        >
-          <Home className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Retos Completados (actual) */}
-        <button
-          onClick={() => {}}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 shadow-lg shadow-yellow-500/30"
-        >
-          <Trophy className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Retos Activos */}
-        <button
-          onClick={() => navigate('/explore/active')}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/10"
-        >
-          <Swords className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Crear */}
-        <button
-          onClick={() => navigate('/new')}
-          className="w-12 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 relative overflow-hidden hover:scale-105 shadow-xl"
-          style={{
-            background: 'linear-gradient(180deg, #000 0%, #000 100%)',
-            border: '2px solid transparent',
-            backgroundImage: 'linear-gradient(#000, #000), linear-gradient(180deg, #A855F7 0%, #3B82F6 100%)',
-            backgroundOrigin: 'border-box',
-            backgroundClip: 'padding-box, border-box',
-          }}
-        >
-          <Plus className="w-6 h-6 text-white" />
-        </button>
-
-        {/* Mensajes */}
-        <button
-          onClick={() => navigate('/messages')}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/10"
-        >
-          <Inbox className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Perfil */}
-        <button
-          onClick={() => navigate('/profile')}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/10"
-        >
-          <User className="w-5 h-5 text-white" />
-        </button>
-      </div>
-
-      {/* Indicador de progreso */}
-      <div className="absolute right-16 top-1/2 transform -translate-y-1/2 flex flex-col gap-1 z-30">
-        {battles.map((_, index) => (
-          <div
-            key={index}
-            className={cn(
-              "w-1 rounded-full transition-all duration-300",
-              index === activeIndex 
-                ? "h-6 bg-white" 
-                : "h-1.5 bg-white/40"
-            )}
-          />
-        ))}
-      </div>
-
-      {/* Indicadores de navegación */}
-      {activeIndex > 0 && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
-          <ChevronUp className="w-6 h-6 text-white/60" />
-        </div>
-      )}
-      {activeIndex < battles.length - 1 && (
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
-          <ChevronDown className="w-6 h-6 text-white/60" />
-        </div>
-      )}
+      {/* TikTokScrollView con los retos completados */}
+      <TikTokScrollView
+        polls={battles}
+        onVote={handleVote}
+        onLike={handleLike}
+        onShare={handleShare}
+        onComment={handleComment}
+        onSave={handleSave}
+        onCreatePoll={handleCreatePoll}
+        showLogo={false}
+        savedPolls={savedPolls}
+        setSavedPolls={setSavedPolls}
+        commentedPolls={commentedPolls}
+        setCommentedPolls={setCommentedPolls}
+        sharedPolls={sharedPolls}
+        setSharedPolls={setSharedPolls}
+      />
     </div>
   );
 };
