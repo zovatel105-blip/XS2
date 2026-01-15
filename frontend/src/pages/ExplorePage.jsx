@@ -141,8 +141,8 @@ const ExplorePage = () => {
   return (
     <div className="fixed inset-0 bg-black overflow-hidden" ref={containerRef}>
       {/* Barra superior con avatares de battles/streams */}
-      <div className="absolute top-0 left-0 right-0 z-30 px-3 py-3 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1">
+      <div className="absolute top-0 left-0 right-0 z-30 px-3 pt-4 pb-3 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-2 pt-2">
           {battles.map((battle, index) => {
             const isSelected = index === selectedBattleIndex;
             const isBattle = battle.type === 'battle' && battle.participants.length > 1;
@@ -152,7 +152,7 @@ const ExplorePage = () => {
                 key={battle.id}
                 onClick={() => handleSelectBattle(index)}
                 className={cn(
-                  "flex-shrink-0 relative transition-all duration-300",
+                  "flex-shrink-0 relative transition-all duration-300 mt-1",
                   isSelected ? "scale-105" : "scale-100 opacity-80 hover:opacity-100"
                 )}
               >
