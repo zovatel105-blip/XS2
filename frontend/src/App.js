@@ -139,6 +139,7 @@ function AppContent() {
             {/* Main pages */}
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/explore/active" element={<ActiveChallengesPage />} />
             <Route path="/messages" element={<MessagesMainPage />} />
             <Route path="/messages/followers" element={<FollowersPage />} />
             <Route path="/messages/activity" element={<ActivityPage />} />
