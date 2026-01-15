@@ -25,6 +25,7 @@ import FollowingPage from './pages/FollowingPage';
 import AuthPage from './pages/AuthPage';
 import StoryCapturePage from './pages/StoryCapturePage';
 import StoryEditPage from './pages/StoryEditPage';
+import CompletedBattlesPage from './pages/CompletedBattlesPage';
 import { Toaster } from './components/ui/toaster';
 // Mock data imports removed - using real backend services
 import { useToast } from './hooks/use-toast';
