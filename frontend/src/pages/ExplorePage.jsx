@@ -468,20 +468,13 @@ const ExplorePage = () => {
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Header fijo con botón de Retos Activos */}
-      <div className="absolute top-0 left-0 right-0 z-50 px-4 py-3 bg-gradient-to-b from-black/90 via-black/60 to-transparent pointer-events-none">
-        <div className="flex items-center justify-between pointer-events-auto">
+      {/* Header fijo con título */}
+      <div className="absolute top-0 left-0 right-0 z-40 px-4 py-3 bg-gradient-to-b from-black/90 via-black/60 to-transparent pointer-events-none">
+        <div className="flex items-center pointer-events-auto">
           <h1 className="text-white text-lg font-bold flex items-center gap-2">
             <Trophy className="w-5 h-5 text-yellow-500" />
             Retos Completados
           </h1>
-          <button 
-            onClick={() => navigate('/explore/active')}
-            className="px-3 py-1.5 bg-red-500 hover:bg-red-600 rounded-full text-white text-sm font-medium transition-colors flex items-center gap-1"
-          >
-            <Swords className="w-4 h-4" />
-            Ver Activos
-          </button>
         </div>
       </div>
 
