@@ -1436,8 +1436,29 @@ const TikTokScrollView = ({
            width: '100dvw'
          }}>
 
-      {/* Close Button - Only visible if showCloseButton is true */}
-      {showCloseButton && (
+      {/* Active Challenges Button - Visible when showActiveChallengesButton is true */}
+      {showActiveChallengesButton && (
+        <div className="fixed z-50"
+             style={{
+               top: 'max(1rem, env(safe-area-inset-top))',
+               right: 'max(1rem, env(safe-area-inset-right))'
+             }}>
+          <Button
+            onClick={() => {
+              console.log('🏆 ACTIVE CHALLENGES BUTTON CLICKED');
+              navigate('/explore/active');
+            }}
+            className="bg-red-500 text-white hover:bg-red-600 backdrop-blur-md border-none px-3 py-2 h-10 rounded-full transition-all duration-200 hover:scale-105 shadow-xl flex items-center gap-1.5"
+            size="sm"
+          >
+            <Swords className="w-4 h-4" />
+            <span className="text-sm font-medium">Activos</span>
+          </Button>
+        </div>
+      )}
+
+      {/* Close Button - Only visible if showCloseButton is true and showActiveChallengesButton is false */}
+      {showCloseButton && !showActiveChallengesButton && (
         <div className="fixed z-50"
              style={{
                top: 'max(1rem, env(safe-area-inset-top))',
