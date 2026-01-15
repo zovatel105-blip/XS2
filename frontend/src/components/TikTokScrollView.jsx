@@ -17,7 +17,7 @@ import { useShare } from '../hooks/useShare';
 import { useViewTracking } from '../hooks/useViewTracking';
 import { cn } from '../lib/utils';
 import AppConfig from '../config/config';
-import { ChevronUp, ChevronDown, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, CheckCircle, User, Home, Search, Plus, Mail, Trophy, Share2, Music, X } from 'lucide-react';
+import { ChevronUp, ChevronDown, Heart, MessageCircle, Send, Bookmark, MoreHorizontal, CheckCircle, User, Home, Search, Plus, Mail, Trophy, Share2, Music, X, Swords } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/use-toast';
