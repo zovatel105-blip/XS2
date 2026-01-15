@@ -495,6 +495,7 @@ const ExplorePage = () => {
         onSave={handleSave}
         onCreatePoll={handleCreatePoll}
         showLogo={false}
+        showActiveChallengesButton={true}
         savedPolls={savedPolls}
         setSavedPolls={setSavedPolls}
         commentedPolls={commentedPolls}
